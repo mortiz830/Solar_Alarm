@@ -1,6 +1,7 @@
 package com.example.solar_alarm;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,20 +25,24 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
     @Override
     public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        // create a new view
-        //AlarmViewHolder v = (AlarmViewHolder) LayoutInflater.from(parent.getContext()).inflate(R.layout.my_text_view, parent, false);
-        return null;
+        TextView textView = (TextView) LayoutInflater.from(parent.getContext())
+                                              .inflate(R.layout.activity_alarm_list, parent, false);
+
+        AlarmViewHolder alarmViewHolder = new AlarmViewHolder(textView);
+
+        return alarmViewHolder;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
-
+        Alarm a = Alarms.get(position);
+        holder.TextView.setText(a.GetAlarmName() + " - " + a.GetAlarmTime());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return 0;
+        return Alarms.size();
     }
 }

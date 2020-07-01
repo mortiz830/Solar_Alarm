@@ -37,11 +37,11 @@ public class AlarmListActivity extends AppCompatActivity {
         LocalTime now = LocalTime.now();
 
         List<Alarm> alarmMocks = new ArrayList<Alarm>();
-        alarmMocks.add(new Alarm(now));
-        alarmMocks.add(new Alarm(now.plusHours(24)));
-        alarmMocks.add(new Alarm(now.plusHours(48)));
+        alarmMocks.add(new Alarm(now, "today"));
+        alarmMocks.add(new Alarm(now.plusHours(24), "tomorrow"));
+        alarmMocks.add(new Alarm(now.plusHours(48), "day after tomorrow"));
 
-        alarmAdapter = new AlarmAdapter(alarmMocks);   // add dataset to this new instance
+        alarmAdapter = new AlarmAdapter(alarmMocks);
         recyclerView.setAdapter(alarmAdapter);
     }
 }
