@@ -5,7 +5,9 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+/**
+ * https://developer.android.com/guide/topics/ui/layout/recyclerview
+ * */
 public class AlarmListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter alarmAdapter;
