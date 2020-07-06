@@ -35,6 +35,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
         catch (Exception e)
         {
             System.out.print(e);
+            throw e;
         }
 
         return alarmViewHolder;
