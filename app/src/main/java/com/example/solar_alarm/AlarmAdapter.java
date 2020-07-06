@@ -35,7 +35,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position)
+    {
         Alarm a = Alarms.get(position);
         holder.TextView.setText(a.GetAlarmName() + " - " + a.GetAlarmTime());
     }
