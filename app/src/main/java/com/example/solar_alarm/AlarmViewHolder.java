@@ -12,11 +12,15 @@ import java.util.List;
  */
 public class AlarmViewHolder extends RecyclerView.ViewHolder
 {
-    public TextView TextView;
+    //public Alarm Alarm;
+    public TextView NameTextView;
+    public TextView TimeTextView;
 
-    public AlarmViewHolder(@NonNull TextView textView)
+    public AlarmViewHolder(@NonNull View textView)
     {
         super(textView);
-        TextView = textView;
+
+        NameTextView = (TextView) itemView.findViewById(R.id.AlarmName);
+        TimeTextView = (TextView) itemView.findViewById(R.id.AlarmTime);
     }
 }

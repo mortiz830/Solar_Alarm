@@ -1,5 +1,6 @@
 package com.example.solar_alarm;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -28,14 +29,13 @@ public class AlarmListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_alarm_list);
 
         recyclerView = findViewById(R.id.recycleViewer);
-        recyclerView.setHasFixedSize(true);
+        //recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(layoutManager);
 
         // MOCKED DATA
         LocalTime now = LocalTime.now();
-
         List<Alarm> alarmMocks = new ArrayList<Alarm>();
         alarmMocks.add(new Alarm(now, "today"));
         alarmMocks.add(new Alarm(now.plusHours(24), "tomorrow"));

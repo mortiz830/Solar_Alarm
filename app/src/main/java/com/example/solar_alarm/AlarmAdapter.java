@@ -1,6 +1,9 @@
 package com.example.solar_alarm;
+import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,28 +28,48 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
     @Override
     public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        AlarmViewHolder alarmViewHolder = null;
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
 
-        try {
-            TextView textView = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_alarm_list, parent, false);
+        // Inflate the custom layout
+        View contactView = inflater.inflate(R.layout.activity_alarm_list, parent, false);
 
-            alarmViewHolder = new AlarmViewHolder(textView);
-        }
-        catch (Exception e)
-        {
-            System.out.print(e);
-            throw e;
-        }
+        // Return a new holder instance
+        AlarmViewHolder viewHolder = new AlarmViewHolder(contactView);
+        return viewHolder;
 
-        return alarmViewHolder;
+
+
+
+        //AlarmViewHolder alarmViewHolder = null;
+
+//        try {
+//            //Alarm alarm = (Alarm) LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_alarm_list, parent, false);
+//
+//            //alarmViewHolder = new AlarmViewHolder(alarm);
+//        }
+//        catch (Exception e)
+//        {
+//            System.out.print(e);
+//            throw e;
+//        }
+//
+//        return alarmViewHolder;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position)
     {
-        Alarm a = Alarms.get(position);
-        holder.TextView.setText(a.GetAlarmName() + " - " + a.GetAlarmTime());
+        // Get the data model based on position
+        Alarm alarm = Alarms.get(position);
+
+        // Set item views based on your views and data model
+        TextView textView = holder.NameTextView;
+        textView.setText(alarm.GetAlarmName());
+
+        textView = holder.TimeTextView;
+        textView.setText(alarm.GetAlarmTime().toString());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
