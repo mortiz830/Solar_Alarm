@@ -32,7 +32,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View contactView = inflater.inflate(R.layout.activity_alarm_list, parent, false);
+        View contactView = inflater.inflate(R.layout.alarm_list_item, parent, false);
 
         // Return a new holder instance
         AlarmViewHolder viewHolder = new AlarmViewHolder(contactView);

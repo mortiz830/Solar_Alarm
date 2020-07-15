@@ -20,7 +20,7 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder
     {
         super(textView);
 
-        NameTextView = (TextView) itemView.findViewById(R.id.AlarmName);
-        TimeTextView = (TextView) itemView.findViewById(R.id.AlarmTime);
+        NameTextView = (TextView) itemView.findViewById(R.id.alarmName);
+        TimeTextView = (TextView) itemView.findViewById(R.id.alarmTime);
     }
 }
