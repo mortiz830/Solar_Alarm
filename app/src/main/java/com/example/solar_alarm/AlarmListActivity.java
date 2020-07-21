@@ -27,7 +27,7 @@ public class AlarmListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         // MOCKED DATA
-        alarmAdapter = new AlarmAdapter(Alarm.createAlarmList(5));
+        alarmAdapter = new AlarmAdapter(Alarm.createAlarmList(10));
         recyclerView.setAdapter(alarmAdapter);
     }
 }
