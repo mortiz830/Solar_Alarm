@@ -1,8 +1,6 @@
 package com.example.solar_alarm;
 
-import android.content.Context;
 import android.os.Build;
-import android.view.View;
 
 import androidx.annotation.RequiresApi;
 
@@ -31,7 +29,7 @@ public class Alarm
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static ArrayList<Alarm> createContactsList(int numAlarms) {
+    public static ArrayList<Alarm> createAlarmList(int numAlarms) {
         ArrayList<Alarm> contacts = new ArrayList<Alarm>();
         LocalTime now = LocalTime.now();
 

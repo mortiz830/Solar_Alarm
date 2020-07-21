@@ -5,8 +5,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
 /**
  * https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.ViewHolder
  */
@@ -20,7 +18,7 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder
     {
         super(textView);
 
-        NameTextView = (TextView) itemView.findViewById(R.id.alarmName);
-        TimeTextView = (TextView) itemView.findViewById(R.id.alarmTime);
+        NameTextView = itemView.findViewById(R.id.alarmName);
+        TimeTextView = itemView.findViewById(R.id.alarmTime);
     }
 }

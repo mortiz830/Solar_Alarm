@@ -3,7 +3,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,24 +36,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
         // Return a new holder instance
         AlarmViewHolder viewHolder = new AlarmViewHolder(contactView);
         return viewHolder;
-
-
-
-
-        //AlarmViewHolder alarmViewHolder = null;
-
-//        try {
-//            //Alarm alarm = (Alarm) LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_alarm_list, parent, false);
-//
-//            //alarmViewHolder = new AlarmViewHolder(alarm);
-//        }
-//        catch (Exception e)
-//        {
-//            System.out.print(e);
-//            throw e;
-//        }
-//
-//        return alarmViewHolder;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
