@@ -1,9 +1,12 @@
 package com.example.solar_alarm;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +19,7 @@ import java.util.List;
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
 {
     private List<Alarm> Alarms;
+    Context context;
 
     public AlarmAdapter(List<Alarm> alarms)
     {
@@ -27,7 +31,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
     @Override
     public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        Context context = parent.getContext();
+        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
@@ -51,6 +55,14 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
 
         textView = holder.TimeTextView;
         textView.setText(alarm.GetAlarmTime().toString());
+        holder.parent_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, SetAlarmActivity.class);
+                context.startActivity(intent);
+            }
+        });
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
