@@ -67,10 +67,16 @@
 
     </LinearLayout>
     <EditText
+        android:id="@+id/alarmName"
         android:layout_width="match_parent"
         android:layout_marginHorizontal="10dp"
         android:layout_height="wrap_content"
         android:padding="25dp"
         android:hint="Alarm Name"/>
+    <Button
+        android:id="@+id/setAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Alarm" />
 
 </LinearLayout>
