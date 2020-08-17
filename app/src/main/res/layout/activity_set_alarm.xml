@@ -66,30 +66,11 @@
             android:text="S" />
 
     </LinearLayout>
-
     <EditText
-        android:id="@+id/almName"
         android:layout_width="match_parent"
         android:layout_marginHorizontal="10dp"
         android:layout_height="wrap_content"
         android:padding="25dp"
         android:hint="Alarm Name"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-    <Button
-        android:id="@+id/save"
-        android:text="Save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <Button
-        android:id="@+id/cancel"
-        android:text="Cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    </LinearLayout>
-
 
 </LinearLayout>
