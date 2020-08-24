@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * https://developer.android.com/guide/topics/ui/layout/recyclerview
  * */
 public class AlarmListActivity extends AppCompatActivity {
-    private ArrayList<Alarm> mAlarm;
+    private ArrayList<Alarm>           mAlarm;
     private RecyclerView               recyclerView;
     private RecyclerView.Adapter       alarmAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -65,8 +65,9 @@ public class AlarmListActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void addNewAlarm(String l1, String s1){
         int currPosition = mAlarm.size();
-
-        Alarm a = new Alarm(l1, s1);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("h:mm a");
+        LocalTime time = LocalTime.parse(l1, dtf);
+        Alarm a = new Alarm(time, s1);
         mAlarm.add(currPosition, a);
         alarmAdapter.notifyItemInserted(currPosition);
     }
