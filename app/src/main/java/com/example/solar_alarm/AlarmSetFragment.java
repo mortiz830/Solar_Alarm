@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.time.LocalTime;
@@ -53,6 +54,7 @@ public class AlarmSetFragment extends Fragment {
                 AlarmListActivity al1 = (AlarmListActivity) getActivity();
                 al1.addNewAlarm(timeText,alarmName);
 
+                System.out.println(timeText);
                 getFragmentManager().beginTransaction().remove(AlarmSetFragment.this).commit();
             }
         });

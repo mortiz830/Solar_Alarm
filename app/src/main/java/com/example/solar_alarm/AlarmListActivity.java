@@ -16,11 +16,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 /**
  * https://developer.android.com/guide/topics/ui/layout/recyclerview
  * */
 public class AlarmListActivity extends AppCompatActivity {
+    private ArrayList<Alarm> mAlarm;
     private RecyclerView               recyclerView;
     private RecyclerView.Adapter       alarmAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -34,6 +37,11 @@ public class AlarmListActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycleViewer);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+        // MOCKED DATA
+        mAlarm = new ArrayList<>();
+        alarmAdapter = new AlarmAdapter(mAlarm);
+        recyclerView.setAdapter(alarmAdapter);
 
         // FRAGMENTS
         final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -51,14 +59,16 @@ public class AlarmListActivity extends AppCompatActivity {
             }
         });
 
-        // MOCKED DATA
-        alarmAdapter = new AlarmAdapter(Alarm.createAlarmList());
-        recyclerView.setAdapter(alarmAdapter);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void addNewAlarm(String l1, String s1){
+        int currPosition = mAlarm.size();
 
+        Alarm a = new Alarm(l1, s1);
+        mAlarm.add(currPosition, a);
+        alarmAdapter.notifyItemInserted(currPosition);
     }
 }
 

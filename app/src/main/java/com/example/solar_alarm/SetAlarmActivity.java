@@ -32,17 +32,17 @@ public class SetAlarmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
 
-        timePicker = findViewById(R.id.TimePicker);
-        alarmName = findViewById(R.id.alarmName);
-        setAlarm = findViewById(R.id.setAlarm);
-        setAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hour = timePicker.getCurrentHour();
-                min = timePicker.getCurrentMinute();
-                onTimeSet(timePicker, hour, min);
-            }
-        });
+//        timePicker = findViewById(R.id.TimePicker);
+//        alarmName = findViewById(R.id.alarmName);
+//        setAlarm = findViewById(R.id.setAlarm);
+//        setAlarm.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                hour = timePicker.getCurrentHour();
+//                min = timePicker.getCurrentMinute();
+//                onTimeSet(timePicker, hour, min);
+//            }
+//        });
     }
 
     public void onTimeSet(TimePicker timePicker, int hour, int min){
