@@ -1,6 +1,5 @@
 package com.example.solar_alarm;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -13,10 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -67,8 +64,12 @@ public class AlarmListActivity extends AppCompatActivity {
         int currPosition = mAlarm.size();
 
         Alarm a = new Alarm(l1, s1);
-        mAlarm.add(currPosition, a);
-        alarmAdapter.notifyItemInserted(currPosition);
+        mAlarm.add(currPosition, a);  // add to list's tail
+        alarmAdapter.notifyItemInserted(currPosition);  // refresh view
+
+        //  safe to file
+        String json = new Gson().toJson(mAlarm);   // create json string by serializing
+        // create/overwrite file to disk
     }
 }
 
