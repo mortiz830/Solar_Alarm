@@ -79,11 +79,13 @@ public class AlarmListActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void SaveToFile()
     {
-        String json = new Gson().toJson(mAlarm);   // create json string by serializing
+        // create json string by serializing
+        String json = new Gson().toJson(mAlarm);
+
+        // Get file instance
+        File saveFile = new File(this.getBaseContext().getDataDir(), SaveFile);
 
         // create/overwrite file to disk
-        this.getApplicationContext();
-        File saveFile = new File(this.getBaseContext().getDataDir(), SaveFile);
     }
 }
 
