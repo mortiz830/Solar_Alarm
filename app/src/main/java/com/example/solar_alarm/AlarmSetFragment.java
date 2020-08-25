@@ -54,7 +54,6 @@ public class AlarmSetFragment extends Fragment {
                 AlarmListActivity al1 = (AlarmListActivity) getActivity();
                 al1.addNewAlarm(timeText,alarmName);
 
-                System.out.println(timeText);
                 getFragmentManager().beginTransaction().remove(AlarmSetFragment.this).commit();
             }
         });

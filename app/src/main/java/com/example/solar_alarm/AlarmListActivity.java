@@ -1,5 +1,5 @@
 package com.example.solar_alarm;
-
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -14,16 +14,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
  * https://developer.android.com/guide/topics/ui/layout/recyclerview
  * */
 public class AlarmListActivity extends AppCompatActivity {
-    private ArrayList<Alarm> mAlarm;
+    private ArrayList<Alarm>           mAlarm;
     private RecyclerView               recyclerView;
     private RecyclerView.Adapter       alarmAdapter;
     private RecyclerView.LayoutManager layoutManager;
+
+    private final String SaveFile = "SolarAlarmData.json";
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -60,16 +65,25 @@ public class AlarmListActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void addNewAlarm(String l1, String s1){
+    public void addNewAlarm(String localTimeString, String alarmName){
         int currPosition = mAlarm.size();
-
-        Alarm a = new Alarm(l1, s1);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("h:mm a");
+        LocalTime time = LocalTime.parse(localTimeString, dtf);
+        Alarm a = new Alarm(time, alarmName);
         mAlarm.add(currPosition, a);  // add to list's tail
         alarmAdapter.notifyItemInserted(currPosition);  // refresh view
 
-        //  safe to file
+        SaveToFile();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void SaveToFile()
+    {
         String json = new Gson().toJson(mAlarm);   // create json string by serializing
+
         // create/overwrite file to disk
+        this.getApplicationContext();
+        File saveFile = new File(this.getBaseContext().getDataDir(), SaveFile);
     }
 }
 

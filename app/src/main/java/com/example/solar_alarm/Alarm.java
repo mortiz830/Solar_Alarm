@@ -12,16 +12,16 @@ import java.util.ArrayList;
 public class Alarm implements Serializable
 {
     private static ArrayList<Alarm> contacts = new ArrayList<Alarm>(1);
-    private String AlarmTime;
+    private LocalTime AlarmTime;
     private String    AlarmName;
 
-    public Alarm(String alarmTime, String alarmName)
+    public Alarm(LocalTime alarmTime, String alarmName)
     {
         AlarmTime = alarmTime;
         AlarmName = alarmName;
     }
 
-    public String GetAlarmTime()
+    public LocalTime GetAlarmTime()
     {
         return AlarmTime;
     }
@@ -35,14 +35,14 @@ public class Alarm implements Serializable
     public static ArrayList<Alarm> createAlarmList() {
 
 
-        String time = "";
+        LocalTime time = LocalTime.now();
         contacts.add(new Alarm(time, "New"));
 
         return contacts;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static ArrayList<Alarm> updateAlarmList(String l1, String s1){
+    public static ArrayList<Alarm> updateAlarmList(LocalTime l1, String s1){
 
         //DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_TIME;
         //LocalTime time = LocalTime.parse(l1, formatter);
