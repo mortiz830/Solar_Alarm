@@ -36,6 +36,7 @@ public class AlarmSetFragment extends Fragment {
         tp1 = v.findViewById(R.id.TimePicker);
         save = v.findViewById(R.id.save);
         cancel = v.findViewById(R.id.cancel);
+
         save.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -53,7 +54,7 @@ public class AlarmSetFragment extends Fragment {
 
                 AlarmListActivity al1 = (AlarmListActivity) getActivity();
                 al1.addNewAlarm(timeText,alarmName);
-
+                almName.getText().clear();
                 getFragmentManager().beginTransaction().remove(AlarmSetFragment.this).commit();
             }
         });

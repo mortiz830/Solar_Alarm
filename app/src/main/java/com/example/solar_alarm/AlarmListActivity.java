@@ -15,6 +15,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,6 +33,8 @@ public class AlarmListActivity extends AppCompatActivity {
     private RecyclerView.Adapter       alarmAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
+    private FloatingActionButton fab;
+
     private final String SaveFile = "SolarAlarmData.json";
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -36,6 +43,7 @@ public class AlarmListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_list);
 
+        ReadFromFile();
         recyclerView = findViewById(R.id.recycleViewer);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -50,7 +58,7 @@ public class AlarmListActivity extends AppCompatActivity {
         final AlarmSetFragment alarmSetFragment = new AlarmSetFragment();
 
 
-        final FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,6 +66,7 @@ public class AlarmListActivity extends AppCompatActivity {
                 fragmentTransaction.add(R.id.flFragment, alarmSetFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
+                fab.hide();
             }
         });
 
@@ -72,7 +81,7 @@ public class AlarmListActivity extends AppCompatActivity {
         Alarm a = new Alarm(time, alarmName);
         mAlarm.add(currPosition, a);  // add to list's tail
         alarmAdapter.notifyItemInserted(currPosition);  // refresh view
-
+        fab.show();
         SaveToFile();
     }
 
@@ -81,11 +90,56 @@ public class AlarmListActivity extends AppCompatActivity {
     {
         // create json string by serializing
         String json = new Gson().toJson(mAlarm);
+        FileOutputStream fos = null;
 
         // Get file instance
-        File saveFile = new File(this.getBaseContext().getDataDir(), SaveFile);
+        //File saveFile = new File(this.getBaseContext().getDataDir(), SaveFile);
 
         // create/overwrite file to disk
+        try
+        {
+            fos = this.openFileOutput(SaveFile, Context.MODE_PRIVATE);
+            fos.write(json.getBytes());
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            if(fos != null)
+            {
+                try {
+                    fos.close();
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private String ReadFromFile()
+    {
+        String json = null;
+        try {
+            FileInputStream fis = openFileInput(SaveFile);
+            try {
+                int size = fis.available();
+                byte[] buffer = new byte[size];
+                fis.read(buffer);
+                fis.close();
+                json = new String (buffer, StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 }
 
