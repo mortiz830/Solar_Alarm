@@ -13,12 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -43,13 +45,15 @@ public class AlarmListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_list);
 
-        ReadFromFile();
+        ParseJSON(ReadFromFile());
         recyclerView = findViewById(R.id.recycleViewer);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         // MOCKED DATA
-        mAlarm = new ArrayList<>();
+        if (mAlarm.isEmpty()) {
+            mAlarm = new ArrayList<>();
+        }
         alarmAdapter = new AlarmAdapter(mAlarm);
         recyclerView.setAdapter(alarmAdapter);
 
@@ -140,6 +144,14 @@ public class AlarmListActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return json;
+    }
+
+    private void ParseJSON(String json)
+    {
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<Alarm>>(){}.getType();
+        ArrayList<Alarm> mList = gson.fromJson(json, type);
+        mAlarm = new ArrayList<>(mList);
     }
 }
 
