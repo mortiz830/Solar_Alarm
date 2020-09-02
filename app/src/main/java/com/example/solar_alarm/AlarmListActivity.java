@@ -52,11 +52,14 @@ public class AlarmListActivity extends AppCompatActivity {
             ParseJSON(json);
         }
 
+
+
         recyclerView = findViewById(R.id.recycleViewer);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // MOCKED DATA
+        // need to listen for removal notifications to trigger file save.
+
         if (mAlarm == null)
         {
             mAlarm = new ArrayList<>();

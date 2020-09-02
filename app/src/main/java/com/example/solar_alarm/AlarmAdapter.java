@@ -84,7 +84,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
     public void removeItem(Alarm a){
         int currPosition = Alarms.indexOf(a);
         Alarms.remove(a);
-        notifyItemRemoved(currPosition);
-        // init save process...
+        notifyItemRemoved(currPosition);   // init save process... what needs to listen and how to make it listen??
     }
 }
