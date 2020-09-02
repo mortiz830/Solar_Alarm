@@ -35,7 +35,7 @@ public class AlarmListActivity extends AppCompatActivity {
     private RecyclerView.Adapter       alarmAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    private FloatingActionButton fab;
+    private FloatingActionButton floatingActionButton;
 
     private final String SaveFile = "SolarAlarmData.json";
 
@@ -61,6 +61,7 @@ public class AlarmListActivity extends AppCompatActivity {
         {
             mAlarm = new ArrayList<>();
         }
+
         alarmAdapter = new AlarmAdapter(mAlarm);
         recyclerView.setAdapter(alarmAdapter);
 
@@ -69,15 +70,16 @@ public class AlarmListActivity extends AppCompatActivity {
         final AlarmSetFragment alarmSetFragment = new AlarmSetFragment();
 
 
-        fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton = findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // launch new alarm window and hide button
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.add(R.id.flFragment, alarmSetFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-                fab.hide();
+                floatingActionButton.hide();
             }
         });
     }
@@ -90,7 +92,7 @@ public class AlarmListActivity extends AppCompatActivity {
         Alarm a = new Alarm(time, alarmName);
         mAlarm.add(currPosition, a);  // add to list's tail
         alarmAdapter.notifyItemInserted(currPosition);  // refresh view
-        fab.show();
+        floatingActionButton.show();
         SaveToFile();
     }
 
@@ -99,16 +101,13 @@ public class AlarmListActivity extends AppCompatActivity {
     {
         // create json string by serializing
         String json = new Gson().toJson(mAlarm);
-        FileOutputStream fos = null;
+        FileOutputStream fileOutputStream = null;
 
-        // Get file instance
-
-
-        // create/overwrite file to disk
         try
         {
-            fos = this.openFileOutput(SaveFile, Context.MODE_PRIVATE);
-            fos.write(json.getBytes());
+            // create/overwrite file to disk
+            fileOutputStream = this.openFileOutput(SaveFile, Context.MODE_PRIVATE);
+            fileOutputStream.write(json.getBytes());
         }
         catch (FileNotFoundException e)
         {
@@ -118,11 +117,12 @@ public class AlarmListActivity extends AppCompatActivity {
         {
             e.printStackTrace();
         }
-        finally {
-            if(fos != null)
+        finally
+        {
+            if(fileOutputStream != null)
             {
                 try {
-                    fos.close();
+                    fileOutputStream.close();
                 } catch (IOException e)
                 {
                     e.printStackTrace();

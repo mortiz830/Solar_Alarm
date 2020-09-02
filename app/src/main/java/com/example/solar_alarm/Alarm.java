@@ -32,9 +32,8 @@ public class Alarm implements Serializable
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static ArrayList<Alarm> createAlarmList() {
-
-
+    public static ArrayList<Alarm> createAlarmList()
+    {
         LocalTime time = LocalTime.now();
         contacts.add(new Alarm(time, "New"));
 
@@ -42,13 +41,12 @@ public class Alarm implements Serializable
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static ArrayList<Alarm> updateAlarmList(LocalTime l1, String s1){
-
+    public static ArrayList<Alarm> updateAlarmList(LocalTime l1, String s1)
+    {
         //DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_TIME;
         //LocalTime time = LocalTime.parse(l1, formatter);
         contacts.add(new Alarm(l1, s1));
 
         return contacts;
-
     }
 }

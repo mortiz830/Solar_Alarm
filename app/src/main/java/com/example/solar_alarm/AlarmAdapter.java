@@ -58,8 +58,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
         holder.parent_layout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                Toast.makeText(context, "Alarm '"+ alarm.GetAlarmName() +"' deleted", Toast.LENGTH_LONG).show();
                 removeItem(alarm);
-                Toast.makeText(context, "Alarm deleted", Toast.LENGTH_LONG).show();
+
                 return true;
             }
         });
@@ -84,5 +85,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
         int currPosition = Alarms.indexOf(a);
         Alarms.remove(a);
         notifyItemRemoved(currPosition);
+        // init save process...
     }
 }
