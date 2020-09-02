@@ -4,11 +4,14 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import java.io.Serializable;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class Alarm
+public class Alarm implements Serializable
 {
+    private static ArrayList<Alarm> contacts = new ArrayList<Alarm>(1);
     private LocalTime AlarmTime;
     private String    AlarmName;
 
@@ -29,14 +32,23 @@ public class Alarm
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static ArrayList<Alarm> createAlarmList(int numAlarms) {
-        ArrayList<Alarm> contacts = new ArrayList<Alarm>();
-        LocalTime now = LocalTime.now();
+    public static ArrayList<Alarm> createAlarmList() {
 
-        for (int i = 0; i <= numAlarms - 1; i++) {
-            contacts.add(new Alarm(now.plusHours(i*24), "Alarm " + i));
-        }
+
+        LocalTime time = LocalTime.now();
+        contacts.add(new Alarm(time, "New"));
 
         return contacts;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static ArrayList<Alarm> updateAlarmList(LocalTime l1, String s1){
+
+        //DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_TIME;
+        //LocalTime time = LocalTime.parse(l1, formatter);
+        contacts.add(new Alarm(l1, s1));
+
+        return contacts;
+
     }
 }
