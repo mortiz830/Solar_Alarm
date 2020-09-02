@@ -45,13 +45,20 @@ public class AlarmListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_list);
 
-        ParseJSON(ReadFromFile());
+        String json = ReadFromFile();
+
+        if (json != null)
+        {
+            ParseJSON(json);
+        }
+
         recyclerView = findViewById(R.id.recycleViewer);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         // MOCKED DATA
-        if (mAlarm.isEmpty()) {
+        if (mAlarm == null)
+        {
             mAlarm = new ArrayList<>();
         }
         alarmAdapter = new AlarmAdapter(mAlarm);
@@ -73,8 +80,6 @@ public class AlarmListActivity extends AppCompatActivity {
                 fab.hide();
             }
         });
-
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -97,7 +102,7 @@ public class AlarmListActivity extends AppCompatActivity {
         FileOutputStream fos = null;
 
         // Get file instance
-        //File saveFile = new File(this.getBaseContext().getDataDir(), SaveFile);
+
 
         // create/overwrite file to disk
         try
@@ -129,20 +134,46 @@ public class AlarmListActivity extends AppCompatActivity {
     private String ReadFromFile()
     {
         String json = null;
-        try {
-            FileInputStream fis = openFileInput(SaveFile);
-            try {
-                int size = fis.available();
-                byte[] buffer = new byte[size];
-                fis.read(buffer);
-                fis.close();
-                json = new String (buffer, StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                e.printStackTrace();
+
+        try
+        {
+            File file = new File("/data/data/com.example.solar_alarm/files/" + SaveFile);
+
+            if (file.exists())
+            {
+                FileInputStream fileInputStream = openFileInput(SaveFile);
+
+                try
+                {
+                    int size = fileInputStream.available();
+
+                    if (size > 0)
+                    {
+                        byte[] buffer = new byte[size];
+                        fileInputStream.read(buffer);
+                        fileInputStream.close();
+                        json = new String(buffer, StandardCharsets.UTF_8);
+                    }
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
             }
-        } catch (FileNotFoundException e) {
+            else
+            {
+                file.createNewFile();
+            }
+        }
+        catch (FileNotFoundException e)
+        {
             e.printStackTrace();
         }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
         return json;
     }
 
