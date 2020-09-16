@@ -35,7 +35,7 @@ public class AlarmListActivity extends AppCompatActivity {
     private RecyclerView.Adapter       alarmAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    private FloatingActionButton fab;
+    private FloatingActionButton floatingActionButton;
 
     private final String SaveFile = "SolarAlarmData.json";
 
@@ -69,15 +69,15 @@ public class AlarmListActivity extends AppCompatActivity {
         final AlarmSetFragment alarmSetFragment = new AlarmSetFragment();
 
 
-        fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton = findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.add(R.id.flFragment, alarmSetFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-                fab.hide();
+                floatingActionButton.hide();
             }
         });
     }
@@ -90,19 +90,16 @@ public class AlarmListActivity extends AppCompatActivity {
         Alarm a = new Alarm(time, alarmName);
         mAlarm.add(currPosition, a);  // add to list's tail
         alarmAdapter.notifyItemInserted(currPosition);  // refresh view
-        fab.show();
+        floatingActionButton.show();
         SaveToFile();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void SaveToFile()
+    public void SaveToFile()
     {
         // create json string by serializing
         String json = new Gson().toJson(mAlarm);
         FileOutputStream fos = null;
-
-        // Get file instance
-
 
         // create/overwrite file to disk
         try
