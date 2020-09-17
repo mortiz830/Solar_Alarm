@@ -2,7 +2,6 @@ package com.example.solar_alarm;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -72,12 +72,13 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
         });
 
         holder.parent_layout.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view)
             {
                 Intent intent = new Intent(context, UpdateAlarmActivity.class);
                 intent.putExtra("AlarmName",Alarms.get(position).GetAlarmName());
-                //intent.putExtra("AlarmTime",Alarms.get(position));
+                intent.putExtra("AlarmTime",Alarms.get(position).GetAlarmTime().toString());
                 context.startActivity(intent);
             }
         });
