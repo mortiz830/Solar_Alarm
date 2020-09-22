@@ -77,8 +77,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
             public void onClick(View view)
             {
                 Intent intent = new Intent(context, UpdateAlarmActivity.class);
-                intent.putExtra("AlarmName",Alarms.get(position).GetAlarmName());
-                intent.putExtra("AlarmTime",Alarms.get(position).GetAlarmTime().toString());
+                intent.putExtra("AlarmName", Alarms.get(position).GetAlarmName());
+                intent.putExtra("AlarmTime", Alarms.get(position).GetAlarmTime().toString());
+                intent.putExtra("AlarmPosition", Integer.toString(position));
                 context.startActivity(intent);
             }
         });
@@ -97,11 +98,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
         Alarms.remove(alarm);
         notifyItemRemoved(currPosition);
     }
-
-    public void updateItem(Alarm alarm)
+    public void updateItem(Alarm alarm, int position)
     {
-        int currPosition = Alarms.indexOf(alarm);
-        notifyItemChanged(currPosition);
-
+         Alarms.set(position, alarm);
+         notifyItemChanged(position);
     }
 }
