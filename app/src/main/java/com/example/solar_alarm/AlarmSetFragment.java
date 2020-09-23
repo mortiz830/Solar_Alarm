@@ -41,10 +41,6 @@ public class AlarmSetFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-<<<<<<< HEAD
-
-=======
->>>>>>> master
                 String alarmName = almName.getText().toString();
 
                 currentHr = tp1.getHour();
@@ -56,13 +52,8 @@ public class AlarmSetFragment extends Fragment {
 
                 String timeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
 
-<<<<<<< HEAD
                 AlarmListActivity alarmListActivity = (AlarmListActivity) getActivity();
                 alarmListActivity.addNewAlarm(timeText,alarmName);
-=======
-                AlarmListActivity al1 = (AlarmListActivity) getActivity();
-                al1.addNewAlarm(timeText,alarmName);
->>>>>>> master
                 almName.getText().clear();
                 getFragmentManager().beginTransaction().remove(AlarmSetFragment.this).commit();
             }
