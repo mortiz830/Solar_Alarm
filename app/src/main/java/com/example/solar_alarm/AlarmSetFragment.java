@@ -1,6 +1,9 @@
 package com.example.solar_alarm;
 
-import android.app.TimePickerDialog;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -9,18 +12,14 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.text.DateFormat;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 public class AlarmSetFragment extends Fragment {
@@ -28,6 +27,8 @@ public class AlarmSetFragment extends Fragment {
     EditText almName;
     TimePicker tp1;
     int currentHr, currentMin;
+    //Context context;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,12 +46,13 @@ public class AlarmSetFragment extends Fragment {
 
                 currentHr = tp1.getHour();
                 currentMin = tp1.getMinute();
-                Calendar c = Calendar.getInstance();
-                c.set(Calendar.HOUR_OF_DAY, currentHr);
-                c.set(Calendar.MINUTE, currentMin);
-                c.set(Calendar.SECOND, 0);
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, currentHr);
+                calendar.set(Calendar.MINUTE, currentMin);
+                calendar.set(Calendar.SECOND, 0);
 
-                String timeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+
+                String timeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
 
                 AlarmListActivity alarmListActivity = (AlarmListActivity) getActivity();
                 alarmListActivity.addNewAlarm(timeText,alarmName);
@@ -73,4 +75,16 @@ public class AlarmSetFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
     }
+
+//    private void setAlarm(Calendar calendar)
+//    {
+//        AlarmManager alarmManager;
+//        PendingIntent alarmIntent;
+//
+//        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(this, AlarmReceiver.class);
+//        alarmIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+//
+//        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP,calendar.getTimeInMillis(),alarmIntent);
+//    }
 }

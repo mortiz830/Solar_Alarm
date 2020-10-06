@@ -4,6 +4,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -27,9 +29,6 @@ public class UpdateAlarmActivity extends AppCompatActivity {
     TimePicker tp1;
     int currentHr, currentMin, position;
     String alarmPosition;
-    AlarmListActivity alarmListActivity;
-    AlarmAdapter alarmAdapter;
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -49,12 +48,14 @@ public class UpdateAlarmActivity extends AppCompatActivity {
 
                 currentHr = tp1.getHour();
                 currentMin = tp1.getMinute();
-                Calendar c = Calendar.getInstance();
-                c.set(Calendar.HOUR_OF_DAY, currentHr);
-                c.set(Calendar.MINUTE, currentMin);
-                c.set(Calendar.SECOND, 0);
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, currentHr);
+                calendar.set(Calendar.MINUTE, currentMin);
+                calendar.set(Calendar.SECOND, 0);
 
-                String timeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+                String timeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
+
+                setAlarm(calendar);
 
                 Intent intent = new Intent(UpdateAlarmActivity.this, AlarmListActivity.class);
                 intent.putExtra("AlarmName", alarmName);
@@ -114,5 +115,17 @@ public class UpdateAlarmActivity extends AppCompatActivity {
         almName.setText(AlarmName);
         alarmPosition = AlarmPosition;
         position = Integer.parseInt(alarmPosition);
+    }
+
+    private void setAlarm(Calendar calendar)
+    {
+        AlarmManager alarmManager;
+        PendingIntent alarmIntent;
+
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+
+        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP,calendar.getTimeInMillis(),alarmIntent);
     }
 }

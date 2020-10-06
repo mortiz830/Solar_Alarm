@@ -18,12 +18,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         //Create the content intent for the notification, which launches this activity
-        Intent contentIntent = new Intent(context, SetAlarmActivity.class);
+        Intent contentIntent = new Intent(context, UpdateAlarmActivity.class);
         PendingIntent contentPendingIntent = PendingIntent.getActivity
                 (context, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //Build the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Alarm Channel")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle("Alarm")
                 .setContentText("Alarm Successful")
