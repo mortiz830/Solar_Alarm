@@ -1,5 +1,6 @@
 package com.example.solar_alarm;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -30,12 +31,12 @@ import java.util.ArrayList;
  * https://developer.android.com/guide/topics/ui/layout/recyclerview
  * */
 public class AlarmListActivity extends AppCompatActivity {
-    private ArrayList<Alarm>           mAlarm;
-    private RecyclerView               recyclerView;
-    private RecyclerView.Adapter       alarmAdapter;
+    private ArrayList<Alarm> mAlarm;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter alarmAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    private FloatingActionButton fab;
+    private FloatingActionButton floatingActionButton;
 
     private final String SaveFile = "SolarAlarmData.json";
 
@@ -64,67 +65,91 @@ public class AlarmListActivity extends AppCompatActivity {
         alarmAdapter = new AlarmAdapter(mAlarm);
         recyclerView.setAdapter(alarmAdapter);
 
+        if(savedInstanceState == null)
+        {
+            Bundle extras = getIntent().getExtras();
+            if (extras == null)
+            {
+                //Extra bundle is null
+            }
+            else
+            {
+                String method = extras.getString("methodName");
+
+                if (method.equals("UpdateAlarm"))
+                {
+                    String AlarmName = getIntent().getStringExtra("AlarmName");
+                    String AlarmTime = getIntent().getStringExtra("AlarmTime");
+                    String AlarmPosition = getIntent().getStringExtra("AlarmPosition");
+                    int position = Integer.parseInt(AlarmPosition);
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("h:mm a");
+                    LocalTime time = LocalTime.parse(AlarmTime, dtf);
+                    Alarm alarm = new Alarm(time, AlarmName);
+                    updateAlarm(alarm, position);
+                }
+            }
+        }
+
         // FRAGMENTS
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final AlarmSetFragment alarmSetFragment = new AlarmSetFragment();
 
 
-        fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton = findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.add(R.id.flFragment, alarmSetFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-                fab.hide();
+                floatingActionButton.hide();
             }
         });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void addNewAlarm(String localTimeString, String alarmName){
+    public void addNewAlarm(String localTimeString, String alarmName)
+    {
         int currPosition = mAlarm.size();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("h:mm a");
         LocalTime time = LocalTime.parse(localTimeString, dtf);
-        Alarm a = new Alarm(time, alarmName);
-        mAlarm.add(currPosition, a);  // add to list's tail
+        Alarm alarm = new Alarm(time, alarmName);
+        mAlarm.add(currPosition, alarm);  // add to list's tail
         alarmAdapter.notifyItemInserted(currPosition);  // refresh view
-        fab.show();
+        floatingActionButton.show();
         SaveToFile();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void SaveToFile()
+    public void updateAlarm(Alarm alarm, int position)
+    {
+        mAlarm.set(position, alarm);
+        alarmAdapter.notifyItemChanged(position, alarm);
+        SaveToFile();
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void SaveToFile()
     {
         // create json string by serializing
         String json = new Gson().toJson(mAlarm);
         FileOutputStream fos = null;
 
-        // Get file instance
-
-
         // create/overwrite file to disk
-        try
-        {
+        try {
             fos = this.openFileOutput(SaveFile, Context.MODE_PRIVATE);
             fos.write(json.getBytes());
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
-            if(fos != null)
-            {
+        } finally {
+            if (fos != null) {
                 try {
                     fos.close();
-                } catch (IOException e)
-                {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -135,42 +160,30 @@ public class AlarmListActivity extends AppCompatActivity {
     {
         String json = null;
 
-        try
-        {
+        try {
             File file = new File("/data/data/com.example.solar_alarm/files/" + SaveFile);
 
-            if (file.exists())
-            {
+            if (file.exists()) {
                 FileInputStream fileInputStream = openFileInput(SaveFile);
 
-                try
-                {
+                try {
                     int size = fileInputStream.available();
 
-                    if (size > 0)
-                    {
+                    if (size > 0) {
                         byte[] buffer = new byte[size];
                         fileInputStream.read(buffer);
                         fileInputStream.close();
                         json = new String(buffer, StandardCharsets.UTF_8);
                     }
-                }
-                catch (IOException e)
-                {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-            else
-            {
+            } else {
                 file.createNewFile();
             }
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -180,7 +193,8 @@ public class AlarmListActivity extends AppCompatActivity {
     private void ParseJSON(String json)
     {
         Gson gson = new Gson();
-        Type type = new TypeToken<ArrayList<Alarm>>(){}.getType();
+        Type type = new TypeToken<ArrayList<Alarm>>() {
+        }.getType();
         ArrayList<Alarm> mList = gson.fromJson(json, type);
         mAlarm = new ArrayList<>(mList);
     }
