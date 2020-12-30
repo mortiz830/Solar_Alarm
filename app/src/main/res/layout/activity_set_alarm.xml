@@ -20,14 +20,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/sun"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="S" />
+            android:clickable="true"
+            android:text="Su" />
 
         <Button
             android:id="@+id/mon"
@@ -39,7 +40,7 @@
             android:id="@+id/tue"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="T" />
+            android:text="Tu" />
 
         <Button
             android:id="@+id/wed"
@@ -51,7 +52,7 @@
             android:id="@+id/thur"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="T" />
+            android:text="Th" />
 
         <Button
             android:id="@+id/fri"
@@ -63,7 +64,7 @@
             android:id="@+id/sat"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="S" />
+            android:text="Sa" />
 
     </LinearLayout>
     <EditText

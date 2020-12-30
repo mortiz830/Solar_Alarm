@@ -23,7 +23,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 public class AlarmSetFragment extends Fragment {
-    Button save, cancel;
+    Button save, cancel, sun, mon, tues, wed ,thurs, fri, sat;
     EditText almName;
     TimePicker tp1;
     int currentHr, currentMin;
@@ -37,6 +37,13 @@ public class AlarmSetFragment extends Fragment {
         tp1 = v.findViewById(R.id.TimePicker);
         save = v.findViewById(R.id.save);
         cancel = v.findViewById(R.id.cancel);
+        sun = v.findViewById(R.id.sun);
+        mon = v.findViewById(R.id.mon;
+        tues = v.findViewById(R.id.tue);
+        wed = v.findViewById(R.id.wed);
+        thurs = v.findViewById(R.id.thur);
+        fri = v.findViewById(R.id.fri);
+        sat = v.findViewById(R.id.sat);
 
         save.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
