@@ -1,15 +1,10 @@
 package com.example.solar_alarm;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.widget.Toast;
-
-import androidx.core.app.NotificationCompat;
 
 import java.util.Calendar;
 
@@ -29,7 +24,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
             String toastText = String.format("Alarm Reboot");
             Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show();
-            startRescheduleAlarmsService(context);
+//            startRescheduleAlarmsService(context);
         }
         else {
             String toastText = String.format("Alarm Received");
@@ -95,14 +90,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    private void startRescheduleAlarmsService(Context context) {
-        Intent intentService = new Intent(context, RescheduleAlarmsService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-            context.startForegroundService(intentService);
-        }
-        else {
-                context.startService(intentService);
-        }
-    }
+//    private void startRescheduleAlarmsService(Context context) {
+//        Intent intentService = new Intent(context, RescheduleAlarmsService.class);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+//        {
+//            context.startForegroundService(intentService);
+//        }
+//        else {
+//                context.startService(intentService);
+//        }
+//    }
 }

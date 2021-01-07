@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,11 +21,13 @@ import java.util.List;
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
  {
     private List<Alarm> Alarms;
+    private OnToggleAlarmListener listener;
     Context context;
 
-    public AlarmAdapter(List<Alarm> alarms)
+    public AlarmAdapter(OnToggleAlarmListener listener)
     {
-        Alarms = alarms;
+        this.Alarms = new ArrayList<Alarm>();
+        this.listener = listener;
     }
 
     // Create new views (invoked by the layout manager)
@@ -33,11 +35,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
     @Override
     public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-
         // Inflate the custom layout
-        View contactView = inflater.inflate(R.layout.alarm_list_item, parent, false);
+        View contactView = LayoutInflater.from(parent.getContext()).inflate(R.layout.alarm_list_item, parent, false);
 
         // Return a new holder instance
         AlarmViewHolder viewHolder = new AlarmViewHolder(contactView);
@@ -53,16 +52,16 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
 
         // Set item views based on your views and data model
         TextView textView = holder.NameTextView;
-        textView.setText(alarm.GetAlarmName());
+        textView.setText(alarm.getTitle());
 
         textView = holder.TimeTextView;
-        textView.setText(alarm.GetAlarmTime().toString());
+        //textView.setText(alarm.GetAlarmTime().toString());
         holder.parent_layout.setOnLongClickListener(new View.OnLongClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public boolean onLongClick(View v) {
                 removeItem(alarm);
-                Toast.makeText(context, "Alarm " + alarm.GetAlarmName() + " deleted", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Alarm " + alarm.getTitle() + " deleted", Toast.LENGTH_LONG).show();
                 if(context instanceof AlarmListActivity)
                 {
                     ((AlarmListActivity)context).SaveToFile();
@@ -77,8 +76,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmViewHolder>
             public void onClick(View view)
             {
                 Intent intent = new Intent(context, UpdateAlarmActivity.class);
-                intent.putExtra("AlarmName", Alarms.get(position).GetAlarmName());
-                intent.putExtra("AlarmTime", Alarms.get(position).GetAlarmTime().toString());
+                intent.putExtra("AlarmName", Alarms.get(position).getTitle());
+                //intent.putExtra("AlarmTime", Alarms.get(position).GetAlarmTime().toString());
                 intent.putExtra("AlarmPosition", Integer.toString(position));
                 context.startActivity(intent);
             }
