@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
     private AlarmRecycleViewAdapter alarmRecyclerViewAdapter;
     private AlarmListViewModel alarmsListViewModel;
     private RecyclerView alarmsRecyclerView;
-    private Button addAlarm;
+    private FloatingActionButton addAlarm;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
         addAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_createAlarmFragment);
+                Navigation.findNavController(v).navigate(R.id.action_alarmListActivity_to_createAlarmFragment);
             }
         });
 

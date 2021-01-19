@@ -12,9 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.RingActivity"></activity>
-        <activity android:name=".UpdateAlarmActivity" />
-        <activity android:name=".SetAlarmActivity" />
-        <activity android:name=".MainActivity" />
         <activity android:name=".Activities.AlarmListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
