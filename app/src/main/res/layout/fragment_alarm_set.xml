@@ -18,6 +18,12 @@
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="0dp" />
 
+    <CheckBox
+        android:id="@+id/recurring"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Recurring" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

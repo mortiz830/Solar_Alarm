@@ -1,9 +1,5 @@
 package com.example.solar_alarm;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -18,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
+
+import com.example.solar_alarm.Activities.AlarmListActivity;
 
 import java.text.DateFormat;
 import java.util.Calendar;

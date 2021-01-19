@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.solar_alarm">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,10 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UpdateAlarmActivity"></activity>
+        <activity android:name=".Activities.RingActivity"></activity>
+        <activity android:name=".UpdateAlarmActivity" />
         <activity android:name=".SetAlarmActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".AlarmListActivity">
+        <activity android:name=".Activities.AlarmListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".BroadcastReceiver.AlarmReceiver" />
     </application>
 
 </manifest>
