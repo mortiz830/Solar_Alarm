@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SetAlarmActivity"
     android:orientation="vertical"
     android:background="@color/cardview_light_background">
 
@@ -25,52 +24,68 @@
         android:text="Recurring" />
 
     <LinearLayout
+        android:id="@+id/fragment_createalarm_recurring_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:visibility="gone">
 
-        <Button
+        <ToggleButton
             android:id="@+id/sun"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="S" />
+            android:text="S"
+            android:textOn="S"
+            android:textOff="S"/>
 
-        <Button
+        <ToggleButton
             android:id="@+id/mon"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="M" />
+            android:text="M"
+            android:textOn="M"
+            android:textOff="M"/>
 
-        <Button
+        <ToggleButton
             android:id="@+id/tue"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="T" />
+            android:text="T"
+            android:textOn="T"
+            android:textOff="T"/>
 
-        <Button
+        <ToggleButton
             android:id="@+id/wed"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="W" />
+            android:text="W"
+            android:textOn="W"
+            android:textOff="W"/>
 
-        <Button
+        <ToggleButton
             android:id="@+id/thur"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="T" />
+            android:text="T"
+            android:textOn="T"
+            android:textOff="T"/>
 
-        <Button
+        <ToggleButton
             android:id="@+id/fri"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="F" />
+            android:text="F"
+            android:textOn="F"
+            android:textOff="F"/>
 
-        <Button
+        <ToggleButton
             android:id="@+id/sat"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="S" />
+            android:text="S"
+            android:textOn="S"
+            android:textOff="S"/>
 
     </LinearLayout>
 

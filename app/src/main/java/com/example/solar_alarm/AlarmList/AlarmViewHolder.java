@@ -28,7 +28,7 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder {
         alarmStarted = itemView.findViewById(R.id.item_alarm_started);
         alarmRecurring = itemView.findViewById(R.id.item_alarm_recurring);
         alarmRecurringDays = itemView.findViewById(R.id.item_alarm_recurringDays);
-        alarmName = itemView.findViewById(R.id.alarmName);
+        alarmName = itemView.findViewById(R.id.item_alarm_title);
 
         this.listener = listener;
     }
