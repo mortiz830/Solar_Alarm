@@ -25,7 +25,7 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
     @NonNull
     @Override
     public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.alarm_list_item, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_alarm, parent, false);
         return new AlarmViewHolder(itemView, listener);
     }
 
@@ -51,3 +51,4 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
         holder.alarmStarted.setOnCheckedChangeListener(null);
     }
 }
+

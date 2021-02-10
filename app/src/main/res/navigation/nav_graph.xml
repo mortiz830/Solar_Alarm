@@ -9,9 +9,9 @@
         android:id="@+id/alarmsListFragment"
         android:name="com.example.solar_alarm.AlarmList.AlarmListFragment"
         android:label="fragment_allalarms"
-        tools:layout="@layout/activity_alarm_list" >
+        tools:layout="@layout/fragment_listalarms" >
         <action
-            android:id="@+id/action_alarmListActivity_to_createAlarmFragment"
+            android:id="@+id/action_alarmsListFragment_to_createAlarmFragment"
             app:destination="@id/createAlarmFragment" />
     </fragment>
     <fragment

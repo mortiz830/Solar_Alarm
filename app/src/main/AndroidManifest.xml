@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".Activities.AlarmListActivity">
+        <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,9 +22,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activities.RingActivity"></activity>
+        <activity android:name=".Activities.RingActivity">
+        </activity>
 
-        <receiver android:name=".BroadcastReceiver.AlarmReceiver">
+        <receiver android:name=".BroadcastReceiver.AlarmBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

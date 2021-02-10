@@ -11,22 +11,20 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.example.solar_alarm.BroadcastReceiver.AlarmReceiver;
-
+import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver;
 import com.example.solar_alarm.CreateAlarm.DayUtil;
 
 import java.util.Calendar;
 
-import static com.example.solar_alarm.BroadcastReceiver.AlarmReceiver.FRIDAY;
-import static com.example.solar_alarm.BroadcastReceiver.AlarmReceiver.MONDAY;
-import static com.example.solar_alarm.BroadcastReceiver.AlarmReceiver.RECURRING;
-import static com.example.solar_alarm.BroadcastReceiver.AlarmReceiver.SATURDAY;
-import static com.example.solar_alarm.BroadcastReceiver.AlarmReceiver.SUNDAY;
-import static com.example.solar_alarm.BroadcastReceiver.AlarmReceiver.THURSDAY;
-import static com.example.solar_alarm.BroadcastReceiver.AlarmReceiver.TITLE;
-import static com.example.solar_alarm.BroadcastReceiver.AlarmReceiver.TUESDAY;
-import static com.example.solar_alarm.BroadcastReceiver.AlarmReceiver.WEDNESDAY;
-
+import static com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver.FRIDAY;
+import static com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver.MONDAY;
+import static com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver.RECURRING;
+import static com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver.SATURDAY;
+import static com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver.SUNDAY;
+import static com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver.THURSDAY;
+import static com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver.TITLE;
+import static com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver.TUESDAY;
+import static com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver.WEDNESDAY;
 
 @Entity(tableName = "alarm_table")
 public class Alarm {
@@ -117,7 +115,7 @@ public class Alarm {
     public void schedule(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        Intent intent = new Intent(context, AlarmReceiver.class);
+        Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
         intent.putExtra(RECURRING, recurring);
         intent.putExtra(MONDAY, monday);
         intent.putExtra(TUESDAY, tuesday);
@@ -175,7 +173,7 @@ public class Alarm {
 
     public void cancelAlarm(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, AlarmReceiver.class);
+        Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
         PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, alarmId, intent, 0);
         alarmManager.cancel(alarmPendingIntent);
         this.started = false;

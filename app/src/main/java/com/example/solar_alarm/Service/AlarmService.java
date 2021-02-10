@@ -8,15 +8,16 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.example.solar_alarm.Activities.RingActivity;
 import com.example.solar_alarm.R;
+import com.example.solar_alarm.Activities.RingActivity;
 
 import static com.example.solar_alarm.Application.App.CHANNEL_ID;
-import static com.example.solar_alarm.BroadcastReceiver.AlarmReceiver.TITLE;
+import static com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver.TITLE;
 
 public class AlarmService extends Service {
     private MediaPlayer mediaPlayer;

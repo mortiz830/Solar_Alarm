@@ -1,17 +1,26 @@
 package com.example.solar_alarm.BroadcastReceiver;
 
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
+import androidx.lifecycle.Observer;
+
+import com.example.solar_alarm.Data.Alarm;
+import com.example.solar_alarm.Data.AlarmRepository;
 import com.example.solar_alarm.Service.AlarmService;
 import com.example.solar_alarm.Service.RescheduleAlarmService;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
-public class AlarmReceiver extends BroadcastReceiver {
+public class AlarmBroadcastReceiver extends BroadcastReceiver {
     public static final String MONDAY = "MONDAY";
     public static final String TUESDAY = "TUESDAY";
     public static final String WEDNESDAY = "WEDNESDAY";

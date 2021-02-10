@@ -10,7 +10,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
-import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,8 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
-import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.R;
+import com.example.solar_alarm.Data.Alarm;
 
 import java.util.Random;
 
@@ -27,20 +26,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CreateAlarmFragment extends Fragment {
-    @BindView(R.id.TimePicker) TimePicker timePicker;
-    @BindView(R.id.almName) EditText alarmName;
-    @BindView(R.id.save) Button save;
-    @BindView(R.id.cancel) Button cancel;
-    @BindView(R.id.recurring) CheckBox recurring;
-    @BindView(R.id.mon) ToggleButton mon;
-    @BindView(R.id.tue) ToggleButton tue;
-    @BindView(R.id.wed) ToggleButton wed;
-    @BindView(R.id.thur) ToggleButton thu;
-    @BindView(R.id.fri) ToggleButton fri;
-    @BindView(R.id.sat) ToggleButton sat;
-    @BindView(R.id.sun) ToggleButton sun;
-    @BindView(R.id.fragment_createalarm_recurring_options)
-    LinearLayout recurringOptions;
+    @BindView(R.id.fragment_createalarm_timePicker) TimePicker timePicker;
+    @BindView(R.id.fragment_createalarm_title) EditText title;
+    @BindView(R.id.fragment_createalarm_scheduleAlarm) Button scheduleAlarm;
+    @BindView(R.id.fragment_createalarm_recurring) CheckBox recurring;
+    @BindView(R.id.fragment_createalarm_checkMon) CheckBox mon;
+    @BindView(R.id.fragment_createalarm_checkTue) CheckBox tue;
+    @BindView(R.id.fragment_createalarm_checkWed) CheckBox wed;
+    @BindView(R.id.fragment_createalarm_checkThu) CheckBox thu;
+    @BindView(R.id.fragment_createalarm_checkFri) CheckBox fri;
+    @BindView(R.id.fragment_createalarm_checkSat) CheckBox sat;
+    @BindView(R.id.fragment_createalarm_checkSun) CheckBox sun;
+    @BindView(R.id.fragment_createalarm_recurring_options) LinearLayout recurringOptions;
 
     private CreateAlarmViewModel createAlarmViewModel;
 
@@ -54,7 +51,7 @@ public class CreateAlarmFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_alarm_set, container, false);
+        View view = inflater.inflate(R.layout.fragment_createalarm, container, false);
 
         ButterKnife.bind(this, view);
 
@@ -69,17 +66,10 @@ public class CreateAlarmFragment extends Fragment {
             }
         });
 
-        save.setOnClickListener(new View.OnClickListener() {
+        scheduleAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 scheduleAlarm();
-                Navigation.findNavController(v).navigate(R.id.action_createAlarmFragment_to_alarmsListFragment);
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 Navigation.findNavController(v).navigate(R.id.action_createAlarmFragment_to_alarmsListFragment);
             }
         });
@@ -94,7 +84,7 @@ public class CreateAlarmFragment extends Fragment {
                 alarmId,
                 TimePickerUtil.getTimePickerHour(timePicker),
                 TimePickerUtil.getTimePickerMinute(timePicker),
-                alarmName.getText().toString(),
+                title.getText().toString(),
                 System.currentTimeMillis(),
                 true,
                 recurring.isChecked(),

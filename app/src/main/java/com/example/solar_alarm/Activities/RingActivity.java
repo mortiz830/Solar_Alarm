@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.solar_alarm.R;
+import com.example.solar_alarm.CreateAlarm.TimePickerUtil;
 import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.Service.AlarmService;
 
@@ -22,9 +23,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RingActivity extends AppCompatActivity {
-    Button dismiss;
-    Button snooze;
-    ImageView clock;
+    @BindView(R.id.activity_ring_dismiss) Button dismiss;
+    @BindView(R.id.activity_ring_snooze) Button snooze;
+    @BindView(R.id.activity_ring_clock) ImageView clock;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
