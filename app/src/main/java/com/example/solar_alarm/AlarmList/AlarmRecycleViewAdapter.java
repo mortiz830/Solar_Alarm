@@ -1,5 +1,6 @@
 package com.example.solar_alarm.AlarmList;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.List;
 public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolder> {
     private List<Alarm> alarms;
     private OnToggleAlarmListener listener;
+    Context context;
 
     public AlarmRecycleViewAdapter(OnToggleAlarmListener listener) {
         this.alarms = new ArrayList<Alarm>();
@@ -27,6 +29,7 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
     @Override
     public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_alarm, parent, false);
+        context = parent.getContext();
         return new AlarmViewHolder(itemView, listener);
     }
 
@@ -37,12 +40,14 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
         holder.parent_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(context,"Small Click", Toast.LENGTH_LONG).show();
             }
         });
 
         holder.parent_layout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                Toast.makeText(context,"Long Click", Toast.LENGTH_LONG).show();
                 return false;
             }
         });
