@@ -47,6 +47,8 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
         holder.parent_layout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                // call delete
+
                 Toast.makeText(context,"Long Click", Toast.LENGTH_LONG).show();
                 return false;
             }
