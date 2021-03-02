@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,6 +51,7 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
         alarmsRecyclerView = view.findViewById(R.id.fragment_listalarms_recylerView);
         alarmsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         alarmsRecyclerView.setAdapter(alarmRecyclerViewAdapter);
+        this.configureOnClickRecyclerView();
 
         addAlarm = view.findViewById(R.id.fragment_listalarms_addAlarm);
         addAlarm.setOnClickListener(new View.OnClickListener() {
@@ -72,4 +74,27 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
             alarmsListViewModel.update(alarm);
         }
     }
+
+    private void configureOnClickRecyclerView(){
+        ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
+                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Alarm alarm = alarmRecyclerViewAdapter.getAlarm(position);
+                        // 2 - Show result in a Toast
+                        Toast.makeText(getContext(), "You clicked on user : "+alarm.getTitle(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+        ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
+                .setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                        Alarm alarm = alarmRecyclerViewAdapter.getAlarm(position);
+                        // 2 - Show result in a Toast
+                        Toast.makeText(getContext(), "You long clicked on user : "+alarm.getTitle(), Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                });
+    }
+
 }
