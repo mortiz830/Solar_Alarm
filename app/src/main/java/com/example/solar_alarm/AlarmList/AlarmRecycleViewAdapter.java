@@ -70,11 +70,12 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
         super.onViewRecycled(holder);
         holder.alarmStarted.setOnCheckedChangeListener(null);
     }
-    public void removeItem(Alarm alarm)
+    public Alarm removeItem(int position)
     {
-        int currPosition = alarms.indexOf(alarm);
+        Alarm alarm = alarms.get(position);
         alarms.remove(alarm);
-        notifyItemRemoved(currPosition);
+        notifyItemRemoved(position);
+        return alarm;
     }
 
     public Alarm getAlarm(int position)

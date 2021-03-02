@@ -92,6 +92,7 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
                         Alarm alarm = alarmRecyclerViewAdapter.getAlarm(position);
                         // 2 - Show result in a Toast
                         Toast.makeText(getContext(), "You long clicked on user : "+alarm.getTitle(), Toast.LENGTH_SHORT).show();
+                        alarmsListViewModel.delete(alarmRecyclerViewAdapter.removeItem(position));
                         return false;
                     }
                 });
