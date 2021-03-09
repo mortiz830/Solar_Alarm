@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_alarmsListFragment_to_createAlarmFragment"
             app:destination="@id/createAlarmFragment" />
+        <action
+            android:id="@+id/action_alarmsListFragment_to_updateAlarmFragment"
+            app:destination="@+id/updateAlarmFragment"/>
     </fragment>
     <fragment
         android:id="@+id/createAlarmFragment"
@@ -22,4 +25,5 @@
             android:id="@+id/action_createAlarmFragment_to_alarmsListFragment"
             app:destination="@id/alarmsListFragment" />
     </fragment>
+
 </navigation>

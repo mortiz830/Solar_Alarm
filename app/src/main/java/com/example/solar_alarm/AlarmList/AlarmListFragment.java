@@ -82,7 +82,9 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                         Alarm alarm = alarmRecyclerViewAdapter.getAlarm(position);
                         // 2 - Show result in a Toast
+                        
                         Toast.makeText(getContext(), "You clicked on user : "+alarm.getTitle(), Toast.LENGTH_SHORT).show();
+                        Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_updateAlarmFragment);
                     }
                 });
         ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
