@@ -25,5 +25,16 @@
             android:id="@+id/action_createAlarmFragment_to_alarmsListFragment"
             app:destination="@id/alarmsListFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/updateAlarmFragment"
+        android:name="com.example.solar_alarm.CreateAlarm.UpdateAlarmFragment"
+        android:label="UpdateAlarmFragment" >
+        <action
+<!--            android:id="@id/action_updateAlarmFragment_to_alarmListFragment"-->
+            app:destination="@+id/alarmsListFragment"/>
+
+    </fragment>
+
+
 
 </navigation>

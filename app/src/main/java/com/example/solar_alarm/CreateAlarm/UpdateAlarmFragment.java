@@ -70,7 +70,7 @@ public class UpdateAlarmFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 updateAlarm();
-                //Navigation.findNavController(v).navigate(R.id.action_updateAlarmFragment_to_alarmsListFragment);
+               //Navigation.findNavController(v).navigate(R.id.action_updateAlarmFragment_to_alarmsListFragment);
             }
         });
 
