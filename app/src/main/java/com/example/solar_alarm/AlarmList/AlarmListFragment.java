@@ -1,5 +1,6 @@
 package com.example.solar_alarm.AlarmList;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +11,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.solar_alarm.CreateAlarm.UpdateAlarmFragment;
 import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.R;
 
@@ -81,9 +84,11 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                         Alarm alarm = alarmRecyclerViewAdapter.getAlarm(position);
-                        // 2 - Show result in a Toast
-                        
-                        Toast.makeText(getContext(), "You clicked on user : "+alarm.getTitle(), Toast.LENGTH_SHORT).show();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("position", position);
+                        UpdateAlarmFragment updateAlarmFragment = new UpdateAlarmFragment();
+                        updateAlarmFragment.setArguments(bundle);
+
                         Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_updateAlarmFragment);
                     }
                 });
@@ -92,8 +97,7 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
                     @Override
                     public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
                         Alarm alarm = alarmRecyclerViewAdapter.getAlarm(position);
-                        // 2 - Show result in a Toast
-                        Toast.makeText(getContext(), "You long clicked on user : "+alarm.getTitle(), Toast.LENGTH_SHORT).show();
+
                         alarmsListViewModel.delete(alarmRecyclerViewAdapter.removeItem(position));
                         return false;
                     }

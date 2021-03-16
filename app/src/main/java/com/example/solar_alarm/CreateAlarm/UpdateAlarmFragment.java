@@ -14,12 +14,18 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
+import com.example.solar_alarm.Activities.MainActivity;
+import com.example.solar_alarm.AlarmList.AlarmListFragment;
+import com.example.solar_alarm.AlarmList.AlarmListViewModel;
 import com.example.solar_alarm.R;
 import com.example.solar_alarm.Data.Alarm;
 
+import java.util.List;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -39,13 +45,20 @@ public class UpdateAlarmFragment extends Fragment {
     @BindView(R.id.fragment_updatealarm_checkSun) CheckBox sun;
     @BindView(R.id.fragment_updatealarm_recurring_options) LinearLayout recurringOptions;
 
-    private CreateAlarmViewModel createAlarmViewModel;
+    private AlarmListViewModel updateAlarmViewModel;
+    private LiveData<List<Alarm>> alarmsLiveData;
+    private Alarm updatedAlarm;
+    int location;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        createAlarmViewModel = ViewModelProviders.of(this).get(CreateAlarmViewModel.class);
+        updateAlarmViewModel = new ViewModelProvider(requireParentFragment()).get(AlarmListViewModel.class);;
+        //alarmsLiveData = updateAlarmViewModel.getAlarmsLiveData();
+        Bundle bundle = getArguments();
+        location = bundle.getInt("location");
+        //updatedAlarm = alarmsLiveData.;
     }
 
     @Nullable
@@ -97,7 +110,7 @@ public class UpdateAlarmFragment extends Fragment {
                 sun.isChecked()
         );
 
-        createAlarmViewModel.update(alarm);
+        updateAlarmViewModel.update(alarm);
 
         alarm.schedule(getContext());
     }
