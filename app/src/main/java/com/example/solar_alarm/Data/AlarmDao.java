@@ -19,10 +19,6 @@ public interface AlarmDao {
     @Query("SELECT * FROM alarm_table ORDER BY created ASC")
     LiveData<List<Alarm>> getAlarms();
 
-    //Read one
-    @Query("SELECT * FROM alarm_table WHERE alarmId = :alarmId")
-    Alarm getAlarm(int alarmId);
-
     // Update
     @Update
     void update(Alarm alarm);
