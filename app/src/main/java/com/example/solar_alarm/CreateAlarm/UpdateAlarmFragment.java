@@ -1,5 +1,6 @@
 package com.example.solar_alarm.CreateAlarm;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +14,10 @@ import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
@@ -25,6 +28,9 @@ import com.example.solar_alarm.AlarmList.AlarmListViewModel;
 import com.example.solar_alarm.R;
 import com.example.solar_alarm.Data.Alarm;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -46,19 +52,39 @@ public class UpdateAlarmFragment extends Fragment {
     @BindView(R.id.fragment_updatealarm_recurring_options) LinearLayout recurringOptions;
 
     private AlarmListViewModel updateAlarmViewModel;
-    private LiveData<List<Alarm>> alarmsLiveData;
     private Alarm updatedAlarm;
     int location;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        updateAlarmViewModel = new ViewModelProvider(requireParentFragment()).get(AlarmListViewModel.class);;
-        //alarmsLiveData = updateAlarmViewModel.getAlarmsLiveData();
         Bundle bundle = getArguments();
-        location = bundle.getInt("location");
-        //updatedAlarm = alarmsLiveData.;
+        location = bundle.getInt("position");
+        updateAlarmViewModel = new ViewModelProvider(requireParentFragment()).get(AlarmListViewModel.class);;
+        updateAlarmViewModel.getAlarmsLiveData().observe(this, new Observer<List<Alarm>>() {
+            @Override
+            public void onChanged(List<Alarm> alarms) {
+                if(alarms != null)
+                {
+//                   updatedAlarm = alarms.get(location);
+                }
+            }
+        });
+
+//        timePicker.setHour(updatedAlarm.getHour());
+//        timePicker.setMinute(updatedAlarm.getMinute());
+//        title.setText(updatedAlarm.getTitle());
+//        recurring.setActivated(updatedAlarm.isRecurring());
+//        mon.setActivated(updatedAlarm.isMonday());
+//        tue.setActivated(updatedAlarm.isTuesday());
+//        wed.setActivated(updatedAlarm.isWednesday());
+//        thu.setActivated(updatedAlarm.isThursday());
+//        fri.setActivated(updatedAlarm.isFriday());
+//        sat.setActivated(updatedAlarm.isSaturday());
+//        sun.setActivated(updatedAlarm.isSunday());
+
     }
 
     @Nullable
@@ -91,27 +117,21 @@ public class UpdateAlarmFragment extends Fragment {
     }
 
     private void updateAlarm() {
-        int alarmId = new Random().nextInt(Integer.MAX_VALUE);
+        updatedAlarm.setHour(TimePickerUtil.getTimePickerHour(timePicker));
+        updatedAlarm.setMinute(TimePickerUtil.getTimePickerMinute(timePicker));
+        updatedAlarm.setTitle(title.getText().toString());
+        updatedAlarm.setCreated(System.currentTimeMillis());
+        updatedAlarm.setRecurring(recurring.isChecked());
+        updatedAlarm.setMonday(mon.isChecked());
+        updatedAlarm.setTuesday(tue.isChecked());
+        updatedAlarm.setWednesday(wed.isChecked());
+        updatedAlarm.setThursday(thu.isChecked());
+        updatedAlarm.setFriday(fri.isChecked());
+        updatedAlarm.setSaturday(sat.isChecked());
+        updatedAlarm.setSunday(sun.isChecked());
 
-        Alarm alarm = new Alarm(
-                alarmId,
-                TimePickerUtil.getTimePickerHour(timePicker),
-                TimePickerUtil.getTimePickerMinute(timePicker),
-                title.getText().toString(),
-                System.currentTimeMillis(),
-                true,
-                recurring.isChecked(),
-                mon.isChecked(),
-                tue.isChecked(),
-                wed.isChecked(),
-                thu.isChecked(),
-                fri.isChecked(),
-                sat.isChecked(),
-                sun.isChecked()
-        );
+        updateAlarmViewModel.update(updatedAlarm);
 
-        updateAlarmViewModel.update(alarm);
-
-        alarm.schedule(getContext());
+        updatedAlarm.schedule(getContext());
     }
 }

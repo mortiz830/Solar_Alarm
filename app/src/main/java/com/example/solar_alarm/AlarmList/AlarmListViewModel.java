@@ -33,4 +33,5 @@ public class AlarmListViewModel extends AndroidViewModel {
     public LiveData<List<Alarm>> getAlarmsLiveData() {
         return alarmsLiveData;
     }
+
 }

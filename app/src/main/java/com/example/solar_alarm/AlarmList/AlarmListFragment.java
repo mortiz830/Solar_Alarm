@@ -1,6 +1,5 @@
 package com.example.solar_alarm.AlarmList;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,8 +87,10 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
                         bundle.putInt("position", position);
                         UpdateAlarmFragment updateAlarmFragment = new UpdateAlarmFragment();
                         updateAlarmFragment.setArguments(bundle);
+                        FragmentManager manager = getFragmentManager();
+                        manager.beginTransaction().replace(R.id.activity_main_nav_host_fragment, updateAlarmFragment).commit();
 
-                        Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_updateAlarmFragment);
+                        //Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_updateAlarmFragment);
                     }
                 });
         ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
@@ -97,7 +98,8 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
                     @Override
                     public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
                         Alarm alarm = alarmRecyclerViewAdapter.getAlarm(position);
-
+                        // 2 - Show result in a Toast
+                        Toast.makeText(getContext(), "You long clicked on user : "+alarm.getTitle(), Toast.LENGTH_SHORT).show();
                         alarmsListViewModel.delete(alarmRecyclerViewAdapter.removeItem(position));
                         return false;
                     }
