@@ -60,6 +60,28 @@ public class Alarm {
         this.created = created;
     }
 
+    public Alarm(Alarm alarm)
+    {
+        this.alarmId = alarm.alarmId;
+        this.hour = alarm.hour;
+        this.minute = alarm.minute;
+        this.started = alarm.started;
+
+        this.recurring = alarm.recurring;
+
+        this.monday = alarm.monday;
+        this.tuesday = alarm.tuesday;
+        this.wednesday = alarm.wednesday;
+        this.thursday = alarm.thursday;
+        this.friday = alarm.friday;
+        this.saturday = alarm.saturday;
+        this.sunday = alarm.sunday;
+
+        this.title = alarm.title;
+
+        this.created = alarm.created;
+    }
+
     public int getHour() {
         return hour;
     }

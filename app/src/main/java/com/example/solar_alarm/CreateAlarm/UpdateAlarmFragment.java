@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -68,23 +69,21 @@ public class UpdateAlarmFragment extends Fragment {
             public void onChanged(List<Alarm> alarms) {
                 if(alarms != null)
                 {
-//                   updatedAlarm = alarms.get(location);
+                   updatedAlarm = new Alarm(alarms.get(location));
+                   timePicker.setHour(updatedAlarm.getHour());
+                   timePicker.setMinute(updatedAlarm.getMinute());
+                   title.setText(updatedAlarm.getTitle());
+                   recurring.setChecked(updatedAlarm.isRecurring());
+                   mon.setChecked(updatedAlarm.isMonday());
+                   tue.setChecked(updatedAlarm.isTuesday());
+                   wed.setChecked(updatedAlarm.isWednesday());
+                   thu.setChecked(updatedAlarm.isThursday());
+                   fri.setChecked(updatedAlarm.isFriday());
+                   sat.setChecked(updatedAlarm.isSaturday());
+                   sun.setChecked(updatedAlarm.isSunday());
                 }
             }
         });
-
-//        timePicker.setHour(updatedAlarm.getHour());
-//        timePicker.setMinute(updatedAlarm.getMinute());
-//        title.setText(updatedAlarm.getTitle());
-//        recurring.setActivated(updatedAlarm.isRecurring());
-//        mon.setActivated(updatedAlarm.isMonday());
-//        tue.setActivated(updatedAlarm.isTuesday());
-//        wed.setActivated(updatedAlarm.isWednesday());
-//        thu.setActivated(updatedAlarm.isThursday());
-//        fri.setActivated(updatedAlarm.isFriday());
-//        sat.setActivated(updatedAlarm.isSaturday());
-//        sun.setActivated(updatedAlarm.isSunday());
-
     }
 
     @Nullable
@@ -109,7 +108,9 @@ public class UpdateAlarmFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 updateAlarm();
-               //Navigation.findNavController(v).navigate(R.id.action_updateAlarmFragment_to_alarmsListFragment);
+                AlarmListFragment alarmListFragment = new AlarmListFragment();
+                FragmentManager manager = getFragmentManager();
+                manager.beginTransaction().replace(R.id.activity_main_nav_host_fragment, alarmListFragment).commit();
             }
         });
 

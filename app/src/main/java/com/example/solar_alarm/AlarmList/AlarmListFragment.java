@@ -90,7 +90,6 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
                         FragmentManager manager = getFragmentManager();
                         manager.beginTransaction().replace(R.id.activity_main_nav_host_fragment, updateAlarmFragment).commit();
 
-                        //Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_updateAlarmFragment);
                     }
                 });
         ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
