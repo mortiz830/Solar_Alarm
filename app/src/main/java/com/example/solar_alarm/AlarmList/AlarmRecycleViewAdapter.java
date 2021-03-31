@@ -37,22 +37,6 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
         Alarm alarm = alarms.get(position);
         holder.bind(alarm);
-        holder.parent_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context,"Small Click", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        holder.parent_layout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                // call delete
-
-                Toast.makeText(context,"Long Click", Toast.LENGTH_LONG).show();
-                return false;
-            }
-        });
     }
 
     @Override
