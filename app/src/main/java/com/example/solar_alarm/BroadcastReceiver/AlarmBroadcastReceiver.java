@@ -1,24 +1,15 @@
 package com.example.solar_alarm.BroadcastReceiver;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 import android.widget.Toast;
 
-import androidx.lifecycle.Observer;
-
-import com.example.solar_alarm.Data.Alarm;
-import com.example.solar_alarm.Data.AlarmRepository;
 import com.example.solar_alarm.Service.AlarmService;
 import com.example.solar_alarm.Service.RescheduleAlarmService;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class AlarmBroadcastReceiver extends BroadcastReceiver {
     public static final String MONDAY = "MONDAY";
@@ -51,42 +42,39 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private boolean alarmIsToday(Intent intent) {
+    private boolean alarmIsToday(Intent intent)
+    {
+        boolean alarmIsToday = false;
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         int today = calendar.get(Calendar.DAY_OF_WEEK);
 
-        switch(today) {
+        switch(today)
+        {
             case Calendar.MONDAY:
                 if (intent.getBooleanExtra(MONDAY, false))
-                    return true;
-                return false;
+                    alarmIsToday = true;
             case Calendar.TUESDAY:
                 if (intent.getBooleanExtra(TUESDAY, false))
-                    return true;
-                return false;
+                    alarmIsToday = true;
             case Calendar.WEDNESDAY:
                 if (intent.getBooleanExtra(WEDNESDAY, false))
-                    return true;
-                return false;
+                    alarmIsToday = true;
             case Calendar.THURSDAY:
                 if (intent.getBooleanExtra(THURSDAY, false))
-                    return true;
-                return false;
+                    alarmIsToday = true;
             case Calendar.FRIDAY:
                 if (intent.getBooleanExtra(FRIDAY, false))
-                    return true;
-                return false;
+                    alarmIsToday = true;
             case Calendar.SATURDAY:
                 if (intent.getBooleanExtra(SATURDAY, false))
-                    return true;
-                return false;
+                    alarmIsToday = true;
             case Calendar.SUNDAY:
                 if (intent.getBooleanExtra(SUNDAY, false))
-                    return true;
-                return false;
+                    alarmIsToday = true;
         }
-        return false;
+
+        return alarmIsToday;
     }
 
     private void startAlarmService(Context context, Intent intent) {

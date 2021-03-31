@@ -60,6 +60,28 @@ public class Alarm {
         this.created = created;
     }
 
+    public Alarm(Alarm alarm)
+    {
+        this.alarmId = alarm.alarmId;
+        this.hour = alarm.hour;
+        this.minute = alarm.minute;
+        this.started = alarm.started;
+
+        this.recurring = alarm.recurring;
+
+        this.monday = alarm.monday;
+        this.tuesday = alarm.tuesday;
+        this.wednesday = alarm.wednesday;
+        this.thursday = alarm.thursday;
+        this.friday = alarm.friday;
+        this.saturday = alarm.saturday;
+        this.sunday = alarm.sunday;
+
+        this.title = alarm.title;
+
+        this.created = alarm.created;
+    }
+
     public int getHour() {
         return hour;
     }
@@ -79,6 +101,28 @@ public class Alarm {
     public void setAlarmId(int alarmId) {
         this.alarmId = alarmId;
     }
+
+    public void setTitle(String title) {this.title = title; }
+
+    public void setHour(int hour) {this.hour = hour; }
+
+    public void setMinute(int minute) {this.minute = minute; }
+
+    public void setRecurring(boolean recurring) {this.recurring = recurring; }
+
+    public void setMonday(boolean monday) {this.monday = monday; }
+
+    public void setTuesday(boolean tuesday) {this.monday = tuesday; }
+
+    public void setWednesday(boolean wednesday) {this.wednesday = wednesday; }
+
+    public void setThursday(boolean thursday) {this.thursday = thursday; }
+
+    public void setFriday(boolean friday) {this.friday = friday; }
+
+    public void setSaturday(boolean saturday) {this.saturday = saturday; }
+
+    public void setSunday(boolean sunday) {this.sunday = sunday; }
 
     public boolean isRecurring() {
         return recurring;

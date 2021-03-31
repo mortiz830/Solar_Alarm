@@ -5,16 +5,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.solar_alarm.CreateAlarm.UpdateAlarmFragment;
 import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.R;
 
@@ -50,6 +53,7 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
         alarmsRecyclerView = view.findViewById(R.id.fragment_listalarms_recylerView);
         alarmsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         alarmsRecyclerView.setAdapter(alarmRecyclerViewAdapter);
+        this.configureOnClickRecyclerView();
 
         addAlarm = view.findViewById(R.id.fragment_listalarms_addAlarm);
         addAlarm.setOnClickListener(new View.OnClickListener() {
@@ -72,4 +76,33 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
             alarmsListViewModel.update(alarm);
         }
     }
+
+    private void configureOnClickRecyclerView(){
+        ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
+                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Alarm alarm = alarmRecyclerViewAdapter.getAlarm(position);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("position", position);
+                        UpdateAlarmFragment updateAlarmFragment = new UpdateAlarmFragment();
+                        updateAlarmFragment.setArguments(bundle);
+                        FragmentManager manager = getFragmentManager();
+                        manager.beginTransaction().replace(R.id.activity_main_nav_host_fragment, updateAlarmFragment).commit();
+
+                    }
+                });
+        ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
+                .setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                        Alarm alarm = alarmRecyclerViewAdapter.getAlarm(position);
+                        // 2 - Show result in a Toast
+                        Toast.makeText(getContext(), "You long clicked on user : "+alarm.getTitle(), Toast.LENGTH_SHORT).show();
+                        alarmsListViewModel.delete(alarmRecyclerViewAdapter.removeItem(position));
+                        return false;
+                    }
+                });
+    }
+
 }
