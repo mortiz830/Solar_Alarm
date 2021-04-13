@@ -17,7 +17,7 @@ public class SunriseSunsetDataTest extends BaseTestCase {
 
     @BeforeClass
     public static void setupAllTests() {
-        driver = new CSVTestDriver("testdata");
+        driver = new CSVTestDriver("src\\test\\java\\com\\example\\solar_alarm\\testdata");
         dataSetNames = driver.getFileNames();
     }
 
