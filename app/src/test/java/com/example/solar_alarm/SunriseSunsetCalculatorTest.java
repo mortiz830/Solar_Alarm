@@ -20,8 +20,8 @@ public class SunriseSunsetCalculatorTest extends BaseTestCase {
     @Before
     public void setup() {
         // November 1, 2008
-        super.setup(10, 1, 2008);
-        calc = new SunriseSunsetCalculator(location, "America/New_York");
+        super.setup(3, 21, 2021);
+        calc = new SunriseSunsetCalculator(location, "America/Chicago");
     }
 
     @Test

@@ -17,7 +17,8 @@ public class BaseTestCase {
     protected Location location;
 
     public void setup(int month, int day, int year) {
-        this.setup(month, day, year, "39.9937", "-75.7850", "America/New_York");
+        //this.setup(month, day, year, "39.9937", "-75.7850", "America/New_York");
+        this.setup(month, day, year, "33.2539", "-96.8097", "America/Chicago");
     }
 
     public void setup(int month, int day, int year, String longitude, String latitude, String timeZoneIdentifier) {

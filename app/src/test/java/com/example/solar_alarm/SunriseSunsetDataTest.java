@@ -23,7 +23,7 @@ public class SunriseSunsetDataTest extends BaseTestCase {
 
     @AfterClass
     public static void tearDownAllTests() {
-        TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"));
+        TimeZone.setDefault(TimeZone.getTimeZone("America/Chicago"));
     }
 
     @Test
