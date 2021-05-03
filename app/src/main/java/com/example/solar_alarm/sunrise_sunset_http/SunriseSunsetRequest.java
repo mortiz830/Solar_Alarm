@@ -1,11 +1,21 @@
 package com.example.solar_alarm.sunrise_sunset_http;
 
+import java.util.Calendar;
+
 public class SunriseSunsetRequest
 {
     public float Latitude;
     public float Longitude;
     public String Date;
     public Boolean Format;
+
+    public SunriseSunsetRequest()
+    {
+        Latitude = (float) 40.67441;
+        Longitude = (float) -73.43162;
+        Date = Calendar.getInstance().getTime().toString();
+        Format = true;
+    }
 
     public SunriseSunsetRequest(float latitude, float longitude, String date, Boolean format)
     {

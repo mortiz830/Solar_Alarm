@@ -48,9 +48,9 @@ public class HttpRequests {
     public static String getParamsString(SunriseSunsetRequest sunriseSunsetRequest) throws UnsupportedEncodingException
     {
         return String.format("?date=%s;lat=%s;lon=%s;formatted=%s;",
-                             URLEncoder.encode(sunriseSunsetRequest.Date, "UTF-8"),
-                             URLEncoder.encode(sunriseSunsetRequest.Date, "UTF-8"),
-                             URLEncoder.encode(String.valueOf(sunriseSunsetRequest.Latitude), "UTF-8"),
-                             URLEncoder.encode(String.valueOf(sunriseSunsetRequest.Longitude), "UTF-8"));
+                             URLEncoder.encode(sunriseSunsetRequest.getDate(), "UTF-8"),
+                             URLEncoder.encode(sunriseSunsetRequest.getDate(), "UTF-8"),
+                             URLEncoder.encode(String.valueOf(sunriseSunsetRequest.getLatitude()), "UTF-8"),
+                             URLEncoder.encode(String.valueOf(sunriseSunsetRequest.getLongitude()), "UTF-8"));
     }
 }

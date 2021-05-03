@@ -24,7 +24,12 @@ public class BaseTestCase {
     {
         SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest();
 
-        //sunriseSunsetRequest.Date
+        try {
+            httpRequests.GetSolarData(sunriseSunsetRequest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 }
