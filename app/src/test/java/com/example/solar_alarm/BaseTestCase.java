@@ -11,25 +11,17 @@ import java.util.Calendar;
 public class BaseTestCase {
 
     protected Calendar eventDate;
-    protected HttpRequests httpRequests;
-
-    public BaseTestCase() throws IOException
-    {
-        httpRequests = new HttpRequests();
-    }
-
 
     @Test
     public void Foo()
     {
-        SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest();
+        SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float) 40.67441, (float) -73.43162, Calendar.getInstance(), true);
 
         try {
+            HttpRequests httpRequests = new HttpRequests(sunriseSunsetRequest);
             httpRequests.GetSolarData(sunriseSunsetRequest);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 }

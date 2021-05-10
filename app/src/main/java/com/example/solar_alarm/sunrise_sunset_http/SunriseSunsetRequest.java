@@ -6,18 +6,18 @@ public class SunriseSunsetRequest
 {
     public float Latitude;
     public float Longitude;
-    public String Date;
+    public Calendar Date;
     public Boolean Format;
 
-    public SunriseSunsetRequest()
+    private SunriseSunsetRequest()
     {
         Latitude = (float) 40.67441;
         Longitude = (float) -73.43162;
-        Date = Calendar.getInstance().getTime().toString();
+        Date = Calendar.getInstance();
         Format = true;
     }
 
-    public SunriseSunsetRequest(float latitude, float longitude, String date, Boolean format)
+    public SunriseSunsetRequest(float latitude, float longitude, Calendar date, Boolean format)
     {
         this.Latitude = latitude;
         this.Longitude = longitude;
@@ -35,7 +35,7 @@ public class SunriseSunsetRequest
         this.Longitude = longitude;
     }
 
-    public void setDate(String date)
+    public void setDate(Calendar date)
     {
         this.Date = date;
     }
@@ -55,10 +55,7 @@ public class SunriseSunsetRequest
         return Longitude;
     }
 
-    public String getDate()
-    {
-        return Date;
-    }
+    public Calendar getDate() { return Date; }
 
     public Boolean getFormat()
     {
