@@ -37,6 +37,7 @@ public class HttpRequests {
         while ((inputLine = bufferedReader.readLine()) != null) {
             content.append(inputLine);
         }
+
         Gson gson = new Gson();
         SunriseSunsetResponse sunriseSunsetResponse = gson.fromJson(content.toString(), SunriseSunsetResponse.class);
         bufferedReader.close();
