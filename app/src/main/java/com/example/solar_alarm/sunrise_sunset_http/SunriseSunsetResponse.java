@@ -14,20 +14,10 @@ public class SunriseSunsetResponse {
 
     public SunriseSunsetResponse()
     {
-        sunrise = "";
-        sunset = "";
-        solar_noon = "";
-        day_length = "";
-        civil_twilight_begin = "";
-        civil_twilight_end = "";
-        nautical_twilight_begin = "";
-        nautical_twilight_end = "";
-        astronomical_twilight_begin = "";
-        astronomical_twilight_end = "";
     }
 
     public SunriseSunsetResponse(String sunrise, String sunset, String solar_noon, String day_length,
-                                    String ctb, String cte, String ntb, String nte, String atb, String ate)
+                                 String ctb, String cte, String ntb, String nte, String atb, String ate)
     {
         this.sunrise = sunrise;
         this.sunset = sunset;

@@ -1,5 +1,7 @@
 package com.example.solar_alarm.sunrise_sunset_http;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,16 +25,7 @@ public class HttpRequests {
 
     public SunriseSunsetResponse GetSolarData(SunriseSunsetRequest sunriseSunsetRequest) throws IOException
     {
-        SunriseSunsetResponse sunriseSunsetResponse = new SunriseSunsetResponse();
-
         httpUrlConnection.setDoOutput(true);
-
-        //DataOutputStream dataOutputStream = new DataOutputStream(httpUrlConnection.getOutputStream());
-        //String query = getParamsString(sunriseSunsetRequest);
-        //dataOutputStream.writeBytes(query);
-        //dataOutputStream.flush();
-        //dataOutputStream.close();
-
         httpUrlConnection.setConnectTimeout(5000);
         httpUrlConnection.setReadTimeout(5000);
 
@@ -44,7 +37,10 @@ public class HttpRequests {
         while ((inputLine = bufferedReader.readLine()) != null) {
             content.append(inputLine);
         }
+        Gson gson = new Gson();
+        SunriseSunsetResponse sunriseSunsetResponse = gson.fromJson(content.toString(), SunriseSunsetResponse.class);
         bufferedReader.close();
+
 
         return sunriseSunsetResponse;
     }
