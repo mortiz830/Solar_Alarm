@@ -34,6 +34,7 @@ public class HttpRequests {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
         String inputLine;
         StringBuilder content = new StringBuilder();
+
         while ((inputLine = bufferedReader.readLine()) != null) {
             content.append(inputLine);
         }
@@ -42,6 +43,7 @@ public class HttpRequests {
         SunriseSunsetResponse sunriseSunsetResponse = gson.fromJson(content.toString(), SunriseSunsetResponse.class);
         bufferedReader.close();
 
+        sunriseSunsetResponse.request = sunriseSunsetRequest;
 
         return sunriseSunsetResponse;
     }
