@@ -9,14 +9,6 @@ public class SunriseSunsetRequest
     public Calendar Date;
     public Boolean Format;
 
-    private SunriseSunsetRequest()
-    {
-        Latitude = (float) 40.67441;
-        Longitude = (float) -73.43162;
-        Date = Calendar.getInstance();
-        Format = true;
-    }
-
     public SunriseSunsetRequest(float latitude, float longitude, Calendar date, Boolean format)
     {
         this.Latitude = latitude;
@@ -24,7 +16,7 @@ public class SunriseSunsetRequest
         this.Date = date;
         this.Format = format;
     }
-
+/*
     public void setLatitude(float latitude)
     {
         this.Latitude = latitude;
@@ -60,7 +52,7 @@ public class SunriseSunsetRequest
     public Boolean getFormat()
     {
         return Format;
-    }
+    }*/
 }
 
 
