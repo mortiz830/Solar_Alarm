@@ -2,7 +2,9 @@ package com.example.solar_alarm;
 
 import com.example.solar_alarm.sunrise_sunset_http.HttpRequests;
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest;
+import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -19,7 +21,9 @@ public class BaseTestCase {
 
         try {
             HttpRequests httpRequests = new HttpRequests(sunriseSunsetRequest);
-            httpRequests.GetSolarData(sunriseSunsetRequest);
+            SunriseSunsetResponse response = httpRequests.GetSolarData(sunriseSunsetRequest);
+
+            Assert.assertTrue("Status Code", response.status == "OK");
         } catch (IOException e) {
             e.printStackTrace();
         }
