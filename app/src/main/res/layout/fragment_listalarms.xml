@@ -11,19 +11,72 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/fragment_listalarms_myAlarms"
-            android:layout_width="match_parent"
+            android:id="@+id/fragment_listalarms_timezone"
+            android:layout_width="203dp"
             android:layout_height="wrap_content"
-            android:text="My Alarms"
+            android:text=""
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toEndOf="@+id/fragment_listalarms_timezone_txt"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/fragment_listalarms_latitude"
+            android:layout_width="203dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="test"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toEndOf="@+id/fragment_listalarms_latitude_txt"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/fragment_listalarms_longitude"
+            android:layout_width="203dp"
+            android:layout_height="wrap_content"
+            android:text="test"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toEndOf="@+id/fragment_listalarms_longitude_txt"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_listalarms_latitude" />
+
+        <TextView
+            android:id="@+id/fragment_listalarms_timezone_txt"
+            android:layout_width="208dp"
+            android:layout_height="wrap_content"
+            android:text="Time Zone: "
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/fragment_listalarms_latitude_txt"
+            android:layout_width="208dp"
+            android:layout_height="wrap_content"
+            android:text="Latitude: "
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_listalarms_timezone_txt"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <TextView
+            android:id="@+id/fragment_listalarms_longitude_txt"
+            android:layout_width="208dp"
+            android:layout_height="wrap_content"
+            android:text="Longitude: "
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_listalarms_latitude_txt"
+            tools:layout_editor_absoluteX="0dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fragment_listalarms_recylerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_listalarms_myAlarms">
+
+            app:layout_constraintTop_toBottomOf="@+id/fragment_listalarms_longitude_txt"
+            tools:layout_editor_absoluteX="16dp">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -34,6 +87,8 @@
             android:layout_gravity="bottom"
             android:text="Add Alarm"
             app:layout_constraintBottom_toBottomOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout><![CDATA["/>
+
+        ]]>
 
 </LinearLayout>
