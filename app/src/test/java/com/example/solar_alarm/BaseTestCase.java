@@ -15,7 +15,7 @@ public class BaseTestCase {
     protected Calendar eventDate;
 
     @Test
-    public void Foo()
+    public void HttpGetTest()
     {
         SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float) 40.67441, (float) -73.43162, Calendar.getInstance(), true);
 

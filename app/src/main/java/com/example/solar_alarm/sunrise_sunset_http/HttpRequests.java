@@ -11,7 +11,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Calendar;
 
-public class HttpRequests {
+public class HttpRequests
+{
     private final HttpURLConnection httpUrlConnection;
 
     public HttpRequests(SunriseSunsetRequest sunriseSunsetRequest) throws IOException
@@ -33,7 +34,8 @@ public class HttpRequests {
         String inputLine;
         StringBuilder content = new StringBuilder();
 
-        while ((inputLine = bufferedReader.readLine()) != null) {
+        while ((inputLine = bufferedReader.readLine()) != null)
+        {
             content.append(inputLine);
         }
 
@@ -48,7 +50,6 @@ public class HttpRequests {
 
     public static String getParamsString(SunriseSunsetRequest sunriseSunsetRequest) throws UnsupportedEncodingException
     {
-        //https://api.sunrise-sunset.org/json?date=2021-5-10&lat=40.67441&lng=-73.43162&formatted=1
         return String.format("?date=%s-%s-%s&lat=%s&lng=%s&formatted=%s",
                              URLEncoder.encode(String.valueOf(sunriseSunsetRequest.Date.get(Calendar.YEAR)), "UTF-8"),
                              URLEncoder.encode(String.valueOf(sunriseSunsetRequest.Date.get(Calendar.MONTH) + 1), "UTF-8"),
