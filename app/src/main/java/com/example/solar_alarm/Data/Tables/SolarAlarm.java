@@ -1,7 +1,9 @@
 package com.example.solar_alarm.Data.Tables;
 
 import androidx.annotation.NonNull;
+import androidx.room.Entity;
 
+@Entity(tableName = "SolarAlarms")
 public class SolarAlarm extends TableBase
 {
     @NonNull
