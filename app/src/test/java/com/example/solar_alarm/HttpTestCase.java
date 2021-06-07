@@ -10,7 +10,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Calendar;
 
-public class BaseTestCase {
+public class HttpTestCase {
 
     protected Calendar eventDate;
 
