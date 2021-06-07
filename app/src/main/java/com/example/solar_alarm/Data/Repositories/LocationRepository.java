@@ -1,12 +1,29 @@
 package com.example.solar_alarm.Data.Repositories;
 
-public class LocationRepository {
-    /*private AlarmDao alarmDao;
-    private LiveData<List<Alarm>> alarmsLiveData;
+import android.app.Application;
 
-    public LocationRepository(Application application) {
-        AlarmDatabase db = AlarmDatabase.getDatabase(application);
-        alarmDao = db.();
-        alarmsLiveData = alarmDao.getAlarms();
-    }*/
+import androidx.lifecycle.LiveData;
+
+import com.example.solar_alarm.Data.SolarAlarmDatabase;
+import com.example.solar_alarm.Data.Tables.Location;
+
+import java.util.List;
+
+public class LocationRepository {
+    private LocationDao locationDao;
+    private LiveData<List<Location>> locationsLiveData;
+
+    public LocationRepository(Application application)
+    {
+        SolarAlarmDatabase db = SolarAlarmDatabase.getDatabase(application);
+        locationDao = db.locationDao();
+        locationsLiveData = locationDao.getAll();
+    }
+
+    public LocationRepository()
+    {
+        Location l1 = new Location();
+        Location l2 = new Location();
+        Location l3 = new Location();
+    }
 }
