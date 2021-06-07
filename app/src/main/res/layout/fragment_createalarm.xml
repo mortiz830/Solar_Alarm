@@ -27,21 +27,11 @@
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_scheduleAlarmHeading">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.4"
-                android:text="Alarm Time"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-            <TimePicker
-                android:id="@+id/fragment_createalarm_timePicker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:timePickerMode="spinner" />
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
         </LinearLayout>
 
         <EditText

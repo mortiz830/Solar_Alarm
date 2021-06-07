@@ -46,6 +46,7 @@ public class HttpRequests {
         return sunriseSunsetResponse;
     }
 
+
     public static String getParamsString(SunriseSunsetRequest sunriseSunsetRequest) throws UnsupportedEncodingException
     {
         //https://api.sunrise-sunset.org/json?date=2021-5-10&lat=40.67441&lng=-73.43162&formatted=1
