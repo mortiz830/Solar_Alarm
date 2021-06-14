@@ -1,5 +1,6 @@
 package com.example.solar_alarm.CreateAlarm;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,6 +72,7 @@ public class CreateAlarmFragment extends Fragment implements OnMapReadyCallback{
     private GpsTracker gpsTracker;
     private double latitude;
     private double longitude;
+    private HttpURLConnection httpUrlConnection;
 
     private CreateAlarmViewModel createAlarmViewModel;
 
@@ -143,6 +153,32 @@ public class CreateAlarmFragment extends Fragment implements OnMapReadyCallback{
         }
     }
 
+    public void getTimeZone(double latitude, double longitude) throws IOException {
+        String timeStamp = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
+        String location = latitude + "," + longitude;
+        //?location=38.908133,-77.047119&timestamp=1458000000&key=YOUR_API_KEY
+        String query = String.format("?location=%s&timestamp=%s&key=%s",
+                URLEncoder.encode(location, "UTF-8"),
+                URLEncoder.encode(timeStamp, "UTF-8"),
+                URLEncoder.encode(String.valueOf(getResources().getString(R.string.api_key)), "UTF-8"));
+        URL url = new URL("https://maps.googleapis.com/maps/api/timezone/json" + query);
+
+        httpUrlConnection = (HttpURLConnection)url.openConnection();
+        httpUrlConnection.setRequestMethod("GET");
+        httpUrlConnection.setDoOutput(true);
+        httpUrlConnection.setConnectTimeout(5000);
+        httpUrlConnection.setReadTimeout(5000);
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
+        String inputLine;
+        StringBuilder content = new StringBuilder();
+
+        while ((inputLine = bufferedReader.readLine()) != null) {
+            content.append(inputLine);
+        }
+
+    }
+
     @Override
     public void onMapReady(GoogleMap gMap) {
         googleMap = gMap;
@@ -160,9 +196,30 @@ public class CreateAlarmFragment extends Fragment implements OnMapReadyCallback{
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11.0f));
                 latitude = latLng.latitude;
                 longitude = latLng.longitude;
+                DecimalFormat df = new DecimalFormat("#.0000");
+                df.format(latitude);
+                df.format(longitude);
+                new TimeZoneTask().execute();
             }
         });
 
+    }
+    private class TimeZoneTask extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                getTimeZone(latitude, longitude);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+        }
     }
 
 }
