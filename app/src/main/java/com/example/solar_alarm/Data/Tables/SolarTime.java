@@ -16,7 +16,7 @@ public class SolarTime extends TableBase
     @ForeignKey(entity = Location.class, parentColumns = "Id", childColumns = "LocationId")
     public int LocationId;
 
-    // Times
+    // UTC Times
     public LocalTime Sunrise;
     public LocalTime Sunset;
     public LocalTime SolarNoon;

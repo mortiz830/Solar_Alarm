@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 public abstract class TableBase
 {
     @PrimaryKey
-    @NonNull
     public int Id;
 
     @NonNull

@@ -9,6 +9,9 @@ public class Location extends TableBase
     @NonNull
     public String Name;
 
+    @NonNull
+    public String TimezonId;
+
     public float Latitude;
 
     public float Longitude;
