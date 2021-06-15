@@ -12,7 +12,7 @@ public class Location extends TableBase
     @NonNull
     public String TimezonId;
 
-    public float Latitude;
+    public double Latitude;
 
-    public float Longitude;
+    public double Longitude;
 }

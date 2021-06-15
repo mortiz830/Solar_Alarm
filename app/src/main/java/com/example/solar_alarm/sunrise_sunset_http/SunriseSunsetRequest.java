@@ -4,12 +4,12 @@ import java.util.Calendar;
 
 public class SunriseSunsetRequest
 {
-    public float Latitude;
-    public float Longitude;
+    public double Latitude;
+    public double Longitude;
     public Calendar Date;
     public Boolean Format;
 
-    public SunriseSunsetRequest(float latitude, float longitude, Calendar date, Boolean format)
+    public SunriseSunsetRequest(double latitude, double longitude, Calendar date, Boolean format)
     {
         this.Latitude = latitude;
         this.Longitude = longitude;
