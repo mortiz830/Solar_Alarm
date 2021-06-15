@@ -23,7 +23,7 @@ public class HttpTestCase {
             HttpRequests httpRequests = new HttpRequests(sunriseSunsetRequest);
             SunriseSunsetResponse response = httpRequests.GetSolarData(sunriseSunsetRequest);
 
-            Assert.assertTrue("Status Code", response.status == "OK");
+            Assert.assertSame("OK", response.status);
         } catch (IOException e) {
             e.printStackTrace();
         }

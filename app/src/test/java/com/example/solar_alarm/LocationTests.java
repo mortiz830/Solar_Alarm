@@ -3,43 +3,50 @@ package com.example.solar_alarm;
 import android.content.Context;
 
 import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
 
 import com.example.solar_alarm.Data.Repositories.LocationDao;
 import com.example.solar_alarm.Data.SolarAlarmDatabase;
+import com.example.solar_alarm.Data.Tables.Location;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.Test;
 
 import java.io.IOException;
 
 public class LocationTests
 {
-    @RunWith(AndroidJUnit4.class)
     public class SimpleEntityReadWriteTest {
-        private LocationDao userDao;
-        private SolarAlarmDatabase db;
+        private LocationDao locationDao;
+        private SolarAlarmDatabase solarAlarmDatabase;
 
         @Before
         public void createDb() {
             Context context = ApplicationProvider.getApplicationContext();
-            db = Room.inMemoryDatabaseBuilder(context, SolarAlarmDatabase.class).build();
-            userDao = db.locationDao();
+
+            solarAlarmDatabase = Room.inMemoryDatabaseBuilder(context, SolarAlarmDatabase.class).build();
+            locationDao        = solarAlarmDatabase.locationDao();
         }
 
         @After
         public void closeDb() throws IOException
         {
-            db.close();
+            solarAlarmDatabase.close();
         }
 
-        /*@Test
+        @Test
         public void writeUserAndReadInList() throws Exception {
+            /*
             User user = TestUtil.createUser(3);
             user.setName("george");
             userDao.insert(user);
             List<User> byName = userDao.findUsersByName("george");
             assertThat(byName.get(0), equalTo(user));
-        }*/
+            */
+            Location newLocation = new Location();
+
+            newLocation.Latitude = 33.00;
+        }
     }
 }
