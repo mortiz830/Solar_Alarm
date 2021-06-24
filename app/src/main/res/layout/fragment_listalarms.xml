@@ -81,6 +81,15 @@
         </androidx.recyclerview.widget.RecyclerView>
 
         <Button
+            android:id="@+id/fragment_listAlarms_addLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:textAlignment="center"
+            android:text="Add Location"
+            app:layout_constraintBottom_toTopOf="@id/fragment_listalarms_addAlarm"/>
+
+        <Button
             android:id="@+id/fragment_listalarms_addAlarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

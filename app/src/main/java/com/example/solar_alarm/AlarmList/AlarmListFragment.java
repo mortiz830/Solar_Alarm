@@ -34,6 +34,7 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
     private AlarmListViewModel alarmsListViewModel;
     private RecyclerView alarmsRecyclerView;
     private Button addAlarm;
+    private Button addLocation;
     private GpsTracker gpsTracker;
     TextView timeZone;
     TextView latitude;
@@ -80,6 +81,14 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
                 Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_createAlarmFragment);
             }
         });
+        addLocation = view.findViewById(R.id.fragment_listAlarms_addLocation);
+        addLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_addLocationFragment);
+            }
+        });
+
         getLocation(view);
 
         return view;

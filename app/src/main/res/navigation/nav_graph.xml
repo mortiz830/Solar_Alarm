@@ -14,8 +14,8 @@
             android:id="@+id/action_alarmsListFragment_to_createAlarmFragment"
             app:destination="@id/createAlarmFragment" />
         <action
-            android:id="@+id/action_alarmsListFragment_to_updateAlarmFragment"
-            app:destination="@+id/updateAlarmFragment"/>
+            android:id="@+id/action_alarmsListFragment_to_addLocationFragment"
+            app:destination="@+id/addLocationFragment"/>
     </fragment>
     <fragment
         android:id="@+id/createAlarmFragment"
@@ -26,12 +26,15 @@
             app:destination="@id/alarmsListFragment" />
     </fragment>
     <fragment
-        android:id="@+id/updateAlarmFragment"
-        android:name="com.example.solar_alarm.CreateAlarm.UpdateAlarmFragment"
-        android:label="UpdateAlarmFragment" >
-<!--        <action-->
-<!--&lt;!&ndash;            android:id="@id/action_updateAlarmFragment_to_alarmsListFragment"&ndash;&gt;-->
-<!--            app:destination="@+id/alarmsListFragment"/>-->
+        android:id="@+id/addLocationFragment"
+        android:name="com.example.solar_alarm.Location.AddLocationFragment"
+        android:label="AddLocationFragment" >
+        <action
+            android:id="@id/action_addLocationFragment_to_alarmsListFragment"
+            app:destination="@+id/alarmsListFragment" />
+        <action
+            android:id="@+id/action_addLocationFragment_to_alarmsListFragment"
+            app:destination="@id/alarmsListFragment" />
 
     </fragment>
 

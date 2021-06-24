@@ -21,9 +21,11 @@ import androidx.navigation.Navigation;
 import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.R;
 import com.example.solar_alarm.Service.GpsTracker;
+import com.example.solar_alarm.sunrise_sunset_http.HttpRequests;
+import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest;
+import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -36,6 +38,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -67,7 +70,6 @@ public class CreateAlarmFragment extends Fragment implements OnMapReadyCallback{
     @BindView(R.id.fragment_createalarm_recurring_options)
     LinearLayout recurringOptions;
     TimePicker timePicker;
-    MapView mapView;
     GoogleMap googleMap;
     private GpsTracker gpsTracker;
     private double latitude;
@@ -89,7 +91,7 @@ public class CreateAlarmFragment extends Fragment implements OnMapReadyCallback{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_createalarm, container, false);
         getLocation(view);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_add_location_map);
         mapFragment.getMapAsync(this);
         ButterKnife.bind(this, view);
 
@@ -200,6 +202,7 @@ public class CreateAlarmFragment extends Fragment implements OnMapReadyCallback{
                 df.format(latitude);
                 df.format(longitude);
                 new TimeZoneTask().execute();
+                new TimeResponseTask().execute();
             }
         });
 
@@ -219,6 +222,22 @@ public class CreateAlarmFragment extends Fragment implements OnMapReadyCallback{
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
+        }
+    }
+
+    private class TimeResponseTask extends AsyncTask<Void, Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float)latitude, (float) longitude, Calendar.getInstance(), true);
+
+            try {
+                HttpRequests httpRequests = new HttpRequests(sunriseSunsetRequest);
+                SunriseSunsetResponse response = httpRequests.GetSolarData(sunriseSunsetRequest);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 
