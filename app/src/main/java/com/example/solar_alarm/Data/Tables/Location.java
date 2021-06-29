@@ -10,7 +10,7 @@ public class Location extends TableBase
     public String Name;
 
     @NonNull
-    public String TimezonId;
+    public String TimezoneId;
 
     public double Latitude;
 

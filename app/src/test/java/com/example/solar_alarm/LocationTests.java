@@ -18,51 +18,49 @@ import java.io.IOException;
 
 public class LocationTests
 {
-    public class SimpleEntityReadWriteTest
+    private LocationDao locationDao;
+    private SolarAlarmDatabase solarAlarmDatabase;
+
+    @Before
+    public void createDb()
     {
-        private LocationDao locationDao;
-        private SolarAlarmDatabase solarAlarmDatabase;
+        Context context = ApplicationProvider.getApplicationContext();
 
-        @Before
-        public void createDb()
-        {
-            Context context = ApplicationProvider.getApplicationContext();
+        solarAlarmDatabase = Room.inMemoryDatabaseBuilder(context, SolarAlarmDatabase.class).build();
+        locationDao        = solarAlarmDatabase.locationDao();
+    }
 
-            solarAlarmDatabase = Room.inMemoryDatabaseBuilder(context, SolarAlarmDatabase.class).build();
-            locationDao        = solarAlarmDatabase.locationDao();
-        }
+    @After
+    public void closeDb() throws IOException
+    {
+        solarAlarmDatabase.close();
+    }
 
-        @After
-        public void closeDb() throws IOException
-        {
-            solarAlarmDatabase.close();
-        }
+    @Test
+    public void writeLocationAndReadInList() throws Exception
+    {
+        /*
+        User user = TestUtil.createUser(3);
+        user.setName("george");
+        userDao.insert(user);
+        List<User> byName = userDao.findUsersByName("george");
+        assertThat(byName.get(0), equalTo(user));
+        */
+        Location newLocation = new Location();
 
-        @Test
-        public void writeLocationAndReadInList() throws Exception {
-            /*
-            User user = TestUtil.createUser(3);
-            user.setName("george");
-            userDao.insert(user);
-            List<User> byName = userDao.findUsersByName("george");
-            assertThat(byName.get(0), equalTo(user));
-            */
-            Location newLocation = new Location();
+        newLocation.Latitude = 33.00;
+        newLocation.Longitude = 40.00;
+        newLocation.Name = "TEST LOCATION";
+        newLocation.TimezoneId = "America/Chicago";
 
-            newLocation.Latitude = 33.00;
-            newLocation.Longitude = 40.00;
-            newLocation.Name = "TEST LOCATION";
-            newLocation.TimezonId = "America/Chicago";
+        locationDao.Insert(newLocation);
 
-            locationDao.Insert(newLocation);
-
-            Location l = locationDao.getAll().getValue().iterator().next();
+        Location l = locationDao.getAll().getValue().iterator().next();
 
 
 
-            Assert.assertSame(newLocation.Name, l.Name);
+        Assert.assertSame(newLocation.Name, l.Name);
 
-            //l.
-        }
+        //l.
     }
 }
