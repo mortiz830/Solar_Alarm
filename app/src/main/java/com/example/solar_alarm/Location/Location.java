@@ -1,11 +1,14 @@
 package com.example.solar_alarm.Location;
 
+import java.text.DecimalFormat;
+
 public class Location {
     private int locationID;
     private double latitude;
     private double longitude;
     private String locationName;
     private String timeZoneID;
+    DecimalFormat decimalFormat = new DecimalFormat("0.000");
 
     private long created;
     private long updated;
@@ -14,8 +17,8 @@ public class Location {
                     String timeZoneID, long created)
     {
         this.locationID = locationID;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.latitude = Double.parseDouble(decimalFormat.format(latitude));
+        this.longitude = Double.parseDouble(decimalFormat.format(longitude));
         this.locationName = locationName;
         this.timeZoneID = timeZoneID;
         this.created = created;

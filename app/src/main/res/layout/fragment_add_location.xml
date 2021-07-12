@@ -22,7 +22,7 @@
             android:layout_height="191dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-
+            android:padding="10dp"
             app:layout_constraintBottom_toTopOf="@id/fragment_add_location_getTimeZoneButton"
             app:layout_constraintTop_toBottomOf="@id/fragment_add_location_map">
 
@@ -82,6 +82,7 @@
                     android:id="@+id/fragment_add_location_LocationNameText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="Location Name Here" />
 
                 <TextView
@@ -89,6 +90,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
                     android:text="TEST"
+                    android:textSize="15dp"
+                    android:gravity="bottom"
+                    android:textAlignment="center"
 
                     app:layout_constraintTop_toBottomOf="@+id/fragment_add_location_map" />
 
@@ -97,6 +101,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
                     android:text="TEST"
+                    android:textSize="15dp"
+                    android:gravity="bottom"
+                    android:textAlignment="center"
 
                     app:layout_constraintTop_toBottomOf="@+id/fragment_add_location_map" />
 
@@ -105,6 +112,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
                     android:text="TEST"
+                    android:textSize="15dp"
+                    android:gravity="bottom"
+                    android:textAlignment="center"
 
                     app:layout_constraintTop_toBottomOf="@+id/fragment_add_location_map" />
 

@@ -1,6 +1,7 @@
 package com.example.solar_alarm.Location;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -29,6 +31,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -61,23 +64,24 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         super.onCreate(savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_location, container, false);
         getCurrentLocation(view);
-//        latitudeText.setText(String.valueOf(latitude));
-//        longitudeText.setText(String.valueOf(longitude));
-//        timeZoneText.setText(TimeZone.getDefault().toString());
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_add_location_map);
         mapFragment.getMapAsync(this);
         ButterKnife.bind(this, view);
+        latitudeText.setText(String.valueOf(latitude));
+        longitudeText.setText(String.valueOf(longitude));
+        timeZoneText.setText(TimeZone.getDefault().toZoneId().toString());
 
         getTimeZone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new TimeZoneTask().execute();
-                timeZoneText.setText(timeZoneResults.getTimeZoneId());
             }
         });
 
@@ -160,8 +164,10 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         }
 
         @Override
-        protected void onPostExecute(Void unused) {
+        protected void onPostExecute(Void unused)
+        {
             super.onPostExecute(unused);
+            timeZoneText.setText(timeZoneResults.getTimeZoneId());
         }
     }
 
