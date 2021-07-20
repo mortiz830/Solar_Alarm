@@ -12,8 +12,11 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
+import com.example.solar_alarm.Data.Repositories.LocationViewModel;
+import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.R;
 import com.example.solar_alarm.Service.GpsTracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -58,10 +61,14 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
     private HttpURLConnection httpUrlConnection;
     TimeZoneResults timeZoneResults;
 
+    private LocationViewModel locationViewModel;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -77,13 +84,6 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         latitudeText.setText(String.valueOf(latitude));
         longitudeText.setText(String.valueOf(longitude));
         timeZoneText.setText(TimeZone.getDefault().toZoneId().toString());
-
-        getTimeZone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new TimeZoneTask().execute();
-            }
-        });
 
         addLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,14 +142,16 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         String locationName = locationNameText.getText().toString();
         String timeZone = timeZoneResults.getTimeZoneId();
 
-        Location location = new Location(
-                locationID,
-                latitude,
-                longitude,
-                locationName,
-                timeZone,
-                System.currentTimeMillis()
-        );
+        com.example.solar_alarm.Data.Tables.Location location = new Location();
+        location.Name = locationName;
+        location.TimezoneId = timeZone;
+        location.Latitude = latitude;
+        location.Longitude = longitude;
+        location.Id = locationID;
+
+        locationViewModel.insert(location);
+
+
     }
     private class TimeZoneTask extends AsyncTask<Void, Void, Void> {
 
@@ -190,6 +192,8 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
                 longitude = latLng.longitude;
                 latitudeText.setText(String.valueOf(latitude));
                 longitudeText.setText(String.valueOf(longitude));
+
+                new TimeZoneTask().execute();
             }
         });
     }

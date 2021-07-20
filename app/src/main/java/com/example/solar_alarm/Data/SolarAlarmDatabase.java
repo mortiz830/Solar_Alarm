@@ -23,7 +23,7 @@ public abstract class SolarAlarmDatabase extends RoomDatabase
 
     private static volatile SolarAlarmDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
-    static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     public static SolarAlarmDatabase getDatabase(final Context context)
     {

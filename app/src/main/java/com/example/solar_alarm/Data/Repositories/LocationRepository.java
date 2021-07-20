@@ -20,10 +20,28 @@ public class LocationRepository {
         locationsLiveData = locationDao.getAll();
     }
 
-    public LocationRepository()
+
+    public void Insert(Location location)
     {
-        Location l1 = new Location();
-        Location l2 = new Location();
-        Location l3 = new Location();
+        SolarAlarmDatabase.databaseWriteExecutor.execute(() -> {
+            locationDao.Insert(location);
+        });
     }
+
+
+    public void Update(Location location)
+    {
+        SolarAlarmDatabase.databaseWriteExecutor.execute(() -> {
+            locationDao.Update(location);
+        });
+    }
+
+    public void delete(Location location)
+    {
+        SolarAlarmDatabase.databaseWriteExecutor.execute(() -> {
+            locationDao.delete(location);
+        });
+    }
+
+    public LiveData<List<Location>> getAll() {return locationsLiveData;}
 }
