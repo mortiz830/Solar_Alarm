@@ -8,6 +8,8 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import com.example.solar_alarm.Data.Repositories.LocationDao;
+import com.example.solar_alarm.Data.Repositories.SolarAlarmDao;
+import com.example.solar_alarm.Data.Repositories.SolarTimeDao;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
@@ -20,6 +22,8 @@ import java.util.concurrent.Executors;
 public abstract class SolarAlarmDatabase extends RoomDatabase
 {
     public abstract LocationDao locationDao();
+    public abstract SolarAlarmDao solarAlarmDao();
+    public abstract SolarTimeDao solarTimeDao();
 
     private static volatile SolarAlarmDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
