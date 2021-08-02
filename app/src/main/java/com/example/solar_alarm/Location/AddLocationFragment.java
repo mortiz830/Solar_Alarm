@@ -12,10 +12,9 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
-import com.example.solar_alarm.Data.Repositories.LocationViewModel;
+import com.example.solar_alarm.Data.Repositories.LocationRepository;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.R;
 import com.example.solar_alarm.Service.GpsTracker;
@@ -42,8 +41,6 @@ import butterknife.ButterKnife;
 
 public class AddLocationFragment extends Fragment implements OnMapReadyCallback {
 
-    @BindView(R.id.fragment_add_location_getTimeZoneButton)
-    Button getTimeZone;
     @BindView(R.id.fragment_add_location_addLocationButton)
     Button addLocation;
     @BindView(R.id.fragment_add_location_Latitude)
@@ -61,14 +58,14 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
     private HttpURLConnection httpUrlConnection;
     TimeZoneResults timeZoneResults;
 
-    private LocationViewModel locationViewModel;
+    LocationRepository locationRepository;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
+        locationRepository = new LocationRepository(getActivity().getApplication());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -149,7 +146,7 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         location.Longitude = longitude;
         location.Id = locationID;
 
-        locationViewModel.insert(location);
+        locationRepository.Insert(location);
 
 
     }

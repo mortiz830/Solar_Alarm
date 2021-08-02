@@ -5,48 +5,42 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import com.example.solar_alarm.Data.Alarm;
+import com.example.solar_alarm.Data.Repositories.LocationRepository;
+import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.R;
-import com.example.solar_alarm.Service.GpsTracker;
 import com.example.solar_alarm.sunrise_sunset_http.HttpRequests;
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest;
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CreateAlarmFragment extends Fragment implements OnMapReadyCallback{
-    //@BindView(R.id.fragment_createalarm_timePicker) TimePicker timePicker;
+public class CreateAlarmFragment extends Fragment{
+
     @BindView(R.id.fragment_createalarm_title)
     EditText title;
     @BindView(R.id.fragment_createalarm_scheduleAlarm)
@@ -69,30 +63,56 @@ public class CreateAlarmFragment extends Fragment implements OnMapReadyCallback{
     CheckBox sun;
     @BindView(R.id.fragment_createalarm_recurring_options)
     LinearLayout recurringOptions;
+    @BindView(R.id.fragment_createalarm_location_spinner)
+    Spinner spinner;
+
+    SpinnerAdapter spinnerAdapter;
     TimePicker timePicker;
-    GoogleMap googleMap;
-    private GpsTracker gpsTracker;
-    private double latitude;
-    private double longitude;
-    private HttpURLConnection httpUrlConnection;
+
+    private LocationRepository locationRepository;
+    private List<Location> Locations;
 
     private CreateAlarmViewModel createAlarmViewModel;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
+        Locations = new ArrayList<Location>();
         createAlarmViewModel = ViewModelProviders.of(this).get(CreateAlarmViewModel.class);
+        locationRepository = new LocationRepository(getActivity().getApplication());
+        locationRepository.getAll().observe(this, new Observer<List<Location>>() {
+            @Override
+            public void onChanged(List<Location> locations) {
+                Locations = locations;
+                spinnerAdapter = new SpinnerAdapter(getActivity(), Locations);
+                spinner.setAdapter(spinnerAdapter);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                        Location locationItem = (Location) adapterView.getItemAtPosition(position);
+                        SunriseSunsetRequest sunriseSunsetRequest =
+                                new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, Calendar.getInstance(), true);
+                        new TimeResponseTask().execute(sunriseSunsetRequest);
 
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+            }
+        });
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_createalarm, container, false);
-        getLocation(view);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_add_location_map);
-        mapFragment.getMapAsync(this);
+
         ButterKnife.bind(this, view);
 
         recurring.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -144,75 +164,15 @@ public class CreateAlarmFragment extends Fragment implements OnMapReadyCallback{
         alarm.schedule(getContext());
     }
 
-    public void getLocation(View view){
-        gpsTracker = new GpsTracker(view.getContext());
-        if(gpsTracker.canGetLocation()){
-            latitude = gpsTracker.getLatitude();
-            longitude = gpsTracker.getLongitude();
-
-        }else{
-            gpsTracker.showSettingsAlert();
-        }
-    }
-
-    public void getTimeZone(double latitude, double longitude) throws IOException {
-        String timeStamp = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
-        String location = latitude + "," + longitude;
-        //?location=38.908133,-77.047119&timestamp=1458000000&key=YOUR_API_KEY
-        String query = String.format("?location=%s&timestamp=%s&key=%s",
-                URLEncoder.encode(location, "UTF-8"),
-                URLEncoder.encode(timeStamp, "UTF-8"),
-                URLEncoder.encode(String.valueOf(getResources().getString(R.string.api_key)), "UTF-8"));
-        URL url = new URL("https://maps.googleapis.com/maps/api/timezone/json" + query);
-
-        httpUrlConnection = (HttpURLConnection)url.openConnection();
-        httpUrlConnection.setRequestMethod("GET");
-        httpUrlConnection.setDoOutput(true);
-        httpUrlConnection.setConnectTimeout(5000);
-        httpUrlConnection.setReadTimeout(5000);
-
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
-        String inputLine;
-        StringBuilder content = new StringBuilder();
-
-        while ((inputLine = bufferedReader.readLine()) != null) {
-            content.append(inputLine);
-        }
-
-    }
-
-    @Override
-    public void onMapReady(GoogleMap gMap) {
-        googleMap = gMap;
-        LatLng current = new LatLng(latitude, longitude);
-        googleMap.addMarker(new MarkerOptions().position(current).title(latitude + ", " + longitude));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(current));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 11.0f));
-
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                googleMap.clear();
-                googleMap.addMarker(new MarkerOptions().position(latLng).title(latLng.latitude + ", " + latLng.longitude));
-                googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11.0f));
-                latitude = latLng.latitude;
-                longitude = latLng.longitude;
-                DecimalFormat df = new DecimalFormat("#.0000");
-                df.format(latitude);
-                df.format(longitude);
-                new TimeZoneTask().execute();
-                new TimeResponseTask().execute();
-            }
-        });
-
-    }
-    private class TimeZoneTask extends AsyncTask<Void, Void, Void>{
-
+    private class TimeResponseTask extends AsyncTask<SunriseSunsetRequest, Void,Void> {
+        HttpRequests httpRequests;
+        SunriseSunsetResponse response;
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Void doInBackground(SunriseSunsetRequest... sunriseSunsetRequests) {
+
             try {
-                getTimeZone(latitude, longitude);
+                httpRequests = new HttpRequests(sunriseSunsetRequests[0]);
+                response = httpRequests.GetSolarData(sunriseSunsetRequests[0]);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -224,21 +184,4 @@ public class CreateAlarmFragment extends Fragment implements OnMapReadyCallback{
             super.onPostExecute(unused);
         }
     }
-
-    private class TimeResponseTask extends AsyncTask<Void, Void,Void>{
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float)latitude, (float) longitude, Calendar.getInstance(), true);
-
-            try {
-                HttpRequests httpRequests = new HttpRequests(sunriseSunsetRequest);
-                SunriseSunsetResponse response = httpRequests.GetSolarData(sunriseSunsetRequest);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
-
 }

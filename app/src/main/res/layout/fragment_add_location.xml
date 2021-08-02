@@ -9,7 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="8dp">
         <fragment
             android:id="@+id/fragment_add_location_map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -20,26 +21,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="191dp"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="10dp"
-            app:layout_constraintBottom_toTopOf="@id/fragment_add_location_getTimeZoneButton"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_add_location_addLocationButton"
             app:layout_constraintTop_toBottomOf="@id/fragment_add_location_map">
 
             <LinearLayout
                 android:id="@id/text_column"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:layout_weight="1">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
+                    android:gravity="center_vertical"
                     android:text="Location Name: "
-                    android:textSize="20dp"
-                    android:gravity="center_vertical"/>
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/fragment_add_location_LatitudeText"
@@ -72,12 +73,12 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"
                 android:gravity="center"
-                app:layout_constraintBottom_toTopOf="@id/fragment_add_location_getTimeZoneButton"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@id/fragment_add_location_addLocationButton"
                 app:layout_constraintLeft_toRightOf="@+id/text_column"
                 app:layout_constraintTop_toBottomOf="@id/fragment_add_location_map">
-                
+
                 <EditText
                     android:id="@+id/fragment_add_location_LocationNameText"
                     android:layout_width="match_parent"
@@ -89,10 +90,10 @@
                     android:id="@+id/fragment_add_location_Latitude"
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
-                    android:text="TEST"
-                    android:textSize="15dp"
                     android:gravity="bottom"
+                    android:text="TEST"
                     android:textAlignment="center"
+                    android:textSize="15dp"
 
                     app:layout_constraintTop_toBottomOf="@+id/fragment_add_location_map" />
 
@@ -100,10 +101,10 @@
                     android:id="@+id/fragment_add_location_Longitude"
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
-                    android:text="TEST"
-                    android:textSize="15dp"
                     android:gravity="bottom"
+                    android:text="TEST"
                     android:textAlignment="center"
+                    android:textSize="15dp"
 
                     app:layout_constraintTop_toBottomOf="@+id/fragment_add_location_map" />
 
@@ -111,24 +112,16 @@
                     android:id="@+id/fragment_add_location_TimeZone"
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
-                    android:text="TEST"
-                    android:textSize="15dp"
                     android:gravity="bottom"
+                    android:text="TEST"
                     android:textAlignment="center"
+                    android:textSize="15dp"
 
                     app:layout_constraintTop_toBottomOf="@+id/fragment_add_location_map" />
 
             </LinearLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/fragment_add_location_getTimeZoneButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Get TimeZone"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@+id/fragment_add_location_addLocationButton"
-            android:gravity="center_horizontal" />
         <Button
             android:id="@+id/fragment_add_location_addLocationButton"
             android:layout_width="match_parent"
