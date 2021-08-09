@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
@@ -65,7 +66,18 @@ public class CreateAlarmFragment extends Fragment{
     LinearLayout recurringOptions;
     @BindView(R.id.fragment_createalarm_location_spinner)
     Spinner spinner;
-
+    @BindView(R.id.fragment_createalarm_sunrise_radio_button)
+    RadioButton sunrise;
+    @BindView(R.id.fragment_createalarm_solarnoon_radio_button)
+    RadioButton solarnoon;
+    @BindView(R.id.fragment_createalarm_sunset_radio_button)
+    RadioButton sunset;
+    @BindView(R.id.fragment_createalarm_radio_button_at)
+    RadioButton at;
+    @BindView(R.id.fragment_createalarm_radio_button_before)
+    RadioButton before;
+    @BindView(R.id.fragment_createalarm_radio_button_after)
+    RadioButton after;
     SpinnerAdapter spinnerAdapter;
     TimePicker timePicker;
 
@@ -183,5 +195,10 @@ public class CreateAlarmFragment extends Fragment{
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
         }
+    }
+
+    public void onSetTimeRadioButtonClicked(View view)
+    {
+
     }
 }
