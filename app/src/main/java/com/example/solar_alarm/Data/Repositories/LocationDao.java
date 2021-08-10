@@ -17,7 +17,7 @@ public interface LocationDao
     @Insert
     void Insert(Location location);
 
-    @Query("SELECT * FROM Locations ORDER BY Name")
+    @Query("SELECT * FROM Location ORDER BY Name")
     LiveData<List<Location>> getAll();
 
     @Update

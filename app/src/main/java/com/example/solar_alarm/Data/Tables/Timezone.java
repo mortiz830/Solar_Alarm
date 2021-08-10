@@ -1,8 +1,9 @@
 package com.example.solar_alarm.Data.Tables;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 
-@Entity(tableName = "Timezones")
+@Entity(tableName = "Timezone", indices = {@Index(value = {"ZoneName"},unique = true)})
 public class Timezone extends TableBase
 {
     public String CountryCode;

@@ -7,7 +7,7 @@ import androidx.room.ForeignKey;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Entity(tableName = "SolarTimes")
+@Entity(tableName = "SolarTime")
 public class SolarTime extends TableBase
 {
     @NonNull

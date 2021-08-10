@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
-@Entity(tableName = "SolarAlarms")
+@Entity(tableName = "SolarAlarm")
 public class SolarAlarm extends TableBase
 {
     @NonNull

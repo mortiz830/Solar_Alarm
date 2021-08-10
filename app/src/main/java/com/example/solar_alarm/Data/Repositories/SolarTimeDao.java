@@ -17,7 +17,7 @@ public interface SolarTimeDao
     @Insert
     void Insert(SolarTime solarTime);
 
-    @Query("SELECT * FROM SolarTimes ORDER BY Date")
+    @Query("SELECT * FROM SolarTime ORDER BY Date")
     LiveData<List<SolarTime>> getAll();
 
     @Update

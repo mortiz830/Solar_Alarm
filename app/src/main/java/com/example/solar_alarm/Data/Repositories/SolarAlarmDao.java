@@ -17,7 +17,7 @@ public interface SolarAlarmDao
     @Insert
     void Insert(SolarAlarm solarAlarm);
 
-    @Query("SELECT * FROM SolarAlarms ORDER BY Name")
+    @Query("SELECT * FROM SolarAlarm ORDER BY Name")
     LiveData<List<SolarAlarm>> getAll();
 
     @Update

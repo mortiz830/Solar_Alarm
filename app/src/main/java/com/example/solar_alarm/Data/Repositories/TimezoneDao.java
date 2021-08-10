@@ -17,7 +17,7 @@ public interface TimezoneDao
     @Insert
     void Insert(Timezone timezone);
 
-    @Query("SELECT * FROM Timezones ORDER BY ZoneName")
+    @Query("SELECT * FROM Timezone ORDER BY ZoneName")
     LiveData<List<Timezone>> getAll();
 
     @Update
