@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
@@ -78,6 +79,10 @@ public class CreateAlarmFragment extends Fragment{
     RadioButton before;
     @BindView(R.id.fragment_createalarm_radio_button_after)
     RadioButton after;
+    @BindView(R.id.fragment_createalarm_alarmtime_radiogroup)
+    RadioGroup alarmTime;
+    @BindView(R.id.fragment_createalarm_alarmtype_radiogroup)
+    RadioGroup alarmType;
     SpinnerAdapter spinnerAdapter;
     TimePicker timePicker;
 
@@ -112,6 +117,12 @@ public class CreateAlarmFragment extends Fragment{
 
                     @Override
                     public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+                alarmType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup radioGroup, int i) {
 
                     }
                 });
@@ -197,8 +208,53 @@ public class CreateAlarmFragment extends Fragment{
         }
     }
 
-    public void onSetTimeRadioButtonClicked(View view)
-    {
-
-    }
+//    public void onRadioButtonClicked(View view)
+//    {
+//        boolean checked = ((RadioButton) view).isChecked();
+//        switch(view.getId()) {
+//            case R.id.fragment_createalarm_sunrise_radio_button:
+//                if (checked)
+//                {
+//                    solarnoon.setChecked(false);
+//                    sunset.setChecked(false);
+//                }
+//                    break;
+//            case R.id.fragment_createalarm_solarnoon_radio_button:
+//                if (checked)
+//                {
+//                    sunrise.setChecked(false);
+//                    sunset.setChecked(false);
+//                }
+//                    break;
+//            case R.id.fragment_createalarm_sunset_radio_button:
+//                if (checked)
+//                {
+//                    sunrise.setChecked(false);
+//                    solarnoon.setChecked(false);
+//                }
+//                    break;
+//            case R.id.fragment_createalarm_radio_button_at:
+//                if (checked)
+//                {
+//                    before.setChecked(false);
+//                    after.setChecked(false);
+//                }
+//                    break;
+//            case R.id.fragment_createalarm_radio_button_before:
+//                if (checked)
+//                {
+//                    at.setChecked(false);
+//                    after.setChecked(false);
+//                }
+//                    break;
+//            case R.id.fragment_createalarm_radio_button_after:
+//                if (checked)
+//                {
+//                    at.setChecked(false);
+//                    before.setChecked(false);
+//                }
+//
+//                    break;
+//        }
+//    }
 }

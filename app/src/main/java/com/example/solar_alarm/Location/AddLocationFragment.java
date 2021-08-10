@@ -105,13 +105,15 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
 
     public void getTimeZone(double latitude, double longitude) throws IOException {
         String timeStamp = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
-        String location = latitude + "," + longitude;
-        //?location=38.908133,-77.047119&timestamp=1458000000&key=YOUR_API_KEY
-        String query = String.format("?location=%s&timestamp=%s&key=%s",
-                URLEncoder.encode(location, "UTF-8"),
-                URLEncoder.encode(timeStamp, "UTF-8"),
-                URLEncoder.encode(String.valueOf(getResources().getString(R.string.api_key)), "UTF-8"));
-        URL url = new URL("https://maps.googleapis.com/maps/api/timezone/json" + query);
+
+        //?key=TLB8N68ONE37&format=xml&by=position&lat=40.689247&lng=-74.044502
+        String query = String.format("?key=%s&format=%s&by=position&lat=%s&lng=%s",
+                URLEncoder.encode(String.valueOf(getResources().getString(R.string.time_zone_api_key)), "UTF-8"),
+                URLEncoder.encode(String.valueOf(getResources().getString(R.string.url_format)), "UTF-8"),
+                URLEncoder.encode(String.valueOf(latitude), "UTF-8"),
+                        URLEncoder.encode(String.valueOf(longitude), "UTF-8"),
+                URLEncoder.encode(timeStamp, "UTF-8"));
+        URL url = new URL("http://api.timezonedb.com/v2.1/get-time-zone" + query);
 
         httpUrlConnection = (HttpURLConnection)url.openConnection();
         httpUrlConnection.setRequestMethod("GET");
@@ -137,11 +139,11 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
     {
         int locationID = new Random().nextInt(Integer.MAX_VALUE);
         String locationName = locationNameText.getText().toString();
-        String timeZone = timeZoneResults.getTimeZoneId();
+        String timeZone = timeZoneResults.getZoneName();
 
         com.example.solar_alarm.Data.Tables.Location location = new Location();
         location.Name = locationName;
-        location.TimezoneId = timeZone;
+        //location.TimezoneId = timeZone;
         location.Latitude = latitude;
         location.Longitude = longitude;
         location.Id = locationID;
@@ -166,7 +168,7 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         protected void onPostExecute(Void unused)
         {
             super.onPostExecute(unused);
-            timeZoneText.setText(timeZoneResults.getTimeZoneId());
+            timeZoneText.setText(timeZoneResults.getZoneName());
         }
     }
 

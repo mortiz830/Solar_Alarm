@@ -3,4 +3,7 @@
     <string name="api_key" translatable="false">
         AIzaSyBZeFACwPok7vopQBJw7RQHXN0NpR9hfIg
     </string>
+    <string name="time_zone_api_key" translatable="false">
+        TLB8N68ONE37
+    </string>
 </resources>
