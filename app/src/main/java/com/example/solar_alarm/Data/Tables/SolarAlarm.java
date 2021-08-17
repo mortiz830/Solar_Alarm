@@ -3,8 +3,13 @@ package com.example.solar_alarm.Data.Tables;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 
-@Entity(tableName = "SolarAlarm")
+@Entity
+(
+    tableName = "SolarAlarm",
+    indices = {@Index(value = {"Name", "LocationId"}, unique = true)}
+)
 public class SolarAlarm extends TableBase
 {
     @NonNull
