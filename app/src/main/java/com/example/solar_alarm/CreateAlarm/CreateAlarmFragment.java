@@ -1,6 +1,7 @@
 package com.example.solar_alarm.CreateAlarm;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -25,7 +27,9 @@ import androidx.navigation.Navigation;
 
 import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
+import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
 import com.example.solar_alarm.Data.Tables.Location;
+import com.example.solar_alarm.Data.Tables.SolarTime;
 import com.example.solar_alarm.R;
 import com.example.solar_alarm.sunrise_sunset_http.HttpRequests;
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest;
@@ -33,6 +37,7 @@ import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -88,6 +93,7 @@ public class CreateAlarmFragment extends Fragment{
 
     private LocationRepository locationRepository;
     private List<Location> Locations;
+    private SolarTimeRepository solarTimeRepository;
 
     private CreateAlarmViewModel createAlarmViewModel;
 
@@ -202,10 +208,32 @@ public class CreateAlarmFragment extends Fragment{
             return null;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
-        protected void onPostExecute(Void unused) {
+        protected void onPostExecute(Void unused)
+        {
             super.onPostExecute(unused);
+            solarTimeRepository.Insert(newSolarTime(response));
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public SolarTime newSolarTime(SunriseSunsetResponse sunriseSunsetResponse)
+    {
+        SolarTime solarTime = new SolarTime();
+
+       // solarTime.Date =
+        solarTime.Sunrise = LocalTime.parse(sunriseSunsetResponse.getSunrise());
+        solarTime.Sunset = LocalTime.parse(sunriseSunsetResponse.getSunset());
+        solarTime.SolarNoon = LocalTime.parse(sunriseSunsetResponse.getSolarNoon());
+        solarTime.CivilTwilightBegin = LocalTime.parse(sunriseSunsetResponse.getCivilTwilightBegin());
+        solarTime.CivilTwilightEnd = LocalTime.parse(sunriseSunsetResponse.getCivilTwilightEnd());
+        solarTime.NauticalTwilightBegin = LocalTime.parse(sunriseSunsetResponse.getNauticalTwilightBegin());
+        solarTime.NauticalTwilightEnd = LocalTime.parse(sunriseSunsetResponse.getNauticalTwilightEnd());
+        solarTime.AstronomicalTwilightBegin = LocalTime.parse(sunriseSunsetResponse.getAstronomicalTwilightBegin());
+        solarTime.AstronomicalTwilightEnd = LocalTime.parse(sunriseSunsetResponse.getAstronomicalTwilightEnd());
+
+        return solarTime;
     }
 
 //    public void onRadioButtonClicked(View view)

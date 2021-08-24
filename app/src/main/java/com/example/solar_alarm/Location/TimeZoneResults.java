@@ -2,22 +2,22 @@ package com.example.solar_alarm.Location;
 
 public class TimeZoneResults {
 
-    private String status;
-    private String message;
-    private String countryCode;
-    private String countryName;
-    private String zoneName;
-    private String abbreviation;
-    private int gmtOffset;
-    private String dst;
-    private int zoneStart;
-    private int zoneEnd;
-    private String nextAbbreviation;
-    private int timestamp;
-    private String formatted;
+    public String status;
+    public String message;
+    public String countryCode;
+    public String countryName;
+    public String zoneName;
+    public String abbreviation;
+    public int gmtOffset;
+    public boolean dst;
+    public int zoneStart;
+    public int zoneEnd;
+    public String nextAbbreviation;
+    public int timestamp;
+    public String formatted;
 
     public TimeZoneResults(String status, String message, String countryCode, String countryName, String zoneName,
-                                String abbreviation, int gmtOffset, String dst, int zoneStart, int zoneEnd, String nextAbbreviation,
+                                String abbreviation, int gmtOffset, boolean dst, int zoneStart, int zoneEnd, String nextAbbreviation,
                                 int timestamp, String formatted)
     {
         this.status = status;

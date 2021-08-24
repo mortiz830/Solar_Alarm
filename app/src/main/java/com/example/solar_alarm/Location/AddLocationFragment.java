@@ -16,6 +16,7 @@ import androidx.navigation.Navigation;
 
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
 import com.example.solar_alarm.Data.Tables.Location;
+import com.example.solar_alarm.Data.Tables.Timezone;
 import com.example.solar_alarm.R;
 import com.example.solar_alarm.Service.GpsTracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -55,6 +56,7 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
     private GpsTracker gpsTracker;
     private double latitude;
     private double longitude;
+    public int timeZoneID;
     private HttpURLConnection httpUrlConnection;
     TimeZoneResults timeZoneResults;
 
@@ -106,7 +108,6 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
     public void getTimeZone(double latitude, double longitude) throws IOException {
         String timeStamp = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
 
-        //?key=TLB8N68ONE37&format=xml&by=position&lat=40.689247&lng=-74.044502
         String query = String.format("?key=%s&format=%s&by=position&lat=%s&lng=%s",
                 URLEncoder.encode(String.valueOf(getResources().getString(R.string.time_zone_api_key)), "UTF-8"),
                 URLEncoder.encode(String.valueOf(getResources().getString(R.string.url_format)), "UTF-8"),
@@ -141,9 +142,9 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         String locationName = locationNameText.getText().toString();
         String timeZone = timeZoneResults.getZoneName();
 
-        com.example.solar_alarm.Data.Tables.Location location = new Location();
+        Location location = new Location();
         location.Name = locationName;
-        //location.TimezoneId = timeZone;
+        location.TimezoneId = timeZoneID;
         location.Latitude = latitude;
         location.Longitude = longitude;
         location.Id = locationID;
@@ -151,6 +152,23 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         locationRepository.Insert(location);
 
 
+    }
+
+    public void saveTimeZone()
+    {
+        timeZoneID = new Random().nextInt(Integer.MAX_VALUE);
+        Timezone timezone = new Timezone();
+        timezone.CountryCode = timeZoneResults.countryCode;
+        timezone.CountryName = timeZoneResults.countryName;
+        timezone.ZoneName = timeZoneResults.zoneName;
+        timezone.Abbreviation = timeZoneResults.abbreviation;
+        timezone.GmtOffset = timeZoneResults.gmtOffset;
+        timezone.Dst = timeZoneResults.dst;
+        timezone.ZoneStart = timeZoneResults.zoneStart;
+        timezone.ZoneEnd = timeZoneResults.zoneEnd;
+        timezone.NextAbbreviation = timeZoneResults.nextAbbreviation;
+        timezone.Timestamp = timeZoneResults.timestamp;
+        timezone.Id = timeZoneID;
     }
     private class TimeZoneTask extends AsyncTask<Void, Void, Void> {
 
@@ -169,6 +187,8 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         {
             super.onPostExecute(unused);
             timeZoneText.setText(timeZoneResults.getZoneName());
+            if(locationRepository.isLocationExists(timeZoneResults.getZoneName()))
+                saveTimeZone();
         }
     }
 

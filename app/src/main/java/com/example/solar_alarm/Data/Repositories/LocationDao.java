@@ -20,6 +20,9 @@ public interface LocationDao
     @Query("SELECT * FROM Location ORDER BY Name")
     LiveData<List<Location>> getAll();
 
+    @Query("SELECT EXISTS(SELECT * FROM Location WHERE Name = :Name)")
+    boolean isLocationExists(String Name);
+
     @Update
     void Update(Location location);
 

@@ -1,6 +1,7 @@
 package com.example.solar_alarm.Data.Repositories;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
@@ -37,4 +38,12 @@ public class LocationRepository
     }
 
     public LiveData<List<Location>> getAll() { return locationsLiveData; }
+
+    public boolean isLocationExists(String Name)
+    {
+        if (SolarAlarmDatabase.databaseWriteExecutor.execute(() -> locationDao.isLocationExists(Name)))
+            return true;
+        else
+            return false;
+    }
 }
