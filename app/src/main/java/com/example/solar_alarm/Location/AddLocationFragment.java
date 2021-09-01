@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
@@ -34,7 +35,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Random;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -58,6 +58,7 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
     private double longitude;
     public int timeZoneID;
     private HttpURLConnection httpUrlConnection;
+    boolean isLocationExists;
     TimeZoneResults timeZoneResults;
 
     LocationRepository locationRepository;
@@ -82,13 +83,19 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         ButterKnife.bind(this, view);
         latitudeText.setText(String.valueOf(latitude));
         longitudeText.setText(String.valueOf(longitude));
-        timeZoneText.setText(TimeZone.getDefault().toZoneId().toString());
+        //new TimeZoneTask().execute();
+        //timeZoneText.setText(TimeZone.getDefault().toZoneId().toString());
 
         addLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveLocation();
-                Navigation.findNavController(view).navigate(R.id.action_addLocationFragment_to_alarmsListFragment);
+                try{
+                    saveLocation();
+                    Navigation.findNavController(view).navigate(R.id.action_addLocationFragment_to_alarmsListFragment);
+                } catch (Exception e) {
+                    Toast.makeText(getView().getContext(), "Location Name Already Exists!", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -140,7 +147,6 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
     {
         int locationID = new Random().nextInt(Integer.MAX_VALUE);
         String locationName = locationNameText.getText().toString();
-        String timeZone = timeZoneResults.getZoneName();
 
         Location location = new Location();
         location.Name = locationName;
@@ -150,8 +156,6 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         location.Id = locationID;
 
         locationRepository.Insert(location);
-
-
     }
 
     public void saveTimeZone()
@@ -176,6 +180,7 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         protected Void doInBackground(Void... voids) {
             try {
                 getTimeZone(latitude, longitude);
+                isLocationExists = locationRepository.isLocationExists(timeZoneResults.getZoneName());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -187,8 +192,7 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         {
             super.onPostExecute(unused);
             timeZoneText.setText(timeZoneResults.getZoneName());
-            if(locationRepository.isLocationExists(timeZoneResults.getZoneName()))
-                saveTimeZone();
+            saveTimeZone();
         }
     }
 
