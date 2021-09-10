@@ -21,7 +21,7 @@ public interface LocationDao
     LiveData<List<Location>> getAll();
 
     @Query("SELECT EXISTS(SELECT * FROM Location WHERE Name = :name)")
-    boolean isLocationExists(String name);
+    int isLocationExists(String name);
 
     @Update
     void Update(Location location);

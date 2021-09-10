@@ -35,6 +35,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -43,7 +44,7 @@ import butterknife.ButterKnife;
 public class AddLocationFragment extends Fragment implements OnMapReadyCallback {
 
     @BindView(R.id.fragment_add_location_addLocationButton)
-    Button addLocation;
+    Button addLocationButton;
     @BindView(R.id.fragment_add_location_Latitude)
     TextView latitudeText;
     @BindView(R.id.fragment_add_location_Longitude)
@@ -62,7 +63,6 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
     TimeZoneResults timeZoneResults;
 
     LocationRepository locationRepository;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,15 +84,18 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         latitudeText.setText(String.valueOf(latitude));
         longitudeText.setText(String.valueOf(longitude));
         //new TimeZoneTask().execute();
-        //timeZoneText.setText(TimeZone.getDefault().toZoneId().toString());
+        timeZoneText.setText(TimeZone.getDefault().toZoneId().toString());
 
-        addLocation.setOnClickListener(new View.OnClickListener() {
+        addLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try{
                     saveLocation();
                     Navigation.findNavController(view).navigate(R.id.action_addLocationFragment_to_alarmsListFragment);
-                } catch (Exception e) {
+                } catch(android.database.sqlite.SQLiteConstraintException s){
+                    Toast.makeText(getView().getContext(), "Location Name Already Exists!", Toast.LENGTH_LONG).show();
+                    s.printStackTrace();
+                }catch (Exception e) {
                     Toast.makeText(getView().getContext(), "Location Name Already Exists!", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
@@ -139,23 +142,25 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         Gson gson = new Gson();
         timeZoneResults = gson.fromJson(content.toString(), TimeZoneResults.class);
         bufferedReader.close();
-
-
     }
 
     public void saveLocation()
     {
-        int locationID = new Random().nextInt(Integer.MAX_VALUE);
-        String locationName = locationNameText.getText().toString();
+        isLocationExists = locationRepository.isLocationExists(locationNameText.toString());
+        if(!isLocationExists)
+        {
+            int locationID = new Random().nextInt(Integer.MAX_VALUE);
+            String locationName = locationNameText.getText().toString();
 
-        Location location = new Location();
-        location.Name = locationName;
-        location.TimezoneId = timeZoneID;
-        location.Latitude = latitude;
-        location.Longitude = longitude;
-        location.Id = locationID;
+            Location location = new Location();
+            location.Name = locationName;
+            location.TimezoneId = timeZoneID;
+            location.Latitude = latitude;
+            location.Longitude = longitude;
+            location.Id = locationID;
 
-        locationRepository.Insert(location);
+            locationRepository.Insert(location);
+        }
     }
 
     public void saveTimeZone()
@@ -174,13 +179,14 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         timezone.Timestamp = timeZoneResults.timestamp;
         timezone.Id = timeZoneID;
     }
+
     private class TimeZoneTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
             try {
                 getTimeZone(latitude, longitude);
-                isLocationExists = locationRepository.isLocationExists(timeZoneResults.getZoneName());
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

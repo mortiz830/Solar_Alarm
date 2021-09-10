@@ -40,7 +40,7 @@ public class LocationRepository
 
     public boolean isLocationExists(String name)
     {
-        if (locationDao.isLocationExists(name))
+        if (locationDao.isLocationExists(name) == 1)
             return true;
         else
             return false;
