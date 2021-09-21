@@ -21,7 +21,13 @@ public interface LocationDao
     LiveData<List<Location>> getAll();
 
     @Query("SELECT EXISTS(SELECT * FROM Location WHERE Name = :name)")
-    int isLocationExists(String name);
+    boolean isLocationNameExists(String name);
+
+    @Query("SELECT EXISTS(SELECT * FROM Location WHERE Latitude = :latitude)")
+    boolean isLocationLatitudeExists(double latitude);
+
+    @Query("SELECT EXISTS(SELECT * FROM Location WHERE Longitude = :longitude)")
+    boolean isLocationLongitudeExists(double longitude);
 
     @Update
     void Update(Location location);

@@ -38,11 +38,18 @@ public class LocationRepository
 
     public LiveData<List<Location>> getAll() { return locationsLiveData; }
 
-    public boolean isLocationExists(String name)
+    public boolean isLocationNameExists(String name)
     {
-        if (locationDao.isLocationExists(name) == 1)
-            return true;
-        else
-            return false;
+        return locationDao.isLocationNameExists(name);
+    }
+
+    public boolean isLocationLatitudeExists(double latitude)
+    {
+        return locationDao.isLocationLatitudeExists(latitude);
+    }
+
+    public boolean isLocationLongitudeExists(double longitude)
+    {
+        return locationDao.isLocationLongitudeExists(longitude);
     }
 }
