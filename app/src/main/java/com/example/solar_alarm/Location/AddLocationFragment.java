@@ -59,7 +59,7 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
     private double longitude;
     public int timeZoneID;
     private HttpURLConnection httpUrlConnection;
-    boolean isLocationNameExists;
+    Boolean isLocationNameExists;
     boolean isLocationLatitudeExists;
     boolean isLocationLongitudeExists;
     boolean isLocationPointExists;
@@ -94,13 +94,24 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
             public void onClick(View view) {
                 locationName = locationNameText.getText().toString();
                 try{
-                    new LocationNameExistsTask().execute();
+                    isLocationNameExists = new LocationNameExistsTask().execute(locationName).get();
+                    isLocationPointExists = new LocationPointExistsTask().execute(latitude, longitude).get();
                 } catch(Exception e){
                     e.printStackTrace();
-                }finally {
-                    if(isLocationNameExists == false && isLocationPointExists == false)
-                        Navigation.findNavController(view).navigate(R.id.action_addLocationFragment_to_alarmsListFragment);
                 }
+
+                if(!isLocationNameExists  && !isLocationPointExists)
+                {
+                    saveLocation();
+                    Navigation.findNavController(view).navigate(R.id.action_addLocationFragment_to_alarmsListFragment);
+                }
+                else if(isLocationNameExists && isLocationPointExists)
+                {
+                    Toast.makeText(getContext(), "Location Name & Point Already Exists!", Toast.LENGTH_LONG).show();
+                } else if (isLocationNameExists)
+                    Toast.makeText(getContext(), "Location Name Already Exists!", Toast.LENGTH_LONG).show();
+                else if(isLocationPointExists)
+                    Toast.makeText(getContext(), "Location Point Already Exists!", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -148,31 +159,18 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
 
     public void saveLocation()
     {
-        if(isLocationNameExists == true && isLocationPointExists == true)
-        {
-            Toast.makeText(getContext(), "Location Name & Point Already Exists!", Toast.LENGTH_LONG).show();
-        }
-        else if(isLocationNameExists == false)
-        {
-            if(isLocationPointExists == false)
-            {
-                int locationID = new Random().nextInt(Integer.MAX_VALUE);
-                String locationName = locationNameText.getText().toString();
+        int locationID = new Random().nextInt(Integer.MAX_VALUE);
+        String locationName = locationNameText.getText().toString();
 
-                Location location = new Location();
-                location.Name = locationName;
-                location.TimezoneId = timeZoneID;
-                location.Latitude = latitude;
-                location.Longitude = longitude;
-                location.Id = locationID;
+        Location location = new Location();
+        location.Name = locationName;
+        location.TimezoneId = timeZoneID;
+        location.Latitude = latitude;
+        location.Longitude = longitude;
+        location.Id = locationID;
 
-                locationRepository.Insert(location);
-            }
-            else
-                Toast.makeText(getContext(), "Location Point Already Exists!", Toast.LENGTH_LONG).show();
-        }
-        else
-            Toast.makeText(getContext(), "Location Name Already Exists!", Toast.LENGTH_LONG).show();
+        locationRepository.Insert(location);
+        Toast.makeText(getContext(), "New Location Created", Toast.LENGTH_LONG).show();
     }
 
     public void saveTimeZone()
@@ -213,47 +211,29 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         }
     }
 
-    private class LocationNameExistsTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
+    private class LocationNameExistsTask extends AsyncTask<String, Void, Boolean> {
+        
+        protected Boolean doInBackground(String... strings ) {
+            Boolean result = false;
             try{
-                isLocationNameExists = locationRepository.isLocationNameExists(locationName);
+                result = locationRepository.isLocationNameExists(locationName);
             }catch (Exception e){
                 e.printStackTrace();
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void unused) {
-            super.onPostExecute(unused);
-            new LocationPointExistsTask().execute();
+            return result;
         }
     }
 
-    private class LocationPointExistsTask extends AsyncTask<Void, Void, Void> {
+    private class LocationPointExistsTask extends AsyncTask<Double, Void, Boolean> {
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Boolean doInBackground(Double... doubles) {
             try{
                 isLocationLatitudeExists = locationRepository.isLocationLatitudeExists(latitude);
                 isLocationLongitudeExists = locationRepository.isLocationLongitudeExists(longitude);
             }catch (Exception e){
                 e.printStackTrace();
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void unused) {
-            super.onPostExecute(unused);
-            if(isLocationLatitudeExists == true && isLocationLongitudeExists == true)
-                isLocationPointExists = true;
-            else
-                isLocationPointExists = false;
-
-            saveLocation();
-
+            return isLocationLatitudeExists && isLocationLongitudeExists;
         }
     }
 

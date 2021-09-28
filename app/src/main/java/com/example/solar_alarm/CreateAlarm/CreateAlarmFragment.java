@@ -37,7 +37,10 @@ import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -221,9 +224,11 @@ public class CreateAlarmFragment extends Fragment{
     public SolarTime newSolarTime(SunriseSunsetResponse sunriseSunsetResponse)
     {
         SolarTime solarTime = new SolarTime();
+        String pattern = "hh:mm:ss a";
+        DateFormat dateFormat = new SimpleDateFormat(pattern);
 
        // solarTime.Date =
-        solarTime.Sunrise = LocalTime.parse(sunriseSunsetResponse.getSunrise());
+        solarTime.Sunrise = LocalTime.parse(sunriseSunsetResponse.getSunrise(), DateTimeFormatter.ofPattern(pattern));
         solarTime.Sunset = LocalTime.parse(sunriseSunsetResponse.getSunset());
         solarTime.SolarNoon = LocalTime.parse(sunriseSunsetResponse.getSolarNoon());
         solarTime.CivilTwilightBegin = LocalTime.parse(sunriseSunsetResponse.getCivilTwilightBegin());
