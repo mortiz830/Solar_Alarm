@@ -37,14 +37,14 @@ import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,6 +93,11 @@ public class CreateAlarmFragment extends Fragment{
     RadioGroup alarmType;
     SpinnerAdapter spinnerAdapter;
     TimePicker timePicker;
+    Location locationItem;
+    SolarTime solarTimeItem;
+
+    boolean isLocationIdExists;
+    boolean isDateExists;
 
     private LocationRepository locationRepository;
     private List<Location> Locations;
@@ -107,6 +112,7 @@ public class CreateAlarmFragment extends Fragment{
         
         Locations = new ArrayList<Location>();
         createAlarmViewModel = ViewModelProviders.of(this).get(CreateAlarmViewModel.class);
+        solarTimeRepository = new SolarTimeRepository(getActivity().getApplication());
         locationRepository = new LocationRepository(getActivity().getApplication());
         locationRepository.getAll().observe(this, new Observer<List<Location>>() {
             @Override
@@ -117,10 +123,31 @@ public class CreateAlarmFragment extends Fragment{
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                        Location locationItem = (Location) adapterView.getItemAtPosition(position);
+                        locationItem = (Location) adapterView.getItemAtPosition(position);
+
                         SunriseSunsetRequest sunriseSunsetRequest =
                                 new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, Calendar.getInstance(), true);
-                        new TimeResponseTask().execute(sunriseSunsetRequest);
+                        try {
+                            solarTimeItem = new TimeResponseTask().execute(sunriseSunsetRequest).get();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            isLocationIdExists = new LocationIdExistsTask().execute().get();
+                            isDateExists = new DateExistsTask().execute().get();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        if(!isLocationIdExists && !isDateExists)
+                        {
+                            solarTimeRepository.Insert(solarTimeItem);
+                        }
 
                     }
 
@@ -196,49 +223,76 @@ public class CreateAlarmFragment extends Fragment{
         alarm.schedule(getContext());
     }
 
-    private class TimeResponseTask extends AsyncTask<SunriseSunsetRequest, Void,Void> {
+    private class TimeResponseTask extends AsyncTask<SunriseSunsetRequest, Void, SolarTime> {
         HttpRequests httpRequests;
         SunriseSunsetResponse response;
+        SolarTime solarTime;
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
-        protected Void doInBackground(SunriseSunsetRequest... sunriseSunsetRequests) {
+        protected SolarTime doInBackground(SunriseSunsetRequest... sunriseSunsetRequests) {
 
             try {
                 httpRequests = new HttpRequests(sunriseSunsetRequests[0]);
                 response = httpRequests.GetSolarData(sunriseSunsetRequests[0]);
+                solarTime = newSolarTime(response);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return null;
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        @Override
-        protected void onPostExecute(Void unused)
-        {
-            super.onPostExecute(unused);
-            solarTimeRepository.Insert(newSolarTime(response));
+            return solarTime;
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public SolarTime newSolarTime(SunriseSunsetResponse sunriseSunsetResponse)
     {
+        int solarTimeID = new Random().nextInt(Integer.MAX_VALUE);
         SolarTime solarTime = new SolarTime();
-        String pattern = "hh:mm:ss a";
-        DateFormat dateFormat = new SimpleDateFormat(pattern);
+        String pattern = "h:mm a";
+        String day_length_pattern = "hh:mm";
 
-       // solarTime.Date =
+        solarTime.LocationId = locationItem.Id;
+        solarTime.Id = solarTimeID;
+        solarTime.Date = LocalDate.now();
         solarTime.Sunrise = LocalTime.parse(sunriseSunsetResponse.getSunrise(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.Sunset = LocalTime.parse(sunriseSunsetResponse.getSunset());
-        solarTime.SolarNoon = LocalTime.parse(sunriseSunsetResponse.getSolarNoon());
-        solarTime.CivilTwilightBegin = LocalTime.parse(sunriseSunsetResponse.getCivilTwilightBegin());
-        solarTime.CivilTwilightEnd = LocalTime.parse(sunriseSunsetResponse.getCivilTwilightEnd());
-        solarTime.NauticalTwilightBegin = LocalTime.parse(sunriseSunsetResponse.getNauticalTwilightBegin());
-        solarTime.NauticalTwilightEnd = LocalTime.parse(sunriseSunsetResponse.getNauticalTwilightEnd());
-        solarTime.AstronomicalTwilightBegin = LocalTime.parse(sunriseSunsetResponse.getAstronomicalTwilightBegin());
-        solarTime.AstronomicalTwilightEnd = LocalTime.parse(sunriseSunsetResponse.getAstronomicalTwilightEnd());
+        solarTime.Sunset = LocalTime.parse(sunriseSunsetResponse.getSunset(), DateTimeFormatter.ofPattern(pattern));
+        solarTime.SolarNoon = LocalTime.parse(sunriseSunsetResponse.getSolarNoon(), DateTimeFormatter.ofPattern(pattern));
+        solarTime.DayLength = LocalTime.parse(sunriseSunsetResponse.getDayLength());
+        solarTime.CivilTwilightBegin = LocalTime.parse(sunriseSunsetResponse.getCivilTwilightBegin(), DateTimeFormatter.ofPattern(pattern));
+        solarTime.CivilTwilightEnd = LocalTime.parse(sunriseSunsetResponse.getCivilTwilightEnd(), DateTimeFormatter.ofPattern(pattern));
+        solarTime.NauticalTwilightBegin = LocalTime.parse(sunriseSunsetResponse.getNauticalTwilightBegin(), DateTimeFormatter.ofPattern(pattern));
+        solarTime.NauticalTwilightEnd = LocalTime.parse(sunriseSunsetResponse.getNauticalTwilightEnd(), DateTimeFormatter.ofPattern(pattern));
+        solarTime.AstronomicalTwilightBegin = LocalTime.parse(sunriseSunsetResponse.getAstronomicalTwilightBegin(), DateTimeFormatter.ofPattern(pattern));
+        solarTime.AstronomicalTwilightEnd = LocalTime.parse(sunriseSunsetResponse.getAstronomicalTwilightEnd(), DateTimeFormatter.ofPattern(pattern));
 
         return solarTime;
+    }
+
+    private class LocationIdExistsTask extends AsyncTask<Integer, Void, Boolean>{
+        @Override
+        protected Boolean doInBackground(Integer... integers) {
+            Boolean result = false;
+            try{
+                result = solarTimeRepository.isLocationIDExists(locationItem.Id);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+    }
+
+    private class DateExistsTask extends AsyncTask<LocalDate, Void, Boolean>{
+        @Override
+        protected Boolean doInBackground(LocalDate... localDates) {
+            Boolean result = false;
+            try{
+                result = solarTimeRepository.isDateExists(solarTimeItem.Date);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return result;
+        }
     }
 
 //    public void onRadioButtonClicked(View view)

@@ -30,11 +30,11 @@
             app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_title">
 
             <Spinner
-                android:layout_margin="5dp"
                 android:id="@+id/fragment_createalarm_location_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:layout_margin="5dp"
                 android:layout_marginTop="18dp" />
         </LinearLayout>
 
@@ -188,6 +188,45 @@
                 </RadioButton>
             </LinearLayout>
         </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_alarmtime_radiogroup"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_scheduleAlarm">
+            <LinearLayout
+                android:id="@+id/timetext_column"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/fragment_createalarm_sunrise_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sunrise"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_solarnoon_text">
+                </TextView>
+                <TextView
+                    android:id="@+id/fragment_createalarm_solarnoon_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Solar Noon"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_sunrise_text"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_sunset_text">
+                </TextView>
+                <TextView
+                    android:id="@+id/fragment_createalarm_sunset_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sunset">
+                </TextView>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                />
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/fragment_createalarm_scheduleAlarm"

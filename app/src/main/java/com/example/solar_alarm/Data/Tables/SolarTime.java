@@ -25,7 +25,7 @@ public class SolarTime extends TableBase
     public LocalTime Sunrise;
     public LocalTime Sunset;
     public LocalTime SolarNoon;
-    //public LocalTime DayLength;
+    public LocalTime DayLength;
     public LocalTime CivilTwilightBegin;
     public LocalTime CivilTwilightEnd;
     public LocalTime NauticalTwilightBegin;

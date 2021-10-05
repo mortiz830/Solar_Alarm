@@ -9,6 +9,7 @@ import androidx.room.Update;
 
 import com.example.solar_alarm.Data.Tables.SolarTime;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Dao
@@ -19,6 +20,12 @@ public interface SolarTimeDao
 
     @Query("SELECT * FROM SolarTime ORDER BY Date")
     LiveData<List<SolarTime>> getAll();
+
+    @Query("SELECT EXISTS(SELECT * FROM SolarTime WHERE LocationId = :locationId)")
+    boolean isLocationIDExists(int locationId);
+
+    @Query("SELECT EXISTS(SELECT * FROM SolarTime WHERE Date = :date)")
+    boolean isDateExists(LocalDate date);
 
     @Update
     void Update(SolarTime solarTime);

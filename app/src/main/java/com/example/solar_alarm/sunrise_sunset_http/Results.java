@@ -76,60 +76,44 @@ public class Results {
         astronomical_twilight_end = ate;
     }
 
-    public String getSunrise()
-    {
-        return sunrise;
-    }
+    public String getSunrise() { return deleteSeconds(sunrise); }
 
-    public String getSunset()
-    {
-        return sunset;
-    }
+    public String getSunset() { return deleteSeconds(sunset); }
 
-    public String getSolar_noon()
-    {
-        return solar_noon;
-    }
+    public String getSolar_noon() { return deleteSeconds(solar_noon); }
 
-    public String getDay_length()
-    {
-        return day_length;
-    }
+    public String getDay_length() { return deleteSeconds(day_length); }
 
     public String getCivil_twilight_begin()
     {
-        return civil_twilight_begin;
+        return deleteSeconds(civil_twilight_begin);
     }
 
-    public String getCivil_twilight_end()
-    {
-        return civil_twilight_end;
-    }
+    public String getCivil_twilight_end() { return deleteSeconds(civil_twilight_end); }
 
     public String getNautical_twilight_begin()
     {
-        return nautical_twilight_begin;
+        return deleteSeconds(nautical_twilight_begin);
     }
 
-    public String getNautical_twilight_end()
-    {
-        return nautical_twilight_end;
-    }
+    public String getNautical_twilight_end() { return deleteSeconds(nautical_twilight_end); }
 
-    public String getAstronomical_twilight_begin()
-    {
-        return astronomical_twilight_begin;
-    }
+    public String getAstronomical_twilight_begin() { return deleteSeconds(astronomical_twilight_begin); }
 
-    public String getAstronomical_twilight_end()
+    public String getAstronomical_twilight_end() { return deleteSeconds(astronomical_twilight_end); }
+
+    public String deleteSeconds(String time)
     {
-        return astronomical_twilight_end;
+        StringBuilder builder = new StringBuilder(time);
+        builder.delete(4, 7);
+        return builder.toString();
     }
 }
 
 /*
 {
     "results": {
+                    01234567
         "sunrise": "11:48:41 AM",
         "sunset": "1:02:48 AM",
         "solar_noon": "6:25:45 PM",

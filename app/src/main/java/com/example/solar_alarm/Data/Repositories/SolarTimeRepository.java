@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.example.solar_alarm.Data.SolarAlarmDatabase;
 import com.example.solar_alarm.Data.Tables.SolarTime;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class SolarTimeRepository
@@ -36,5 +37,15 @@ public class SolarTimeRepository
         SolarAlarmDatabase.databaseWriteExecutor.execute(() -> solarTimeDao.delete(solarTime));
     }
 
+    public boolean isLocationIDExists(int locationId)
+    {
+        return solarTimeDao.isLocationIDExists(locationId);
+    }
+
+    public boolean isDateExists(LocalDate date)
+    {
+        return solarTimeDao.isDateExists(date);
+    }
+    
     public LiveData<List<SolarTime>> getAll() {return solarTimeLiveData;}
 }
