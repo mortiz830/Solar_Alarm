@@ -4,7 +4,7 @@ import androidx.room.PrimaryKey;
 
 public abstract class TableBase
 {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     public int Id;
 
 //    @NonNull
