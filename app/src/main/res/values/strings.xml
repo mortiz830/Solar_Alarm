@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Solar_Alarm</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="url_format">json</string>
 </resources>

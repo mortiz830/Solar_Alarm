@@ -1,14 +1,17 @@
 package com.example.solar_alarm.AlarmList;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
@@ -20,14 +23,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.solar_alarm.CreateAlarm.UpdateAlarmFragment;
 import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.R;
+import com.example.solar_alarm.Service.GpsTracker;
 
+import java.time.ZoneId;
 import java.util.List;
+import java.util.TimeZone;
 
 public class AlarmListFragment extends Fragment implements OnToggleAlarmListener {
     private AlarmRecycleViewAdapter alarmRecyclerViewAdapter;
     private AlarmListViewModel alarmsListViewModel;
     private RecyclerView alarmsRecyclerView;
     private Button addAlarm;
+    private Button addLocation;
+    private GpsTracker gpsTracker;
+    TextView timeZone;
+    TextView latitude;
+    TextView longitude;
+    ZoneId zoneId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +57,7 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,6 +68,12 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
         alarmsRecyclerView.setAdapter(alarmRecyclerViewAdapter);
         this.configureOnClickRecyclerView();
 
+        zoneId = TimeZone.getDefault().toZoneId();
+        timeZone = view.findViewById(R.id.fragment_listalarms_timezone);
+        latitude = view.findViewById(R.id.fragment_listalarms_latitude);
+        longitude = view.findViewById(R.id.fragment_listalarms_longitude);
+
+        timeZone.setText(zoneId.toString());
         addAlarm = view.findViewById(R.id.fragment_listalarms_addAlarm);
         addAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +81,15 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
                 Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_createAlarmFragment);
             }
         });
+        addLocation = view.findViewById(R.id.fragment_listAlarms_addLocation);
+        addLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_addLocationFragment);
+            }
+        });
+
+        getLocation(view);
 
         return view;
     }
@@ -74,6 +102,18 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
         } else {
             alarm.schedule(getContext());
             alarmsListViewModel.update(alarm);
+        }
+    }
+
+    public void getLocation(View view){
+        gpsTracker = new GpsTracker(view.getContext());
+        if(gpsTracker.canGetLocation()){
+            double lat = gpsTracker.getLatitude();
+            double lon = gpsTracker.getLongitude();
+            latitude.setText(String.valueOf(lat));
+            longitude.setText(String.valueOf(lon));
+        }else{
+            gpsTracker.showSettingsAlert();
         }
     }
 
