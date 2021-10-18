@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
@@ -91,6 +92,12 @@ public class CreateAlarmFragment extends Fragment{
     RadioGroup alarmTime;
     @BindView(R.id.fragment_createalarm_alarmtype_radiogroup)
     RadioGroup alarmType;
+    @BindView(R.id.fragment_createalarm_sunrise_data)
+    TextView sunriseData;
+    @BindView(R.id.fragment_createalarm_solarnoon_data)
+    TextView solarNoonData;
+    @BindView(R.id.fragment_createalarm_sunset_data)
+    TextView sunsetData;
     SpinnerAdapter spinnerAdapter;
     TimePicker timePicker;
     Location locationItem;
@@ -148,6 +155,10 @@ public class CreateAlarmFragment extends Fragment{
                         {
                             solarTimeRepository.Insert(solarTimeItem);
                         }
+
+                        sunriseData.setText(solarTimeItem.Sunrise.toString());
+                        solarNoonData.setText(solarTimeItem.SolarNoon.toString());
+                        sunsetData.setText(solarTimeItem.Sunset.toString());
 
                     }
 

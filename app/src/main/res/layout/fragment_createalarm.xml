@@ -196,35 +196,71 @@
             app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_scheduleAlarm">
             <LinearLayout
                 android:id="@+id/timetext_column"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_weight="1">
                 <TextView
                     android:id="@+id/fragment_createalarm_sunrise_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Sunrise"
+                    android:layout_height="50dp"
+                    android:text="Sunrise:"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
                     app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_solarnoon_text">
                 </TextView>
                 <TextView
                     android:id="@+id/fragment_createalarm_solarnoon_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Solar Noon"
+                    android:layout_height="50dp"
+                    android:text="Solar Noon:"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
                     app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_sunrise_text"
                     app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_sunset_text">
                 </TextView>
                 <TextView
                     android:id="@+id/fragment_createalarm_sunset_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Sunset">
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="Sunset:"
+                    android:textSize="24dp"
+                    android:textStyle="bold">
                 </TextView>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                />
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/fragment_createalarm_sunrise_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_solarnoon_data">
+                </TextView>
+                <TextView
+                    android:id="@+id/fragment_createalarm_solarnoon_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_sunrise_data"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_sunset_data">
+                </TextView>
+                <TextView
+                    android:id="@+id/fragment_createalarm_sunset_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:textSize="20dp"
+                    android:gravity="center">
+                </TextView>
+            </LinearLayout>
         </LinearLayout>
 
 
