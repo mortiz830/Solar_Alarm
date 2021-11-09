@@ -106,6 +106,7 @@
 
         </LinearLayout>
 
+
         <RadioGroup
             android:id="@+id/fragment_createalarm_alarmtype_radiogroup"
             android:layout_width="match_parent"
@@ -116,7 +117,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Alarm Time"></TextView>
+                android:text="Alarm Time">
+            </TextView>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -127,24 +129,21 @@
                     android:id="@+id/fragment_createalarm_sunrise_radio_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sunrise"
-                    android:onClick="onRadioButtonClicked">
+                    android:text="Sunrise">
                 </RadioButton>
 
                 <RadioButton
                     android:id="@+id/fragment_createalarm_solarnoon_radio_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Solar Noon"
-                    android:onClick="onRadioButtonClicked">
+                    android:text="Solar Noon">
                 </RadioButton>
 
                 <RadioButton
                     android:id="@+id/fragment_createalarm_sunset_radio_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sunset"
-                    android:onClick="onRadioButtonClicked">
+                    android:text="Sunset">
                 </RadioButton>
             </LinearLayout>
         </RadioGroup>
@@ -166,17 +165,17 @@
                 android:layout_height="wrap_content"
                 android:gravity="center">
                 <RadioButton
-                    android:id="@+id/fragment_createalarm_radio_button_at"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="At"
-                    android:onClick="onRadioButtonClicked">
-                </RadioButton>
-                <RadioButton
                     android:id="@+id/fragment_createalarm_radio_button_before"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Before"
+                    android:onClick="onRadioButtonClicked">
+                </RadioButton>
+                <RadioButton
+                    android:id="@+id/fragment_createalarm_radio_button_at"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="At"
                     android:onClick="onRadioButtonClicked">
                 </RadioButton>
                 <RadioButton

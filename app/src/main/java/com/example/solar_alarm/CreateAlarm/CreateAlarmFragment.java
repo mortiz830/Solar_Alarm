@@ -23,11 +23,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
+import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository;
 import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarTime;
@@ -102,6 +102,7 @@ public class CreateAlarmFragment extends Fragment{
     TimePicker timePicker;
     Location locationItem;
     SolarTime solarTimeItem;
+    TimeZoneConverter timeZoneConverter;
 
     boolean isLocationIdExists;
     boolean isDateExists;
@@ -109,8 +110,7 @@ public class CreateAlarmFragment extends Fragment{
     private LocationRepository locationRepository;
     private List<Location> Locations;
     private SolarTimeRepository solarTimeRepository;
-
-    private CreateAlarmViewModel createAlarmViewModel;
+    private SolarAlarmRepository solarAlarmRepository;
 
 
     @Override
@@ -118,8 +118,8 @@ public class CreateAlarmFragment extends Fragment{
         super.onCreate(savedInstanceState);
         
         Locations = new ArrayList<Location>();
-        createAlarmViewModel = ViewModelProviders.of(this).get(CreateAlarmViewModel.class);
         solarTimeRepository = new SolarTimeRepository(getActivity().getApplication());
+        solarAlarmRepository = new SolarAlarmRepository(getActivity().getApplication());
         locationRepository = new LocationRepository(getActivity().getApplication());
         locationRepository.getAll().observe(this, new Observer<List<Location>>() {
             @Override
@@ -128,6 +128,7 @@ public class CreateAlarmFragment extends Fragment{
                 spinnerAdapter = new SpinnerAdapter(getActivity(), Locations);
                 spinner.setAdapter(spinnerAdapter);
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                         locationItem = (Location) adapterView.getItemAtPosition(position);
@@ -155,7 +156,8 @@ public class CreateAlarmFragment extends Fragment{
                         {
                             solarTimeRepository.Insert(solarTimeItem);
                         }
-
+                        timeZoneConverter = new TimeZoneConverter(solarTimeItem);
+                        solarTimeItem = timeZoneConverter.convertSolarTime();
                         sunriseData.setText(solarTimeItem.Sunrise.toString());
                         solarNoonData.setText(solarTimeItem.SolarNoon.toString());
                         sunsetData.setText(solarTimeItem.Sunset.toString());
@@ -169,8 +171,21 @@ public class CreateAlarmFragment extends Fragment{
                 });
                 alarmType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @Override
-                    public void onCheckedChanged(RadioGroup radioGroup, int i) {
-
+                    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                        switch(checkedId) {
+                            case R.id.fragment_createalarm_sunrise_radio_button:
+                                solarnoon.setChecked(false);
+                                sunset.setChecked(false);
+                                break;
+                            case R.id.fragment_createalarm_solarnoon_radio_button:
+                                sunrise.setChecked(false);
+                                sunset.setChecked(false);
+                                break;
+                            case R.id.fragment_createalarm_sunset_radio_button:
+                                sunrise.setChecked(false);
+                                solarnoon.setChecked(false);
+                                break;
+                        }
                     }
                 });
             }
@@ -229,8 +244,6 @@ public class CreateAlarmFragment extends Fragment{
                 sun.isChecked()
         );
 
-        createAlarmViewModel.insert(alarm);
-
         alarm.schedule(getContext());
     }
 
@@ -256,13 +269,10 @@ public class CreateAlarmFragment extends Fragment{
     @RequiresApi(api = Build.VERSION_CODES.O)
     public SolarTime newSolarTime(SunriseSunsetResponse sunriseSunsetResponse)
     {
-        int solarTimeID = new Random().nextInt(Integer.MAX_VALUE);
         SolarTime solarTime = new SolarTime();
         String pattern = "h:mm a";
-        String day_length_pattern = "hh:mm";
 
         solarTime.LocationId = locationItem.Id;
-        solarTime.Id = solarTimeID;
         solarTime.Date = LocalDate.now();
         solarTime.Sunrise = LocalTime.parse(sunriseSunsetResponse.getSunrise(), DateTimeFormatter.ofPattern(pattern));
         solarTime.Sunset = LocalTime.parse(sunriseSunsetResponse.getSunset(), DateTimeFormatter.ofPattern(pattern));
@@ -306,53 +316,53 @@ public class CreateAlarmFragment extends Fragment{
         }
     }
 
-//    public void onRadioButtonClicked(View view)
-//    {
-//        boolean checked = ((RadioButton) view).isChecked();
-//        switch(view.getId()) {
-//            case R.id.fragment_createalarm_sunrise_radio_button:
-//                if (checked)
-//                {
-//                    solarnoon.setChecked(false);
-//                    sunset.setChecked(false);
-//                }
-//                    break;
-//            case R.id.fragment_createalarm_solarnoon_radio_button:
-//                if (checked)
-//                {
-//                    sunrise.setChecked(false);
-//                    sunset.setChecked(false);
-//                }
-//                    break;
-//            case R.id.fragment_createalarm_sunset_radio_button:
-//                if (checked)
-//                {
-//                    sunrise.setChecked(false);
-//                    solarnoon.setChecked(false);
-//                }
-//                    break;
-//            case R.id.fragment_createalarm_radio_button_at:
-//                if (checked)
-//                {
-//                    before.setChecked(false);
-//                    after.setChecked(false);
-//                }
-//                    break;
-//            case R.id.fragment_createalarm_radio_button_before:
-//                if (checked)
-//                {
-//                    at.setChecked(false);
-//                    after.setChecked(false);
-//                }
-//                    break;
-//            case R.id.fragment_createalarm_radio_button_after:
-//                if (checked)
-//                {
-//                    at.setChecked(false);
-//                    before.setChecked(false);
-//                }
-//
-//                    break;
-//        }
-//    }
+    public void radioButtonClicked(int idChecked, RadioButton radioButton)
+    {
+        boolean checked = radioButton.isChecked();
+        switch(idChecked) {
+            case R.id.fragment_createalarm_sunrise_radio_button:
+                if (checked)
+                {
+                    solarnoon.setChecked(false);
+                    sunset.setChecked(false);
+                }
+                    break;
+            case R.id.fragment_createalarm_solarnoon_radio_button:
+                if (checked)
+                {
+                    sunrise.setChecked(false);
+                    sunset.setChecked(false);
+                }
+                    break;
+            case R.id.fragment_createalarm_sunset_radio_button:
+                if (checked)
+                {
+                    sunrise.setChecked(false);
+                    solarnoon.setChecked(false);
+                }
+                    break;
+            case R.id.fragment_createalarm_radio_button_at:
+                if (checked)
+                {
+                    before.setChecked(false);
+                    after.setChecked(false);
+                }
+                    break;
+            case R.id.fragment_createalarm_radio_button_before:
+                if (checked)
+                {
+                    at.setChecked(false);
+                    after.setChecked(false);
+                }
+                    break;
+            case R.id.fragment_createalarm_radio_button_after:
+                if (checked)
+                {
+                    at.setChecked(false);
+                    before.setChecked(false);
+                }
+
+                    break;
+        }
+    }
 }

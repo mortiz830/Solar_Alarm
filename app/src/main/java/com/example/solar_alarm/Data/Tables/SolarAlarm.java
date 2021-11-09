@@ -19,6 +19,7 @@ public class SolarAlarm extends TableBase
     public int LocationId;
 
     // Recurrence Flags
+    public boolean Recurring;
     public boolean Monday;
     public boolean Tuesday;
     public boolean Wednesday;
