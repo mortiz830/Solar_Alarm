@@ -20,6 +20,12 @@ public interface SolarAlarmDao
     @Query("SELECT * FROM SolarAlarm ORDER BY Name")
     LiveData<List<SolarAlarm>> getAll();
 
+    @Query("SELECT EXISTS(SELECT * FROM Location WHERE Name = :name)")
+    boolean isSolarAlarmNameExists(String name);
+
+    @Query("SELECT EXISTS(SELECT * FROM SolarTime WHERE LocationId = :locationId)")
+    boolean isLocationIDExists(int locationId);
+
     @Update
     void Update(SolarAlarm solarAlarm);
 

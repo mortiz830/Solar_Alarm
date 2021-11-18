@@ -28,6 +28,10 @@ public class SolarAlarm extends TableBase
     public boolean Saturday;
     public boolean Sunday;
 
+    public boolean Before;
+    public boolean At;
+    public boolean After;
+
     // Time Type Flags
     public boolean Sunrise;
     public boolean Sunset;

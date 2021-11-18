@@ -17,6 +17,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,11 +26,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 
-import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
 import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository;
 import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
 import com.example.solar_alarm.Data.Tables.Location;
+import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
 import com.example.solar_alarm.R;
 import com.example.solar_alarm.sunrise_sunset_http.HttpRequests;
@@ -44,7 +45,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
@@ -102,10 +102,13 @@ public class CreateAlarmFragment extends Fragment{
     TimePicker timePicker;
     Location locationItem;
     SolarTime solarTimeItem;
+    SolarAlarm solarAlarmItem = new SolarAlarm();
     TimeZoneConverter timeZoneConverter;
 
     boolean isLocationIdExists;
     boolean isDateExists;
+    boolean isSolarAlarmLocationIdExists;
+    boolean isSolarAlarmNameExists;
 
     private LocationRepository locationRepository;
     private List<Location> Locations;
@@ -169,25 +172,6 @@ public class CreateAlarmFragment extends Fragment{
 
                     }
                 });
-                alarmType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                        switch(checkedId) {
-                            case R.id.fragment_createalarm_sunrise_radio_button:
-                                solarnoon.setChecked(false);
-                                sunset.setChecked(false);
-                                break;
-                            case R.id.fragment_createalarm_solarnoon_radio_button:
-                                sunrise.setChecked(false);
-                                sunset.setChecked(false);
-                                break;
-                            case R.id.fragment_createalarm_sunset_radio_button:
-                                sunrise.setChecked(false);
-                                solarnoon.setChecked(false);
-                                break;
-                        }
-                    }
-                });
             }
         });
     }
@@ -225,26 +209,43 @@ public class CreateAlarmFragment extends Fragment{
     }
 
     private void scheduleAlarm() {
-        int alarmId = new Random().nextInt(Integer.MAX_VALUE);
+        solarAlarmItem.Name = title.getText().toString();
+        solarAlarmItem.LocationId = locationItem.Id;
+        solarAlarmItem.Recurring = recurring.isChecked();
+        solarAlarmItem.Monday = mon.isChecked();
+        solarAlarmItem.Tuesday = tue.isChecked();
+        solarAlarmItem.Wednesday = wed.isChecked();
+        solarAlarmItem.Thursday = thu.isChecked();
+        solarAlarmItem.Friday = fri.isChecked();
+        solarAlarmItem.Saturday = sat.isChecked();
+        solarAlarmItem.Sunday = sun.isChecked();
+        solarAlarmItem.Sunrise = sunrise.isChecked();
+        solarAlarmItem.Sunset = sunset.isChecked();
+        solarAlarmItem.Before = before.isChecked();
+        solarAlarmItem.At = at.isChecked();
+        solarAlarmItem.After = after.isChecked();
+        solarAlarmItem.SolarNoon = solarnoon.isChecked();
+        solarAlarmItem.CivilTwilightBegin = false;
+        solarAlarmItem.CivilTwilightEnd = false;
+        solarAlarmItem.NauticalTwilightBegin = false;
+        solarAlarmItem.NauticalTwilightEnd = false;
+        solarAlarmItem.AstronomicalTwilightBegin = false;
+        solarAlarmItem.AstronomicalTwilightEnd = false;
 
-        Alarm alarm = new Alarm(
-                alarmId,
-                TimePickerUtil.getTimePickerHour(timePicker),
-                TimePickerUtil.getTimePickerMinute(timePicker),
-                title.getText().toString(),
-                System.currentTimeMillis(),
-                true,
-                recurring.isChecked(),
-                mon.isChecked(),
-                tue.isChecked(),
-                wed.isChecked(),
-                thu.isChecked(),
-                fri.isChecked(),
-                sat.isChecked(),
-                sun.isChecked()
-        );
+        try {
+            isSolarAlarmLocationIdExists = new SolarAlarmLocationIdExistsTask().execute().get();
+            isSolarAlarmNameExists = new SolarAlarmNameExistsTask().execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        alarm.schedule(getContext());
+        if(!isSolarAlarmLocationIdExists && !isSolarAlarmNameExists)
+            solarAlarmRepository.Insert(solarAlarmItem);
+        else
+            Toast.makeText(getContext(), "Alarm already exists!", Toast.LENGTH_LONG).show();
+        //alarm.schedule(getContext());
     }
 
     private class TimeResponseTask extends AsyncTask<SunriseSunsetRequest, Void, SolarTime> {
@@ -316,53 +317,31 @@ public class CreateAlarmFragment extends Fragment{
         }
     }
 
-    public void radioButtonClicked(int idChecked, RadioButton radioButton)
-    {
-        boolean checked = radioButton.isChecked();
-        switch(idChecked) {
-            case R.id.fragment_createalarm_sunrise_radio_button:
-                if (checked)
-                {
-                    solarnoon.setChecked(false);
-                    sunset.setChecked(false);
-                }
-                    break;
-            case R.id.fragment_createalarm_solarnoon_radio_button:
-                if (checked)
-                {
-                    sunrise.setChecked(false);
-                    sunset.setChecked(false);
-                }
-                    break;
-            case R.id.fragment_createalarm_sunset_radio_button:
-                if (checked)
-                {
-                    sunrise.setChecked(false);
-                    solarnoon.setChecked(false);
-                }
-                    break;
-            case R.id.fragment_createalarm_radio_button_at:
-                if (checked)
-                {
-                    before.setChecked(false);
-                    after.setChecked(false);
-                }
-                    break;
-            case R.id.fragment_createalarm_radio_button_before:
-                if (checked)
-                {
-                    at.setChecked(false);
-                    after.setChecked(false);
-                }
-                    break;
-            case R.id.fragment_createalarm_radio_button_after:
-                if (checked)
-                {
-                    at.setChecked(false);
-                    before.setChecked(false);
-                }
+    private class SolarAlarmNameExistsTask extends AsyncTask<LocalDate, Void, Boolean>{
+        @Override
+        protected Boolean doInBackground(LocalDate... localDates) {
+            Boolean result = false;
+            try{
+                result = solarAlarmRepository.isSolarAlarmNameExists(solarAlarmItem.Name);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
-                    break;
+            return result;
+        }
+    }
+
+    private class SolarAlarmLocationIdExistsTask extends AsyncTask<Integer, Void, Boolean>{
+        @Override
+        protected Boolean doInBackground(Integer... integers) {
+            Boolean result = false;
+            try{
+                result = solarAlarmRepository.isLocationIDExists(solarAlarmItem.LocationId);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return result;
         }
     }
 }
