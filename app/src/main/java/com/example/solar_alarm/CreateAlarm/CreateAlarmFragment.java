@@ -105,10 +105,10 @@ public class CreateAlarmFragment extends Fragment{
     SolarAlarm solarAlarmItem = new SolarAlarm();
     TimeZoneConverter timeZoneConverter;
 
-    boolean isLocationIdExists;
+    boolean isLocationIdDatePairExists;
     boolean isDateExists;
     boolean isSolarAlarmLocationIdExists;
-    boolean isSolarAlarmNameExists;
+    boolean isSolarAlarmNameLocationIdPairExists;
 
     private LocationRepository locationRepository;
     private List<Location> Locations;
@@ -147,15 +147,14 @@ public class CreateAlarmFragment extends Fragment{
                         }
 
                         try {
-                            isLocationIdExists = new LocationIdExistsTask().execute().get();
-                            isDateExists = new DateExistsTask().execute().get();
+                            isLocationIdDatePairExists = new LocationIdDatePairExistsTask().execute().get();
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
 
-                        if(!isLocationIdExists && !isDateExists)
+                        if(!isLocationIdDatePairExists)
                         {
                             solarTimeRepository.Insert(solarTimeItem);
                         }
@@ -233,15 +232,14 @@ public class CreateAlarmFragment extends Fragment{
         solarAlarmItem.AstronomicalTwilightEnd = false;
 
         try {
-            isSolarAlarmLocationIdExists = new SolarAlarmLocationIdExistsTask().execute().get();
-            isSolarAlarmNameExists = new SolarAlarmNameExistsTask().execute().get();
+            isSolarAlarmNameLocationIdPairExists = new SolarAlarmNameExistsTask().execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        if(!isSolarAlarmLocationIdExists && !isSolarAlarmNameExists)
+        if(!isSolarAlarmNameLocationIdPairExists)
             solarAlarmRepository.Insert(solarAlarmItem);
         else
             Toast.makeText(getContext(), "Alarm already exists!", Toast.LENGTH_LONG).show();
@@ -289,26 +287,12 @@ public class CreateAlarmFragment extends Fragment{
         return solarTime;
     }
 
-    private class LocationIdExistsTask extends AsyncTask<Integer, Void, Boolean>{
+    private class LocationIdDatePairExistsTask extends AsyncTask<Integer, Void, Boolean>{
         @Override
         protected Boolean doInBackground(Integer... integers) {
             Boolean result = false;
             try{
-                result = solarTimeRepository.isLocationIDExists(locationItem.Id);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-            return result;
-        }
-    }
-
-    private class DateExistsTask extends AsyncTask<LocalDate, Void, Boolean>{
-        @Override
-        protected Boolean doInBackground(LocalDate... localDates) {
-            Boolean result = false;
-            try{
-                result = solarTimeRepository.isDateExists(solarTimeItem.Date);
+                result = solarTimeRepository.isLocationIDDatePairExists(locationItem.Id, solarTimeItem.Date);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -322,21 +306,7 @@ public class CreateAlarmFragment extends Fragment{
         protected Boolean doInBackground(LocalDate... localDates) {
             Boolean result = false;
             try{
-                result = solarAlarmRepository.isSolarAlarmNameExists(solarAlarmItem.Name);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-            return result;
-        }
-    }
-
-    private class SolarAlarmLocationIdExistsTask extends AsyncTask<Integer, Void, Boolean>{
-        @Override
-        protected Boolean doInBackground(Integer... integers) {
-            Boolean result = false;
-            try{
-                result = solarAlarmRepository.isLocationIDExists(solarAlarmItem.LocationId);
+                result = solarAlarmRepository.isSolarAlarmNameLocationIDExists(solarAlarmItem.Name, solarAlarmItem.LocationId);
             }catch (Exception e){
                 e.printStackTrace();
             }

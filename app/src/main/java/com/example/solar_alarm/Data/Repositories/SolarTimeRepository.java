@@ -37,15 +37,11 @@ public class SolarTimeRepository
         SolarAlarmDatabase.databaseWriteExecutor.execute(() -> solarTimeDao.delete(solarTime));
     }
 
-    public boolean isLocationIDExists(int locationId)
+    public boolean isLocationIDDatePairExists(int locationId, LocalDate date)
     {
-        return solarTimeDao.isLocationIDExists(locationId);
+        return solarTimeDao.isLocationIDDatePairExists(locationId, date);
     }
 
-    public boolean isDateExists(LocalDate date)
-    {
-        return solarTimeDao.isDateExists(date);
-    }
     
     public LiveData<List<SolarTime>> getAll() {return solarTimeLiveData;}
 }
