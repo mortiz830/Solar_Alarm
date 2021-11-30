@@ -101,13 +101,9 @@ public class CreateAlarmFragment extends Fragment{
     SpinnerAdapter spinnerAdapter;
     TimePicker timePicker;
     Location locationItem;
-    SolarTime solarTimeItem;
     SolarAlarm solarAlarmItem = new SolarAlarm();
     TimeZoneConverter timeZoneConverter;
 
-    boolean isLocationIdDatePairExists;
-    boolean isDateExists;
-    boolean isSolarAlarmLocationIdExists;
     boolean isSolarAlarmNameLocationIdPairExists;
 
     private LocationRepository locationRepository;
@@ -135,29 +131,14 @@ public class CreateAlarmFragment extends Fragment{
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                         locationItem = (Location) adapterView.getItemAtPosition(position);
+                        Calendar date = Calendar.getInstance();
 
-                        SunriseSunsetRequest sunriseSunsetRequest =
-                                new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, Calendar.getInstance(), true);
-                        try {
-                            solarTimeItem = new TimeResponseTask().execute(sunriseSunsetRequest).get();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        try {
-                            isLocationIdDatePairExists = new LocationIdDatePairExistsTask().execute().get();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        if(!isLocationIdDatePairExists)
+                        for(int i = 0; i < 7; i++)
                         {
-                            solarTimeRepository.Insert(solarTimeItem);
+                            date.add(Calendar.DAY_OF_YEAR, i);
+                            getWeekOfTimes(locationItem, date);
                         }
+
                         timeZoneConverter = new TimeZoneConverter(solarTimeItem);
                         solarTimeItem = timeZoneConverter.convertSolarTime();
                         sunriseData.setText(solarTimeItem.Sunrise.toString());
@@ -205,6 +186,32 @@ public class CreateAlarmFragment extends Fragment{
 
 
         return view;
+    }
+
+    public void getWeekOfTimes(Location locationItem, Calendar date)
+    {
+        boolean isLocationIdDatePairExists = false;
+        try {
+            isLocationIdDatePairExists = new LocationIdDatePairExistsTask().execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            //throw new Toast.makeText(getContext(), "Alarm already exists!", Toast.LENGTH_LONG).show();;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            //throw;
+        }
+
+        if(!isLocationIdDatePairExists) {
+            SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, date, true);
+            try {
+                solarTimeItem = new TimeResponseTask().execute(sunriseSunsetRequest).get();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            solarTimeRepository.Insert(solarTimeItem);
+        }
     }
 
     private void scheduleAlarm() {
