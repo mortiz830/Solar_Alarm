@@ -37,9 +37,6 @@ public class TimeZoneConverter {
     public LocalTime convertToUTC(LocalTime localTime)
     {
         long offset = TimeZone.getDefault().getRawOffset();
-        //int dst = TimeZone.getDefault().getDSTSavings();
-        //long time = localTime.getLong(ChronoField.CLOCK_HOUR_OF_DAY);
-       // localTime = Instant.ofEpochMilli(time + offset).atZone(ZoneId.systemDefault()).toLocalTime();
         localTime = localTime.plus(offset, ChronoUnit.MILLIS);
 
         return localTime;
