@@ -188,7 +188,7 @@ public class CreateAlarmFragment extends Fragment{
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public SolarTime getSolarTime(Location locationItem, Calendar date) throws ExecutionException, InterruptedException {
+    public SolarTime getSolarTime(Location locationItem, Calendar date) throws Exception {
         boolean isLocationIdDatePairExists = getLocationIdDatePareExists(locationItem, date);
         SolarTime solarTimeItem = new SolarTime();
 
@@ -203,9 +203,7 @@ public class CreateAlarmFragment extends Fragment{
                 sunsetData.setText(solarTimeItem.Sunset.toString());
                 solarTimeRepository.Insert(solarTimeItem);
 
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -219,31 +217,25 @@ public class CreateAlarmFragment extends Fragment{
         return solarTimeItem;
     }
 
-    public boolean getLocationIdDatePareExists(Location locationItem, Calendar date) throws InterruptedException, ExecutionException {
+    public boolean getLocationIdDatePareExists(Location locationItem, Calendar date) throws Exception {
         try {
             return new LocationIdDatePairExistsTask().execute(locationItem, date).get();
-        } catch (ExecutionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw e;// Toast.makeText(getContext(), "Alarm already exists!", Toast.LENGTH_LONG).show();;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            throw e;
-        } catch (Exception e){
-            e.printStackTrace();
-            throw e;
         }
     }
 
-    public boolean getSolarAlarmNameLocationIdPairExists(SolarAlarm solarAlarmItem)
+    public boolean getSolarAlarmNameLocationIdPairExists(SolarAlarm solarAlarmItem) throws Exception
     {
         boolean result = false;
         try {
             result = new SolarAlarmNameExistsTask().execute(solarAlarmItem).get();
-        } catch (ExecutionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw e;
         }
+
         return result;
     }
 
@@ -283,24 +275,27 @@ public class CreateAlarmFragment extends Fragment{
         //alarm.schedule(getContext());
     }
 
-    private class TimeResponseTask extends AsyncTask<Object, Void, SolarTime> {
+    private class TimeResponseTask extends AsyncTask<Object, Void, SolarTime>  {
         HttpRequests httpRequests;
         SunriseSunsetRequest sunriseSunsetRequest;
         SunriseSunsetResponse response;
         Location location;
         SolarTime solarTime;
+
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
-        protected SolarTime doInBackground(Object... objects) {
+        protected SolarTime doInBackground(Object... objects) throws Exception {
             sunriseSunsetRequest = (SunriseSunsetRequest) objects[0];
             location = (Location) objects[1];
             try {
                 httpRequests = new HttpRequests(sunriseSunsetRequest);
                 response = httpRequests.GetSolarData(sunriseSunsetRequest);
                 solarTime = newSolarTime(response, location);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+                throw e;
             }
+
             return solarTime;
         }
     }
