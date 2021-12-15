@@ -36,5 +36,9 @@ public class SolarAlarmRepository
         SolarAlarmDatabase.databaseWriteExecutor.execute(() -> solarAlarmDao.delete(solarAlarm));
     }
 
+    public boolean isSolarAlarmNameLocationIDExists(String name, int locationId)
+    {
+        return solarAlarmDao.isSolarAlarmNameLocationIDPairExists(name, locationId);
+    }
     public LiveData<List<SolarAlarm>> getAll() {return solarAlarmLiveData;}
 }

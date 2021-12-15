@@ -16,20 +16,20 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
-import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
+import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository;
 import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
 import com.example.solar_alarm.Data.Tables.Location;
+import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
 import com.example.solar_alarm.R;
 import com.example.solar_alarm.sunrise_sunset_http.HttpRequests;
@@ -39,12 +39,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
@@ -99,27 +100,21 @@ public class CreateAlarmFragment extends Fragment{
     @BindView(R.id.fragment_createalarm_sunset_data)
     TextView sunsetData;
     SpinnerAdapter spinnerAdapter;
-    TimePicker timePicker;
-    Location locationItem;
-    SolarTime solarTimeItem;
-
-    boolean isLocationIdExists;
-    boolean isDateExists;
+    TimeZoneConverter timeZoneConverter;
 
     private LocationRepository locationRepository;
     private List<Location> Locations;
     private SolarTimeRepository solarTimeRepository;
-
-    private CreateAlarmViewModel createAlarmViewModel;
+    private SolarAlarmRepository solarAlarmRepository;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         Locations = new ArrayList<Location>();
-        createAlarmViewModel = ViewModelProviders.of(this).get(CreateAlarmViewModel.class);
         solarTimeRepository = new SolarTimeRepository(getActivity().getApplication());
+        solarAlarmRepository = new SolarAlarmRepository(getActivity().getApplication());
         locationRepository = new LocationRepository(getActivity().getApplication());
         locationRepository.getAll().observe(this, new Observer<List<Location>>() {
             @Override
@@ -127,52 +122,6 @@ public class CreateAlarmFragment extends Fragment{
                 Locations = locations;
                 spinnerAdapter = new SpinnerAdapter(getActivity(), Locations);
                 spinner.setAdapter(spinnerAdapter);
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                        locationItem = (Location) adapterView.getItemAtPosition(position);
-
-                        SunriseSunsetRequest sunriseSunsetRequest =
-                                new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, Calendar.getInstance(), true);
-                        try {
-                            solarTimeItem = new TimeResponseTask().execute(sunriseSunsetRequest).get();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        try {
-                            isLocationIdExists = new LocationIdExistsTask().execute().get();
-                            isDateExists = new DateExistsTask().execute().get();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        if(!isLocationIdExists && !isDateExists)
-                        {
-                            solarTimeRepository.Insert(solarTimeItem);
-                        }
-
-                        sunriseData.setText(solarTimeItem.Sunrise.toString());
-                        solarNoonData.setText(solarTimeItem.SolarNoon.toString());
-                        sunsetData.setText(solarTimeItem.Sunset.toString());
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                });
-                alarmType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(RadioGroup radioGroup, int i) {
-
-                    }
-                });
             }
         });
     }
@@ -183,7 +132,32 @@ public class CreateAlarmFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_createalarm, container, false);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_add_location_map);
 
+        List<SolarTime> solarTimes = new ArrayList<SolarTime>();
         ButterKnife.bind(this, view);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                Location locationItem = (Location) adapterView.getItemAtPosition(position);
+                Calendar date = Calendar.getInstance();
+
+                for(int i = 0; i < 7; i++)
+                {
+                    date.add(Calendar.DAY_OF_YEAR, 1);
+                    try {
+                        solarTimes.add(getSolarTime(locationItem, date));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        //throw e;
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         recurring.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -199,7 +173,11 @@ public class CreateAlarmFragment extends Fragment{
         scheduleAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scheduleAlarm();
+
+                for(int i = 0; i < solarTimes.size(); i++)
+                {
+                    scheduleAlarm(solarTimes.get(i));
+                }
                 Navigation.findNavController(v).navigate(R.id.action_createAlarmFragment_to_alarmsListFragment);
             }
         });
@@ -209,61 +187,128 @@ public class CreateAlarmFragment extends Fragment{
         return view;
     }
 
-    private void scheduleAlarm() {
-        int alarmId = new Random().nextInt(Integer.MAX_VALUE);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public SolarTime getSolarTime(Location locationItem, Calendar date) throws Exception {
+        boolean isLocationIdDatePairExists = getLocationIdDatePareExists(locationItem, date);
+        SolarTime solarTimeItem = new SolarTime();
 
-        Alarm alarm = new Alarm(
-                alarmId,
-                TimePickerUtil.getTimePickerHour(timePicker),
-                TimePickerUtil.getTimePickerMinute(timePicker),
-                title.getText().toString(),
-                System.currentTimeMillis(),
-                true,
-                recurring.isChecked(),
-                mon.isChecked(),
-                tue.isChecked(),
-                wed.isChecked(),
-                thu.isChecked(),
-                fri.isChecked(),
-                sat.isChecked(),
-                sun.isChecked()
-        );
-
-        createAlarmViewModel.insert(alarm);
-
-        alarm.schedule(getContext());
-    }
-
-    private class TimeResponseTask extends AsyncTask<SunriseSunsetRequest, Void, SolarTime> {
-        HttpRequests httpRequests;
-        SunriseSunsetResponse response;
-        SolarTime solarTime;
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        @Override
-        protected SolarTime doInBackground(SunriseSunsetRequest... sunriseSunsetRequests) {
-
+        if(!isLocationIdDatePairExists) {
+            SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, date, true);
             try {
-                httpRequests = new HttpRequests(sunriseSunsetRequests[0]);
-                response = httpRequests.GetSolarData(sunriseSunsetRequests[0]);
-                solarTime = newSolarTime(response);
-            } catch (IOException e) {
+                solarTimeItem = new TimeResponseTask().execute(sunriseSunsetRequest, locationItem).get();
+                timeZoneConverter = new TimeZoneConverter(solarTimeItem);
+                solarTimeItem = timeZoneConverter.convertSolarTime();
+                sunriseData.setText(solarTimeItem.Sunrise.toString());
+                solarNoonData.setText(solarTimeItem.SolarNoon.toString());
+                sunsetData.setText(solarTimeItem.Sunset.toString());
+                solarTimeRepository.Insert(solarTimeItem);
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        else {
+            LocalDate localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).toLocalDate();
+            solarTimeItem = new GetSolarTimeTask().execute(locationItem.Id, localDate).get();
+            sunriseData.setText(solarTimeItem.Sunrise.toString());
+            solarNoonData.setText(solarTimeItem.SolarNoon.toString());
+            sunsetData.setText(solarTimeItem.Sunset.toString());
+        }
+        return solarTimeItem;
+    }
+
+    public boolean getLocationIdDatePareExists(Location locationItem, Calendar date) throws Exception {
+        try {
+            return new LocationIdDatePairExistsTask().execute(locationItem, date).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;// Toast.makeText(getContext(), "Alarm already exists!", Toast.LENGTH_LONG).show();;
+        }
+    }
+
+    public boolean getSolarAlarmNameLocationIdPairExists(SolarAlarm solarAlarmItem) throws Exception
+    {
+        boolean result = false;
+        try {
+            result = new SolarAlarmNameExistsTask().execute(solarAlarmItem).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        return result;
+    }
+
+    private void scheduleAlarm(SolarTime solarTimeItem) {
+        SolarAlarm solarAlarmItem = new SolarAlarm();
+        boolean isSolarAlarmNameLocationIdPairExists;
+
+        solarAlarmItem.Name = title.getText().toString();
+        solarAlarmItem.LocationId = solarTimeItem.LocationId;
+        solarAlarmItem.Recurring = recurring.isChecked();
+        solarAlarmItem.Monday = mon.isChecked();
+        solarAlarmItem.Tuesday = tue.isChecked();
+        solarAlarmItem.Wednesday = wed.isChecked();
+        solarAlarmItem.Thursday = thu.isChecked();
+        solarAlarmItem.Friday = fri.isChecked();
+        solarAlarmItem.Saturday = sat.isChecked();
+        solarAlarmItem.Sunday = sun.isChecked();
+        solarAlarmItem.Sunrise = sunrise.isChecked();
+        solarAlarmItem.Sunset = sunset.isChecked();
+        solarAlarmItem.Before = before.isChecked();
+        solarAlarmItem.At = at.isChecked();
+        solarAlarmItem.After = after.isChecked();
+        solarAlarmItem.SolarNoon = solarnoon.isChecked();
+        solarAlarmItem.CivilTwilightBegin = false;
+        solarAlarmItem.CivilTwilightEnd = false;
+        solarAlarmItem.NauticalTwilightBegin = false;
+        solarAlarmItem.NauticalTwilightEnd = false;
+        solarAlarmItem.AstronomicalTwilightBegin = false;
+        solarAlarmItem.AstronomicalTwilightEnd = false;
+
+        isSolarAlarmNameLocationIdPairExists = getSolarAlarmNameLocationIdPairExists(solarAlarmItem);
+
+        if(!isSolarAlarmNameLocationIdPairExists)
+            solarAlarmRepository.Insert(solarAlarmItem);
+        else
+            Toast.makeText(getContext(), "Alarm already exists!", Toast.LENGTH_LONG).show();
+        //alarm.schedule(getContext());
+    }
+
+    private class TimeResponseTask extends AsyncTask<Object, Void, SolarTime>  {
+        HttpRequests httpRequests;
+        SunriseSunsetRequest sunriseSunsetRequest;
+        SunriseSunsetResponse response;
+        Location location;
+        SolarTime solarTime;
+
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        protected SolarTime doInBackground(Object... objects) throws Exception {
+            sunriseSunsetRequest = (SunriseSunsetRequest) objects[0];
+            location = (Location) objects[1];
+            try {
+                httpRequests = new HttpRequests(sunriseSunsetRequest);
+                response = httpRequests.GetSolarData(sunriseSunsetRequest);
+                solarTime = newSolarTime(response, location);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw e;
+            }
+
             return solarTime;
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public SolarTime newSolarTime(SunriseSunsetResponse sunriseSunsetResponse)
+    public SolarTime newSolarTime(SunriseSunsetResponse sunriseSunsetResponse, Location locationItem)
     {
-        int solarTimeID = new Random().nextInt(Integer.MAX_VALUE);
         SolarTime solarTime = new SolarTime();
         String pattern = "h:mm a";
-        String day_length_pattern = "hh:mm";
+        LocalDate date = LocalDateTime.ofInstant(sunriseSunsetResponse.request.Date.toInstant(), ZoneId.systemDefault()).toLocalDate();
 
         solarTime.LocationId = locationItem.Id;
-        solarTime.Id = solarTimeID;
-        solarTime.Date = LocalDate.now();
+        solarTime.Date = date;
         solarTime.Sunrise = LocalTime.parse(sunriseSunsetResponse.getSunrise(), DateTimeFormatter.ofPattern(pattern));
         solarTime.Sunset = LocalTime.parse(sunriseSunsetResponse.getSunset(), DateTimeFormatter.ofPattern(pattern));
         solarTime.SolarNoon = LocalTime.parse(sunriseSunsetResponse.getSolarNoon(), DateTimeFormatter.ofPattern(pattern));
@@ -278,12 +323,19 @@ public class CreateAlarmFragment extends Fragment{
         return solarTime;
     }
 
-    private class LocationIdExistsTask extends AsyncTask<Integer, Void, Boolean>{
+    private class LocationIdDatePairExistsTask extends AsyncTask<Object, Void, Boolean>{
+        Location location;
+        Calendar date;
+        LocalDate localDate;
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
-        protected Boolean doInBackground(Integer... integers) {
+        protected Boolean doInBackground(Object... objects) {
+            location = (Location) objects[0];
+            date = (Calendar) objects[1];
+            localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).toLocalDate();
             Boolean result = false;
             try{
-                result = solarTimeRepository.isLocationIDExists(locationItem.Id);
+                result = solarTimeRepository.isLocationIDDatePairExists(location.Id, localDate);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -292,12 +344,26 @@ public class CreateAlarmFragment extends Fragment{
         }
     }
 
-    private class DateExistsTask extends AsyncTask<LocalDate, Void, Boolean>{
+    private class GetSolarTimeTask extends AsyncTask<Object, Void, SolarTime>{
+
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
-        protected Boolean doInBackground(LocalDate... localDates) {
+        protected SolarTime doInBackground(Object... objects) {
+            int locationId = (Integer) objects[0];
+            LocalDate localDate = (LocalDate) objects[1];
+            return solarTimeRepository.getSolarTime(locationId, localDate);
+        }
+    }
+
+    private class SolarAlarmNameExistsTask extends AsyncTask<SolarAlarm, Void, Boolean>{
+        SolarAlarm solarAlarmItem;
+
+        @Override
+        protected Boolean doInBackground(SolarAlarm... solarAlarms) {
+            solarAlarmItem = solarAlarms[0];
             Boolean result = false;
             try{
-                result = solarTimeRepository.isDateExists(solarTimeItem.Date);
+                result = solarAlarmRepository.isSolarAlarmNameLocationIDExists(solarAlarmItem.Name, solarAlarmItem.LocationId);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -305,54 +371,4 @@ public class CreateAlarmFragment extends Fragment{
             return result;
         }
     }
-
-//    public void onRadioButtonClicked(View view)
-//    {
-//        boolean checked = ((RadioButton) view).isChecked();
-//        switch(view.getId()) {
-//            case R.id.fragment_createalarm_sunrise_radio_button:
-//                if (checked)
-//                {
-//                    solarnoon.setChecked(false);
-//                    sunset.setChecked(false);
-//                }
-//                    break;
-//            case R.id.fragment_createalarm_solarnoon_radio_button:
-//                if (checked)
-//                {
-//                    sunrise.setChecked(false);
-//                    sunset.setChecked(false);
-//                }
-//                    break;
-//            case R.id.fragment_createalarm_sunset_radio_button:
-//                if (checked)
-//                {
-//                    sunrise.setChecked(false);
-//                    solarnoon.setChecked(false);
-//                }
-//                    break;
-//            case R.id.fragment_createalarm_radio_button_at:
-//                if (checked)
-//                {
-//                    before.setChecked(false);
-//                    after.setChecked(false);
-//                }
-//                    break;
-//            case R.id.fragment_createalarm_radio_button_before:
-//                if (checked)
-//                {
-//                    at.setChecked(false);
-//                    after.setChecked(false);
-//                }
-//                    break;
-//            case R.id.fragment_createalarm_radio_button_after:
-//                if (checked)
-//                {
-//                    at.setChecked(false);
-//                    before.setChecked(false);
-//                }
-//
-//                    break;
-//        }
-//    }
 }

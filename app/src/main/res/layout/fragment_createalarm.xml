@@ -106,87 +106,85 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/fragment_createalarm_alarmtime_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Alarm Time"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_recurring_options"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_alarmtype_radiogroup">
+        </TextView>
+
         <RadioGroup
             android:id="@+id/fragment_createalarm_alarmtype_radiogroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_recurring_options">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Alarm Time"></TextView>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center">
+            android:orientation="horizontal"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_alarmtime_text">
 
                 <RadioButton
                     android:id="@+id/fragment_createalarm_sunrise_radio_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sunrise"
-                    android:onClick="onRadioButtonClicked">
+                    android:text="Sunrise">
                 </RadioButton>
 
                 <RadioButton
                     android:id="@+id/fragment_createalarm_solarnoon_radio_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Solar Noon"
-                    android:onClick="onRadioButtonClicked">
+                    android:text="Solar Noon">
                 </RadioButton>
 
                 <RadioButton
                     android:id="@+id/fragment_createalarm_sunset_radio_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sunset"
-                    android:onClick="onRadioButtonClicked">
+                    android:text="Sunset">
                 </RadioButton>
-            </LinearLayout>
+
         </RadioGroup>
+
+        <TextView
+            android:id="@+id/fragment_createalarm_settime_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set Time"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_alarmtype_radiogroup"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_alarmtime_radiogroup">
+        </TextView>
 
         <RadioGroup
             android:id="@+id/fragment_createalarm_alarmtime_radiogroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/fragment_createalarm_alarmtype_radiogroup"
+            android:orientation="horizontal"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_settime_text"
             >
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Set Time"
-                android:gravity="center">
-            </TextView>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center">
-                <RadioButton
-                    android:id="@+id/fragment_createalarm_radio_button_at"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="At"
-                    android:onClick="onRadioButtonClicked">
-                </RadioButton>
+
                 <RadioButton
                     android:id="@+id/fragment_createalarm_radio_button_before"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Before"
-                    android:onClick="onRadioButtonClicked">
+                    android:text="Before">
+                </RadioButton>
+                <RadioButton
+                    android:id="@+id/fragment_createalarm_radio_button_at"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="At">
                 </RadioButton>
                 <RadioButton
                     android:id="@+id/fragment_createalarm_radio_button_after"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="After"
-                    android:onClick="onRadioButtonClicked">
+                    android:text="After">
                 </RadioButton>
-            </LinearLayout>
+
         </RadioGroup>
 
         <LinearLayout

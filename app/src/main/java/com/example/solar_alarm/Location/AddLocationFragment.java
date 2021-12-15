@@ -34,7 +34,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -159,7 +158,6 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
 
     public void saveLocation()
     {
-        int locationID = new Random().nextInt(Integer.MAX_VALUE);
         String locationName = locationNameText.getText().toString();
 
         Location location = new Location();
@@ -167,7 +165,6 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         location.TimezoneId = timeZoneID;
         location.Latitude = latitude;
         location.Longitude = longitude;
-        location.Id = locationID;
 
         locationRepository.Insert(location);
         Toast.makeText(getContext(), "New Location Created", Toast.LENGTH_LONG).show();
@@ -175,7 +172,6 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
 
     public void saveTimeZone()
     {
-        timeZoneID = new Random().nextInt(Integer.MAX_VALUE);
         Timezone timezone = new Timezone();
         timezone.CountryCode = timeZoneResults.countryCode;
         timezone.CountryName = timeZoneResults.countryName;

@@ -21,11 +21,11 @@ public interface SolarTimeDao
     @Query("SELECT * FROM SolarTime ORDER BY Date")
     LiveData<List<SolarTime>> getAll();
 
-    @Query("SELECT EXISTS(SELECT * FROM SolarTime WHERE LocationId = :locationId)")
-    boolean isLocationIDExists(int locationId);
+    @Query("SELECT * FROM SolarTime WHERE LocationId = :locationId AND Date = :date")
+    SolarTime getSolarTime(int locationId, LocalDate date);
 
-    @Query("SELECT EXISTS(SELECT * FROM SolarTime WHERE Date = :date)")
-    boolean isDateExists(LocalDate date);
+    @Query("SELECT EXISTS(SELECT * FROM SolarTime WHERE LocationId = :locationId AND Date = :date)")
+    boolean isLocationIDDatePairExists(int locationId, LocalDate date);
 
     @Update
     void Update(SolarTime solarTime);
