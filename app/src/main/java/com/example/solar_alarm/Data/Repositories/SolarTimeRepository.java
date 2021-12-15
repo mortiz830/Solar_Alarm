@@ -42,6 +42,10 @@ public class SolarTimeRepository
         return solarTimeDao.isLocationIDDatePairExists(locationId, date);
     }
 
+    public SolarTime getSolarTime(int locationId, LocalDate date)
+    {
+        return solarTimeDao.getSolarTime(locationId, date);
+    }
     
     public LiveData<List<SolarTime>> getAll() {return solarTimeLiveData;}
 }
