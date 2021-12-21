@@ -35,7 +35,6 @@ import com.example.solar_alarm.R;
 import com.example.solar_alarm.sunrise_sunset_http.HttpRequests;
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest;
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
-import com.google.android.gms.maps.SupportMapFragment;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -100,7 +99,6 @@ public class CreateAlarmFragment extends Fragment{
     SpinnerAdapter spinnerAdapter;
     TimeZoneConverter timeZoneConverter;
 
-    private LocationRepository locationRepository;
     private List<Location> Locations;
     private SolarTimeRepository solarTimeRepository;
     private SolarAlarmRepository solarAlarmRepository;
@@ -110,10 +108,10 @@ public class CreateAlarmFragment extends Fragment{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Locations = new ArrayList<Location>();
+        Locations = new ArrayList<>();
         solarTimeRepository = new SolarTimeRepository(getActivity().getApplication());
         solarAlarmRepository = new SolarAlarmRepository(getActivity().getApplication());
-        locationRepository = new LocationRepository(getActivity().getApplication());
+        LocationRepository locationRepository = new LocationRepository(getActivity().getApplication());
         locationRepository.getAll().observe(this, new Observer<List<Location>>() {
             @Override
             public void onChanged(List<Location> locations) {
@@ -128,7 +126,7 @@ public class CreateAlarmFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_createalarm, container, false);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_add_location_map);
+        //SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_add_location_map);
 
         List<SolarTime> solarTimes = new ArrayList<SolarTime>();
         ButterKnife.bind(this, view);
@@ -231,7 +229,7 @@ public class CreateAlarmFragment extends Fragment{
 
     public boolean getSolarAlarmNameLocationIdPairExists(SolarAlarm solarAlarmItem) throws Exception
     {
-        boolean result = false;
+        boolean result;
         try {
             result = new SolarAlarmNameExistsTask().execute(solarAlarmItem).get();
         } catch (Exception e) {
