@@ -174,7 +174,11 @@ public class CreateAlarmFragment extends Fragment{
 
                 for(int i = 0; i < solarTimes.size(); i++)
                 {
-                    scheduleAlarm(solarTimes.get(i));
+                    try {
+                        scheduleAlarm(solarTimes.get(i));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 Navigation.findNavController(v).navigate(R.id.action_createAlarmFragment_to_alarmsListFragment);
             }
@@ -188,7 +192,7 @@ public class CreateAlarmFragment extends Fragment{
     @RequiresApi(api = Build.VERSION_CODES.O)
     public SolarTime getSolarTime(Location locationItem, Calendar date) throws Exception {
         boolean isLocationIdDatePairExists = getLocationIdDatePareExists(locationItem, date);
-        SolarTime solarTimeItem = new SolarTime();
+        SolarTime solarTimeItem;
 
         if(!isLocationIdDatePairExists) {
             SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, date, true);
@@ -240,7 +244,7 @@ public class CreateAlarmFragment extends Fragment{
 
     private void scheduleAlarm(SolarTime solarTimeItem) throws Exception {
         SolarAlarm solarAlarmItem = new SolarAlarm();
-        boolean isSolarAlarmNameLocationIdPairExists = false;
+        boolean isSolarAlarmNameLocationIdPairExists;
 
         solarAlarmItem.Name = title.getText().toString();
         solarAlarmItem.LocationId = solarTimeItem.LocationId;
