@@ -37,7 +37,6 @@ import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest;
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
 import com.google.android.gms.maps.SupportMapFragment;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -46,7 +45,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -148,7 +146,7 @@ public class CreateAlarmFragment extends Fragment{
                         solarTimes.add(getSolarTime(locationItem, date));
                     } catch (Exception e) {
                         e.printStackTrace();
-                        //throw e;
+                        Toast.makeText(getContext(), "Solar Time exists!", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -205,6 +203,7 @@ public class CreateAlarmFragment extends Fragment{
 
             } catch (Exception e) {
                 e.printStackTrace();
+                throw e;
             }
         }
         else {
@@ -222,7 +221,7 @@ public class CreateAlarmFragment extends Fragment{
             return new LocationIdDatePairExistsTask().execute(locationItem, date).get();
         } catch (Exception e) {
             e.printStackTrace();
-            throw e;// Toast.makeText(getContext(), "Alarm already exists!", Toast.LENGTH_LONG).show();;
+            throw e;
         }
     }
 
@@ -239,9 +238,9 @@ public class CreateAlarmFragment extends Fragment{
         return result;
     }
 
-    private void scheduleAlarm(SolarTime solarTimeItem) {
+    private void scheduleAlarm(SolarTime solarTimeItem) throws Exception {
         SolarAlarm solarAlarmItem = new SolarAlarm();
-        boolean isSolarAlarmNameLocationIdPairExists;
+        boolean isSolarAlarmNameLocationIdPairExists = false;
 
         solarAlarmItem.Name = title.getText().toString();
         solarAlarmItem.LocationId = solarTimeItem.LocationId;
@@ -266,7 +265,12 @@ public class CreateAlarmFragment extends Fragment{
         solarAlarmItem.AstronomicalTwilightBegin = false;
         solarAlarmItem.AstronomicalTwilightEnd = false;
 
-        isSolarAlarmNameLocationIdPairExists = getSolarAlarmNameLocationIdPairExists(solarAlarmItem);
+        try {
+            isSolarAlarmNameLocationIdPairExists = getSolarAlarmNameLocationIdPairExists(solarAlarmItem);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
 
         if(!isSolarAlarmNameLocationIdPairExists)
             solarAlarmRepository.Insert(solarAlarmItem);
@@ -284,7 +288,7 @@ public class CreateAlarmFragment extends Fragment{
 
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
-        protected SolarTime doInBackground(Object... objects) throws Exception {
+        protected SolarTime doInBackground(Object... objects) {
             sunriseSunsetRequest = (SunriseSunsetRequest) objects[0];
             location = (Location) objects[1];
             try {
@@ -293,7 +297,7 @@ public class CreateAlarmFragment extends Fragment{
                 solarTime = newSolarTime(response, location);
             } catch (Exception e) {
                 e.printStackTrace();
-                throw e;
+                Toast.makeText(getContext(), "Unable to get times!", Toast.LENGTH_LONG).show();
             }
 
             return solarTime;
@@ -338,6 +342,7 @@ public class CreateAlarmFragment extends Fragment{
                 result = solarTimeRepository.isLocationIDDatePairExists(location.Id, localDate);
             }catch (Exception e){
                 e.printStackTrace();
+                Toast.makeText(getContext(), "Location / Date Pair exists!", Toast.LENGTH_LONG).show();
             }
 
             return result;
@@ -366,6 +371,7 @@ public class CreateAlarmFragment extends Fragment{
                 result = solarAlarmRepository.isSolarAlarmNameLocationIDExists(solarAlarmItem.Name, solarAlarmItem.LocationId);
             }catch (Exception e){
                 e.printStackTrace();
+                Toast.makeText(getContext(), "Solar Alarm already exists!", Toast.LENGTH_LONG).show();
             }
 
             return result;
