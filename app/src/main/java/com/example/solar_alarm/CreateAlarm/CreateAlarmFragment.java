@@ -240,9 +240,12 @@ public class CreateAlarmFragment extends Fragment{
         return result;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void scheduleAlarm(SolarTime solarTimeItem) throws Exception {
         SolarAlarm solarAlarmItem = new SolarAlarm();
         boolean isSolarAlarmNameLocationIdPairExists;
+
+
 
         solarAlarmItem.Name = title.getText().toString();
         solarAlarmItem.LocationId = solarTimeItem.LocationId;
@@ -278,7 +281,22 @@ public class CreateAlarmFragment extends Fragment{
             solarAlarmRepository.Insert(solarAlarmItem);
         else
             Toast.makeText(getContext(), "Alarm already exists!", Toast.LENGTH_LONG).show();
-        //alarm.schedule(getContext());
+
+        if(solarAlarmItem.Sunrise)
+        {
+            AlarmScheduler alarmScheduler = new AlarmScheduler(solarAlarmItem, solarTimeItem.Sunrise);
+            alarmScheduler.schedule(getContext());
+        }
+        else if(solarAlarmItem.Sunset)
+        {
+            AlarmScheduler alarmScheduler = new AlarmScheduler(solarAlarmItem, solarTimeItem.Sunset);
+            alarmScheduler.schedule(getContext());
+        }
+        else if(solarAlarmItem.SolarNoon)
+        {
+            AlarmScheduler alarmScheduler = new AlarmScheduler(solarAlarmItem, solarTimeItem.SolarNoon);
+            alarmScheduler.schedule(getContext());
+        }
     }
 
     private class TimeResponseTask extends AsyncTask<Object, Void, SolarTime>  {
