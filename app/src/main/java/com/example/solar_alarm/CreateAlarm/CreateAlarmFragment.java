@@ -282,23 +282,9 @@ public class CreateAlarmFragment extends Fragment{
         else
             Toast.makeText(getContext(), "Alarm already exists!", Toast.LENGTH_LONG).show();
 
-        if(true) { AlarmScheduler alarmScheduler = new AlarmScheduler(solarAlarmItem, LocalTime.now().plusMinutes(1)); alarmScheduler.schedule(getContext()); } else // DEBUG STATEMENT
+        AlarmScheduler alarmScheduler = new AlarmScheduler(solarAlarmItem, solarTimeItem);
 
-        if(solarAlarmItem.Sunrise)
-        {
-            AlarmScheduler alarmScheduler = new AlarmScheduler(solarAlarmItem, solarTimeItem.Sunrise);
-            alarmScheduler.schedule(getContext());
-        }
-        else if(solarAlarmItem.Sunset)
-        {
-            AlarmScheduler alarmScheduler = new AlarmScheduler(solarAlarmItem, solarTimeItem.Sunset);
-            alarmScheduler.schedule(getContext());
-        }
-        else if(solarAlarmItem.SolarNoon)
-        {
-            AlarmScheduler alarmScheduler = new AlarmScheduler(solarAlarmItem, solarTimeItem.SolarNoon);
-            alarmScheduler.schedule(getContext());
-        }
+        alarmScheduler.schedule(getContext());
     }
 
     private class TimeResponseTask extends AsyncTask<Object, Void, SolarTime>  {

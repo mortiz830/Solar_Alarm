@@ -21,25 +21,27 @@ import androidx.annotation.RequiresApi;
 
 import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
+import com.example.solar_alarm.Data.Tables.SolarTime;
 
 import java.time.LocalTime;
 import java.util.Calendar;
 
 public class AlarmScheduler {
     private SolarAlarm solarAlarm;
-    private LocalTime localTime;
+    private SolarTime solarTime;
     private boolean started;
 
-    public AlarmScheduler(SolarAlarm solarAlarm, LocalTime localTime)
+    public AlarmScheduler(SolarAlarm solarAlarm, SolarTime solarTime)
     {
         this.solarAlarm = solarAlarm;
-        this.localTime = localTime;
+        this.solarTime = solarTime;
         this.started = false;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void schedule(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        LocalTime localTime;
 
         Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
         intent.putExtra(RECURRING, solarAlarm.Recurring);
@@ -54,6 +56,16 @@ public class AlarmScheduler {
         intent.putExtra(TITLE, solarAlarm.Name);
 
         PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, solarAlarm.Id, intent, 0);
+
+        if(true) localTime = LocalTime.now().plusMinutes(1); else // DEBUG STATEMENT
+
+        if(solarAlarm.Sunrise)
+            localTime = solarTime.Sunrise;
+        else if(solarAlarm.SolarNoon)
+            localTime = solarTime.SolarNoon;
+        else if(solarAlarm.Sunset)
+            localTime = solarTime.Sunset;
+
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -128,3 +140,8 @@ public class AlarmScheduler {
         return days;
     }
 }
+//    SELECT DISTINCT Location.Id AS 'LocationId', SolarAlarm.Id AS 'SolarAlarmID', SolarTime.Id AS 'SolarTimeID'
+//        FROM
+//        Location JOIN SolarAlarm ON (Location.Id = SolarAlarm.LocationId)
+//        JOIN SolarTime ON(Location.Id = SolarTime.LocationId)
+//        ORDER BY 1,2,3
