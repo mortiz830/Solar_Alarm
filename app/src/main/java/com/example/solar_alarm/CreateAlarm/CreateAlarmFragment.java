@@ -137,7 +137,7 @@ public class CreateAlarmFragment extends Fragment{
                 Location locationItem = (Location) adapterView.getItemAtPosition(position);
                 Calendar date = Calendar.getInstance();
 
-                for(int i = 0; i < 7; i++)
+                for (int i = 0; i < 14; i++)
                 {
                     try {
                         solarTimes.add(getSolarTime(locationItem, date));
