@@ -139,13 +139,14 @@ public class CreateAlarmFragment extends Fragment{
 
                 for(int i = 0; i < 7; i++)
                 {
-                    date.add(Calendar.DAY_OF_YEAR, 1);
                     try {
                         solarTimes.add(getSolarTime(locationItem, date));
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(getContext(), "Solar Time exists!", Toast.LENGTH_LONG).show();
                     }
+
+                    date.add(Calendar.DAY_OF_YEAR, 1);
                 }
             }
 
