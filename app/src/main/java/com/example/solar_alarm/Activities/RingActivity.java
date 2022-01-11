@@ -11,9 +11,8 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.solar_alarm.R;
-import com.example.solar_alarm.CreateAlarm.TimePickerUtil;
 import com.example.solar_alarm.Data.Alarm;
+import com.example.solar_alarm.R;
 import com.example.solar_alarm.Service.AlarmService;
 
 import java.util.Calendar;
@@ -22,28 +21,30 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RingActivity extends AppCompatActivity {
+public class RingActivity extends AppCompatActivity
+{
     @BindView(R.id.activity_ring_dismiss) Button dismiss;
     @BindView(R.id.activity_ring_snooze) Button snooze;
     @BindView(R.id.activity_ring_clock) ImageView clock;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ring);
 
         ButterKnife.bind(this);
 
-        dismiss.setOnClickListener(new View.OnClickListener() {
+        dismiss.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
-                Intent intentService = new Intent(getApplicationContext(), AlarmService.class);
-                getApplicationContext().stopService(intentService);
-                finish();
+                StopService();
             }
         });
 
-        snooze.setOnClickListener(new View.OnClickListener() {
+        snooze.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
@@ -69,13 +70,18 @@ public class RingActivity extends AppCompatActivity {
 
                 alarm.schedule(getApplicationContext());
 
-                Intent intentService = new Intent(getApplicationContext(), AlarmService.class);
-                getApplicationContext().stopService(intentService);
-                finish();
+                StopService();
             }
         });
 
         animateClock();
+    }
+
+    private void StopService()
+    {
+        Intent intentService = new Intent(getApplicationContext(), AlarmService.class);
+        getApplicationContext().stopService(intentService);
+        finish();
     }
 
     private void animateClock() {

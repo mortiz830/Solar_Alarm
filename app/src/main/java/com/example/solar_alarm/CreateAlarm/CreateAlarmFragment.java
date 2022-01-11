@@ -35,9 +35,7 @@ import com.example.solar_alarm.R;
 import com.example.solar_alarm.sunrise_sunset_http.HttpRequests;
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest;
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
-import com.google.android.gms.maps.SupportMapFragment;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -46,7 +44,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -102,7 +99,6 @@ public class CreateAlarmFragment extends Fragment{
     SpinnerAdapter spinnerAdapter;
     TimeZoneConverter timeZoneConverter;
 
-    private LocationRepository locationRepository;
     private List<Location> Locations;
     private SolarTimeRepository solarTimeRepository;
     private SolarAlarmRepository solarAlarmRepository;
@@ -112,10 +108,10 @@ public class CreateAlarmFragment extends Fragment{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Locations = new ArrayList<Location>();
+        Locations = new ArrayList<>();
         solarTimeRepository = new SolarTimeRepository(getActivity().getApplication());
         solarAlarmRepository = new SolarAlarmRepository(getActivity().getApplication());
-        locationRepository = new LocationRepository(getActivity().getApplication());
+        LocationRepository locationRepository = new LocationRepository(getActivity().getApplication());
         locationRepository.getAll().observe(this, new Observer<List<Location>>() {
             @Override
             public void onChanged(List<Location> locations) {
@@ -130,7 +126,7 @@ public class CreateAlarmFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_createalarm, container, false);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_add_location_map);
+        //SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_add_location_map);
 
         List<SolarTime> solarTimes = new ArrayList<SolarTime>();
         ButterKnife.bind(this, view);
@@ -141,15 +137,16 @@ public class CreateAlarmFragment extends Fragment{
                 Location locationItem = (Location) adapterView.getItemAtPosition(position);
                 Calendar date = Calendar.getInstance();
 
-                for(int i = 0; i < 7; i++)
+                for (int i = 0; i < 14; i++)
                 {
-                    date.add(Calendar.DAY_OF_YEAR, 1);
                     try {
                         solarTimes.add(getSolarTime(locationItem, date));
                     } catch (Exception e) {
                         e.printStackTrace();
-                        //throw e;
+                        Toast.makeText(getContext(), "Solar Time exists!", Toast.LENGTH_LONG).show();
                     }
+
+                    date.add(Calendar.DAY_OF_YEAR, 1);
                 }
             }
 
@@ -176,7 +173,11 @@ public class CreateAlarmFragment extends Fragment{
 
                 for(int i = 0; i < solarTimes.size(); i++)
                 {
-                    scheduleAlarm(solarTimes.get(i));
+                    try {
+                        scheduleAlarm(solarTimes.get(i));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 Navigation.findNavController(v).navigate(R.id.action_createAlarmFragment_to_alarmsListFragment);
             }
@@ -190,7 +191,7 @@ public class CreateAlarmFragment extends Fragment{
     @RequiresApi(api = Build.VERSION_CODES.O)
     public SolarTime getSolarTime(Location locationItem, Calendar date) throws Exception {
         boolean isLocationIdDatePairExists = getLocationIdDatePareExists(locationItem, date);
-        SolarTime solarTimeItem = new SolarTime();
+        SolarTime solarTimeItem;
 
         if(!isLocationIdDatePairExists) {
             SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, date, true);
@@ -205,6 +206,7 @@ public class CreateAlarmFragment extends Fragment{
 
             } catch (Exception e) {
                 e.printStackTrace();
+                throw e;
             }
         }
         else {
@@ -222,13 +224,13 @@ public class CreateAlarmFragment extends Fragment{
             return new LocationIdDatePairExistsTask().execute(locationItem, date).get();
         } catch (Exception e) {
             e.printStackTrace();
-            throw e;// Toast.makeText(getContext(), "Alarm already exists!", Toast.LENGTH_LONG).show();;
+            throw e;
         }
     }
 
     public boolean getSolarAlarmNameLocationIdPairExists(SolarAlarm solarAlarmItem) throws Exception
     {
-        boolean result = false;
+        boolean result;
         try {
             result = new SolarAlarmNameExistsTask().execute(solarAlarmItem).get();
         } catch (Exception e) {
@@ -239,9 +241,12 @@ public class CreateAlarmFragment extends Fragment{
         return result;
     }
 
-    private void scheduleAlarm(SolarTime solarTimeItem) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void scheduleAlarm(SolarTime solarTimeItem) throws Exception {
         SolarAlarm solarAlarmItem = new SolarAlarm();
         boolean isSolarAlarmNameLocationIdPairExists;
+
+
 
         solarAlarmItem.Name = title.getText().toString();
         solarAlarmItem.LocationId = solarTimeItem.LocationId;
@@ -266,13 +271,21 @@ public class CreateAlarmFragment extends Fragment{
         solarAlarmItem.AstronomicalTwilightBegin = false;
         solarAlarmItem.AstronomicalTwilightEnd = false;
 
-        isSolarAlarmNameLocationIdPairExists = getSolarAlarmNameLocationIdPairExists(solarAlarmItem);
+        try {
+            isSolarAlarmNameLocationIdPairExists = getSolarAlarmNameLocationIdPairExists(solarAlarmItem);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
 
         if(!isSolarAlarmNameLocationIdPairExists)
             solarAlarmRepository.Insert(solarAlarmItem);
         else
             Toast.makeText(getContext(), "Alarm already exists!", Toast.LENGTH_LONG).show();
-        //alarm.schedule(getContext());
+
+        AlarmScheduler alarmScheduler = new AlarmScheduler(solarAlarmItem, solarTimeItem);
+
+        alarmScheduler.schedule(getContext());
     }
 
     private class TimeResponseTask extends AsyncTask<Object, Void, SolarTime>  {
@@ -284,7 +297,7 @@ public class CreateAlarmFragment extends Fragment{
 
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
-        protected SolarTime doInBackground(Object... objects) throws Exception {
+        protected SolarTime doInBackground(Object... objects) {
             sunriseSunsetRequest = (SunriseSunsetRequest) objects[0];
             location = (Location) objects[1];
             try {
@@ -293,7 +306,7 @@ public class CreateAlarmFragment extends Fragment{
                 solarTime = newSolarTime(response, location);
             } catch (Exception e) {
                 e.printStackTrace();
-                throw e;
+                Toast.makeText(getContext(), "Unable to get times!", Toast.LENGTH_LONG).show();
             }
 
             return solarTime;
@@ -338,6 +351,7 @@ public class CreateAlarmFragment extends Fragment{
                 result = solarTimeRepository.isLocationIDDatePairExists(location.Id, localDate);
             }catch (Exception e){
                 e.printStackTrace();
+                Toast.makeText(getContext(), "Location / Date Pair exists!", Toast.LENGTH_LONG).show();
             }
 
             return result;
@@ -366,6 +380,7 @@ public class CreateAlarmFragment extends Fragment{
                 result = solarAlarmRepository.isSolarAlarmNameLocationIDExists(solarAlarmItem.Name, solarAlarmItem.LocationId);
             }catch (Exception e){
                 e.printStackTrace();
+                Toast.makeText(getContext(), "Solar Alarm already exists!", Toast.LENGTH_LONG).show();
             }
 
             return result;
