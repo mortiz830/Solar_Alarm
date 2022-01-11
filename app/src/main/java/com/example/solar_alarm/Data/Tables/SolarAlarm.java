@@ -33,15 +33,8 @@ public class SolarAlarm extends TableBase
     public boolean After;
 
     // Time Type Flags
-    public boolean Sunrise;
-    public boolean Sunset;
-    public boolean SolarNoon;
-    public boolean CivilTwilightBegin;
-    public boolean CivilTwilightEnd;
-    public boolean NauticalTwilightBegin;
-    public boolean NauticalTwilightEnd;
-    public boolean AstronomicalTwilightBegin;
-    public boolean AstronomicalTwilightEnd;
+    @ForeignKey(entity = TimeType.class, parentColumns = "Id", childColumns = "TimeTypeId")
+    public int TimeTypeId;
 
     // public ??? DayLength;
 }
