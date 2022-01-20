@@ -258,18 +258,18 @@ public class CreateAlarmFragment extends Fragment{
         solarAlarmItem.Friday = fri.isChecked();
         solarAlarmItem.Saturday = sat.isChecked();
         solarAlarmItem.Sunday = sun.isChecked();
-        solarAlarmItem.Sunrise = sunrise.isChecked();
-        solarAlarmItem.Sunset = sunset.isChecked();
-        solarAlarmItem.Before = before.isChecked();
-        solarAlarmItem.At = at.isChecked();
-        solarAlarmItem.After = after.isChecked();
-        solarAlarmItem.SolarNoon = solarnoon.isChecked();
-        solarAlarmItem.CivilTwilightBegin = false;
-        solarAlarmItem.CivilTwilightEnd = false;
-        solarAlarmItem.NauticalTwilightBegin = false;
-        solarAlarmItem.NauticalTwilightEnd = false;
-        solarAlarmItem.AstronomicalTwilightBegin = false;
-        solarAlarmItem.AstronomicalTwilightEnd = false;
+        //solarAlarmItem.Sunrise = sunrise.isChecked();
+        //solarAlarmItem.Sunset = sunset.isChecked();
+        //solarAlarmItem.Before = before.isChecked();
+        //solarAlarmItem.At = at.isChecked();
+        //solarAlarmItem.After = after.isChecked();
+        //solarAlarmItem.SolarNoon = solarnoon.isChecked();
+        //solarAlarmItem.CivilTwilightBegin = false;
+        //solarAlarmItem.CivilTwilightEnd = false;
+        //solarAlarmItem.NauticalTwilightBegin = false;
+        //solarAlarmItem.NauticalTwilightEnd = false;
+        //solarAlarmItem.AstronomicalTwilightBegin = false;
+        //solarAlarmItem.AstronomicalTwilightEnd = false;
 
         try {
             isSolarAlarmNameLocationIdPairExists = getSolarAlarmNameLocationIdPairExists(solarAlarmItem);
