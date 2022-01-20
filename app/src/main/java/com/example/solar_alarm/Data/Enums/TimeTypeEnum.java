@@ -12,10 +12,12 @@ public enum TimeTypeEnum
     //AstronomicalTwilightBegin(8),
     //AstronomicalTwilightEnd(9)
 
-    public final int Value;
+    public final int    Id;
     public final String Name;
-    TimeTypeEnum(int value, String name) {
-        Value = value;
+
+    TimeTypeEnum(int id, String name)
+    {
+        Id   = id;
         Name = name;
     }
 }
