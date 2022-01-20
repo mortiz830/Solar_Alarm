@@ -28,11 +28,9 @@ public class SolarAlarm extends TableBase
     public boolean Saturday;
     public boolean Sunday;
 
-    public boolean Before;
-    public boolean At;
-    public boolean After;
+    @ForeignKey(entity = AlarmType.class, parentColumns = "Id", childColumns = "AlarmTypeId")
+    public int AlarmTypeId;
 
-    // Time Type Flags
     @ForeignKey(entity = TimeType.class, parentColumns = "Id", childColumns = "TimeTypeId")
     public int TimeTypeId;
 
