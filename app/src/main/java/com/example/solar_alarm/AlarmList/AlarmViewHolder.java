@@ -1,15 +1,14 @@
 package com.example.solar_alarm.AlarmList;
-import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.solar_alarm.Data.Alarm;
+import com.example.solar_alarm.Data.AlarmDisplayData;
 import com.example.solar_alarm.R;
 
 public class AlarmViewHolder extends RecyclerView.ViewHolder {
@@ -36,31 +35,31 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder {
         this.listener = listener;
     }
 
-    public void bind(Alarm alarm) {
-        String alarmText = String.format("%02d:%02d", alarm.getHour(), alarm.getMinute());
+    public void bind(AlarmDisplayData alarm) {
+//        String alarmText = String.format("%02d:%02d", alarm.getHour(), alarm.getMinute());
+//
+//        alarmTime.setText(alarmText);
+//        alarmStarted.setChecked(alarm.isStarted());
+//
+//        if (alarm.isRecurring()) {
+//            alarmRecurring.setImageResource(R.drawable.ic_repeat_black_24dp);
+//            alarmRecurringDays.setText(alarm.getRecurringDaysText());
+//        } else {
+//            alarmRecurring.setImageResource(R.drawable.ic_looks_one_black_24dp);
+//            alarmRecurringDays.setText("Once Off");
+//        }
+//
+//        if (alarm.getTitle().length() != 0) {
+//            alarmTitle.setText(String.format("%s | %d | %d", alarm.getTitle(), alarm.getAlarmId(), alarm.getCreated()));
+//        } else {
+//            alarmTitle.setText(String.format("%s | %d | %d", "Alarm", alarm.getAlarmId(), alarm.getCreated()));
+//        }
 
-        alarmTime.setText(alarmText);
-        alarmStarted.setChecked(alarm.isStarted());
-
-        if (alarm.isRecurring()) {
-            alarmRecurring.setImageResource(R.drawable.ic_repeat_black_24dp);
-            alarmRecurringDays.setText(alarm.getRecurringDaysText());
-        } else {
-            alarmRecurring.setImageResource(R.drawable.ic_looks_one_black_24dp);
-            alarmRecurringDays.setText("Once Off");
-        }
-
-        if (alarm.getTitle().length() != 0) {
-            alarmTitle.setText(String.format("%s | %d | %d", alarm.getTitle(), alarm.getAlarmId(), alarm.getCreated()));
-        } else {
-            alarmTitle.setText(String.format("%s | %d | %d", "Alarm", alarm.getAlarmId(), alarm.getCreated()));
-        }
-
-        alarmStarted.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                listener.onToggle(alarm);
-            }
-        });
+//        alarmStarted.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                listener.onToggle(alarm);
+//            }
+//        });
     }
 }
