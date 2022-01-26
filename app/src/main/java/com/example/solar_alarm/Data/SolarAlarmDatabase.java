@@ -1,6 +1,5 @@
 package com.example.solar_alarm.Data;
 
-import android.app.Application;
 import android.content.Context;
 
 import androidx.room.Database;
@@ -13,8 +12,6 @@ import com.example.solar_alarm.Data.Daos.SolarAlarmDao;
 import com.example.solar_alarm.Data.Daos.SolarTimeDao;
 import com.example.solar_alarm.Data.Daos.TimeUnitTypeDao;
 import com.example.solar_alarm.Data.Daos.TimezoneDao;
-import com.example.solar_alarm.Data.Enums.TimeUnitTypeEnum;
-import com.example.solar_alarm.Data.Repositories.TimeUnitTypeRepository;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
@@ -28,11 +25,11 @@ import java.util.concurrent.Executors;
 (
     entities =
     {
-            Location.class,
-            SolarAlarm.class,
-            SolarTime.class,
-            Timezone.class,
-            TimeUnitType.class
+        Location.class,
+        SolarAlarm.class,
+        SolarTime.class,
+        Timezone.class,
+        TimeUnitType.class
     },
     version = 1,
     exportSchema = false
@@ -60,15 +57,6 @@ public abstract class SolarAlarmDatabase extends RoomDatabase
                 if (INSTANCE == null)
                 {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SolarAlarmDatabase.class, "SolarAlarmDatabase").build();
-
-                    TimeUnitTypeRepository timeUnitTypeRepository = new TimeUnitTypeRepository((Application) context);
-
-                    for (TimeUnitTypeEnum timeUnitTypeEnum : TimeUnitTypeEnum.values())
-                    {
-                        TimeUnitType d = new TimeUnitType();
-                        d.Name = timeUnitTypeEnum.Name;
-                        timeUnitTypeRepository.Insert(d);
-                    }
                 }
             }
         }
