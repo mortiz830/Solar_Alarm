@@ -34,5 +34,10 @@ public class SolarAlarm extends TableBase
     @ForeignKey(entity = TimeType.class, parentColumns = "Id", childColumns = "TimeTypeId")
     public int TimeTypeId;
 
+    @ForeignKey(entity = TimeUnitType.class, parentColumns = "Id", childColumns = "TimeUnitTypeId")
+    public int TimeUnitTypeId;
+
+    public int TimeOffsetValue;
+
     // public ??? DayLength;
 }
