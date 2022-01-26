@@ -1,5 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <string name="app_name">Solar_Alarm</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="url_format">json</string>
+
+    <string-array name="alarmtype_array">
+        <item>Sunrise</item>
+        <item>Solar Noon</item>
+        <item>Sunset</item>
+    </string-array>
+
+    <string-array name="settime_array">
+        <item>Before</item>
+        <item>At</item>
+        <item>After</item>
+    </string-array>
 </resources>

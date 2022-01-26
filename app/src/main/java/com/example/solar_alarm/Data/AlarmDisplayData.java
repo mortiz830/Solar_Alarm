@@ -4,4 +4,9 @@ public class AlarmDisplayData {
     public int LocationID;
     public int SolarAlarmID;
     public int SolarTimeID;
+
+//    public LocalTime getAlarmTime()
+//    {
+//        if(SolarAlarm)
+//    }
 }

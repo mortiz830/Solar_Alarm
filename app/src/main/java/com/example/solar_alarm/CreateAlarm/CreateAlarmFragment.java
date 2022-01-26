@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -74,29 +75,15 @@ public class CreateAlarmFragment extends Fragment{
     LinearLayout recurringOptions;
     @BindView(R.id.fragment_createalarm_location_spinner)
     Spinner spinner;
-    @BindView(R.id.fragment_createalarm_sunrise_radio_button)
-    RadioButton sunrise;
-    @BindView(R.id.fragment_createalarm_solarnoon_radio_button)
-    RadioButton solarnoon;
-    @BindView(R.id.fragment_createalarm_sunset_radio_button)
-    RadioButton sunset;
-    @BindView(R.id.fragment_createalarm_radio_button_at)
-    RadioButton at;
-    @BindView(R.id.fragment_createalarm_radio_button_before)
-    RadioButton before;
-    @BindView(R.id.fragment_createalarm_radio_button_after)
-    RadioButton after;
-    @BindView(R.id.fragment_createalarm_alarmtime_radiogroup)
-    RadioGroup alarmTime;
-    @BindView(R.id.fragment_createalarm_alarmtype_radiogroup)
-    RadioGroup alarmType;
     @BindView(R.id.fragment_createalarm_sunrise_data)
     TextView sunriseData;
     @BindView(R.id.fragment_createalarm_solarnoon_data)
     TextView solarNoonData;
     @BindView(R.id.fragment_createalarm_sunset_data)
     TextView sunsetData;
-    SpinnerAdapter spinnerAdapter;
+    SpinnerAdapter locationSpinnerAdapter;
+    ArrayAdapter<CharSequence> alarmTimeAdapter;
+    ArrayAdapter<CharSequence> setTimeAdapter;
     TimeZoneConverter timeZoneConverter;
 
     private List<Location> Locations;
@@ -116,18 +103,27 @@ public class CreateAlarmFragment extends Fragment{
             @Override
             public void onChanged(List<Location> locations) {
                 Locations = locations;
-                spinnerAdapter = new SpinnerAdapter(getActivity(), Locations);
-                spinner.setAdapter(spinnerAdapter);
+                locationSpinnerAdapter = new SpinnerAdapter(getActivity(), Locations);
+                spinner.setAdapter(locationSpinnerAdapter);
             }
         });
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_createalarm, container, false);
-        //SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_add_location_map);
 
+        Spinner alarmTimeSpinner = (Spinner) view.findViewById(R.id.fragment_createalarm_alarmtime_spinner);
+        Spinner setTimeSpinner = (Spinner) view.findViewById(R.id.fragment_createalarm_settime_spinner);
+        alarmTimeAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.alarmtype_array, android.R.layout.simple_spinner_item);
+        alarmTimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        alarmTimeSpinner.setAdapter(alarmTimeAdapter);
+
+        setTimeAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.settime_array, android.R.layout.simple_spinner_item);
+        setTimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        setTimeSpinner.setAdapter(alarmTimeAdapter);
         List<SolarTime> solarTimes = new ArrayList<SolarTime>();
         ButterKnife.bind(this, view);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -258,12 +254,12 @@ public class CreateAlarmFragment extends Fragment{
         solarAlarmItem.Friday = fri.isChecked();
         solarAlarmItem.Saturday = sat.isChecked();
         solarAlarmItem.Sunday = sun.isChecked();
-        solarAlarmItem.Sunrise = sunrise.isChecked();
-        solarAlarmItem.Sunset = sunset.isChecked();
-        solarAlarmItem.Before = before.isChecked();
-        solarAlarmItem.At = at.isChecked();
-        solarAlarmItem.After = after.isChecked();
-        solarAlarmItem.SolarNoon = solarnoon.isChecked();
+//        solarAlarmItem.Sunrise = sunrise.isChecked();
+//        solarAlarmItem.Sunset = sunset.isChecked();
+//        solarAlarmItem.Before = before.isChecked();
+//        solarAlarmItem.At = at.isChecked();
+//        solarAlarmItem.After = after.isChecked();
+//        solarAlarmItem.SolarNoon = solarnoon.isChecked();
         solarAlarmItem.CivilTwilightBegin = false;
         solarAlarmItem.CivilTwilightEnd = false;
         solarAlarmItem.NauticalTwilightBegin = false;
