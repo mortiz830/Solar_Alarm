@@ -7,10 +7,10 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.example.solar_alarm.Data.Repositories.LocationDao;
-import com.example.solar_alarm.Data.Repositories.SolarAlarmDao;
-import com.example.solar_alarm.Data.Repositories.SolarTimeDao;
-import com.example.solar_alarm.Data.Repositories.TimezoneDao;
+import com.example.solar_alarm.Data.Daos.LocationDao;
+import com.example.solar_alarm.Data.Daos.SolarAlarmDao;
+import com.example.solar_alarm.Data.Daos.SolarTimeDao;
+import com.example.solar_alarm.Data.Daos.TimezoneDao;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
@@ -41,6 +41,8 @@ public abstract class SolarAlarmDatabase extends RoomDatabase
                 if (INSTANCE == null)
                 {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SolarAlarmDatabase.class, "SolarAlarmDatabase").build();
+
+
                 }
             }
         }

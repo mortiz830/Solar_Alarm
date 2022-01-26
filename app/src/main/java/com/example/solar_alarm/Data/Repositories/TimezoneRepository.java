@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.solar_alarm.Data.Daos.TimezoneDao;
 import com.example.solar_alarm.Data.SolarAlarmDatabase;
 import com.example.solar_alarm.Data.Tables.Timezone;
 
