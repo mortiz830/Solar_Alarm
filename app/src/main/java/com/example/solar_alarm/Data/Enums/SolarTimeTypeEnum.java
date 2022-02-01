@@ -1,6 +1,6 @@
 package com.example.solar_alarm.Data.Enums;
 
-public enum TimeTypeEnum
+public enum SolarTimeTypeEnum
 {
     Sunrise(1, "Sunrise"),
     Sunset(2, "Sunset"),
@@ -15,7 +15,7 @@ public enum TimeTypeEnum
     public final int    Id;
     public final String Name;
 
-    TimeTypeEnum(int id, String name)
+    SolarTimeTypeEnum(int id, String name)
     {
         Id   = id;
         Name = name;

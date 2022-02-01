@@ -6,11 +6,11 @@ import androidx.room.Index;
 
 @Entity
 (
-    tableName = "TimeTypes",
+    tableName = "SolarTimeTypes",
     indices = { @Index(value = {"Name"}, unique = true) }
 )
 
-public class TimeType extends TableBase
+public class SolarTimeType extends TableBase
 {
     @NonNull
     public String Name;

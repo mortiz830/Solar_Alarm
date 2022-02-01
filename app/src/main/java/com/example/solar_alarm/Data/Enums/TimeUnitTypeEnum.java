@@ -2,7 +2,7 @@ package com.example.solar_alarm.Data.Enums;
 
 public enum TimeUnitTypeEnum
 {
-    Minute(1, "Monitor"),
+    Minute(1, "Minute"),
     Hour(2, "Hour");
 
     public final int    Id;

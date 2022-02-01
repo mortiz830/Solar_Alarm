@@ -20,7 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver;
-import com.example.solar_alarm.Data.Enums.TimeTypeEnum;
+import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
 
@@ -60,11 +60,11 @@ public class AlarmScheduler {
 
         if(true) localTime = LocalTime.now().plusMinutes(1); else // DEBUG STATEMENT
 
-        if(solarAlarm.TimeTypeId == TimeTypeEnum.Sunrise.Id)
+        if(solarAlarm.TimeTypeId == SolarTimeTypeEnum.Sunrise.Id)
             localTime = solarTime.Sunrise;
-        else if(solarAlarm.TimeTypeId == TimeTypeEnum.SolarNoon.Id)
+        else if(solarAlarm.TimeTypeId == SolarTimeTypeEnum.SolarNoon.Id)
             localTime = solarTime.SolarNoon;
-        else if(solarAlarm.TimeTypeId == TimeTypeEnum.Sunset.Id)
+        else if(solarAlarm.TimeTypeId == SolarTimeTypeEnum.Sunset.Id)
             localTime = solarTime.Sunset;
 
         Calendar calendar = Calendar.getInstance();
