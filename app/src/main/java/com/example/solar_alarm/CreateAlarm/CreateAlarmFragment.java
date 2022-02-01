@@ -116,14 +116,15 @@ public class CreateAlarmFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_createalarm, container, false);
 
         Spinner alarmTimeSpinner = (Spinner) view.findViewById(R.id.fragment_createalarm_alarmtime_spinner);
-        Spinner setTimeSpinner = (Spinner) view.findViewById(R.id.fragment_createalarm_settime_spinner);
         alarmTimeAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.alarmtype_array, android.R.layout.simple_spinner_item);
         alarmTimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         alarmTimeSpinner.setAdapter(alarmTimeAdapter);
 
+        Spinner setTimeSpinner = (Spinner) view.findViewById(R.id.fragment_createalarm_settime_spinner);
         setTimeAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.settime_array, android.R.layout.simple_spinner_item);
         setTimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        setTimeSpinner.setAdapter(alarmTimeAdapter);
+        setTimeSpinner.setAdapter(setTimeAdapter);
+
         List<SolarTime> solarTimes = new ArrayList<SolarTime>();
         ButterKnife.bind(this, view);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
