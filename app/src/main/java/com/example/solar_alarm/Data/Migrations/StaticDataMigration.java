@@ -29,7 +29,7 @@ public abstract class StaticDataMigration extends RoomDatabase
                 sql = sql + String.format("(%d, %s),", enumType.Id, enumType.Name);
             }
 
-            removeLastChar(sql);
+            sql = removeLastChar(sql);
             database.execSQL(sql);
 
             //--------------------------
@@ -41,7 +41,7 @@ public abstract class StaticDataMigration extends RoomDatabase
                 sql = sql + String.format("(%d, %s),", enumType.Id, enumType.Name);
             }
 
-            removeLastChar(sql);
+            sql = removeLastChar(sql);
             database.execSQL(sql);
 
             //--------------------------
@@ -53,13 +53,14 @@ public abstract class StaticDataMigration extends RoomDatabase
                 sql = sql + String.format("(%d, %s),", enumType.Id, enumType.Name);
             }
 
-            removeLastChar(sql);
+            sql = removeLastChar(sql);
             database.execSQL(sql);
 
             database.endTransaction();
         }
 
         //Room.databaseBuilder(Context, SolarAlarmDatabase, "SolarAlarmDatabase").addMigrations(MIGRATION_1_2).build();
+        //Database.mig(Context, SolarAlarmDatabase., "SolarAlarmDatabase").addMigrations(MIGRATION_1_2).build();
     };
 
     private static String removeLastChar(String s)
