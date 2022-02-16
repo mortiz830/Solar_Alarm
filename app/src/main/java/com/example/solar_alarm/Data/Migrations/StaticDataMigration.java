@@ -15,7 +15,7 @@ import com.example.solar_alarm.Data.Tables.TimeUnitType;
 @Database(entities = {TimeUnitType.class, AlarmType.class, SolarTimeType.class}, version = 2, exportSchema = false)
 public abstract class StaticDataMigration extends RoomDatabase
 {
-    static final Migration MIGRATION_1_2 = new Migration(1, 2)
+    public static final Migration MIGRATION_1_2 = new Migration(1, 2)
     {
         @Override
         public void migrate(SupportSQLiteDatabase database)

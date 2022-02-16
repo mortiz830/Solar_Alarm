@@ -1,5 +1,7 @@
 package com.example.solar_alarm.Data;
 
+import static com.example.solar_alarm.Data.Migrations.StaticDataMigration.MIGRATION_1_2;
+
 import android.content.Context;
 import android.os.Build;
 
@@ -61,7 +63,8 @@ public abstract class SolarAlarmDatabase extends RoomDatabase
             {
                 if (INSTANCE == null)
                 {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SolarAlarmDatabase.class, "SolarAlarmDatabase").build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SolarAlarmDatabase.class, "SolarAlarmDatabase")
+                            .addMigrations(MIGRATION_1_2).build();
                 }
             }
         }
