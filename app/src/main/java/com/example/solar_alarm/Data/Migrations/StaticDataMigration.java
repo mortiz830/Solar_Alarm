@@ -1,5 +1,8 @@
 package com.example.solar_alarm.Data.Migrations;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
@@ -12,7 +15,19 @@ import com.example.solar_alarm.Data.Tables.AlarmType;
 import com.example.solar_alarm.Data.Tables.SolarTimeType;
 import com.example.solar_alarm.Data.Tables.TimeUnitType;
 
-@Database(entities = {TimeUnitType.class, AlarmType.class, SolarTimeType.class}, version = 2, exportSchema = false)
+@RequiresApi(api = Build.VERSION_CODES.O)
+@Database
+(
+    entities =
+    {
+        TimeUnitType.class,
+        AlarmType.class,
+        SolarTimeType.class
+    },
+    version = 2,
+    exportSchema = false
+)
+
 public abstract class StaticDataMigration extends RoomDatabase
 {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2)
@@ -59,7 +74,7 @@ public abstract class StaticDataMigration extends RoomDatabase
             database.endTransaction();
         }
 
-        //Room.databaseBuilder(Context, SolarAlarmDatabase, "SolarAlarmDatabase").addMigrations(MIGRATION_1_2).build();
+        //Room.databaseBuilder(Context, SolarAlarmDatabase.class, "SolarAlarmDatabase").addMigrations(MIGRATION_1_2).build();
         //Database.mig(Context, SolarAlarmDatabase., "SolarAlarmDatabase").addMigrations(MIGRATION_1_2).build();
     };
 
