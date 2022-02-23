@@ -64,7 +64,8 @@ public abstract class SolarAlarmDatabase extends RoomDatabase
                 if (INSTANCE == null)
                 {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SolarAlarmDatabase.class, "SolarAlarmDatabase")
-                            .addMigrations(MIGRATION_1_2).build();
+                                   .addMigrations(MIGRATION_1_2)
+                                   .build();
                 }
             }
         }
