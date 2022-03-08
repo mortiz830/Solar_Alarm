@@ -1,12 +1,9 @@
 package com.example.solar_alarm.Data.Migrations;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 import androidx.room.Database;
-import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
@@ -14,7 +11,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.example.solar_alarm.Data.Enums.AlarmTypeEnum;
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
 import com.example.solar_alarm.Data.Enums.TimeUnitTypeEnum;
-import com.example.solar_alarm.Data.SolarAlarmDatabase;
 import com.example.solar_alarm.Data.Tables.AlarmType;
 import com.example.solar_alarm.Data.Tables.SolarTimeType;
 import com.example.solar_alarm.Data.Tables.TimeUnitType;
@@ -77,7 +73,7 @@ public abstract class StaticDataMigration extends RoomDatabase
 
             database.endTransaction();
 
-            Room.databaseBuilder(getApplicationContext(), SolarAlarmDatabase.class, "SolarAlarmDatabase").addMigrations(MIGRATION_1_2).build();
+            //Room.databaseBuilder(getApplicationContext(), SolarAlarmDatabase.class, "SolarAlarmDatabase").addMigrations(MIGRATION_1_2).build();
         }
 
         //Room.databaseBuilder(Context, SolarAlarmDatabase.class, "SolarAlarmDatabase").addMigrations(MIGRATION_1_2).build();
