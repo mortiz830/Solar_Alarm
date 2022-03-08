@@ -14,6 +14,7 @@ import androidx.room.TypeConverters;
 import com.example.solar_alarm.Data.Daos.LocationDao;
 import com.example.solar_alarm.Data.Daos.SolarAlarmDao;
 import com.example.solar_alarm.Data.Daos.SolarTimeDao;
+import com.example.solar_alarm.Data.Daos.StaticDataDao;
 import com.example.solar_alarm.Data.Daos.TimezoneDao;
 import com.example.solar_alarm.Data.Tables.AlarmType;
 import com.example.solar_alarm.Data.Tables.Location;
@@ -50,6 +51,7 @@ public abstract class SolarAlarmDatabase extends RoomDatabase
     public abstract SolarAlarmDao solarAlarmDao();
     public abstract SolarTimeDao solarTimeDao();
     public abstract TimezoneDao timezoneDao();
+    public abstract StaticDataDao staticDataDao();
 
     private static volatile SolarAlarmDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;

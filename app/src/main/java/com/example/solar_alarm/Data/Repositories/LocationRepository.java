@@ -30,6 +30,7 @@ public class LocationRepository
     {
         SolarAlarmDatabase db = SolarAlarmDatabase.getDatabase(application);
         locationDao = db.locationDao();
+        staticDataDao = db.staticDataDao();
         locationsLiveData = locationDao.getAll();
     }
 
