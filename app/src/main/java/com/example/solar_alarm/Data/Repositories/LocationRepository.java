@@ -32,11 +32,12 @@ public class LocationRepository
         locationDao = db.locationDao();
         staticDataDao = db.staticDataDao();
         locationsLiveData = locationDao.getAll();
+
+        AddStaticData();
     }
 
     public void Insert(Location location)
     {
-        AddStaticData();
         SolarAlarmDatabase.databaseWriteExecutor.execute(() -> locationDao.Insert(location));
     }
 
