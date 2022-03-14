@@ -1,6 +1,7 @@
 package com.example.solar_alarm.Data.Repositories;
 
 import android.app.Application;
+import android.os.AsyncTask;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -70,46 +71,91 @@ public class LocationRepository
 
     private void AddStaticData()
     {
-        String sql;
-
-        if (staticDataDao.isTimeUnitTypesExists())
-        {
-            for (TimeUnitTypeEnum enumType : TimeUnitTypeEnum.values())
-            {
-                TimeUnitType x = new TimeUnitType();
-                x.Id   = enumType.Id;
-                x.Name = enumType.Name;
-
-                staticDataDao.Insert(x);
-            }
+        try {
+            new IsTimeUnitTypesExistsTask().execute().get();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
-        //--------------------------
+    private class IsTimeUnitTypesExistsTask extends AsyncTask<Double, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Double... doubles) {
+            boolean i = true;
 
-        if (staticDataDao.isAlarmTypesExists())
-        {
-            for (AlarmTypeEnum enumType : AlarmTypeEnum.values())
+            try
             {
-                AlarmType x = new AlarmType();
-                x.Id   = enumType.Id;
-                x.Name = enumType.Name;
+                if (!staticDataDao.isTimeUnitTypesExists())
+                {
+                    for (TimeUnitTypeEnum enumType : TimeUnitTypeEnum.values())
+                    {
+                        TimeUnitType x = new TimeUnitType();
+                        x.Id   = enumType.Id;
+                        x.Name = enumType.Name;
 
-                staticDataDao.Insert(x);
+                        staticDataDao.Insert(x);
+                    }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
+            return i;
         }
+    }
 
-        //--------------------------
-
-        if (staticDataDao.isSolarTimeTypesExists())
+    private class IsAlarmTypesExistsTask extends AsyncTask<Double, Void, Boolean>
+    {
+        @Override
+        protected Boolean doInBackground(Double... doubles)
         {
-            for (SolarTimeTypeEnum enumType : SolarTimeTypeEnum.values())
+            try
             {
-                SolarTimeType x = new SolarTimeType();
-                x.Id   = enumType.Id;
-                x.Name = enumType.Name;
+                if (!staticDataDao.isTimeUnitTypesExists())
+                {
+                    for (TimeUnitTypeEnum enumType : TimeUnitTypeEnum.values())
+                    {
+                        TimeUnitType x = new TimeUnitType();
+                        x.Id   = enumType.Id;
+                        x.Name = enumType.Name;
 
-                staticDataDao.Insert(x);
+                       staticDataDao.Insert(x);
+                    }
+                }
+
+                //--------------------------
+
+                if (staticDataDao.isAlarmTypesExists())
+                {
+                    for (AlarmTypeEnum enumType : AlarmTypeEnum.values())
+                    {
+                        AlarmType x = new AlarmType();
+                        x.Id   = enumType.Id;
+                        x.Name = enumType.Name;
+
+                        staticDataDao.Insert(x);
+                    }
+                }
+
+                //--------------------------
+
+                if (staticDataDao.isSolarTimeTypesExists())
+                {
+                    for (SolarTimeTypeEnum enumType : SolarTimeTypeEnum.values())
+                    {
+                        SolarTimeType x = new SolarTimeType();
+                        x.Id   = enumType.Id;
+                        x.Name = enumType.Name;
+
+                        staticDataDao.Insert(x);
+                    }
+                }
             }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            return true;
         }
     }
 }
