@@ -124,7 +124,7 @@ public class LocationRepository
 
                 //--------------------------
 
-                if (staticDataDao.isAlarmTypesExists())
+                if (!staticDataDao.isAlarmTypesExists())
                 {
                     for (AlarmTypeEnum enumType : AlarmTypeEnum.values())
                     {
@@ -138,7 +138,7 @@ public class LocationRepository
 
                 //--------------------------
 
-                if (staticDataDao.isSolarTimeTypesExists())
+                if (!staticDataDao.isSolarTimeTypesExists())
                 {
                     for (SolarTimeTypeEnum enumType : SolarTimeTypeEnum.values())
                     {
