@@ -78,32 +78,7 @@ public class LocationRepository
         }
     }
 
-    private class IsTimeUnitTypesExistsTask extends AsyncTask<Double, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Double... doubles) {
-            boolean i = true;
-
-            try
-            {
-                if (!staticDataDao.isTimeUnitTypesExists())
-                {
-                    for (TimeUnitTypeEnum enumType : TimeUnitTypeEnum.values())
-                    {
-                        TimeUnitType x = new TimeUnitType();
-                        x.Id   = enumType.Id;
-                        x.Name = enumType.Name;
-
-                        staticDataDao.Insert(x);
-                    }
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            return i;
-        }
-    }
-
-    private class IsAlarmTypesExistsTask extends AsyncTask<Double, Void, Boolean>
+    private class IsTimeUnitTypesExistsTask extends AsyncTask<Double, Void, Boolean>
     {
         @Override
         protected Boolean doInBackground(Double... doubles)
@@ -118,7 +93,7 @@ public class LocationRepository
                         x.Id   = enumType.Id;
                         x.Name = enumType.Name;
 
-                       staticDataDao.Insert(x);
+                        staticDataDao.Insert(x);
                     }
                 }
 
