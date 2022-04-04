@@ -13,8 +13,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +24,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 
+import com.example.solar_alarm.Data.Enums.AlarmTypeEnum;
+import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
 import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository;
 import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
@@ -74,7 +74,7 @@ public class CreateAlarmFragment extends Fragment{
     @BindView(R.id.fragment_createalarm_recurring_options)
     LinearLayout recurringOptions;
     @BindView(R.id.fragment_createalarm_location_spinner)
-    Spinner spinner;
+    Spinner locationSpinner;
     @BindView(R.id.fragment_createalarm_sunrise_data)
     TextView sunriseData;
     @BindView(R.id.fragment_createalarm_solarnoon_data)
@@ -91,6 +91,7 @@ public class CreateAlarmFragment extends Fragment{
     private SolarAlarmRepository solarAlarmRepository;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +105,7 @@ public class CreateAlarmFragment extends Fragment{
             public void onChanged(List<Location> locations) {
                 Locations = locations;
                 locationSpinnerAdapter = new SpinnerAdapter(getActivity(), Locations);
-                spinner.setAdapter(locationSpinnerAdapter);
+                locationSpinner.setAdapter(locationSpinnerAdapter);
             }
         });
 
@@ -116,18 +117,14 @@ public class CreateAlarmFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_createalarm, container, false);
 
         Spinner alarmTimeSpinner = (Spinner) view.findViewById(R.id.fragment_createalarm_alarmtime_spinner);
-        alarmTimeAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.alarmtype_array, android.R.layout.simple_spinner_item);
-        alarmTimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        alarmTimeSpinner.setAdapter(alarmTimeAdapter);
+        alarmTimeSpinner.setAdapter(new ArrayAdapter<AlarmTypeEnum>(getActivity().getBaseContext(), android.R.layout.simple_spinner_item, AlarmTypeEnum.values()));
 
         Spinner setTimeSpinner = (Spinner) view.findViewById(R.id.fragment_createalarm_settime_spinner);
-        setTimeAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.settime_array, android.R.layout.simple_spinner_item);
-        setTimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        setTimeSpinner.setAdapter(setTimeAdapter);
+        setTimeSpinner.setAdapter(new ArrayAdapter<SolarTimeTypeEnum>(getActivity().getBaseContext(), android.R.layout.simple_spinner_item,SolarTimeTypeEnum.values()));
 
         List<SolarTime> solarTimes = new ArrayList<SolarTime>();
         ButterKnife.bind(this, view);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
@@ -165,13 +162,15 @@ public class CreateAlarmFragment extends Fragment{
         });
 
         scheduleAlarm.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-
+                AlarmTypeEnum alarmTimeItem = (AlarmTypeEnum) alarmTimeSpinner.getSelectedItem();
+                SolarTimeTypeEnum solarTimeTypeItem = (SolarTimeTypeEnum) setTimeSpinner.getSelectedItem();
                 for(int i = 0; i < solarTimes.size(); i++)
                 {
                     try {
-                        scheduleAlarm(solarTimes.get(i));
+                        scheduleAlarm(solarTimes.get(i), alarmTimeItem.Id, solarTimeTypeItem.Id);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -239,11 +238,9 @@ public class CreateAlarmFragment extends Fragment{
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void scheduleAlarm(SolarTime solarTimeItem) throws Exception {
+    private void scheduleAlarm(SolarTime solarTimeItem, int alarmTypeId, int solarTimeTypeId) throws Exception {
         SolarAlarm solarAlarmItem = new SolarAlarm();
         boolean isSolarAlarmNameLocationIdPairExists;
-
-
 
         solarAlarmItem.Name = title.getText().toString();
         solarAlarmItem.LocationId = solarTimeItem.LocationId;
@@ -255,18 +252,8 @@ public class CreateAlarmFragment extends Fragment{
         solarAlarmItem.Friday = fri.isChecked();
         solarAlarmItem.Saturday = sat.isChecked();
         solarAlarmItem.Sunday = sun.isChecked();
-//        solarAlarmItem.Sunrise = sunrise.isChecked();
-//        solarAlarmItem.Sunset = sunset.isChecked();
-//        solarAlarmItem.Before = before.isChecked();
-//        solarAlarmItem.At = at.isChecked();
-//        solarAlarmItem.After = after.isChecked();
-//        solarAlarmItem.SolarNoon = solarnoon.isChecked();
-        solarAlarmItem.CivilTwilightBegin = false;
-        solarAlarmItem.CivilTwilightEnd = false;
-        solarAlarmItem.NauticalTwilightBegin = false;
-        solarAlarmItem.NauticalTwilightEnd = false;
-        solarAlarmItem.AstronomicalTwilightBegin = false;
-        solarAlarmItem.AstronomicalTwilightEnd = false;
+        solarAlarmItem.AlarmTypeId = alarmTypeId;
+        solarAlarmItem.TimeTypeId = solarTimeTypeId;
 
         try {
             isSolarAlarmNameLocationIdPairExists = getSolarAlarmNameLocationIdPairExists(solarAlarmItem);
