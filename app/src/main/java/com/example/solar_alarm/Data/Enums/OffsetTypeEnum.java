@@ -1,6 +1,6 @@
 package com.example.solar_alarm.Data.Enums;
 
-public enum AlarmTypeEnum
+public enum OffsetTypeEnum
 {
     Before(1, "Before"),
     At(2, "At"),
@@ -9,7 +9,7 @@ public enum AlarmTypeEnum
     public final int    Id;
     public final String Name;
 
-    AlarmTypeEnum(int id, String name)
+    OffsetTypeEnum(int id, String name)
     {
         Id   = id;
         Name = name;

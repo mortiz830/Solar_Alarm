@@ -4,7 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.example.solar_alarm.Data.Tables.AlarmType;
+import com.example.solar_alarm.Data.Tables.OffsetType;
 import com.example.solar_alarm.Data.Tables.SolarTimeType;
 import com.example.solar_alarm.Data.Tables.TimeUnitType;
 
@@ -18,9 +18,9 @@ public interface StaticDataDao
     boolean isTimeUnitTypesExists();
 
     @Insert
-    void Insert(AlarmType alarmType);
+    void Insert(OffsetType offsetType);
 
-    @Query("SELECT EXISTS(SELECT * FROM AlarmTypes)")
+    @Query("SELECT EXISTS(SELECT * FROM OffsetTypes)")
     boolean isAlarmTypesExists();
 
     @Insert

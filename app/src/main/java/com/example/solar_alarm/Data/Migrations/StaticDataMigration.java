@@ -8,10 +8,10 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.example.solar_alarm.Data.Enums.AlarmTypeEnum;
+import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
 import com.example.solar_alarm.Data.Enums.TimeUnitTypeEnum;
-import com.example.solar_alarm.Data.Tables.AlarmType;
+import com.example.solar_alarm.Data.Tables.OffsetType;
 import com.example.solar_alarm.Data.Tables.SolarTimeType;
 import com.example.solar_alarm.Data.Tables.TimeUnitType;
 
@@ -21,7 +21,7 @@ import com.example.solar_alarm.Data.Tables.TimeUnitType;
     entities =
     {
         TimeUnitType.class,
-        AlarmType.class,
+        OffsetType.class,
         SolarTimeType.class
     },
     version = 2,
@@ -51,7 +51,7 @@ public abstract class StaticDataMigration extends RoomDatabase
 
             sql = "INSERT INTO AlarmTypes VALUES ";
 
-            for (AlarmTypeEnum enumType : AlarmTypeEnum.values())
+            for (OffsetTypeEnum enumType : OffsetTypeEnum.values())
             {
                 sql = sql + String.format("(%d, %s),", enumType.Id, enumType.Name);
             }
