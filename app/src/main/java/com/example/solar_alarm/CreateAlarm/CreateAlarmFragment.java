@@ -81,6 +81,10 @@ public class CreateAlarmFragment extends Fragment{
     TextView solarNoonData;
     @BindView(R.id.fragment_createalarm_sunset_data)
     TextView sunsetData;
+    @BindView(R.id.fragment_createalarm_set_hours)
+    EditText setHours;
+    @BindView(R.id.fragment_createalarm_set_mins)
+    EditText setMins;
     SpinnerAdapter locationSpinnerAdapter;
     ArrayAdapter<CharSequence> alarmTimeAdapter;
     ArrayAdapter<CharSequence> setTimeAdapter;
@@ -161,20 +165,42 @@ public class CreateAlarmFragment extends Fragment{
             }
         });
 
+        alarmTimeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if(adapterView.getItemAtPosition(position).toString() == "Before"
+                        || adapterView.getItemAtPosition(position).toString() == "After")
+                {
+                    setHours.setVisibility(View.VISIBLE);
+                    setMins.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    setHours.setVisibility(View.GONE);
+                    setMins.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         scheduleAlarm.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 AlarmTypeEnum alarmTimeItem = (AlarmTypeEnum) alarmTimeSpinner.getSelectedItem();
                 SolarTimeTypeEnum solarTimeTypeItem = (SolarTimeTypeEnum) setTimeSpinner.getSelectedItem();
-                for(int i = 0; i < solarTimes.size(); i++)
-                {
-                    try {
-                        scheduleAlarm(solarTimes.get(i), alarmTimeItem.Id, solarTimeTypeItem.Id);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+//                for(int i = 0; i < solarTimes.size(); i++)
+//                {
+//                    try {
+//                        scheduleAlarm(solarTimes.get(i), alarmTimeItem.Id, solarTimeTypeItem.Id);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
                 Navigation.findNavController(v).navigate(R.id.action_createAlarmFragment_to_alarmsListFragment);
             }
         });
