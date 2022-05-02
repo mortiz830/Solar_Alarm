@@ -49,7 +49,7 @@ public abstract class StaticDataMigration extends RoomDatabase
 
             //--------------------------
 
-            sql = "INSERT INTO AlarmTypes VALUES ";
+            sql = "INSERT INTO OffsetTypes VALUES ";
 
             for (OffsetTypeEnum enumType : OffsetTypeEnum.values())
             {

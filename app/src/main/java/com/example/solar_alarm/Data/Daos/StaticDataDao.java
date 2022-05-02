@@ -21,7 +21,7 @@ public interface StaticDataDao
     void Insert(OffsetType offsetType);
 
     @Query("SELECT EXISTS(SELECT * FROM OffsetTypes)")
-    boolean isAlarmTypesExists();
+    boolean isOffsetTypesExists();
 
     @Insert
     void Insert(SolarTimeType solarTimeType);

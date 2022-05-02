@@ -99,7 +99,7 @@ public class LocationRepository
 
                 //--------------------------
 
-                if (!staticDataDao.isAlarmTypesExists())
+                if (!staticDataDao.isOffsetTypesExists())
                 {
                     for (OffsetTypeEnum enumType : OffsetTypeEnum.values())
                     {
