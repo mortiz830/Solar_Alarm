@@ -24,7 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 
-import com.example.solar_alarm.Data.Enums.AlarmTypeEnum;
+import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
 import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository;
@@ -121,7 +121,7 @@ public class CreateAlarmFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_createalarm, container, false);
 
         Spinner alarmTimeSpinner = (Spinner) view.findViewById(R.id.fragment_createalarm_alarmtime_spinner);
-        alarmTimeSpinner.setAdapter(new ArrayAdapter<AlarmTypeEnum>(getActivity().getBaseContext(), android.R.layout.simple_spinner_item, AlarmTypeEnum.values()));
+        alarmTimeSpinner.setAdapter(new ArrayAdapter<OffsetTypeEnum>(getActivity().getBaseContext(), android.R.layout.simple_spinner_item, OffsetTypeEnum.values()));
 
         Spinner setTimeSpinner = (Spinner) view.findViewById(R.id.fragment_createalarm_settime_spinner);
         setTimeSpinner.setAdapter(new ArrayAdapter<SolarTimeTypeEnum>(getActivity().getBaseContext(), android.R.layout.simple_spinner_item,SolarTimeTypeEnum.values()));
@@ -191,7 +191,7 @@ public class CreateAlarmFragment extends Fragment{
 
             @Override
             public void onClick(View v) {
-                AlarmTypeEnum alarmTimeItem = (AlarmTypeEnum) alarmTimeSpinner.getSelectedItem();
+                OffsetTypeEnum alarmTimeItem = (OffsetTypeEnum) alarmTimeSpinner.getSelectedItem();
                 SolarTimeTypeEnum solarTimeTypeItem = (SolarTimeTypeEnum) setTimeSpinner.getSelectedItem();
 //                for(int i = 0; i < solarTimes.size(); i++)
 //                {
@@ -278,7 +278,7 @@ public class CreateAlarmFragment extends Fragment{
         solarAlarmItem.Friday = fri.isChecked();
         solarAlarmItem.Saturday = sat.isChecked();
         solarAlarmItem.Sunday = sun.isChecked();
-        solarAlarmItem.AlarmTypeId = alarmTypeId;
+        solarAlarmItem.OffsetTypeId = alarmTypeId;
         solarAlarmItem.TimeTypeId = solarTimeTypeId;
 
         try {
