@@ -16,7 +16,7 @@ import com.example.solar_alarm.Data.Daos.SolarAlarmDao;
 import com.example.solar_alarm.Data.Daos.SolarTimeDao;
 import com.example.solar_alarm.Data.Daos.StaticDataDao;
 import com.example.solar_alarm.Data.Daos.TimezoneDao;
-import com.example.solar_alarm.Data.Tables.AlarmType;
+import com.example.solar_alarm.Data.Tables.OffsetType;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
 (
     entities =
     {
-        AlarmType.class,
+        OffsetType.class,
         Location.class,
         SolarAlarm.class,
         SolarTime.class,

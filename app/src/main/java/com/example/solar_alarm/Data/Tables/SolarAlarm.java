@@ -28,8 +28,8 @@ public class SolarAlarm extends TableBase
     public boolean Saturday;
     public boolean Sunday;
 
-    @ForeignKey(entity = AlarmType.class, parentColumns = "Id", childColumns = "AlarmTypeId")
-    public int AlarmTypeId;
+    @ForeignKey(entity = OffsetType.class, parentColumns = "Id", childColumns = "OffsetTypeId")
+    public int OffsetTypeId;
 
     @ForeignKey(entity = SolarTimeType.class, parentColumns = "Id", childColumns = "TimeTypeId")
     public int TimeTypeId;

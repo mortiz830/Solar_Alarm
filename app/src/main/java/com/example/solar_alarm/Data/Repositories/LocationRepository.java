@@ -9,11 +9,11 @@ import androidx.lifecycle.LiveData;
 
 import com.example.solar_alarm.Data.Daos.LocationDao;
 import com.example.solar_alarm.Data.Daos.StaticDataDao;
-import com.example.solar_alarm.Data.Enums.AlarmTypeEnum;
+import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
 import com.example.solar_alarm.Data.Enums.TimeUnitTypeEnum;
 import com.example.solar_alarm.Data.SolarAlarmDatabase;
-import com.example.solar_alarm.Data.Tables.AlarmType;
+import com.example.solar_alarm.Data.Tables.OffsetType;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarTimeType;
 import com.example.solar_alarm.Data.Tables.TimeUnitType;
@@ -99,11 +99,11 @@ public class LocationRepository
 
                 //--------------------------
 
-                if (!staticDataDao.isAlarmTypesExists())
+                if (!staticDataDao.isOffsetTypesExists())
                 {
-                    for (AlarmTypeEnum enumType : AlarmTypeEnum.values())
+                    for (OffsetTypeEnum enumType : OffsetTypeEnum.values())
                     {
-                        AlarmType x = new AlarmType();
+                        OffsetType x = new OffsetType();
                         x.Id   = enumType.Id;
                         x.Name = enumType.Name;
 
