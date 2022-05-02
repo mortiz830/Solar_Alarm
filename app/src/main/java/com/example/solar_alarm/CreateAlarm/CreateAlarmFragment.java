@@ -88,8 +88,8 @@ public class CreateAlarmFragment extends Fragment{
     RadioButton after;
     @BindView(R.id.fragment_createalarm_alarmtime_radiogroup)
     RadioGroup alarmTime;
-    @BindView(R.id.fragment_createalarm_alarmtype_radiogroup)
-    RadioGroup alarmType;
+    @BindView(R.id.fragment_createalarm_offsettype_radiogroup)
+    RadioGroup offsetType;
     @BindView(R.id.fragment_createalarm_sunrise_data)
     TextView sunriseData;
     @BindView(R.id.fragment_createalarm_solarnoon_data)
