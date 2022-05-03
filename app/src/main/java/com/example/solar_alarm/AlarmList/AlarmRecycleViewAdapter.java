@@ -4,24 +4,23 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.solar_alarm.Data.Alarm;
+import com.example.solar_alarm.Data.AlarmDisplayData;
 import com.example.solar_alarm.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolder> {
-    private List<Alarm> alarms;
+    private List<AlarmDisplayData> alarms;
     private OnToggleAlarmListener listener;
     Context context;
 
     public AlarmRecycleViewAdapter(OnToggleAlarmListener listener) {
-        this.alarms = new ArrayList<Alarm>();
+        this.alarms = new ArrayList<AlarmDisplayData>();
         this.listener = listener;
     }
 
@@ -35,7 +34,7 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
-        Alarm alarm = alarms.get(position);
+        AlarmDisplayData alarm = alarms.get(position);
         holder.bind(alarm);
     }
 
@@ -44,7 +43,7 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
         return alarms.size();
     }
 
-    public void setAlarms(List<Alarm> alarms) {
+    public void setAlarms(List<AlarmDisplayData> alarms) {
         this.alarms = alarms;
         notifyDataSetChanged();
     }
@@ -54,15 +53,15 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
         super.onViewRecycled(holder);
         holder.alarmStarted.setOnCheckedChangeListener(null);
     }
-    public Alarm removeItem(int position)
+    public AlarmDisplayData removeItem(int position)
     {
-        Alarm alarm = alarms.get(position);
+        AlarmDisplayData alarm = alarms.get(position);
         alarms.remove(alarm);
         notifyItemRemoved(position);
         return alarm;
     }
 
-    public Alarm getAlarm(int position)
+    public AlarmDisplayData getAlarm(int position)
     {
         return this.alarms.get(position);
     }

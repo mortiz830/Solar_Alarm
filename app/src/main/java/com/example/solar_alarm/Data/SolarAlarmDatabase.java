@@ -51,7 +51,11 @@ public abstract class SolarAlarmDatabase extends RoomDatabase
     public abstract SolarAlarmDao solarAlarmDao();
     public abstract SolarTimeDao solarTimeDao();
     public abstract TimezoneDao timezoneDao();
+
+    public abstract AlarmDisplayDataDao alarmDisplayDataDao();
+
     public abstract StaticDataDao staticDataDao();
+
 
     private static volatile SolarAlarmDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;

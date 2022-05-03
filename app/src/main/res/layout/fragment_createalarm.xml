@@ -113,39 +113,20 @@
             android:gravity="center"
             android:text="Alarm Time"
             app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_recurring_options"
-            app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_alarmtype_radiogroup">
+            app:layout_constraintBottom_toTopOf="@id/fragment_createalarm_alarmtime_spinner">
         </TextView>
 
-        <RadioGroup
-            android:id="@+id/fragment_createalarm_alarmtype_radiogroup"
+        <Spinner
+            android:id="@+id/fragment_createalarm_alarmtime_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_alarmtime_text">
-
-                <RadioButton
-                    android:id="@+id/fragment_createalarm_sunrise_radio_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Sunrise">
-                </RadioButton>
-
-                <RadioButton
-                    android:id="@+id/fragment_createalarm_solarnoon_radio_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Solar Noon">
-                </RadioButton>
-
-                <RadioButton
-                    android:id="@+id/fragment_createalarm_sunset_radio_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Sunset">
-                </RadioButton>
-
-        </RadioGroup>
+            android:layout_centerInParent="true"
+            android:layout_margin="5dp"
+            android:layout_marginTop="18dp"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/fragment_createalarm_alarmtime_text"
+            app:layout_constraintBottom_toTopOf="@id/fragment_createalarm_settime_text"
+            android:gravity="center_horizontal" />
 
         <TextView
             android:id="@+id/fragment_createalarm_settime_text"
@@ -153,44 +134,49 @@
             android:layout_height="wrap_content"
             android:text="Set Time"
             android:gravity="center"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_alarmtype_radiogroup"
-            app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_alarmtime_radiogroup">
+            app:layout_constraintTop_toBottomOf="@id/fragment_createalarm_alarmtime_spinner"
+            app:layout_constraintBottom_toTopOf="@id/fragment_createalarm_settime_spinner">
         </TextView>
 
-        <RadioGroup
-            android:id="@+id/fragment_createalarm_alarmtime_radiogroup"
+        <Spinner
+            android:id="@+id/fragment_createalarm_settime_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:layout_margin="5dp"
+            android:layout_marginTop="18dp"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/fragment_createalarm_settime_text"
+            android:gravity="center_horizontal" />
+        <EditText
+            android:id="@+id/fragment_createalarm_set_hours"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="Hours"
+            android:visibility="gone"
             android:gravity="center"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_settime_text"
-            >
+            android:inputType="number"
+            app:layout_constraintTop_toBottomOf="@id/fragment_createalarm_settime_spinner"
+            app:layout_constraintRight_toLeftOf="@id/fragment_createalarm_set_mins"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+        <EditText
+            android:id="@+id/fragment_createalarm_set_mins"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="Minutes"
+            android:visibility="gone"
+            android:gravity="center"
+            android:inputType="number"
+            app:layout_constraintTop_toBottomOf="@id/fragment_createalarm_settime_spinner"
+            app:layout_constraintLeft_toRightOf="@id/fragment_createalarm_set_hours"
+            app:layout_constraintRight_toRightOf="parent"/>
 
-                <RadioButton
-                    android:id="@+id/fragment_createalarm_radio_button_before"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Before">
-                </RadioButton>
-                <RadioButton
-                    android:id="@+id/fragment_createalarm_radio_button_at"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="At">
-                </RadioButton>
-                <RadioButton
-                    android:id="@+id/fragment_createalarm_radio_button_after"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="After">
-                </RadioButton>
 
-        </RadioGroup>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_alarmtime_radiogroup"
+            app:layout_constraintTop_toBottomOf="@id/fragment_createalarm_set_hours"
             app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_scheduleAlarm">
             <LinearLayout
                 android:id="@+id/timetext_column"

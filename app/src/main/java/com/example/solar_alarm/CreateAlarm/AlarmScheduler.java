@@ -140,8 +140,3 @@ public class AlarmScheduler {
         return days;
     }
 }
-//    SELECT DISTINCT Location.Id AS 'LocationId', SolarAlarm.Id AS 'SolarAlarmID', SolarTime.Id AS 'SolarTimeID'
-//        FROM
-//        Location JOIN SolarAlarm ON (Location.Id = SolarAlarm.LocationId)
-//        JOIN SolarTime ON(Location.Id = SolarTime.LocationId)
-//        ORDER BY 1,2,3

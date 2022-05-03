@@ -7,10 +7,13 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.solar_alarm.Data.Alarm;
+import com.example.solar_alarm.Data.AlarmDisplayData;
+import com.example.solar_alarm.Data.AlarmDisplayDataDao;
 import com.example.solar_alarm.Data.AlarmRepository;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
 import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository;
 import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
+import com.example.solar_alarm.Data.SolarAlarmDatabase;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
@@ -28,9 +31,14 @@ public class AlarmListViewModel extends AndroidViewModel {
     private LiveData<List<SolarAlarm>> solarAlarmLiveData;
     private LiveData<List<SolarTime>> solarTimeLiveData;
     private LiveData<List<Location>> locationLiveData;
+    private AlarmDisplayDataDao alarmDisplayDataDao;
+    private LiveData<List<AlarmDisplayData>> alarmDisplayLiveData;
+
+    //String rawQuery = "SELECT DISTINCT " + Location.Id + ","
 
     public AlarmListViewModel(@NonNull Application application) {
         super(application);
+        SolarAlarmDatabase db = SolarAlarmDatabase.getDatabase(application);
 
         alarmRepository = new AlarmRepository(application);
         alarmsLiveData = alarmRepository.getAlarmsLiveData();
@@ -43,6 +51,9 @@ public class AlarmListViewModel extends AndroidViewModel {
 
         locationRepository = new LocationRepository(application);
         locationLiveData = locationRepository.getAll();
+
+        alarmDisplayDataDao = db.alarmDisplayDataDao();
+        alarmDisplayLiveData = alarmDisplayDataDao.loadAlarmData();
     }
 
     public void update(Alarm alarm) {
@@ -57,11 +68,12 @@ public class AlarmListViewModel extends AndroidViewModel {
         return alarmsLiveData;
     }
 
+    public LiveData<List<AlarmDisplayData>> getAlarmDisplayLiveData() { return alarmDisplayLiveData; }
+
     public LiveData<List<SolarAlarm>> getSolarAlarmLiveData() { return solarAlarmLiveData; }
 
     public LiveData<List<SolarTime>> getSolarTimeLiveData() { return solarTimeLiveData; }
 
     public LiveData<List<Location>> getLocationLiveData() { return locationLiveData; }
-
 
 }

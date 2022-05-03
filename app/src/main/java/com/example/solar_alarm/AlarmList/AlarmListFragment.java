@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.solar_alarm.CreateAlarm.UpdateAlarmFragment;
 import com.example.solar_alarm.Data.Alarm;
+import com.example.solar_alarm.Data.AlarmDisplayData;
 import com.example.solar_alarm.R;
 import com.example.solar_alarm.Service.GpsTracker;
 
@@ -47,9 +47,9 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
 
         alarmRecyclerViewAdapter = new AlarmRecycleViewAdapter(this);
         alarmsListViewModel = ViewModelProviders.of(this).get(AlarmListViewModel.class);
-        alarmsListViewModel.getAlarmsLiveData().observe(this, new Observer<List<Alarm>>() {
+        alarmsListViewModel.getAlarmDisplayLiveData().observe(this, new Observer<List<AlarmDisplayData>>() {
             @Override
-            public void onChanged(List<Alarm> alarms) {
+            public void onChanged(List<AlarmDisplayData> alarms) {
                 if (alarms != null) {
                     alarmRecyclerViewAdapter.setAlarms(alarms);
                 }
@@ -122,7 +122,7 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
                 .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Alarm alarm = alarmRecyclerViewAdapter.getAlarm(position);
+                        AlarmDisplayData alarm = alarmRecyclerViewAdapter.getAlarm(position);
                         Bundle bundle = new Bundle();
                         bundle.putInt("position", position);
                         UpdateAlarmFragment updateAlarmFragment = new UpdateAlarmFragment();
@@ -136,10 +136,10 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
                 .setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
-                        Alarm alarm = alarmRecyclerViewAdapter.getAlarm(position);
+                        AlarmDisplayData alarm = alarmRecyclerViewAdapter.getAlarm(position);
                         // 2 - Show result in a Toast
-                        Toast.makeText(getContext(), "You long clicked on user : "+alarm.getTitle(), Toast.LENGTH_SHORT).show();
-                        alarmsListViewModel.delete(alarmRecyclerViewAdapter.removeItem(position));
+                        //Toast.makeText(getContext(), "You long clicked on user : "+alarm.getTitle(), Toast.LENGTH_SHORT).show();
+                        //alarmsListViewModel.delete(alarmRecyclerViewAdapter.removeItem(position));
                         return false;
                     }
                 });
