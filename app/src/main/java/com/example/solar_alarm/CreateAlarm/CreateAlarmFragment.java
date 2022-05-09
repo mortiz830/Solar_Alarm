@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,12 +83,10 @@ public class CreateAlarmFragment extends Fragment{
     @BindView(R.id.fragment_createalarm_sunset_data)
     TextView sunsetData;
     @BindView(R.id.fragment_createalarm_set_hours)
-    EditText setHours;
+    NumberPicker setHours;
     @BindView(R.id.fragment_createalarm_set_mins)
-    EditText setMins;
+    NumberPicker setMins;
     SpinnerAdapter locationSpinnerAdapter;
-    ArrayAdapter<CharSequence> alarmTimeAdapter;
-    ArrayAdapter<CharSequence> setTimeAdapter;
     TimeZoneConverter timeZoneConverter;
 
     private List<Location> Locations;
@@ -103,6 +102,7 @@ public class CreateAlarmFragment extends Fragment{
         Locations = new ArrayList<>();
         solarTimeRepository = new SolarTimeRepository(getActivity().getApplication());
         solarAlarmRepository = new SolarAlarmRepository(getActivity().getApplication());
+
         LocationRepository locationRepository = new LocationRepository(getActivity().getApplication());
         locationRepository.getAll().observe(this, new Observer<List<Location>>() {
             @Override
@@ -128,6 +128,7 @@ public class CreateAlarmFragment extends Fragment{
 
         List<SolarTime> solarTimes = new ArrayList<SolarTime>();
         ButterKnife.bind(this, view);
+        setPickers();
         locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -395,5 +396,17 @@ public class CreateAlarmFragment extends Fragment{
 
             return result;
         }
+    }
+
+    public void setPickers()
+    {
+//        setHours = new NumberPicker(getActivity().getApplicationContext());
+//        setMins = new NumberPicker(getActivity().getApplicationContext());
+//        setHours.findViewById(R.id.fragment_createalarm_set_hours);
+//        setMins.findViewById(R.id.fragment_createalarm_set_mins);
+        setHours.setMinValue(0);
+        setHours.setMaxValue(23);
+        setMins.setMinValue(0);
+        setMins.setMaxValue(59);
     }
 }
