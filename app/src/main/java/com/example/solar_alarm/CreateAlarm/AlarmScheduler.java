@@ -30,12 +30,16 @@ import java.util.Calendar;
 public class AlarmScheduler {
     private SolarAlarm solarAlarm;
     private SolarTime solarTime;
+    private int hours;
+    private int mins;
     private boolean started;
 
-    public AlarmScheduler(SolarAlarm solarAlarm, SolarTime solarTime)
+    public AlarmScheduler(SolarAlarm solarAlarm, SolarTime solarTime, int hours, int mins)
     {
         this.solarAlarm = solarAlarm;
         this.solarTime = solarTime;
+        this.hours = hours;
+        this.mins = mins;
         this.started = false;
     }
 
@@ -58,7 +62,7 @@ public class AlarmScheduler {
 
         PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, solarAlarm.Id, intent, 0);
 
-        if(true) localTime = LocalTime.now().plusMinutes(1); else // DEBUG STATEMENT
+        if(true) localTime = LocalTime.now().plusMinutes(mins); else // DEBUG STATEMENT
 
         if(solarAlarm.TimeTypeId == SolarTimeTypeEnum.Sunrise.Id)
             localTime = solarTime.Sunrise;
@@ -66,6 +70,19 @@ public class AlarmScheduler {
             localTime = solarTime.SolarNoon;
         else if(solarAlarm.TimeTypeId == SolarTimeTypeEnum.Sunset.Id)
             localTime = solarTime.Sunset;
+
+        if(solarAlarm.OffsetTypeId == 1)
+        {
+            localTime.minusHours(hours);
+            localTime.minusMinutes(mins);
+        }
+
+        if(solarAlarm.OffsetTypeId == 3)
+        {
+            localTime.plusHours(hours);
+            localTime.plusMinutes(mins);
+        }
+
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());

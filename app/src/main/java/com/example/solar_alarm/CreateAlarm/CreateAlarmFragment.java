@@ -190,18 +190,19 @@ public class CreateAlarmFragment extends Fragment{
 
         scheduleAlarm.setOnClickListener(new View.OnClickListener() {
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 OffsetTypeEnum alarmTimeItem = (OffsetTypeEnum) alarmTimeSpinner.getSelectedItem();
                 SolarTimeTypeEnum solarTimeTypeItem = (SolarTimeTypeEnum) setTimeSpinner.getSelectedItem();
-//                for(int i = 0; i < solarTimes.size(); i++)
-//                {
-//                    try {
-//                        scheduleAlarm(solarTimes.get(i), alarmTimeItem.Id, solarTimeTypeItem.Id);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
+                for(int i = 0; i < solarTimes.size(); i++)
+                {
+                    try {
+                        scheduleAlarm(solarTimes.get(i), alarmTimeItem.Id, solarTimeTypeItem.Id);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 Navigation.findNavController(v).navigate(R.id.action_createAlarmFragment_to_alarmsListFragment);
             }
         });
@@ -294,7 +295,7 @@ public class CreateAlarmFragment extends Fragment{
         else
             Toast.makeText(getContext(), "Alarm already exists!", Toast.LENGTH_LONG).show();
 
-        AlarmScheduler alarmScheduler = new AlarmScheduler(solarAlarmItem, solarTimeItem);
+        AlarmScheduler alarmScheduler = new AlarmScheduler(solarAlarmItem, solarTimeItem, setHours.getValue(), setMins.getValue());
 
         alarmScheduler.schedule(getContext());
     }
