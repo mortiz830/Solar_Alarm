@@ -148,25 +148,23 @@
             android:textAlignment="center"
             app:layout_constraintTop_toBottomOf="@id/fragment_createalarm_settime_text"
             android:gravity="center_horizontal" />
-        <EditText
+        <NumberPicker
             android:id="@+id/fragment_createalarm_set_hours"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:hint="Hours"
             android:visibility="gone"
             android:gravity="center"
-            android:inputType="number"
             app:layout_constraintTop_toBottomOf="@id/fragment_createalarm_settime_spinner"
             app:layout_constraintRight_toLeftOf="@id/fragment_createalarm_set_mins"
             app:layout_constraintLeft_toLeftOf="parent"/>
-        <EditText
+        <NumberPicker
             android:id="@+id/fragment_createalarm_set_mins"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:hint="Minutes"
             android:visibility="gone"
             android:gravity="center"
-            android:inputType="number"
             app:layout_constraintTop_toBottomOf="@id/fragment_createalarm_settime_spinner"
             app:layout_constraintLeft_toRightOf="@id/fragment_createalarm_set_hours"
             app:layout_constraintRight_toRightOf="parent"/>
