@@ -87,6 +87,8 @@ public class CreateAlarmFragment extends Fragment{
     @BindView(R.id.fragment_createalarm_set_mins)
     NumberPicker setMins;
     SpinnerAdapter locationSpinnerAdapter;
+    ArrayAdapter<CharSequence> alarmTimeAdapter;
+    ArrayAdapter<CharSequence> setTimeAdapter;
     TimeZoneConverter timeZoneConverter;
 
     private List<Location> Locations;
@@ -203,6 +205,14 @@ public class CreateAlarmFragment extends Fragment{
                         e.printStackTrace();
                     }
                 }
+//                for(int i = 0; i < solarTimes.size(); i++)
+//                {
+//                    try {
+//                        scheduleAlarm(solarTimes.get(i), alarmTimeItem.Id, solarTimeTypeItem.Id);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
                 Navigation.findNavController(v).navigate(R.id.action_createAlarmFragment_to_alarmsListFragment);
             }
         });
