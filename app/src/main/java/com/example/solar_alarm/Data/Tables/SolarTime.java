@@ -6,6 +6,7 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -16,13 +17,13 @@ import java.time.LocalTime;
 public class SolarTime extends TableBase
 {
     @NonNull
-    public LocalDate Date;
+    public LocalDateTime Date;
 
     @ForeignKey(entity = Location.class, parentColumns = "Id", childColumns = "LocationId")
     public int LocationId;
 
     // UTC Times
-    public LocalTime Sunrise;
+    //public LocalTime Sunrise;
     public LocalTime Sunset;
     public LocalTime SolarNoon;
     public LocalTime DayLength;
