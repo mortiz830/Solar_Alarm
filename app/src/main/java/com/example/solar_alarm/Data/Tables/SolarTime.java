@@ -17,7 +17,7 @@ import java.time.LocalTime;
 public class SolarTime extends TableBase
 {
     @NonNull
-    public LocalDateTime Date;
+    public LocalDate Date;
 
     @ForeignKey(entity = Location.class, parentColumns = "Id", childColumns = "LocationId")
     public int LocationId;
@@ -26,7 +26,7 @@ public class SolarTime extends TableBase
     public LocalDateTime Sunrise;
     public LocalDateTime Sunset;
     public LocalDateTime SolarNoon;
-    public LocalDateTime DayLength;
+    public int DayLength;
     public LocalDateTime CivilTwilightBegin;
     public LocalDateTime CivilTwilightEnd;
     public LocalDateTime NauticalTwilightBegin;

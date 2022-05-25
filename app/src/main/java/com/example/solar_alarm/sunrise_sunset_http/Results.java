@@ -4,7 +4,7 @@ public class Results {
     private String sunrise;
     private String sunset;
     private String solar_noon;
-    private String day_length;
+    private int day_length;
     private String civil_twilight_begin;
     private String civil_twilight_end;
     private String nautical_twilight_begin;
@@ -12,7 +12,7 @@ public class Results {
     private String astronomical_twilight_begin;
     private String astronomical_twilight_end;
 
-    public Results(String sunrise, String sunset, String solar_noon, String day_length, String ctb, String cte, String ntb, String nte, String atb, String ate)
+    public Results(String sunrise, String sunset, String solar_noon, int day_length, String ctb, String cte, String ntb, String nte, String atb, String ate)
     {
         this.sunrise = sunrise;
         this.sunset = sunset;
@@ -41,10 +41,7 @@ public class Results {
         this.solar_noon = solar_noon;
     }
 
-    public void setDay_length(String day_length)
-    {
-        this.day_length = day_length;
-    }
+    public void setDay_length(int day_length) { this.day_length = day_length; }
 
     public void setCivil_twilight_begin(String ctb)
     {
@@ -76,38 +73,25 @@ public class Results {
         astronomical_twilight_end = ate;
     }
 
-    public String getSunrise() { return deleteSeconds(sunrise); }
+    public String getSunrise() { return sunrise; }
 
-    public String getSunset() { return deleteSeconds(sunset); }
+    public String getSunset() { return sunset; }
 
-    public String getSolar_noon() { return deleteSeconds(solar_noon); }
+    public String getSolar_noon() { return solar_noon; }
 
-    public String getDay_length() { return deleteSeconds(day_length); }
+    public int getDay_length() { return day_length; }
 
-    public String getCivil_twilight_begin()
-    {
-        return deleteSeconds(civil_twilight_begin);
-    }
+    public String getCivil_twilight_begin() { return civil_twilight_begin; }
 
-    public String getCivil_twilight_end() { return deleteSeconds(civil_twilight_end); }
+    public String getCivil_twilight_end() { return civil_twilight_end; }
 
-    public String getNautical_twilight_begin()
-    {
-        return deleteSeconds(nautical_twilight_begin);
-    }
+    public String getNautical_twilight_begin() { return nautical_twilight_begin; }
 
-    public String getNautical_twilight_end() { return deleteSeconds(nautical_twilight_end); }
+    public String getNautical_twilight_end() { return nautical_twilight_end; }
 
-    public String getAstronomical_twilight_begin() { return deleteSeconds(astronomical_twilight_begin); }
+    public String getAstronomical_twilight_begin() { return astronomical_twilight_begin; }
 
-    public String getAstronomical_twilight_end() { return deleteSeconds(astronomical_twilight_end); }
-
-    public String deleteSeconds(String time)
-    {
-        StringBuilder builder = new StringBuilder(time);
-        builder.delete(4, 7);
-        return builder.toString();
-    }
+    public String getAstronomical_twilight_end() { return astronomical_twilight_end; }
 }
 
 /*

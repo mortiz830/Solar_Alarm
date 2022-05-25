@@ -352,21 +352,19 @@ public class CreateAlarmFragment extends Fragment{
     public SolarTime newSolarTime(SunriseSunsetResponse sunriseSunsetResponse, Location locationItem)
     {
         SolarTime solarTime = new SolarTime();
-        String pattern = "h:mm a";
-        //LocalDateTime date = LocalDateTime.ofInstant(sunriseSunsetResponse.request.Date.toInstant(), ZoneId.systemDefault()).toLocalDate();
 
-        solarTime.LocationId = locationItem.Id;
-        //solarTime.Date =  date;
-        solarTime.Sunrise = LocalDateTime.parse(sunriseSunsetResponse.getSunrise(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.Sunset = LocalDateTime.parse(sunriseSunsetResponse.getSunset(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.SolarNoon = LocalDateTime.parse(sunriseSunsetResponse.getSolarNoon(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.DayLength = LocalDateTime.parse(sunriseSunsetResponse.getDayLength());
-        solarTime.CivilTwilightBegin = LocalDateTime.parse(sunriseSunsetResponse.getCivilTwilightBegin(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.CivilTwilightEnd = LocalDateTime.parse(sunriseSunsetResponse.getCivilTwilightEnd(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.NauticalTwilightBegin = LocalDateTime.parse(sunriseSunsetResponse.getNauticalTwilightBegin(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.NauticalTwilightEnd = LocalDateTime.parse(sunriseSunsetResponse.getNauticalTwilightEnd(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.AstronomicalTwilightBegin = LocalDateTime.parse(sunriseSunsetResponse.getAstronomicalTwilightBegin(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.AstronomicalTwilightEnd = LocalDateTime.parse(sunriseSunsetResponse.getAstronomicalTwilightEnd(), DateTimeFormatter.ofPattern(pattern));
+        solarTime.LocationId                = locationItem.Id;
+        solarTime.Date                      = LocalDateTime.ofInstant(sunriseSunsetResponse.request.Date.toInstant(), ZoneId.systemDefault()).toLocalDate();
+        solarTime.DayLength                 = sunriseSunsetResponse.getDayLength();
+        solarTime.Sunrise                   = LocalDateTime.parse(sunriseSunsetResponse.getSunrise(),                   DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        solarTime.Sunset                    = LocalDateTime.parse(sunriseSunsetResponse.getSunset(),                    DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        solarTime.SolarNoon                 = LocalDateTime.parse(sunriseSunsetResponse.getSolarNoon(),                 DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        solarTime.CivilTwilightBegin        = LocalDateTime.parse(sunriseSunsetResponse.getCivilTwilightBegin(),        DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        solarTime.CivilTwilightEnd          = LocalDateTime.parse(sunriseSunsetResponse.getCivilTwilightEnd(),          DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        solarTime.NauticalTwilightBegin     = LocalDateTime.parse(sunriseSunsetResponse.getNauticalTwilightBegin(),     DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        solarTime.NauticalTwilightEnd       = LocalDateTime.parse(sunriseSunsetResponse.getNauticalTwilightEnd(),       DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        solarTime.AstronomicalTwilightBegin = LocalDateTime.parse(sunriseSunsetResponse.getAstronomicalTwilightBegin(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        solarTime.AstronomicalTwilightEnd   = LocalDateTime.parse(sunriseSunsetResponse.getAstronomicalTwilightEnd(),   DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         return solarTime;
     }
