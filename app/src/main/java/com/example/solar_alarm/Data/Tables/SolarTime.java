@@ -23,14 +23,14 @@ public class SolarTime extends TableBase
     public int LocationId;
 
     // UTC Times
-    //public LocalTime Sunrise;
-    public LocalTime Sunset;
-    public LocalTime SolarNoon;
-    public LocalTime DayLength;
-    public LocalTime CivilTwilightBegin;
-    public LocalTime CivilTwilightEnd;
-    public LocalTime NauticalTwilightBegin;
-    public LocalTime NauticalTwilightEnd;
-    public LocalTime AstronomicalTwilightBegin;
-    public LocalTime AstronomicalTwilightEnd;
+    public LocalDateTime Sunrise;
+    public LocalDateTime Sunset;
+    public LocalDateTime SolarNoon;
+    public LocalDateTime DayLength;
+    public LocalDateTime CivilTwilightBegin;
+    public LocalDateTime CivilTwilightEnd;
+    public LocalDateTime NauticalTwilightBegin;
+    public LocalDateTime NauticalTwilightEnd;
+    public LocalDateTime AstronomicalTwilightBegin;
+    public LocalDateTime AstronomicalTwilightEnd;
 }

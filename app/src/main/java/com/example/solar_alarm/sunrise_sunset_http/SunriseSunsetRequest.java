@@ -9,60 +9,11 @@ public class SunriseSunsetRequest
     public Calendar Date;
     public Boolean Format;
 
-    public SunriseSunsetRequest(float latitude, float longitude, Calendar date, Boolean format)
+    public SunriseSunsetRequest(float latitude, float longitude, Calendar date)
     {
-        this.Latitude = latitude;
+        this.Latitude  = latitude;
         this.Longitude = longitude;
-        this.Date = date;
-        this.Format = format;
+        this.Date      = date;
+        this.Format    = false;   // hard coded because this will give us date and times in UTC
     }
-/*
-    public void setLatitude(float latitude)
-    {
-        this.Latitude = latitude;
-    }
-
-    public void setLongitude(float longitude)
-    {
-        this.Longitude = longitude;
-    }
-
-    public void setDate(Calendar date)
-    {
-        this.Date = date;
-    }
-
-    public void setFormat(Boolean format)
-    {
-        this.Format = format;
-    }
-
-    public float getLatitude()
-    {
-        return Latitude;
-    }
-
-    public float getLongitude()
-    {
-        return Longitude;
-    }
-
-    public Calendar getDate() { return Date; }
-
-    public Boolean getFormat()
-    {
-        return Format;
-    }*/
 }
-
-
-/*
-*
-*
-* SunriseSunsetRequest foo = new SunriseSunsetRequest()
-*
-* SunriseSunsetRequest.Date = "fhfhf";
-*
-* String x = SunriseSunsetRequest.Date
-*
-* */
