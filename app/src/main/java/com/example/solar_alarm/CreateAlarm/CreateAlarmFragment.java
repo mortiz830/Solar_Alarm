@@ -152,9 +152,7 @@ public class CreateAlarmFragment extends Fragment{
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) { }
         });
 
         recurring.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -225,7 +223,7 @@ public class CreateAlarmFragment extends Fragment{
     @RequiresApi(api = Build.VERSION_CODES.O)
     public SolarTime getSolarTime(Location locationItem, Calendar date) throws Exception {
         boolean isLocationIdDatePairExists = getLocationIdDatePareExists(locationItem, date);
-        SolarTime solarTimeItem;
+        SolarTime solarTime;
 
         if(!isLocationIdDatePairExists)
         {
@@ -233,13 +231,12 @@ public class CreateAlarmFragment extends Fragment{
 
             try
             {
-                solarTimeItem = new TimeResponseTask().execute(sunriseSunsetRequest, locationItem).get();
-                timeZoneConverter = new TimeZoneConverter(solarTimeItem);
-                //solarTimeItem = timeZoneConverter.convertSolarTime();
-                sunriseData.setText(solarTimeItem.SunriseLocal.toString());
-                solarNoonData.setText(solarTimeItem.SolarNoonLocal.toString());
-                sunsetData.setText(solarTimeItem.SunsetLocal.toString());
-                solarTimeRepository.Insert(solarTimeItem);
+                solarTime = new TimeResponseTask().execute(sunriseSunsetRequest, locationItem).get();
+
+                sunriseData.setText(solarTime.SunriseLocal.toString());
+                solarNoonData.setText(solarTime.SolarNoonLocal.toString());
+                sunsetData.setText(solarTime.SunsetLocal.toString());
+                solarTimeRepository.Insert(solarTime);
 
             }
             catch (Exception e)
@@ -251,13 +248,13 @@ public class CreateAlarmFragment extends Fragment{
         else
         {
             LocalDate localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).toLocalDate();
-            solarTimeItem = new GetSolarTimeTask().execute(locationItem.Id, localDate).get();
-            sunriseData.setText(solarTimeItem.SunriseLocal.toString());
-            solarNoonData.setText(solarTimeItem.SolarNoonLocal.toString());
-            sunsetData.setText(solarTimeItem.SunsetLocal.toString());
+            solarTime = new GetSolarTimeTask().execute(locationItem.Id, localDate).get();
+            sunriseData.setText(solarTime.SunriseLocal.toString());
+            solarNoonData.setText(solarTime.SolarNoonLocal.toString());
+            sunsetData.setText(solarTime.SunsetLocal.toString());
         }
 
-        return solarTimeItem;
+        return solarTime;
     }
 
     public boolean getLocationIdDatePareExists(Location locationItem, Calendar date) throws Exception {
