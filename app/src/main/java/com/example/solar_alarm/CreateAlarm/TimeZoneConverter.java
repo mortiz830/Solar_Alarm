@@ -19,7 +19,7 @@ public class TimeZoneConverter {
         this.solarTime = solarTime;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    /*@RequiresApi(api = Build.VERSION_CODES.O)
     public SolarTime convertSolarTime()
     {
         solarTime.Sunrise                   = convertToUTC(solarTime.Sunrise);
@@ -33,7 +33,7 @@ public class TimeZoneConverter {
         solarTime.AstronomicalTwilightEnd   = convertToUTC(solarTime.AstronomicalTwilightEnd);
 
         return solarTime;
-    }
+    }*/
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public LocalDateTime convertToUTC(LocalDateTime localDateTime)

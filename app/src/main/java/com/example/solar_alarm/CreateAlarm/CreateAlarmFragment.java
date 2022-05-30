@@ -235,10 +235,10 @@ public class CreateAlarmFragment extends Fragment{
             {
                 solarTimeItem = new TimeResponseTask().execute(sunriseSunsetRequest, locationItem).get();
                 timeZoneConverter = new TimeZoneConverter(solarTimeItem);
-                solarTimeItem = timeZoneConverter.convertSolarTime();
-                sunriseData.setText(solarTimeItem.Sunrise.toString());
-                solarNoonData.setText(solarTimeItem.SolarNoon.toString());
-                sunsetData.setText(solarTimeItem.Sunset.toString());
+                //solarTimeItem = timeZoneConverter.convertSolarTime();
+                sunriseData.setText(solarTimeItem.SunriseLocal.toString());
+                solarNoonData.setText(solarTimeItem.SolarNoonLocal.toString());
+                sunsetData.setText(solarTimeItem.SunsetLocal.toString());
                 solarTimeRepository.Insert(solarTimeItem);
 
             }
@@ -252,9 +252,9 @@ public class CreateAlarmFragment extends Fragment{
         {
             LocalDate localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).toLocalDate();
             solarTimeItem = new GetSolarTimeTask().execute(locationItem.Id, localDate).get();
-            sunriseData.setText(solarTimeItem.Sunrise.toString());
-            solarNoonData.setText(solarTimeItem.SolarNoon.toString());
-            sunsetData.setText(solarTimeItem.Sunset.toString());
+            sunriseData.setText(solarTimeItem.SunriseLocal.toString());
+            solarNoonData.setText(solarTimeItem.SolarNoonLocal.toString());
+            sunsetData.setText(solarTimeItem.SunsetLocal.toString());
         }
 
         return solarTimeItem;

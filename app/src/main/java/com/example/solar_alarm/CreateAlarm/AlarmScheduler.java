@@ -66,11 +66,11 @@ public class AlarmScheduler {
         if(true) localDateTime = LocalDateTime.now().plusMinutes(mins); else // DEBUG_STATEMENT
 
         if(solarAlarm.TimeTypeId == SolarTimeTypeEnum.Sunrise.Id)
-            localDateTime = solarTime.Sunrise;
+            localDateTime = solarTime.SunriseLocal;
         else if(solarAlarm.TimeTypeId == SolarTimeTypeEnum.SolarNoon.Id)
-            localDateTime = solarTime.SolarNoon;
+            localDateTime = solarTime.SolarNoonLocal;
         else if(solarAlarm.TimeTypeId == SolarTimeTypeEnum.Sunset.Id)
-            localDateTime = solarTime.Sunset;
+            localDateTime = solarTime.SunsetLocal;
 
         if(solarAlarm.OffsetTypeId == 1)
         {
