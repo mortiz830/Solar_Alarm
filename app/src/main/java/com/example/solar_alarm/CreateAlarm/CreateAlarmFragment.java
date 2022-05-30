@@ -336,7 +336,7 @@ public class CreateAlarmFragment extends Fragment{
             {
                 httpRequests          = new HttpRequests(sunriseSunsetRequest);
                 sunriseSunsetResponse = httpRequests.GetSolarData(sunriseSunsetRequest);
-                solarTime             = newSolarTime(sunriseSunsetResponse, location);
+                solarTime             = new SolarTime(location, sunriseSunsetResponse);
             }
             catch (Exception e)
             {
@@ -346,27 +346,6 @@ public class CreateAlarmFragment extends Fragment{
 
             return solarTime;
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public SolarTime newSolarTime(SunriseSunsetResponse sunriseSunsetResponse, Location locationItem)
-    {
-        SolarTime solarTime = new SolarTime();
-
-        solarTime.LocationId                = locationItem.Id;
-        solarTime.Date                      = LocalDateTime.ofInstant(sunriseSunsetResponse.request.Date.toInstant(), ZoneId.systemDefault()).toLocalDate();
-        solarTime.DayLength                 = sunriseSunsetResponse.getDayLength();
-        solarTime.Sunrise                   = LocalDateTime.parse(sunriseSunsetResponse.getSunrise(),                   DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        solarTime.Sunset                    = LocalDateTime.parse(sunriseSunsetResponse.getSunset(),                    DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        solarTime.SolarNoon                 = LocalDateTime.parse(sunriseSunsetResponse.getSolarNoon(),                 DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        solarTime.CivilTwilightBegin        = LocalDateTime.parse(sunriseSunsetResponse.getCivilTwilightBegin(),        DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        solarTime.CivilTwilightEnd          = LocalDateTime.parse(sunriseSunsetResponse.getCivilTwilightEnd(),          DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        solarTime.NauticalTwilightBegin     = LocalDateTime.parse(sunriseSunsetResponse.getNauticalTwilightBegin(),     DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        solarTime.NauticalTwilightEnd       = LocalDateTime.parse(sunriseSunsetResponse.getNauticalTwilightEnd(),       DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        solarTime.AstronomicalTwilightBegin = LocalDateTime.parse(sunriseSunsetResponse.getAstronomicalTwilightBegin(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        solarTime.AstronomicalTwilightEnd   = LocalDateTime.parse(sunriseSunsetResponse.getAstronomicalTwilightEnd(),   DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-
-        return solarTime;
     }
 
     private class LocationIdDatePairExistsTask extends AsyncTask<Object, Void, Boolean>{
