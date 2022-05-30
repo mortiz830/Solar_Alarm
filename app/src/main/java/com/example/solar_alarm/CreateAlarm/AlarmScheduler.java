@@ -63,7 +63,7 @@ public class AlarmScheduler {
 
         PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, solarAlarm.Id, intent, 0);
 
-        if(true) localDateTime = LocalDateTime.now().plusMinutes(mins); else // DEBUG STATEMENT
+        if(true) localDateTime = LocalDateTime.now().plusMinutes(mins); else // DEBUG_STATEMENT
 
         if(solarAlarm.TimeTypeId == SolarTimeTypeEnum.Sunrise.Id)
             localDateTime = solarTime.Sunrise;

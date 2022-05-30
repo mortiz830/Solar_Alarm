@@ -329,11 +329,10 @@ public class CreateAlarmFragment extends Fragment{
         @Override
         protected SolarTime doInBackground(Object... objects)
         {
-            sunriseSunsetRequest = (SunriseSunsetRequest) objects[0];
-            location             = (Location) objects[1];
-
             try
             {
+                sunriseSunsetRequest  = (SunriseSunsetRequest) objects[0];
+                location              = (Location) objects[1];
                 httpRequests          = new HttpRequests(sunriseSunsetRequest);
                 sunriseSunsetResponse = httpRequests.GetSolarData(sunriseSunsetRequest);
                 solarTime             = new SolarTime(location, sunriseSunsetResponse);
