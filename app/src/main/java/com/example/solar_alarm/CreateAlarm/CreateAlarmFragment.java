@@ -43,6 +43,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -159,9 +160,9 @@ public class CreateAlarmFragment extends Fragment{
 
                 try
                 {
-                    sunriseData.setText(solarTimes.get(0).GetLocalDateTime(SolarTimeTypeEnum.Sunrise).toString());
-                    solarNoonData.setText(solarTimes.get(0).GetLocalDateTime(SolarTimeTypeEnum.SolarNoon).toString());
-                    sunsetData.setText(solarTimes.get(0).GetLocalDateTime(SolarTimeTypeEnum.Sunset).toString());
+                    sunriseData.setText(solarTimes.get(0).GetLocalDateTime(SolarTimeTypeEnum.Sunrise).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
+                    solarNoonData.setText(solarTimes.get(0).GetLocalDateTime(SolarTimeTypeEnum.SolarNoon).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
+                    sunsetData.setText(solarTimes.get(0).GetLocalDateTime(SolarTimeTypeEnum.Sunset).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
                 }
                 catch (Exception e)
                 {
