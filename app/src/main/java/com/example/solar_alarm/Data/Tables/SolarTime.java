@@ -86,42 +86,42 @@ public class SolarTime extends TableBase
 
     private LocalDateTime getLocalDateTime(SolarTimeTypeEnum solarTimeTypeEnum) throws Exception
     {
-        final DateTimeFormatter _DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-
-        LocalDateTime localDateTime;
+        String utcString;
 
         switch (solarTimeTypeEnum)
         {
             case Sunrise:
-                localDateTime = LocalDateTime.parse(SunriseUtc, _DateTimeFormatter);
+                utcString = SunriseUtc;
                 break;
             case Sunset:
-                localDateTime = LocalDateTime.parse(SunsetUtc, _DateTimeFormatter);
+                utcString = SunsetUtc;
                 break;
             case SolarNoon:
-                localDateTime = LocalDateTime.parse(SolarNoonUtc, _DateTimeFormatter);
+                utcString = SolarNoonUtc;
                 break;
             case CivilTwilightBegin:
-                localDateTime = LocalDateTime.parse(CivilTwilightBeginUtc, _DateTimeFormatter);
+                utcString = CivilTwilightBeginUtc;
                 break;
             case CivilTwilightEnd:
-                localDateTime = LocalDateTime.parse(CivilTwilightEndUtc, _DateTimeFormatter);
+                utcString = CivilTwilightEndUtc;
                 break;
             case NauticalTwilightBegin:
-                localDateTime = LocalDateTime.parse(NauticalTwilightBeginUtc, _DateTimeFormatter);
+                utcString = NauticalTwilightBeginUtc;
                 break;
             case NauticalTwilightEnd:
-                localDateTime = LocalDateTime.parse(NauticalTwilightEndUtc, _DateTimeFormatter);
+                utcString = NauticalTwilightEndUtc;
                 break;
             case AstronomicalTwilightBegin:
-                localDateTime = LocalDateTime.parse(AstronomicalTwilightBeginUtc, _DateTimeFormatter);
+                utcString = AstronomicalTwilightBeginUtc;
                 break;
             case AstronomicalTwilightEnd:
-                localDateTime = LocalDateTime.parse(AstronomicalTwilightEndUtc, _DateTimeFormatter);
+                utcString = AstronomicalTwilightEndUtc;
                 break;
             default:
                 throw new Exception("Enum not implemented");
         }
+
+        LocalDateTime localDateTime = LocalDateTime.parse(utcString, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         return localDateTime;
     }
