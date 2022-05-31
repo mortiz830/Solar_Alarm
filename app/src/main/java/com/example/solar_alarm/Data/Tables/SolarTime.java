@@ -69,9 +69,9 @@ public class SolarTime extends TableBase
     {
         ZonedDateTime utcDateTime   = GetUtcZonedDateTime(solarTimeTypeEnum);
         ZoneId        zoneId        = ZoneId.systemDefault();
-        ZonedDateTime LocalDateTime = utcDateTime.withZoneSameInstant(zoneId);
+        ZonedDateTime zonedDateTime = utcDateTime.withZoneSameInstant(zoneId);
 
-        return LocalDateTime;
+        return zonedDateTime;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
