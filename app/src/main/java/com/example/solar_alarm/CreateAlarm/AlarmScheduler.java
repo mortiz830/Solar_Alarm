@@ -80,7 +80,7 @@ public class AlarmScheduler {
             localZonedDateTime.plusMinutes(mins);
         }
 
-        localZonedDateTime = solarTime.GetLocalDateTime(SolarTimeTypeEnum.values()[solarAlarm.TimeTypeId]);
+        localZonedDateTime = solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.values()[solarAlarm.TimeTypeId]);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());

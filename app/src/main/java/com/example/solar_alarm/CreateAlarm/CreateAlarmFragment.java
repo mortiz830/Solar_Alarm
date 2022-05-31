@@ -152,9 +152,9 @@ public class CreateAlarmFragment extends Fragment{
 
                 try
                 {
-                    sunriseData.setText(solarTimes.get(0).GetLocalDateTime(SolarTimeTypeEnum.Sunrise).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
-                    solarNoonData.setText(solarTimes.get(0).GetLocalDateTime(SolarTimeTypeEnum.SolarNoon).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
-                    sunsetData.setText(solarTimes.get(0).GetLocalDateTime(SolarTimeTypeEnum.Sunset).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
+                    sunriseData.setText(solarTimes.get(0).GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
+                    solarNoonData.setText(solarTimes.get(0).GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
+                    sunsetData.setText(solarTimes.get(0).GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
                 }
                 catch (Exception e)
                 {

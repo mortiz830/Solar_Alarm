@@ -65,9 +65,9 @@ public class SolarTime extends TableBase
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public ZonedDateTime GetLocalDateTime(SolarTimeTypeEnum solarTimeTypeEnum) throws Exception
+    public ZonedDateTime GetLocalZonedDateTime(SolarTimeTypeEnum solarTimeTypeEnum) throws Exception
     {
-        ZonedDateTime utcDateTime   = GetUtcDateTime(solarTimeTypeEnum);
+        ZonedDateTime utcDateTime   = GetUtcZonedDateTime(solarTimeTypeEnum);
         ZoneId        zoneId        = ZoneId.systemDefault();
         ZonedDateTime LocalDateTime = utcDateTime.withZoneSameInstant(zoneId);
 
@@ -75,7 +75,7 @@ public class SolarTime extends TableBase
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private ZonedDateTime GetUtcDateTime(SolarTimeTypeEnum solarTimeTypeEnum) throws Exception
+    private ZonedDateTime GetUtcZonedDateTime(SolarTimeTypeEnum solarTimeTypeEnum) throws Exception
     {
         LocalDateTime localDateTime = getLocalDateTime(solarTimeTypeEnum);
         ZoneId        zoneId        = ZoneId.ofOffset("UTC", ZoneOffset.UTC);
