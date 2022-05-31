@@ -26,53 +26,6 @@ public class Results {
         this.astronomical_twilight_end = ate;
     }
 
-    public void setSunrise(String sunrise)
-    {
-        this.sunrise = sunrise;
-    }
-
-    public void setSunset(String sunset)
-    {
-        this.sunset = sunset;
-    }
-
-    public void setSolar_noon(String solar_noon)
-    {
-        this.solar_noon = solar_noon;
-    }
-
-    public void setDay_length(int day_length) { this.day_length = day_length; }
-
-    public void setCivil_twilight_begin(String ctb)
-    {
-        civil_twilight_begin = ctb;
-    }
-
-    public void setCivil_twilight_end(String cte)
-    {
-        civil_twilight_end = cte;
-    }
-
-    public void setNautical_twilight_begin(String ntb)
-    {
-        nautical_twilight_begin = ntb;
-    }
-
-    public void setNautical_twilight_end(String nte)
-    {
-        nautical_twilight_end = nte;
-    }
-
-    public void setAstronomical_twilight_begin(String atb)
-    {
-        astronomical_twilight_begin = atb;
-    }
-
-    public void setAstronomical_twilight_end(String ate)
-    {
-        astronomical_twilight_end = ate;
-    }
-
     public String getSunrise() { return sunrise; }
 
     public String getSunset() { return sunset; }
@@ -97,11 +50,10 @@ public class Results {
 /*
 {
     "results": {
-                    01234567
         "sunrise": "11:48:41 AM",
         "sunset": "1:02:48 AM",
         "solar_noon": "6:25:45 PM",
-        "day_length": "13:14:07",
+        "day_length": 01234567,
         "civil_twilight_begin": "11:22:54 AM",
         "civil_twilight_end": "1:28:36 AM",
         "nautical_twilight_begin": "10:52:06 AM",

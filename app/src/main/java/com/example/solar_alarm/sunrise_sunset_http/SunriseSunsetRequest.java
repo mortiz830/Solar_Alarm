@@ -14,6 +14,6 @@ public class SunriseSunsetRequest
         this.Latitude  = latitude;
         this.Longitude = longitude;
         this.Date      = date;
-        this.Format    = false;   // hard coded because this will give us date and times in UTC
+        this.Format    = false;   // hard coded because this will give us date and times in UTC strings
     }
 }

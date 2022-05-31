@@ -90,7 +90,6 @@ public class CreateAlarmFragment extends Fragment{
     SpinnerAdapter locationSpinnerAdapter;
     ArrayAdapter<CharSequence> alarmTimeAdapter;
     ArrayAdapter<CharSequence> setTimeAdapter;
-    TimeZoneConverter timeZoneConverter;
 
     private List<Location> Locations;
     private SolarTimeRepository solarTimeRepository;
@@ -120,8 +119,7 @@ public class CreateAlarmFragment extends Fragment{
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_createalarm, container, false);
 
         Spinner alarmTimeSpinner = (Spinner) view.findViewById(R.id.fragment_createalarm_alarmtime_spinner);
@@ -133,24 +131,18 @@ public class CreateAlarmFragment extends Fragment{
         List<SolarTime> solarTimes = new ArrayList<SolarTime>();
         ButterKnife.bind(this, view);
         setPickers();
-
-        locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
+        locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int locationPosition, long l)
-            {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int locationPosition, long l) {
                 Location locationItem = (Location) adapterView.getItemAtPosition(locationPosition);
-                Calendar date         = Calendar.getInstance();
+                Calendar date = Calendar.getInstance();
 
                 for (int i = 0; i < 14; i++)
                 {
-                    try
-                    {
+                    try {
                         solarTimes.add(getSolarTime(locationItem, date));
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(getContext(), "Solar Time exists!", Toast.LENGTH_LONG).show();
                     }
@@ -171,7 +163,9 @@ public class CreateAlarmFragment extends Fragment{
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) { }
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
         });
 
         recurring.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -240,27 +234,21 @@ public class CreateAlarmFragment extends Fragment{
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public SolarTime getSolarTime(Location locationItem, Calendar date) throws Exception
-    {
+    public SolarTime getSolarTime(Location locationItem, Calendar date) throws Exception {
         boolean isLocationIdDatePairExists = getLocationIdDatePareExists(locationItem, date);
         SolarTime solarTime;
 
-        if(!isLocationIdDatePairExists)
-        {
-            try
-            {
+        if(!isLocationIdDatePairExists) {
+            try {
                 SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, date);
                 solarTime = new TimeResponseTask().execute(sunriseSunsetRequest, locationItem).get();
                 solarTimeRepository.Insert(solarTime);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
                 throw e;
             }
         }
-        else
-        {
+        else {
             LocalDate localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).toLocalDate();
             solarTime = new GetSolarTimeTask().execute(locationItem.Id, localDate).get();
         }
@@ -325,8 +313,7 @@ public class CreateAlarmFragment extends Fragment{
         alarmScheduler.schedule(getContext());
     }
 
-    private class TimeResponseTask extends AsyncTask<Object, Void, SolarTime>
-    {
+    private class TimeResponseTask extends AsyncTask<Object, Void, SolarTime> {
         HttpRequests httpRequests;
         SunriseSunsetRequest sunriseSunsetRequest;
         SunriseSunsetResponse sunriseSunsetResponse;
@@ -335,18 +322,14 @@ public class CreateAlarmFragment extends Fragment{
 
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
-        protected SolarTime doInBackground(Object... objects)
-        {
-            try
-            {
+        protected SolarTime doInBackground(Object... objects) {
+            try {
                 sunriseSunsetRequest  = (SunriseSunsetRequest) objects[0];
                 location              = (Location) objects[1];
                 httpRequests          = new HttpRequests(sunriseSunsetRequest);
                 sunriseSunsetResponse = httpRequests.GetSolarData(sunriseSunsetRequest);
                 solarTime             = new SolarTime(location, sunriseSunsetResponse);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(getContext(), "Unable to get times!", Toast.LENGTH_LONG).show();
             }
