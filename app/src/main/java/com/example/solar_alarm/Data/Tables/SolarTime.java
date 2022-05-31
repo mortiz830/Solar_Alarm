@@ -45,7 +45,7 @@ public class SolarTime extends TableBase
     public String AstronomicalTwilightBeginUtc;
     public String AstronomicalTwilightEndUtc;
 
-    public SolarTime (){}
+    public SolarTime (){}   // explicitly create default constructor for Android Room
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public SolarTime (Location location, SunriseSunsetResponse sunriseSunsetResponse)
