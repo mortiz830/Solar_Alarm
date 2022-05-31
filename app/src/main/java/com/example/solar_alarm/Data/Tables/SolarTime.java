@@ -8,11 +8,13 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 
+import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -43,44 +45,84 @@ public class SolarTime extends TableBase
     public String AstronomicalTwilightBeginUtc;
     public String AstronomicalTwilightEndUtc;
 
-    // LocalDateTime Objects - these are created in the device's local timezone
-    public LocalDateTime SunriseLocal;
-    public LocalDateTime SunsetLocal;
-    public LocalDateTime SolarNoonLocal;
-    public LocalDateTime CivilTwilightBeginLocal;
-    public LocalDateTime CivilTwilightEndLocal;
-    public LocalDateTime NauticalTwilightBeginLocal;
-    public LocalDateTime NauticalTwilightEndLocal;
-    public LocalDateTime AstronomicalTwilightBeginLocal;
-    public LocalDateTime AstronomicalTwilightEndLocal;
-
     public SolarTime (){}
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public SolarTime (Location location, SunriseSunsetResponse sunriseSunsetResponse)
     {
+        Date                         = LocalDateTime.ofInstant(sunriseSunsetResponse.request.Date.toInstant(), ZoneId.systemDefault()).toLocalDate();
+        LocationId                   = location.Id;
+        DayLength                    = sunriseSunsetResponse.getDayLength();
+        SunriseUtc                   = sunriseSunsetResponse.getSunrise();
+        SunsetUtc                    = sunriseSunsetResponse.getSunset();
+        SolarNoonUtc                 = sunriseSunsetResponse.getSolarNoon();
+        CivilTwilightBeginUtc        = sunriseSunsetResponse.getCivilTwilightBegin();
+        CivilTwilightEndUtc          = sunriseSunsetResponse.getCivilTwilightEnd();
+        NauticalTwilightBeginUtc     = sunriseSunsetResponse.getNauticalTwilightBegin();
+        NauticalTwilightEndUtc       = sunriseSunsetResponse.getNauticalTwilightEnd();
+        AstronomicalTwilightBeginUtc = sunriseSunsetResponse.getAstronomicalTwilightBegin();
+        AstronomicalTwilightEndUtc   = sunriseSunsetResponse.getAstronomicalTwilightEnd();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ZonedDateTime GetLocalDateTime(SolarTimeTypeEnum solarTimeTypeEnum) throws Exception
+    {
+        ZonedDateTime utcDateTime   = GetUtcDateTime(solarTimeTypeEnum);
+        ZoneId        zoneId        = ZoneId.systemDefault();
+        ZonedDateTime LocalDateTime = utcDateTime.withZoneSameInstant(zoneId);
+
+        return LocalDateTime;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private ZonedDateTime GetUtcDateTime(SolarTimeTypeEnum solarTimeTypeEnum) throws Exception
+    {
+        LocalDateTime localDateTime = getLocalDateTime(solarTimeTypeEnum);
+        ZoneId        zoneId        = ZoneId.ofOffset("UTC", ZoneOffset.UTC);
+        ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
+
+        return zonedDateTime;
+    }
+
+    private LocalDateTime getLocalDateTime(SolarTimeTypeEnum solarTimeTypeEnum) throws Exception
+    {
         final DateTimeFormatter _DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
-        Date                           = LocalDateTime.ofInstant(sunriseSunsetResponse.request.Date.toInstant(), ZoneId.systemDefault()).toLocalDate();
-        LocationId                     = location.Id;
-        DayLength                      = sunriseSunsetResponse.getDayLength();
-        SunriseUtc                     = sunriseSunsetResponse.getSunrise();
-        SunsetUtc                      = sunriseSunsetResponse.getSunset();
-        SolarNoonUtc                   = sunriseSunsetResponse.getSolarNoon();
-        CivilTwilightBeginUtc          = sunriseSunsetResponse.getCivilTwilightBegin();
-        CivilTwilightEndUtc            = sunriseSunsetResponse.getCivilTwilightEnd();
-        NauticalTwilightBeginUtc       = sunriseSunsetResponse.getNauticalTwilightBegin();
-        NauticalTwilightEndUtc         = sunriseSunsetResponse.getNauticalTwilightEnd();
-        AstronomicalTwilightBeginUtc   = sunriseSunsetResponse.getAstronomicalTwilightBegin();
-        AstronomicalTwilightEndUtc     = sunriseSunsetResponse.getAstronomicalTwilightEnd();
-        SunriseLocal                   = LocalDateTime.parse(SunriseUtc,                   _DateTimeFormatter);
-        SunsetLocal                    = LocalDateTime.parse(SunsetUtc,                    _DateTimeFormatter);
-        SolarNoonLocal                 = LocalDateTime.parse(SolarNoonUtc,                 _DateTimeFormatter);
-        CivilTwilightBeginLocal        = LocalDateTime.parse(CivilTwilightBeginUtc,        _DateTimeFormatter);
-        CivilTwilightEndLocal          = LocalDateTime.parse(CivilTwilightEndUtc,          _DateTimeFormatter);
-        NauticalTwilightBeginLocal     = LocalDateTime.parse(NauticalTwilightBeginUtc,     _DateTimeFormatter);
-        NauticalTwilightEndLocal       = LocalDateTime.parse(NauticalTwilightEndUtc,       _DateTimeFormatter);
-        AstronomicalTwilightBeginLocal = LocalDateTime.parse(AstronomicalTwilightBeginUtc, _DateTimeFormatter);
-        AstronomicalTwilightEndLocal   = LocalDateTime.parse(AstronomicalTwilightEndUtc,   _DateTimeFormatter);
+        LocalDateTime localDateTime;
+
+        switch (solarTimeTypeEnum)
+        {
+            case Sunrise:
+                localDateTime = LocalDateTime.parse(SunriseUtc, _DateTimeFormatter);
+                break;
+            case Sunset:
+                localDateTime = LocalDateTime.parse(SunsetUtc, _DateTimeFormatter);
+                break;
+            case SolarNoon:
+                localDateTime = LocalDateTime.parse(SolarNoonUtc, _DateTimeFormatter);
+                break;
+            case CivilTwilightBegin:
+                localDateTime = LocalDateTime.parse(CivilTwilightBeginUtc, _DateTimeFormatter);
+                break;
+            case CivilTwilightEnd:
+                localDateTime = LocalDateTime.parse(CivilTwilightEndUtc, _DateTimeFormatter);
+                break;
+            case NauticalTwilightBegin:
+                localDateTime = LocalDateTime.parse(NauticalTwilightBeginUtc, _DateTimeFormatter);
+                break;
+            case NauticalTwilightEnd:
+                localDateTime = LocalDateTime.parse(NauticalTwilightEndUtc, _DateTimeFormatter);
+                break;
+            case AstronomicalTwilightBegin:
+                localDateTime = LocalDateTime.parse(AstronomicalTwilightBeginUtc, _DateTimeFormatter);
+                break;
+            case AstronomicalTwilightEnd:
+                localDateTime = LocalDateTime.parse(AstronomicalTwilightEndUtc, _DateTimeFormatter);
+                break;
+            default:
+                throw new Exception("Enum not implemented");
+        }
+
+        return localDateTime;
     }
 }

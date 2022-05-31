@@ -1,7 +1,9 @@
 package com.example.solar_alarm.Data.Repositories;
 
 import android.app.Application;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
 import com.example.solar_alarm.Data.Daos.SolarTimeDao;
@@ -16,6 +18,7 @@ public class SolarTimeRepository
     private SolarTimeDao solarTimeDao;
     private LiveData<List<SolarTime>> solarTimeLiveData;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public SolarTimeRepository(Application application)
     {
         SolarAlarmDatabase db = SolarAlarmDatabase.getDatabase(application);
@@ -23,16 +26,19 @@ public class SolarTimeRepository
         solarTimeLiveData = solarTimeDao.getAll();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void Insert(SolarTime solarTime)
     {
         SolarAlarmDatabase.databaseWriteExecutor.execute(() -> solarTimeDao.Insert(solarTime));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void Update(SolarTime solarTime)
     {
         SolarAlarmDatabase.databaseWriteExecutor.execute(() -> solarTimeDao.Update(solarTime));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void delete(SolarTime solarTime)
     {
         SolarAlarmDatabase.databaseWriteExecutor.execute(() -> solarTimeDao.delete(solarTime));

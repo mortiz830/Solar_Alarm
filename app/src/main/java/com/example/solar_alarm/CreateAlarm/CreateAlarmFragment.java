@@ -119,7 +119,8 @@ public class CreateAlarmFragment extends Fragment{
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
         View view = inflater.inflate(R.layout.fragment_createalarm, container, false);
 
         Spinner alarmTimeSpinner = (Spinner) view.findViewById(R.id.fragment_createalarm_alarmtime_spinner);
@@ -131,23 +132,40 @@ public class CreateAlarmFragment extends Fragment{
         List<SolarTime> solarTimes = new ArrayList<SolarTime>();
         ButterKnife.bind(this, view);
         setPickers();
-        locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+        locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                Location locationItem = (Location) adapterView.getItemAtPosition(position);
-                Calendar date = Calendar.getInstance();
+            public void onItemSelected(AdapterView<?> adapterView, View view, int locationPosition, long l)
+            {
+                Location locationItem = (Location) adapterView.getItemAtPosition(locationPosition);
+                Calendar date         = Calendar.getInstance();
 
                 for (int i = 0; i < 14; i++)
                 {
-                    try {
+                    try
+                    {
                         solarTimes.add(getSolarTime(locationItem, date));
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         e.printStackTrace();
                         Toast.makeText(getContext(), "Solar Time exists!", Toast.LENGTH_LONG).show();
                     }
 
                     date.add(Calendar.DAY_OF_YEAR, 1);
+                }
+
+                try
+                {
+                    sunriseData.setText(solarTimes.get(0).GetLocalDateTime(SolarTimeTypeEnum.Sunrise).toString());
+                    solarNoonData.setText(solarTimes.get(0).GetLocalDateTime(SolarTimeTypeEnum.SolarNoon).toString());
+                    sunsetData.setText(solarTimes.get(0).GetLocalDateTime(SolarTimeTypeEnum.Sunset).toString());
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
             }
 
@@ -221,23 +239,18 @@ public class CreateAlarmFragment extends Fragment{
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public SolarTime getSolarTime(Location locationItem, Calendar date) throws Exception {
+    public SolarTime getSolarTime(Location locationItem, Calendar date) throws Exception
+    {
         boolean isLocationIdDatePairExists = getLocationIdDatePareExists(locationItem, date);
         SolarTime solarTime;
 
         if(!isLocationIdDatePairExists)
         {
-            SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, date);
-
             try
             {
+                SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, date);
                 solarTime = new TimeResponseTask().execute(sunriseSunsetRequest, locationItem).get();
-
-                sunriseData.setText(solarTime.SunriseLocal.toString());
-                solarNoonData.setText(solarTime.SolarNoonLocal.toString());
-                sunsetData.setText(solarTime.SunsetLocal.toString());
                 solarTimeRepository.Insert(solarTime);
-
             }
             catch (Exception e)
             {
@@ -249,9 +262,6 @@ public class CreateAlarmFragment extends Fragment{
         {
             LocalDate localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).toLocalDate();
             solarTime = new GetSolarTimeTask().execute(locationItem.Id, localDate).get();
-            sunriseData.setText(solarTime.SunriseLocal.toString());
-            solarNoonData.setText(solarTime.SolarNoonLocal.toString());
-            sunsetData.setText(solarTime.SunsetLocal.toString());
         }
 
         return solarTime;
