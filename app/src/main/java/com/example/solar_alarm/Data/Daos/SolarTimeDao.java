@@ -18,13 +18,13 @@ public interface SolarTimeDao
     @Insert
     void Insert(SolarTime solarTime);
 
-    @Query("SELECT * FROM SolarTime ORDER BY Date")
+    @Query("SELECT * FROM SolarTime ORDER BY SolarDate")
     LiveData<List<SolarTime>> getAll();
 
-    @Query("SELECT * FROM SolarTime WHERE LocationId = :locationId AND Date = :date")
+    @Query("SELECT * FROM SolarTime WHERE LocationId = :locationId AND SolarDate = :date")
     SolarTime getSolarTime(int locationId, LocalDate date);
 
-    @Query("SELECT EXISTS(SELECT * FROM SolarTime WHERE LocationId = :locationId AND Date = :date)")
+    @Query("SELECT EXISTS(SELECT * FROM SolarTime WHERE LocationId = :locationId AND SolarDate = :date)")
     boolean isLocationIDDatePairExists(int locationId, LocalDate date);
 
     @Update
