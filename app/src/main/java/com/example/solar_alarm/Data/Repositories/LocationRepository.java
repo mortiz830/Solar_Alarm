@@ -23,9 +23,9 @@ import java.util.List;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class LocationRepository
 {
-    private LocationDao locationDao;
-    private StaticDataDao staticDataDao;
-    private LiveData<List<Location>> locationsLiveData;
+    private final LocationDao locationDao;
+    private final StaticDataDao staticDataDao;
+    private final LiveData<List<Location>> locationsLiveData;
 
     public LocationRepository(Application application)
     {
