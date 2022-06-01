@@ -40,9 +40,9 @@ import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -89,7 +89,6 @@ public class CreateAlarmFragment extends Fragment{
     SpinnerAdapter locationSpinnerAdapter;
     ArrayAdapter<CharSequence> alarmTimeAdapter;
     ArrayAdapter<CharSequence> setTimeAdapter;
-    TimeZoneConverter timeZoneConverter;
 
     private List<Location> Locations;
     private SolarTimeRepository solarTimeRepository;
@@ -134,20 +133,36 @@ public class CreateAlarmFragment extends Fragment{
         locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                Location locationItem = (Location) adapterView.getItemAtPosition(position);
+            public void onItemSelected(AdapterView<?> adapterView, View view, int locationPosition, long l) {
+                Location locationItem = (Location) adapterView.getItemAtPosition(locationPosition);
                 Calendar date = Calendar.getInstance();
 
                 for (int i = 0; i < 14; i++)
                 {
                     try {
-                        solarTimes.add(getSolarTime(locationItem, date));
+                        if(solarTimes.size() == 14)
+                        {
+                            solarTimes.set(i, getSolarTime(locationItem, date));
+                        }
+                        else
+                            solarTimes.add(getSolarTime(locationItem, date));
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(getContext(), "Solar Time exists!", Toast.LENGTH_LONG).show();
                     }
 
                     date.add(Calendar.DAY_OF_YEAR, 1);
+                }
+
+                try
+                {
+                    sunriseData.setText(solarTimes.get(0).GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
+                    solarNoonData.setText(solarTimes.get(0).GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
+                    sunsetData.setText(solarTimes.get(0).GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
             }
 
@@ -225,19 +240,13 @@ public class CreateAlarmFragment extends Fragment{
     @RequiresApi(api = Build.VERSION_CODES.O)
     public SolarTime getSolarTime(Location locationItem, Calendar date) throws Exception {
         boolean isLocationIdDatePairExists = getLocationIdDatePareExists(locationItem, date);
-        SolarTime solarTimeItem;
+        SolarTime solarTime;
 
         if(!isLocationIdDatePairExists) {
-            SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, date, true);
             try {
-                solarTimeItem = new TimeResponseTask().execute(sunriseSunsetRequest, locationItem).get();
-                timeZoneConverter = new TimeZoneConverter(solarTimeItem);
-                solarTimeItem = timeZoneConverter.convertSolarTime();
-                sunriseData.setText(solarTimeItem.Sunrise.toString());
-                solarNoonData.setText(solarTimeItem.SolarNoon.toString());
-                sunsetData.setText(solarTimeItem.Sunset.toString());
-                solarTimeRepository.Insert(solarTimeItem);
-
+                SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, date);
+                solarTime = new TimeResponseTask().execute(sunriseSunsetRequest, locationItem).get();
+                solarTimeRepository.Insert(solarTime);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw e;
@@ -245,12 +254,10 @@ public class CreateAlarmFragment extends Fragment{
         }
         else {
             LocalDate localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).toLocalDate();
-            solarTimeItem = new GetSolarTimeTask().execute(locationItem.Id, localDate).get();
-            sunriseData.setText(solarTimeItem.Sunrise.toString());
-            solarNoonData.setText(solarTimeItem.SolarNoon.toString());
-            sunsetData.setText(solarTimeItem.Sunset.toString());
+            solarTime = new GetSolarTimeTask().execute(locationItem.Id, localDate).get();
         }
-        return solarTimeItem;
+
+        return solarTime;
     }
 
     public boolean getLocationIdDatePareExists(Location locationItem, Calendar date) throws Exception {
@@ -310,22 +317,22 @@ public class CreateAlarmFragment extends Fragment{
         alarmScheduler.schedule(getContext());
     }
 
-    private class TimeResponseTask extends AsyncTask<Object, Void, SolarTime>  {
+    private class TimeResponseTask extends AsyncTask<Object, Void, SolarTime> {
         HttpRequests httpRequests;
         SunriseSunsetRequest sunriseSunsetRequest;
-        SunriseSunsetResponse response;
+        SunriseSunsetResponse sunriseSunsetResponse;
         Location location;
         SolarTime solarTime;
 
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         protected SolarTime doInBackground(Object... objects) {
-            sunriseSunsetRequest = (SunriseSunsetRequest) objects[0];
-            location = (Location) objects[1];
             try {
-                httpRequests = new HttpRequests(sunriseSunsetRequest);
-                response = httpRequests.GetSolarData(sunriseSunsetRequest);
-                solarTime = newSolarTime(response, location);
+                sunriseSunsetRequest  = (SunriseSunsetRequest) objects[0];
+                location              = (Location) objects[1];
+                httpRequests          = new HttpRequests(sunriseSunsetRequest);
+                sunriseSunsetResponse = httpRequests.GetSolarData(sunriseSunsetRequest);
+                solarTime             = new SolarTime(location, sunriseSunsetResponse);
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(getContext(), "Unable to get times!", Toast.LENGTH_LONG).show();
@@ -333,29 +340,6 @@ public class CreateAlarmFragment extends Fragment{
 
             return solarTime;
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public SolarTime newSolarTime(SunriseSunsetResponse sunriseSunsetResponse, Location locationItem)
-    {
-        SolarTime solarTime = new SolarTime();
-        String pattern = "h:mm a";
-        LocalDate date = LocalDateTime.ofInstant(sunriseSunsetResponse.request.Date.toInstant(), ZoneId.systemDefault()).toLocalDate();
-
-        solarTime.LocationId = locationItem.Id;
-        solarTime.Date = date;
-        solarTime.Sunrise = LocalTime.parse(sunriseSunsetResponse.getSunrise(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.Sunset = LocalTime.parse(sunriseSunsetResponse.getSunset(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.SolarNoon = LocalTime.parse(sunriseSunsetResponse.getSolarNoon(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.DayLength = LocalTime.parse(sunriseSunsetResponse.getDayLength());
-        solarTime.CivilTwilightBegin = LocalTime.parse(sunriseSunsetResponse.getCivilTwilightBegin(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.CivilTwilightEnd = LocalTime.parse(sunriseSunsetResponse.getCivilTwilightEnd(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.NauticalTwilightBegin = LocalTime.parse(sunriseSunsetResponse.getNauticalTwilightBegin(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.NauticalTwilightEnd = LocalTime.parse(sunriseSunsetResponse.getNauticalTwilightEnd(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.AstronomicalTwilightBegin = LocalTime.parse(sunriseSunsetResponse.getAstronomicalTwilightBegin(), DateTimeFormatter.ofPattern(pattern));
-        solarTime.AstronomicalTwilightEnd = LocalTime.parse(sunriseSunsetResponse.getAstronomicalTwilightEnd(), DateTimeFormatter.ofPattern(pattern));
-
-        return solarTime;
     }
 
     private class LocationIdDatePairExistsTask extends AsyncTask<Object, Void, Boolean>{

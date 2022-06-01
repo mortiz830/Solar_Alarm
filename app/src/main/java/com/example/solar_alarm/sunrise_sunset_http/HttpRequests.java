@@ -49,7 +49,7 @@ public class HttpRequests {
 
     public static String getParamsString(SunriseSunsetRequest sunriseSunsetRequest) throws UnsupportedEncodingException
     {
-        //https://api.sunrise-sunset.org/json?date=2021-5-10&lat=40.67441&lng=-73.43162&formatted=1
+        //https://api.sunrise-sunset.org/json?date=2021-5-10&lat=40.67441&lng=-73.43162&formatted=0
         return String.format("?date=%s-%s-%s&lat=%s&lng=%s&formatted=%s",
                              URLEncoder.encode(String.valueOf(sunriseSunsetRequest.Date.get(Calendar.YEAR)), "UTF-8"),
                              URLEncoder.encode(String.valueOf(sunriseSunsetRequest.Date.get(Calendar.MONTH) + 1), "UTF-8"),
