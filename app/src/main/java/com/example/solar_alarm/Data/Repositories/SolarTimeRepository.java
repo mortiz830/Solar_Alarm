@@ -15,8 +15,8 @@ import java.util.List;
 
 public class SolarTimeRepository
 {
-    private SolarTimeDao solarTimeDao;
-    private LiveData<List<SolarTime>> solarTimeLiveData;
+    private final SolarTimeDao solarTimeDao;
+    private final LiveData<List<SolarTime>> solarTimeLiveData;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public SolarTimeRepository(Application application)
