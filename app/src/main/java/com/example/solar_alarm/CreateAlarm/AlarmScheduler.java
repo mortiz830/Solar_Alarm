@@ -25,8 +25,6 @@ import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 
@@ -67,20 +65,20 @@ public class AlarmScheduler {
         PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, solarAlarm.Id, intent, 0);
 
         if(true) localZonedDateTime = ZonedDateTime.now().plusMinutes(mins); else // DEBUG_STATEMENT
+            localZonedDateTime = solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.values()[solarAlarm.TimeTypeId]);
 
         if(solarAlarm.OffsetTypeId == OffsetTypeEnum.Before.Id)
         {
             localZonedDateTime.minusHours(hours);
             localZonedDateTime.minusMinutes(mins);
         }
-
-        if(solarAlarm.OffsetTypeId == OffsetTypeEnum.After.Id)
+        else if (solarAlarm.OffsetTypeId == OffsetTypeEnum.After.Id)
         {
             localZonedDateTime.plusHours(hours);
             localZonedDateTime.plusMinutes(mins);
         }
 
-        localZonedDateTime = solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.values()[solarAlarm.TimeTypeId]);
+
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
