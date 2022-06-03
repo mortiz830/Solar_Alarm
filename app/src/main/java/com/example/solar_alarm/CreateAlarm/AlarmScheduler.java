@@ -65,7 +65,7 @@ public class AlarmScheduler {
         PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, solarAlarm.Id, intent, 0);
 
         if(true) localZonedDateTime = ZonedDateTime.now().plusMinutes(mins); else // DEBUG_STATEMENT
-            localZonedDateTime = solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.values()[solarAlarm.TimeTypeId]);
+            localZonedDateTime = solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.values()[solarAlarm.SolarTimeTypeId]);
 
         if(solarAlarm.OffsetTypeId == OffsetTypeEnum.Before.Id)
         {

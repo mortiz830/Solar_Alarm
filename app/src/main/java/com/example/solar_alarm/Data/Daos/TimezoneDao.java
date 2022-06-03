@@ -20,6 +20,9 @@ public interface TimezoneDao
     @Query("SELECT * FROM Timezone ORDER BY ZoneName")
     LiveData<List<Timezone>> getAll();
 
+    @Query("SELECT * FROM Timezone WHERE Id = :id")
+    Timezone GetById(int id);
+
     @Update
     void Update(Timezone timezone);
 

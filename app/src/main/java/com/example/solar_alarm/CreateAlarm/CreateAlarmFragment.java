@@ -294,7 +294,7 @@ public class CreateAlarmFragment extends Fragment{
         solarAlarmItem.Saturday = sat.isChecked();
         solarAlarmItem.Sunday = sun.isChecked();
         solarAlarmItem.OffsetTypeId = alarmTypeId;
-        solarAlarmItem.TimeTypeId = solarTimeTypeId;
+        solarAlarmItem.SolarTimeTypeId = solarTimeTypeId;
 
         try {
             isSolarAlarmNameLocationIdPairExists = getSolarAlarmNameLocationIdPairExists(solarAlarmItem);

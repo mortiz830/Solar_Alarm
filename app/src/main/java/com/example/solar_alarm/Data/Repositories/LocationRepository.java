@@ -54,6 +54,8 @@ public class LocationRepository
 
     public LiveData<List<Location>> getAll() { return locationsLiveData; }
 
+    public Location GetById(int id) { return locationDao.GetById(id); }
+
     public boolean isLocationNameExists(String name)
     {
         return locationDao.isLocationNameExists(name);
