@@ -51,7 +51,7 @@ public class LocationTests
         newLocation.Latitude = 33.00;
         newLocation.Longitude = 40.00;
         newLocation.Name = "TEST LOCATION";
-        newLocation.TimezoneId = "America/Chicago";
+        //newLocation.TimezoneId = "America/Chicago";
 
         locationDao.Insert(newLocation);
 

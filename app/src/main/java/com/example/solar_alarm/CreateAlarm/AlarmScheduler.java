@@ -20,11 +20,12 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver;
+import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
 
-import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 
 public class AlarmScheduler {
@@ -44,9 +45,10 @@ public class AlarmScheduler {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void schedule(Context context) {
+    public void schedule(Context context) throws Exception
+    {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        LocalTime localTime;
+        ZonedDateTime localZonedDateTime;
 
         Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
         intent.putExtra(RECURRING, solarAlarm.Recurring);
@@ -62,32 +64,26 @@ public class AlarmScheduler {
 
         PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, solarAlarm.Id, intent, 0);
 
-        if(true) localTime = LocalTime.now().plusMinutes(mins); else // DEBUG STATEMENT
+        if(true) localZonedDateTime = ZonedDateTime.now().plusMinutes(mins); else // DEBUG_STATEMENT
+            localZonedDateTime = solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.values()[solarAlarm.TimeTypeId]);
 
-        if(solarAlarm.TimeTypeId == SolarTimeTypeEnum.Sunrise.Id)
-            localTime = solarTime.Sunrise;
-        else if(solarAlarm.TimeTypeId == SolarTimeTypeEnum.SolarNoon.Id)
-            localTime = solarTime.SolarNoon;
-        else if(solarAlarm.TimeTypeId == SolarTimeTypeEnum.Sunset.Id)
-            localTime = solarTime.Sunset;
-
-        if(solarAlarm.OffsetTypeId == 1)
+        if(solarAlarm.OffsetTypeId == OffsetTypeEnum.Before.Id)
         {
-            localTime.minusHours(hours);
-            localTime.minusMinutes(mins);
+            localZonedDateTime.minusHours(hours);
+            localZonedDateTime.minusMinutes(mins);
+        }
+        else if (solarAlarm.OffsetTypeId == OffsetTypeEnum.After.Id)
+        {
+            localZonedDateTime.plusHours(hours);
+            localZonedDateTime.plusMinutes(mins);
         }
 
-        if(solarAlarm.OffsetTypeId == 3)
-        {
-            localTime.plusHours(hours);
-            localTime.plusMinutes(mins);
-        }
 
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, localTime.getHour());
-        calendar.set(Calendar.MINUTE, localTime.getMinute());
+        calendar.set(Calendar.HOUR_OF_DAY, localZonedDateTime.getHour());
+        calendar.set(Calendar.MINUTE, localZonedDateTime.getMinute());
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
@@ -99,7 +95,7 @@ public class AlarmScheduler {
         if (!solarAlarm.Recurring) {
             String toastText = null;
             try {
-                toastText = String.format("One Time Alarm %s scheduled for %s at %02d:%02d", solarAlarm.Name, DayUtil.toDay(calendar.get(Calendar.DAY_OF_WEEK)), localTime.getHour(), localTime.getMinute(), solarAlarm.Id);
+                toastText = String.format("One Time Alarm %s scheduled for %s at %02d:%02d", solarAlarm.Name, DayUtil.toDay(calendar.get(Calendar.DAY_OF_WEEK)), localZonedDateTime.getHour(), localZonedDateTime.getMinute(), solarAlarm.Id);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -111,7 +107,7 @@ public class AlarmScheduler {
                     alarmPendingIntent
             );
         } else {
-            String toastText = String.format("Recurring Alarm %s scheduled for %s at %02d:%02d", solarAlarm.Name, getRecurringDaysText(), localTime.getHour(), localTime.getMinute(), solarAlarm.Id);
+            String toastText = String.format("Recurring Alarm %s scheduled for %s at %02d:%02d", solarAlarm.Name, getRecurringDaysText(), localZonedDateTime.getHour(), localZonedDateTime.getMinute(), solarAlarm.Id);
             Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
 
             final long RUN_DAILY = 24 * 60 * 60 * 1000;

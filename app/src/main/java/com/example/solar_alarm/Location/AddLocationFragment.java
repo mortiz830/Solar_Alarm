@@ -67,6 +67,7 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
 
     LocationRepository locationRepository;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,6 +157,7 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         bufferedReader.close();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void saveLocation()
     {
         String locationName = locationNameText.getText().toString();
@@ -209,6 +211,7 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
 
     private class LocationNameExistsTask extends AsyncTask<String, Void, Boolean> {
         
+        @RequiresApi(api = Build.VERSION_CODES.O)
         protected Boolean doInBackground(String... strings ) {
             Boolean result = false;
             try{
@@ -221,6 +224,7 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
     }
 
     private class LocationPointExistsTask extends AsyncTask<Double, Void, Boolean> {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         protected Boolean doInBackground(Double... doubles) {
             try{
