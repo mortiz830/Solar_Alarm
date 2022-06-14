@@ -19,7 +19,6 @@ import com.example.solar_alarm.Data.SolarAlarmDatabase;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
-import com.example.solar_alarm.DisplayModels.DisplayModelRepository;
 
 import java.util.List;
 
@@ -59,7 +58,7 @@ public class AlarmListViewModel extends AndroidViewModel {
         alarmDisplayDataDao = db.alarmDisplayDataDao();
         alarmDisplayLiveData = alarmDisplayDataDao.loadAlarmData();
 
-         new DisplayModelRepository(application).GetSolarAlarmDisplayModels();
+        // new DisplayModelRepository(application).GetSolarAlarmDisplayModels();
     }
 
     public void update(Alarm alarm) {

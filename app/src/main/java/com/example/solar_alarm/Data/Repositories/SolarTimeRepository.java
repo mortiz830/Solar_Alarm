@@ -53,6 +53,11 @@ public class SolarTimeRepository
     {
         return solarTimeDao.getSolarTime(locationId, date);
     }
-    
+
+    public SolarTime GetById(int Id)
+    {
+        return solarTimeDao.getById(Id);
+    }
+
     public LiveData<List<SolarTime>> getAll() {return solarTimeLiveData;}
 }

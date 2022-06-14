@@ -9,6 +9,7 @@ import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
 import com.example.solar_alarm.Data.Enums.TimeUnitTypeEnum;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
+import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
@@ -21,11 +22,12 @@ import java.util.Map;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class SolarAlarmDisplayModel
 {
-    private Application          _Application;
-    private SolarAlarm           _SolarAlarm;
-    private SolarTime            _SolarTime;
-    private LocationDisplayModel _LocationDisplayModel;
-    private Timezone             _Timezone;
+    private Application             _Application;
+    private SolarAlarm              _SolarAlarm;
+    private SolarTime               _SolarTime;
+    private LocationDisplayModel    _LocationDisplayModel;
+    private SolarTimeDisplayModel   _SolarTimeDisplayModel;
+    private Timezone                _Timezone;
 
     private HashMap<DayOfWeek, Boolean> _RecurrenceDays;
 
@@ -34,8 +36,6 @@ public class SolarAlarmDisplayModel
         _Application = application;
         _SolarAlarm  = solarAlarm;
     }
-
-    public String GetName() { return _SolarAlarm.Name; }
 
     public LocationDisplayModel GetLocation()
     {
@@ -48,6 +48,20 @@ public class SolarAlarmDisplayModel
 
         return _LocationDisplayModel;
     }
+
+    public SolarTimeDisplayModel GetSolarTime()
+    {
+        if (_SolarTimeDisplayModel == null)
+        {
+            SolarTime solarTime = new SolarTimeRepository(_Application).GetById(_SolarAlarm.LocationId);
+
+            _SolarTimeDisplayModel = new SolarTimeDisplayModel(_Application, solarTime);
+        }
+
+        return _SolarTimeDisplayModel;
+    }
+
+    public String GetName() { return _SolarAlarm.Name; }
 
     public Map<DayOfWeek, Boolean> GetRecurrenceDays()
     {

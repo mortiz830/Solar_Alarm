@@ -285,6 +285,7 @@ public class CreateAlarmFragment extends Fragment{
 
         solarAlarmItem.Name = title.getText().toString();
         solarAlarmItem.LocationId = solarTimeItem.LocationId;
+        solarAlarmItem.SolarTimeId = solarTimeItem.Id;
         solarAlarmItem.Recurring = recurring.isChecked();
         solarAlarmItem.Monday = mon.isChecked();
         solarAlarmItem.Tuesday = tue.isChecked();

@@ -1,10 +1,14 @@
 package com.example.solar_alarm.Data.Tables;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 @Entity
 (
     tableName = "SolarAlarm",
@@ -17,6 +21,9 @@ public class SolarAlarm extends TableBase
 
     @ForeignKey(entity = Location.class, parentColumns = "Id", childColumns = "LocationId")
     public int LocationId;
+
+    @ForeignKey(entity = SolarTime.class, parentColumns = "Id", childColumns = "SolarTimeId")
+    public int SolarTimeId;
 
     // Recurrence Flags
     public boolean Recurring;
