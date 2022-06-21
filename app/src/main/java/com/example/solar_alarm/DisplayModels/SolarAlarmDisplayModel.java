@@ -16,6 +16,7 @@ import com.example.solar_alarm.Data.Tables.SolarTime;
 import com.example.solar_alarm.Data.Tables.Timezone;
 
 import java.time.DayOfWeek;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,6 @@ public class SolarAlarmDisplayModel
 {
     private Application             _Application;
     private SolarAlarm              _SolarAlarm;
-    private SolarTime               _SolarTime;
     private LocationDisplayModel    _LocationDisplayModel;
     private SolarTimeDisplayModel   _SolarTimeDisplayModel;
     private Timezone                _Timezone;
@@ -88,4 +88,33 @@ public class SolarAlarmDisplayModel
     public SolarTimeTypeEnum GetSolarTimeType() { return SolarTimeTypeEnum.values()[_SolarAlarm.SolarTimeTypeId]; }
 
     public TimeUnitTypeEnum GetTimeUnitType() { return TimeUnitTypeEnum.values()[_SolarAlarm.TimeUnitTypeId]; }
+
+    public ZonedDateTime GetSetAlarmTime()
+    {
+        try {
+            switch (GetSolarTimeType()) {
+                case Sunrise:
+                    return _SolarTimeDisplayModel.getSunrise();
+                case Sunset:
+                    return _SolarTimeDisplayModel.getSunset();
+                case SolarNoon:
+                    return _SolarTimeDisplayModel.getSolarNoon();
+                case CivilTwilightBegin:
+                    return _SolarTimeDisplayModel.getCivilTwilightBegin();
+                case CivilTwilightEnd:
+                    return _SolarTimeDisplayModel.getCivilTwilightEnd();
+                case NauticalTwilightBegin:
+                    return _SolarTimeDisplayModel.getNauticalTwilightBegin();
+                case NauticalTwilightEnd:
+                    return _SolarTimeDisplayModel.getNauticalTwilightEnd();
+                case AstronomicalTwilightBegin:
+                    return _SolarTimeDisplayModel.getAstronomicalTwilightBegin();
+                case AstronomicalTwilightEnd:
+                    return _SolarTimeDisplayModel.getAstronomicalTwilightEnd();
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
