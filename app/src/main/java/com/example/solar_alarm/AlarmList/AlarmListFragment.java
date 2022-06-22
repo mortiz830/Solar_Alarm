@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.solar_alarm.CreateAlarm.UpdateAlarmFragment;
 import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.Data.AlarmDisplayData;
+import com.example.solar_alarm.DisplayModels.SolarAlarmDisplayModel;
 import com.example.solar_alarm.R;
 import com.example.solar_alarm.Service.GpsTracker;
 
@@ -41,19 +42,27 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
     TextView longitude;
     ZoneId zoneId;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         alarmRecyclerViewAdapter = new AlarmRecycleViewAdapter(this);
         alarmsListViewModel = ViewModelProviders.of(this).get(AlarmListViewModel.class);
-        alarmsListViewModel.getAlarmDisplayLiveData().observe(this, new Observer<List<AlarmDisplayData>>() {
+        alarmsListViewModel.getAlarmDisplayLiveData().observe(this, new Observer<List<SolarAlarmDisplayModel>>()
+        {
             @Override
-            public void onChanged(List<AlarmDisplayData> alarms) {
-                if (alarms != null) {
-                    alarmRecyclerViewAdapter.setAlarms(alarms);
-                }
+            public void onChanged(List<SolarAlarmDisplayModel> alarmListViewModels)
+            {
+
             }
+
+//            @Override
+//            public void onChanged(List<AlarmDisplayData> alarms) {
+//                if (alarms != null) {
+//                    alarmRecyclerViewAdapter.setAlarms(alarms);
+//                }
+//            }
         });
     }
 

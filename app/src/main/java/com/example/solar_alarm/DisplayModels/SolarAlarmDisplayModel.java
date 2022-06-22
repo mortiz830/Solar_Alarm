@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
+import androidx.lifecycle.AndroidViewModel;
 
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
@@ -21,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class SolarAlarmDisplayModel
+public class SolarAlarmDisplayModel extends AndroidViewModel
 {
     private Application             _Application;
     private SolarAlarm              _SolarAlarm;
@@ -33,6 +34,7 @@ public class SolarAlarmDisplayModel
 
     public SolarAlarmDisplayModel(Application application, SolarAlarm solarAlarm)
     {
+        super(application);
         _Application = application;
         _SolarAlarm  = solarAlarm;
     }
