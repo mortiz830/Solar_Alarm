@@ -1,4 +1,5 @@
 package com.example.solar_alarm.AlarmList;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -8,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.solar_alarm.Data.AlarmDisplayData;
+import com.example.solar_alarm.DisplayModels.SolarAlarmDisplayModel;
 import com.example.solar_alarm.R;
 
 public class AlarmViewHolder extends RecyclerView.ViewHolder {
@@ -35,7 +36,7 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder {
         this.listener = listener;
     }
 
-    public void bind(AlarmDisplayData alarm) {
+    public void bind(SolarAlarmDisplayModel alarm) {
 //        String alarmText = String.format("%02d:%02d", alarm.getHour(), alarm.getMinute());
 //
 //        alarmTime.setText(alarmText);
