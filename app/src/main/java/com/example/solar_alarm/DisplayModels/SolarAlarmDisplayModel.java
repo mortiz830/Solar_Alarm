@@ -82,12 +82,6 @@ public class SolarAlarmDisplayModel extends AndroidViewModel
 
     public boolean IsRecurring() { return _SolarAlarm.Recurring; }
 
-    //public OffsetTypeEnum GetOffsetType() { return OffsetTypeEnum.values()[_SolarAlarm.OffsetTypeId]; }
-
-    //public SolarTimeTypeEnum GetSolarTimeType() { return SolarTimeTypeEnum.values()[_SolarAlarm.SolarTimeTypeId]; }
-
-    //public TimeUnitTypeEnum GetTimeUnitType() { return TimeUnitTypeEnum.values()[_SolarAlarm.TimeUnitTypeId]; }
-
     public ZonedDateTime GetSetAlarmTime()
     {
         try {

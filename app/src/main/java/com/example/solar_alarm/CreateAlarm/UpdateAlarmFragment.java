@@ -17,15 +17,12 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.solar_alarm.AlarmList.AlarmListFragment;
 import com.example.solar_alarm.AlarmList.AlarmListViewModel;
 import com.example.solar_alarm.DisplayModels.SolarAlarmDisplayModel;
 import com.example.solar_alarm.R;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,11 +53,11 @@ public class UpdateAlarmFragment extends Fragment {
         Bundle bundle = getArguments();
         location = bundle.getInt("position");
         updateAlarmViewModel = new ViewModelProvider(requireParentFragment()).get(AlarmListViewModel.class);;
-        updateAlarmViewModel.getAlarmDisplayLiveData().observe(this, new Observer<List<SolarAlarmDisplayModel>>() {
-            @Override
-            public void onChanged(List<SolarAlarmDisplayModel> alarms) {
-                if(alarms != null)
-                {
+//        updateAlarmViewModel.getAlarmDisplayLiveData().observe(this, new Observer<List<AlarmDisplayData>>() {
+//            @Override
+//            public void onChanged(List<SolarAlarmDisplayModel> alarms) {
+//                if(alarms != null)
+//                {
 //                   updatedAlarm = new SolarAlarmDisplayModel(alarms.get(location));
 //                   timePicker.setHour(updatedAlarm.getHour());
 //                   timePicker.setMinute(updatedAlarm.getMinute());
@@ -73,9 +70,9 @@ public class UpdateAlarmFragment extends Fragment {
 //                   fri.setChecked(updatedAlarm.isFriday());
 //                   sat.setChecked(updatedAlarm.isSaturday());
 //                   sun.setChecked(updatedAlarm.isSunday());
-                }
-            }
-        });
+//                }
+//            }
+//        });
     }
 
     @Nullable

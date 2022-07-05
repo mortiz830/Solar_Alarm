@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,7 +25,6 @@ import com.example.solar_alarm.R;
 import com.example.solar_alarm.Service.GpsTracker;
 
 import java.time.ZoneId;
-import java.util.List;
 import java.util.TimeZone;
 
 public class AlarmListFragment extends Fragment implements OnToggleAlarmListener {
@@ -48,16 +46,16 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
 
         alarmRecyclerViewAdapter = new AlarmRecycleViewAdapter(this);
         alarmsListViewModel = ViewModelProviders.of(this).get(AlarmListViewModel.class);
-        alarmsListViewModel.getAlarmDisplayLiveData().observe(this, new Observer<List<SolarAlarmDisplayModel>>()
-        {
-            @Override
-            public void onChanged(List<SolarAlarmDisplayModel> alarmListViewModels)
-            {
-                if (alarmListViewModels != null) {
-                    alarmRecyclerViewAdapter.setAlarms(alarmListViewModels);
-                }
-            }
-        });
+//        alarmsListViewModel.getAlarmDisplayLiveData().observe(this, new Observer<List<SolarAlarmDisplayModel>>()
+//        {
+//            @Override
+//            public void onChanged(List<SolarAlarmDisplayModel> alarmListViewModels)
+//            {
+//                if (alarmListViewModels != null) {
+//                    alarmRecyclerViewAdapter.setAlarms(alarmListViewModels);
+//                }
+//            }
+//        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
