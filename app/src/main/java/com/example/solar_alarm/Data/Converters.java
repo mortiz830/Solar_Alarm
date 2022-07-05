@@ -7,7 +7,6 @@ import androidx.room.TypeConverter;
 
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
-import com.example.solar_alarm.Data.Enums.TimeUnitTypeEnum;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -68,10 +67,4 @@ public class Converters
 
     @TypeConverter
     public static SolarTimeTypeEnum toSolarTimeTypeEnum(int id) { return SolarTimeTypeEnum.values()[id]; }
-
-    @TypeConverter
-    public static int toTimeUnitTypeId(TimeUnitTypeEnum enumType) { return enumType.Id; }
-
-    @TypeConverter
-    public static TimeUnitTypeEnum toTimeUnitTypeEnum(int id) { return TimeUnitTypeEnum.values()[id]; }
 }

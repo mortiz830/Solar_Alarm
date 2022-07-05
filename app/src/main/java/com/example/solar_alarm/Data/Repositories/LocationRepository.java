@@ -11,12 +11,10 @@ import com.example.solar_alarm.Data.Daos.LocationDao;
 import com.example.solar_alarm.Data.Daos.StaticDataDao;
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
-import com.example.solar_alarm.Data.Enums.TimeUnitTypeEnum;
 import com.example.solar_alarm.Data.SolarAlarmDatabase;
 import com.example.solar_alarm.Data.Tables.OffsetType;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarTimeType;
-import com.example.solar_alarm.Data.Tables.TimeUnitType;
 
 import java.util.List;
 
@@ -87,20 +85,6 @@ public class LocationRepository
         {
             try
             {
-                if (!staticDataDao.isTimeUnitTypesExists())
-                {
-                    for (TimeUnitTypeEnum enumType : TimeUnitTypeEnum.values())
-                    {
-                        TimeUnitType x = new TimeUnitType();
-                        x.Id   = enumType.Id;
-                        x.Name = enumType.Name;
-
-                        staticDataDao.Insert(x);
-                    }
-                }
-
-                //--------------------------
-
                 if (!staticDataDao.isOffsetTypesExists())
                 {
                     for (OffsetTypeEnum enumType : OffsetTypeEnum.values())

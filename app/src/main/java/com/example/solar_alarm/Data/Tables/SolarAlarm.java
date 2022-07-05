@@ -10,7 +10,6 @@ import androidx.room.Index;
 
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
-import com.example.solar_alarm.Data.Enums.TimeUnitTypeEnum;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Entity
@@ -44,7 +43,4 @@ public class SolarAlarm extends TableBase
 
     @ForeignKey(entity = SolarTimeType.class, parentColumns = "Id", childColumns = "SolarTimeTypeId")
     public SolarTimeTypeEnum SolarTimeTypeId;
-
-    @ForeignKey(entity = TimeUnitType.class, parentColumns = "Id", childColumns = "TimeUnitTypeId")
-    public TimeUnitTypeEnum TimeUnitTypeId;
 }

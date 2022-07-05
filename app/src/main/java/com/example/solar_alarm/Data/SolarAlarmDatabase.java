@@ -21,7 +21,6 @@ import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
 import com.example.solar_alarm.Data.Tables.SolarTimeType;
-import com.example.solar_alarm.Data.Tables.TimeUnitType;
 import com.example.solar_alarm.Data.Tables.Timezone;
 
 import java.util.concurrent.ExecutorService;
@@ -37,7 +36,6 @@ import java.util.concurrent.Executors;
         SolarAlarm.class,
         SolarTime.class,
         SolarTimeType.class,
-        TimeUnitType.class,
         Timezone.class
     },
     version = 1,
