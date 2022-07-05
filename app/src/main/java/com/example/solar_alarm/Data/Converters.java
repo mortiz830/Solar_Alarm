@@ -5,6 +5,10 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 import androidx.room.TypeConverter;
 
+import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
+import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
+import com.example.solar_alarm.Data.Enums.TimeUnitTypeEnum;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -52,4 +56,22 @@ public class Converters
     {
         return localTime == null ? null : localTime.format(timeFormat);
     }
+
+    @TypeConverter
+    public static int toOffsetTypeId(OffsetTypeEnum enumType) { return enumType.Id; }
+
+    @TypeConverter
+    public static OffsetTypeEnum toOffsetTypeEnum(int id) { return OffsetTypeEnum.values()[id]; }
+
+    @TypeConverter
+    public static int toSolarTimeTypeId(SolarTimeTypeEnum enumType) { return enumType.Id; }
+
+    @TypeConverter
+    public static SolarTimeTypeEnum toSolarTimeTypeEnum(int id) { return SolarTimeTypeEnum.values()[id]; }
+
+    @TypeConverter
+    public static int toTimeUnitTypeId(TimeUnitTypeEnum enumType) { return enumType.Id; }
+
+    @TypeConverter
+    public static TimeUnitTypeEnum toTimeUnitTypeEnum(int id) { return TimeUnitTypeEnum.values()[id]; }
 }

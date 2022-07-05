@@ -212,7 +212,7 @@ public class CreateAlarmFragment extends Fragment{
                 for(int i = 0; i < solarTimes.size(); i++)
                 {
                     try {
-                        scheduleAlarm(solarTimes.get(i), alarmTimeItem.Id, solarTimeTypeItem.Id);
+                        scheduleAlarm(solarTimes.get(i), alarmTimeItem, solarTimeTypeItem);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -279,7 +279,7 @@ public class CreateAlarmFragment extends Fragment{
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void scheduleAlarm(SolarTime solarTimeItem, int alarmTypeId, int solarTimeTypeId) throws Exception {
+    private void scheduleAlarm(SolarTime solarTimeItem, OffsetTypeEnum alarmTypeId, SolarTimeTypeEnum solarTimeTypeId) throws Exception {
         SolarAlarm solarAlarmItem = new SolarAlarm();
         boolean isSolarAlarmNameLocationIdPairExists;
 

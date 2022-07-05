@@ -6,9 +6,6 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 
-import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
-import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
-import com.example.solar_alarm.Data.Enums.TimeUnitTypeEnum;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
 import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
 import com.example.solar_alarm.Data.Tables.Location;
@@ -85,16 +82,17 @@ public class SolarAlarmDisplayModel extends AndroidViewModel
 
     public boolean IsRecurring() { return _SolarAlarm.Recurring; }
 
-    public OffsetTypeEnum GetOffsetType() { return OffsetTypeEnum.values()[_SolarAlarm.OffsetTypeId]; }
+    //public OffsetTypeEnum GetOffsetType() { return OffsetTypeEnum.values()[_SolarAlarm.OffsetTypeId]; }
 
-    public SolarTimeTypeEnum GetSolarTimeType() { return SolarTimeTypeEnum.values()[_SolarAlarm.SolarTimeTypeId]; }
+    //public SolarTimeTypeEnum GetSolarTimeType() { return SolarTimeTypeEnum.values()[_SolarAlarm.SolarTimeTypeId]; }
 
-    public TimeUnitTypeEnum GetTimeUnitType() { return TimeUnitTypeEnum.values()[_SolarAlarm.TimeUnitTypeId]; }
+    //public TimeUnitTypeEnum GetTimeUnitType() { return TimeUnitTypeEnum.values()[_SolarAlarm.TimeUnitTypeId]; }
 
     public ZonedDateTime GetSetAlarmTime()
     {
         try {
-            switch (GetSolarTimeType()) {
+            switch (_SolarAlarm.SolarTimeTypeId)
+            {
                 case Sunrise:
                     return _SolarTimeDisplayModel.getSunrise();
                 case Sunset:
