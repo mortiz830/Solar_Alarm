@@ -1,6 +1,5 @@
 package com.example.solar_alarm.Data.Repositories;
 
-import android.app.Application;
 import android.os.AsyncTask;
 import android.os.Build;
 
@@ -12,24 +11,23 @@ import com.example.solar_alarm.Data.Daos.StaticDataDao;
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
 import com.example.solar_alarm.Data.SolarAlarmDatabase;
-import com.example.solar_alarm.Data.Tables.OffsetType;
 import com.example.solar_alarm.Data.Tables.Location;
+import com.example.solar_alarm.Data.Tables.OffsetType;
 import com.example.solar_alarm.Data.Tables.SolarTimeType;
 
 import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class LocationRepository
+public class LocationRepository extends RepositoryBase
 {
     private final LocationDao locationDao;
     private final StaticDataDao staticDataDao;
     private final LiveData<List<Location>> locationsLiveData;
 
-    public LocationRepository(Application application)
+    public LocationRepository()
     {
-        SolarAlarmDatabase db = SolarAlarmDatabase.getDatabase(application);
-        locationDao = db.locationDao();
-        staticDataDao = db.staticDataDao();
+        locationDao = _SolarAlarmDatabase.locationDao();
+        staticDataDao = _SolarAlarmDatabase.staticDataDao();
         locationsLiveData = locationDao.getAll();
 
         AddStaticData();

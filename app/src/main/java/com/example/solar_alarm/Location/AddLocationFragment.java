@@ -72,7 +72,7 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        locationRepository = new LocationRepository(getActivity().getApplication());
+        locationRepository = new LocationRepository();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

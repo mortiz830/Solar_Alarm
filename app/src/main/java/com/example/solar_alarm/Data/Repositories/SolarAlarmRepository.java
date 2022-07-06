@@ -1,6 +1,5 @@
 package com.example.solar_alarm.Data.Repositories;
 
-import android.app.Application;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -12,16 +11,16 @@ import com.example.solar_alarm.Data.Tables.SolarAlarm;
 
 import java.util.List;
 
-public class SolarAlarmRepository
+@RequiresApi(api = Build.VERSION_CODES.O)
+public class SolarAlarmRepository extends RepositoryBase
 {
     private final SolarAlarmDao solarAlarmDao;
     private final LiveData<List<SolarAlarm>> solarAlarmLiveData;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public SolarAlarmRepository(Application application)
+    public SolarAlarmRepository()
     {
-        SolarAlarmDatabase db = SolarAlarmDatabase.getDatabase(application);
-        solarAlarmDao = db.solarAlarmDao();
+        solarAlarmDao = _SolarAlarmDatabase.solarAlarmDao();
         solarAlarmLiveData = solarAlarmDao.getAll();
     }
 
@@ -38,7 +37,7 @@ public class SolarAlarmRepository
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void delete(SolarAlarm solarAlarm)
+    public void Delete(SolarAlarm solarAlarm)
     {
         SolarAlarmDatabase.databaseWriteExecutor.execute(() -> solarAlarmDao.delete(solarAlarm));
     }

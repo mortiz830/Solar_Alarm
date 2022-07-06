@@ -36,7 +36,7 @@ public class DisplayModelRepository
             Lock lock = new ReentrantLock();
             lock.lock();
 
-            LiveData<List<SolarAlarm>> solarAlarms = new SolarAlarmRepository(_Application).getAll();
+            LiveData<List<SolarAlarm>> solarAlarms = new SolarAlarmRepository().getAll();
 
             _SolarAlarmDisplayModels = new ArrayList<>();
 

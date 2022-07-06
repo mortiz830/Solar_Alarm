@@ -40,7 +40,7 @@ public class SolarAlarmDisplayModel extends AndroidViewModel
     {
         if (_LocationDisplayModel == null)
         {
-            Location location = new LocationRepository(_Application).GetById(_SolarAlarm.LocationId);
+            Location location = new LocationRepository().GetById(_SolarAlarm.LocationId);
 
             _LocationDisplayModel = new LocationDisplayModel(_Application, location) ;
         }
@@ -52,7 +52,7 @@ public class SolarAlarmDisplayModel extends AndroidViewModel
     {
         if (_SolarTimeDisplayModel == null)
         {
-            SolarTime solarTime = new SolarTimeRepository(_Application).GetById(_SolarAlarm.LocationId);
+            SolarTime solarTime = new SolarTimeRepository().GetById(_SolarAlarm.LocationId);
 
             _SolarTimeDisplayModel = new SolarTimeDisplayModel(_Application, solarTime);
         }

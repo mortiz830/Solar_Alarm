@@ -23,13 +23,13 @@ public class SolarTimeDisplayModel {
     }
 
 
-    public ZonedDateTime getSunrise() throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise);}
-    public ZonedDateTime getSunset() throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset);}
-    public ZonedDateTime getSolarNoon() throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon);}
-    public ZonedDateTime getCivilTwilightBegin() throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.CivilTwilightBegin);}
-    public ZonedDateTime getCivilTwilightEnd() throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.CivilTwilightEnd);}
-    public ZonedDateTime getNauticalTwilightBegin() throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.NauticalTwilightBegin);}
-    public ZonedDateTime getNauticalTwilightEnd() throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.NauticalTwilightEnd);}
+    public ZonedDateTime getSunrise()                   throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise);}
+    public ZonedDateTime getSunset()                    throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset);}
+    public ZonedDateTime getSolarNoon()                 throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon);}
+    public ZonedDateTime getCivilTwilightBegin()        throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.CivilTwilightBegin);}
+    public ZonedDateTime getCivilTwilightEnd()          throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.CivilTwilightEnd);}
+    public ZonedDateTime getNauticalTwilightBegin()     throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.NauticalTwilightBegin);}
+    public ZonedDateTime getNauticalTwilightEnd()       throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.NauticalTwilightEnd);}
     public ZonedDateTime getAstronomicalTwilightBegin() throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.AstronomicalTwilightBegin);}
-    public ZonedDateTime getAstronomicalTwilightEnd() throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.AstronomicalTwilightEnd);}
+    public ZonedDateTime getAstronomicalTwilightEnd()   throws Exception {return _SolarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.AstronomicalTwilightEnd);}
 }

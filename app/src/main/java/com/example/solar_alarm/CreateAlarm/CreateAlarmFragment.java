@@ -98,10 +98,10 @@ public class CreateAlarmFragment extends Fragment{
         super.onCreate(savedInstanceState);
 
         Locations = new ArrayList<>();
-        solarTimeRepository = new SolarTimeRepository(getActivity().getApplication());
-        solarAlarmRepository = new SolarAlarmRepository(getActivity().getApplication());
+        solarTimeRepository = new SolarTimeRepository();
+        solarAlarmRepository = new SolarAlarmRepository();
 
-        LocationRepository locationRepository = new LocationRepository(getActivity().getApplication());
+        LocationRepository locationRepository = new LocationRepository();
         locationRepository.getAll().observe(this, new Observer<List<Location>>() {
             @Override
             public void onChanged(List<Location> locations) {

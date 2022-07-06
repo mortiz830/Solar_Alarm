@@ -13,15 +13,14 @@ import com.example.solar_alarm.Data.Tables.Timezone;
 import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class TimezoneRepository
+public class TimezoneRepository extends RepositoryBase
 {
     private TimezoneDao timezoneDao;
     private LiveData<List<Timezone>> timezonesLiveData;
 
     public TimezoneRepository(Application application)
     {
-        SolarAlarmDatabase db = SolarAlarmDatabase.getDatabase(application);
-        timezoneDao = db.timezoneDao();
+        timezoneDao       = _SolarAlarmDatabase.timezoneDao();
         timezonesLiveData = timezoneDao.getAll();
     }
 

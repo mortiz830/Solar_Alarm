@@ -8,10 +8,8 @@ import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.Data.AlarmDisplayData;
 import com.example.solar_alarm.Data.AlarmDisplayDataDao;
-import com.example.solar_alarm.Data.AlarmRepository;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
 import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository;
 import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
@@ -23,10 +21,8 @@ import com.example.solar_alarm.Data.Tables.SolarTime;
 import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class AlarmListViewModel extends AndroidViewModel {
-    private AlarmRepository alarmRepository;
-    private LiveData<List<Alarm>> alarmsLiveData;
-
+public class AlarmListViewModel extends AndroidViewModel
+{
     private SolarTimeRepository solarTimeRepository;
     private SolarAlarmRepository solarAlarmRepository;
     private LocationRepository locationRepository;
@@ -42,29 +38,30 @@ public class AlarmListViewModel extends AndroidViewModel {
     public AlarmListViewModel(@NonNull Application application)
     {
         super(application);
+
+        // to be deleted
         SolarAlarmDatabase db = SolarAlarmDatabase.getDatabase(application);
-
-        alarmsLiveData = new AlarmRepository(application).getAlarmsLiveData();
-
-        solarAlarmLiveData = new SolarAlarmRepository(application).getAll();
-
-        solarTimeLiveData = new SolarTimeRepository(application).getAll();
-
-        locationLiveData = new LocationRepository(application).getAll();
-
         alarmDisplayLiveData = db.alarmDisplayDataDao().loadAlarmData();
+
+        solarAlarmRepository = new SolarAlarmRepository();
+
+        solarAlarmLiveData = solarAlarmRepository.getAll();
+
+        solarTimeLiveData = new SolarTimeRepository().getAll();
+
+        locationLiveData = new LocationRepository().getAll();
     }
 
-    public void update(Alarm alarm) {
-        alarmRepository.update(alarm);
+    public void update(SolarAlarm alarm) {
+        solarAlarmRepository.Update(alarm);
     }
 
-    public void delete(Alarm alarm) {
-        alarmRepository.delete(alarm);
+    public void delete(SolarAlarm alarm) {
+        solarAlarmRepository.Delete(alarm);
     }
 
-    public LiveData<List<Alarm>> getAlarmsLiveData() {
-        return alarmsLiveData;
+    public LiveData<List<SolarAlarm>> getAlarmsLiveData() {
+        return solarAlarmLiveData;
     }
 
     public LiveData<List<AlarmDisplayData>> getAlarmDisplayLiveData() { return alarmDisplayLiveData; }

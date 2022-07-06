@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,11 +21,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.solar_alarm.CreateAlarm.UpdateAlarmFragment;
 import com.example.solar_alarm.Data.Alarm;
-import com.example.solar_alarm.DisplayModels.SolarAlarmDisplayModel;
+import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.R;
 import com.example.solar_alarm.Service.GpsTracker;
 
 import java.time.ZoneId;
+import java.util.List;
 import java.util.TimeZone;
 
 public class AlarmListFragment extends Fragment implements OnToggleAlarmListener {
@@ -46,16 +48,18 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
 
         alarmRecyclerViewAdapter = new AlarmRecycleViewAdapter(this);
         alarmsListViewModel = ViewModelProviders.of(this).get(AlarmListViewModel.class);
-//        alarmsListViewModel.getAlarmDisplayLiveData().observe(this, new Observer<List<SolarAlarmDisplayModel>>()
-//        {
-//            @Override
-//            public void onChanged(List<SolarAlarmDisplayModel> alarmListViewModels)
-//            {
-//                if (alarmListViewModels != null) {
-//                    alarmRecyclerViewAdapter.setAlarms(alarmListViewModels);
-//                }
-//            }
-//        });
+
+        alarmsListViewModel.getSolarAlarmLiveData().observe(this, new Observer<List<SolarAlarm>>()
+        {
+            @Override
+            public void onChanged(List<SolarAlarm> alarmListViewModels)
+            {
+                if (alarmListViewModels != null)
+                {
+                    alarmRecyclerViewAdapter.setAlarms(alarmListViewModels);
+                }
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -123,7 +127,7 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
                 .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        SolarAlarmDisplayModel alarm = alarmRecyclerViewAdapter.getAlarm(position);
+                        SolarAlarm alarm = alarmRecyclerViewAdapter.getAlarm(position);
                         Bundle bundle = new Bundle();
                         bundle.putInt("position", position);
                         UpdateAlarmFragment updateAlarmFragment = new UpdateAlarmFragment();
@@ -137,7 +141,7 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
                 .setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
-                        SolarAlarmDisplayModel alarm = alarmRecyclerViewAdapter.getAlarm(position);
+                        SolarAlarm alarm = alarmRecyclerViewAdapter.getAlarm(position);
                         // 2 - Show result in a Toast
                         //Toast.makeText(getContext(), "You long clicked on user : "+alarm.getTitle(), Toast.LENGTH_SHORT).show();
                         //alarmsListViewModel.delete(alarmRecyclerViewAdapter.removeItem(position));

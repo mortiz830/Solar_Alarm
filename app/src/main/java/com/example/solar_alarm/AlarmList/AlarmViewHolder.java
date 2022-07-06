@@ -1,5 +1,6 @@
 package com.example.solar_alarm.AlarmList;
 
+import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -7,12 +8,16 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.solar_alarm.DisplayModels.SolarAlarmDisplayModel;
+import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
+import com.example.solar_alarm.Data.Tables.SolarAlarm;
+import com.example.solar_alarm.Data.Tables.SolarTime;
 import com.example.solar_alarm.R;
 
-public class AlarmViewHolder extends RecyclerView.ViewHolder {
+public class AlarmViewHolder extends RecyclerView.ViewHolder
+{
     private TextView alarmTime;
     private ImageView alarmRecurring;
     private TextView alarmRecurringDays;
@@ -23,7 +28,8 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder {
 
     private OnToggleAlarmListener listener;
 
-    public AlarmViewHolder(@NonNull View itemView, OnToggleAlarmListener listener) {
+    public AlarmViewHolder(@NonNull View itemView, OnToggleAlarmListener listener)
+    {
         super(itemView);
 
         alarmTime = itemView.findViewById(R.id.item_alarm_time);
@@ -36,8 +42,11 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder {
         this.listener = listener;
     }
 
-    public void bind(SolarAlarmDisplayModel alarm) {
-//        String alarmText = String.format("%02d:%02d", alarm.getHour(), alarm.getMinute());
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void bind(SolarAlarm solarAlarm)   // Sets up list of alarms for display
+    {
+        SolarTime solarTime = new SolarTimeRepository().GetById(solarAlarm.SolarTimeId);
+        // String alarmText = String.format("%02d:%02d", solarAlarm.getHour(), solarAlarm.getMinute());
 //
 //        alarmTime.setText(alarmText);
 //        alarmStarted.setChecked(alarm.isStarted());
