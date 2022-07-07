@@ -284,6 +284,7 @@ public class CreateAlarmFragment extends Fragment{
         boolean isSolarAlarmNameLocationIdPairExists;
 
         solarAlarmItem.Name = title.getText().toString();
+        solarAlarmItem.Active = true;
         solarAlarmItem.LocationId = solarTimeItem.LocationId;
         solarAlarmItem.SolarTimeId = solarTimeItem.Id;
         solarAlarmItem.Recurring = recurring.isChecked();

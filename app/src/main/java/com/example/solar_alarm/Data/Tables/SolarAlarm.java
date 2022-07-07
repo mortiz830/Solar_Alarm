@@ -22,6 +22,8 @@ public class SolarAlarm extends TableBase
     @NonNull
     public String Name;
 
+    public boolean Active;
+
     @ForeignKey(entity = Location.class, parentColumns = "Id", childColumns = "LocationId")
     public int LocationId;
 
