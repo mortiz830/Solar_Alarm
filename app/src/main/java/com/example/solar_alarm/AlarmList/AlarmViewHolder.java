@@ -17,6 +17,7 @@ import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
 import com.example.solar_alarm.R;
 
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -79,6 +80,7 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder
         SolarTime solarTime = new GetSolarTime().execute(solarAlarm.SolarTimeId).get();
 
         ZonedDateTime zonedDateTime = solarTime.GetLocalZonedDateTime(solarAlarm.SolarTimeTypeId);
+        LocalTime localTime = zonedDateTime.toLocalTime();
 
         String alarmText = String.format("%s", zonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)));
 
@@ -88,7 +90,7 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder
         if (solarAlarm.Recurring)
         {
             alarmRecurring.setImageResource(R.drawable.ic_repeat_black_24dp);
-          //alarmRecurringDays.setText(solarAlarm.getRecurringDaysText());
+            alarmRecurringDays.setText(solarAlarm.getRecurringDaysText());
         }
         else
         {

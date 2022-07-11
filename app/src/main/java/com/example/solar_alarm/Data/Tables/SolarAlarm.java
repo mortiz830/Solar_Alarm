@@ -45,4 +45,35 @@ public class SolarAlarm extends TableBase
 
     @ForeignKey(entity = SolarTimeType.class, parentColumns = "Id", childColumns = "SolarTimeTypeId")
     public SolarTimeTypeEnum SolarTimeTypeId;
+
+    public String getRecurringDaysText() {
+        if (!Recurring) {
+            return null;
+        }
+
+        String days = "";
+        if (Monday) {
+            days += "Mo ";
+        }
+        if (Tuesday) {
+            days += "Tu ";
+        }
+        if (Wednesday) {
+            days += "We ";
+        }
+        if (Thursday) {
+            days += "Th ";
+        }
+        if (Friday) {
+            days += "Fr ";
+        }
+        if (Saturday) {
+            days += "Sa ";
+        }
+        if (Sunday) {
+            days += "Su ";
+        }
+
+        return days;
+    }
 }
