@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.solar_alarm.Data.Converters;
 import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
@@ -19,8 +20,6 @@ import com.example.solar_alarm.R;
 
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 
 public class AlarmViewHolder extends RecyclerView.ViewHolder
 {
@@ -80,11 +79,13 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder
         SolarTime solarTime = new GetSolarTime().execute(solarAlarm.SolarTimeId).get();
 
         ZonedDateTime zonedDateTime = solarTime.GetLocalZonedDateTime(solarAlarm.SolarTimeTypeId);
+
+        zonedDateTime.getHour();
         LocalTime localTime = zonedDateTime.toLocalTime();
 
-        String alarmText = String.format("%s", zonedDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)));
+        String[] alarmText = Converters.toTimeString(zonedDateTime);
 
-        alarmTime.setText(alarmText);
+        alarmTime.setText(alarmText[0]);
         alarmStarted.setChecked(solarAlarm.Active);
 
         if (solarAlarm.Recurring)
