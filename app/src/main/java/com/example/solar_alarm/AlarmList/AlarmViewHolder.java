@@ -24,6 +24,7 @@ import java.time.ZonedDateTime;
 public class AlarmViewHolder extends RecyclerView.ViewHolder
 {
     private TextView alarmTime;
+    private TextView alarmDate;
     private ImageView alarmRecurring;
     private TextView alarmRecurringDays;
     private TextView alarmTitle;
@@ -38,6 +39,7 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder
         super(itemView);
 
         alarmTime = itemView.findViewById(R.id.item_alarm_time);
+        alarmDate = itemView.findViewById(R.id.item_alarm_date);
         alarmStarted = itemView.findViewById(R.id.item_alarm_started);
         alarmRecurring = itemView.findViewById(R.id.item_alarm_recurring);
         alarmRecurringDays = itemView.findViewById(R.id.item_alarm_recurringDays);
@@ -85,7 +87,8 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder
 
         String[] alarmText = Converters.toTimeString(zonedDateTime);
 
-        alarmTime.setText(alarmText[0]);
+        alarmDate.setText(alarmText[0]);
+        alarmTime.setText(alarmText[1]);
         alarmStarted.setChecked(solarAlarm.Active);
 
         if (solarAlarm.Recurring)
