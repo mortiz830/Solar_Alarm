@@ -29,23 +29,34 @@ public class HttpRequests {
 
     public SunriseSunsetResponse GetSolarData(SunriseSunsetRequest sunriseSunsetRequest) throws IOException
     {
-        httpUrlConnection.setDoOutput(true);
-        httpUrlConnection.setConnectTimeout(5000);
-        httpUrlConnection.setReadTimeout(5000);
+        SunriseSunsetResponse sunriseSunsetResponse = null;
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
-        String inputLine;
-        StringBuilder content = new StringBuilder();
+        try
+        {
+            httpUrlConnection.setDoInput(true);
+            httpUrlConnection.setDoOutput(true);
+            httpUrlConnection.setConnectTimeout(5000);
+            httpUrlConnection.setReadTimeout(5000);
 
-        while ((inputLine = bufferedReader.readLine()) != null) {
-            content.append(inputLine);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
+            String inputLine;
+            StringBuilder content = new StringBuilder();
+
+            while ((inputLine = bufferedReader.readLine()) != null)
+            {
+                content.append(inputLine);
+            }
+
+            Gson gson = new Gson();
+            sunriseSunsetResponse = gson.fromJson(content.toString(), SunriseSunsetResponse.class);
+            bufferedReader.close();
+
+            sunriseSunsetResponse.request = sunriseSunsetRequest;
         }
-
-        Gson gson = new Gson();
-        SunriseSunsetResponse sunriseSunsetResponse = gson.fromJson(content.toString(), SunriseSunsetResponse.class);
-        bufferedReader.close();
-
-        sunriseSunsetResponse.request = sunriseSunsetRequest;
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
         return sunriseSunsetResponse;
     }
