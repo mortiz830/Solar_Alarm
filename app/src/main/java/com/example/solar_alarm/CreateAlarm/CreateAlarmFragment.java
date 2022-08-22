@@ -148,7 +148,7 @@ public class CreateAlarmFragment extends Fragment{
                         Toast.makeText(getContext(), "Solar Time exists!", Toast.LENGTH_LONG).show();
                     }
 
-                    date.plusDays(1);
+                    date = date.plusDays(1);
                 }
 
                 try
@@ -217,14 +217,7 @@ public class CreateAlarmFragment extends Fragment{
                         e.printStackTrace();
                     }
                 }
-//                for(int i = 0; i < solarTimes.size(); i++)
-//                {
-//                    try {
-//                        scheduleAlarm(solarTimes.get(i), alarmTimeItem.Id, solarTimeTypeItem.Id);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
+
                 Navigation.findNavController(v).navigate(R.id.action_createAlarmFragment_to_alarmsListFragment);
             }
         });
@@ -329,7 +322,7 @@ public class CreateAlarmFragment extends Fragment{
                 solarTime = new SolarTime(location, sunriseSunsetResponse);
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(getContext(), "Unable to get times!", Toast.LENGTH_LONG).show();
+              //  Toast.makeText(getContext(), "Unable to get times!", Toast.LENGTH_LONG).show();
             }
 
             return solarTime;
@@ -341,7 +334,7 @@ public class CreateAlarmFragment extends Fragment{
         @Override
         protected Boolean doInBackground(Object... objects) {
             Location location = (Location) objects[0];
-            LocalDate localDate = LocalDate.now();
+            LocalDate localDate = (LocalDate) objects[1];
             Boolean result = false;
             try{
                 result = solarTimeRepository.isLocationIDDatePairExists(location.Id, localDate);
@@ -365,6 +358,7 @@ public class CreateAlarmFragment extends Fragment{
     }
 
     private class SolarAlarmNameExistsTask extends AsyncTask<SolarAlarm, Void, Boolean>{
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         protected Boolean doInBackground(SolarAlarm... solarAlarms) {
             Boolean result = false;
