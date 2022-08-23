@@ -1,10 +1,17 @@
 package com.example.solar_alarm.Data.Tables;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 
+import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
+import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 @Entity
 (
     tableName = "SolarAlarm",
@@ -15,8 +22,13 @@ public class SolarAlarm extends TableBase
     @NonNull
     public String Name;
 
+    public boolean Active;
+
     @ForeignKey(entity = Location.class, parentColumns = "Id", childColumns = "LocationId")
     public int LocationId;
+
+    @ForeignKey(entity = SolarTime.class, parentColumns = "Id", childColumns = "SolarTimeId")
+    public int SolarTimeId;
 
     // Recurrence Flags
     public boolean Recurring;
@@ -29,15 +41,39 @@ public class SolarAlarm extends TableBase
     public boolean Sunday;
 
     @ForeignKey(entity = OffsetType.class, parentColumns = "Id", childColumns = "OffsetTypeId")
-    public int OffsetTypeId;
+    public OffsetTypeEnum OffsetTypeId;
 
-    @ForeignKey(entity = SolarTimeType.class, parentColumns = "Id", childColumns = "TimeTypeId")
-    public int TimeTypeId;
+    @ForeignKey(entity = SolarTimeType.class, parentColumns = "Id", childColumns = "SolarTimeTypeId")
+    public SolarTimeTypeEnum SolarTimeTypeId;
 
-    @ForeignKey(entity = TimeUnitType.class, parentColumns = "Id", childColumns = "TimeUnitTypeId")
-    public int TimeUnitTypeId;
+    public String getRecurringDaysText() {
+        if (!Recurring) {
+            return null;
+        }
 
-    public int TimeOffsetValue;
+        String days = "";
+        if (Monday) {
+            days += "Mo ";
+        }
+        if (Tuesday) {
+            days += "Tu ";
+        }
+        if (Wednesday) {
+            days += "We ";
+        }
+        if (Thursday) {
+            days += "Th ";
+        }
+        if (Friday) {
+            days += "Fr ";
+        }
+        if (Saturday) {
+            days += "Sa ";
+        }
+        if (Sunday) {
+            days += "Su ";
+        }
 
-    // public ??? DayLength;
+        return days;
+    }
 }

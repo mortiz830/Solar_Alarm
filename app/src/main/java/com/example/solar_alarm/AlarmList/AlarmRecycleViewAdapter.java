@@ -1,26 +1,30 @@
 package com.example.solar_alarm.AlarmList;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.solar_alarm.Data.AlarmDisplayData;
+import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolder> {
-    private List<AlarmDisplayData> alarms;
+public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolder>
+{
+    private List<SolarAlarm> alarms;
     private OnToggleAlarmListener listener;
     Context context;
 
     public AlarmRecycleViewAdapter(OnToggleAlarmListener listener) {
-        this.alarms = new ArrayList<AlarmDisplayData>();
+        this.alarms = new ArrayList<SolarAlarm>();
         this.listener = listener;
     }
 
@@ -32,10 +36,19 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
         return new AlarmViewHolder(itemView, listener);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
-        AlarmDisplayData alarm = alarms.get(position);
-        holder.bind(alarm);
+        SolarAlarm alarm = alarms.get(position);
+        try {
+            holder.bind(alarm);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -43,7 +56,8 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
         return alarms.size();
     }
 
-    public void setAlarms(List<AlarmDisplayData> alarms) {
+    public void setAlarms(List<SolarAlarm> alarms)
+    {
         this.alarms = alarms;
         notifyDataSetChanged();
     }
@@ -53,15 +67,15 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
         super.onViewRecycled(holder);
         holder.alarmStarted.setOnCheckedChangeListener(null);
     }
-    public AlarmDisplayData removeItem(int position)
+    public SolarAlarm removeItem(int position)
     {
-        AlarmDisplayData alarm = alarms.get(position);
+        SolarAlarm alarm = alarms.get(position);
         alarms.remove(alarm);
         notifyItemRemoved(position);
         return alarm;
     }
 
-    public AlarmDisplayData getAlarm(int position)
+    public SolarAlarm getAlarm(int position)
     {
         return this.alarms.get(position);
     }

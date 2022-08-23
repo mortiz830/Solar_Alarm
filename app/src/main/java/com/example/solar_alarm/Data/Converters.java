@@ -5,51 +5,60 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 import androidx.room.TypeConverter;
 
+import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
+import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class Converters
 {
-    private static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ISO_DATE_TIME;
     private static DateTimeFormatter dateFormat = DateTimeFormatter.ISO_DATE;
-    private static DateTimeFormatter timeFormat = DateTimeFormatter.ISO_TIME;
 
     @TypeConverter
-    public static String fromLocalDateTime(LocalDateTime localDateTime)
-    {
-        return localDateTime == null ? null : localDateTime.format(dateTimeFormat);
-    }
+    public static LocalDate toLocalDate(String dateString) { return dateString == null ? null: LocalDate.parse(dateString); }
 
     @TypeConverter
-    public static LocalDateTime toLocalDateTime(String dateTimeString)
-    {
-        return dateTimeString == null ? null : LocalDateTime.parse(dateTimeString, dateTimeFormat);
-    }
+    public static String fromLocalDate(LocalDate localDate) { return localDate == null ? null : localDate.format(dateFormat); }
 
     @TypeConverter
-    public static LocalDate toLocalDate(String dateString)
-    {
-        return dateString == null ? null: LocalDate.parse(dateString);
-    }
+    public static int toOffsetTypeId(OffsetTypeEnum enumType) { return enumType.Id; }
 
     @TypeConverter
-    public static String fromLocalDate(LocalDate localDate)
-    {
-        return localDate == null ? null : localDate.format(dateFormat);
-    }
+    public static OffsetTypeEnum toOffsetTypeEnum(int id) { return OffsetTypeEnum.values()[id]; }
 
     @TypeConverter
-    public static LocalTime toLocalTime(String timeString)
-    {
-        return timeString == null ? null: LocalTime.parse(timeString);
-    }
+    public static int toSolarTimeTypeId(SolarTimeTypeEnum enumType) { return enumType.Id; }
 
     @TypeConverter
-    public static String fromLocalTime(LocalTime localTime)
+    public static SolarTimeTypeEnum toSolarTimeTypeEnum(int id) { return SolarTimeTypeEnum.values()[id]; }
+
+    @TypeConverter
+    public static String[] toTimeString(ZonedDateTime zonedDateTime)
     {
-        return localTime == null ? null : localTime.format(timeFormat);
+        // We will need to consider giving the user to choose their date and time formats.
+        String hour;
+        int hourInt = zonedDateTime.getHour() > 12 ? zonedDateTime.getHour() - 12 : zonedDateTime.getHour();
+
+        if (hourInt < 10)
+        {
+            hour = String.format("%02d" , hourInt);
+        }
+        else
+        {
+            hour = String.valueOf(hourInt);
+        }
+
+        String ampm       = zonedDateTime.getHour() > 11 ? "PM" : "AM";
+        String time       = hour + ":" + zonedDateTime.getMinute() + " " + ampm;
+
+        //String dayOfWeek  = zonedDateTime.getDayOfWeek().toString().substring(0,3);
+        String dayOfMonth = zonedDateTime.getDayOfMonth() < 10 ? String.format("%02d" , zonedDateTime.getDayOfMonth()) : String.valueOf(zonedDateTime.getDayOfMonth());
+        String month      = zonedDateTime.getMonth().toString().substring(0,3);
+        String date       = /*dayOfWeek + " " +*/ dayOfMonth + "-" + month + "-" + zonedDateTime.getYear();
+
+        return new String[] {date, time};
     }
 }

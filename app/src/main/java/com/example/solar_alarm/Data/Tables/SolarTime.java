@@ -22,13 +22,13 @@ import java.time.format.DateTimeFormatter;
 @Entity
 (
     tableName = "SolarTime",
-    indices = {@Index(value = {"Date", "LocationId"}, unique = true)}
+    indices = {@Index(value = {"SolarDate", "LocationId"}, unique = true)}
 )
 
 public class SolarTime extends TableBase
 {
     @NonNull
-    public LocalDate Date;
+    public LocalDate SolarDate;
 
     @ForeignKey(entity = Location.class, parentColumns = "Id", childColumns = "LocationId")
     public int LocationId;
@@ -50,7 +50,7 @@ public class SolarTime extends TableBase
     @RequiresApi(api = Build.VERSION_CODES.O)
     public SolarTime (Location location, SunriseSunsetResponse sunriseSunsetResponse)
     {
-        Date                         = LocalDateTime.ofInstant(sunriseSunsetResponse.request.Date.toInstant(), ZoneId.systemDefault()).toLocalDate();
+        SolarDate                    = sunriseSunsetResponse.request.RequestDate;
         LocationId                   = location.Id;
         DayLength                    = sunriseSunsetResponse.getDayLength();
         SunriseUtc                   = sunriseSunsetResponse.getSunrise();

@@ -1,15 +1,15 @@
 package com.example.solar_alarm.AlarmList;
 
 import android.app.Application;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.solar_alarm.Data.Alarm;
 import com.example.solar_alarm.Data.AlarmDisplayData;
 import com.example.solar_alarm.Data.AlarmDisplayDataDao;
-import com.example.solar_alarm.Data.AlarmRepository;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
 import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository;
 import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
@@ -20,10 +20,9 @@ import com.example.solar_alarm.Data.Tables.SolarTime;
 
 import java.util.List;
 
-public class AlarmListViewModel extends AndroidViewModel {
-    private AlarmRepository alarmRepository;
-    private LiveData<List<Alarm>> alarmsLiveData;
-
+@RequiresApi(api = Build.VERSION_CODES.O)
+public class AlarmListViewModel extends AndroidViewModel
+{
     private SolarTimeRepository solarTimeRepository;
     private SolarAlarmRepository solarAlarmRepository;
     private LocationRepository locationRepository;
@@ -36,36 +35,33 @@ public class AlarmListViewModel extends AndroidViewModel {
 
     //String rawQuery = "SELECT DISTINCT " + Location.Id + ","
 
-    public AlarmListViewModel(@NonNull Application application) {
+    public AlarmListViewModel(@NonNull Application application)
+    {
         super(application);
+
+        // to be deleted
         SolarAlarmDatabase db = SolarAlarmDatabase.getDatabase(application);
+        alarmDisplayLiveData = db.alarmDisplayDataDao().loadAlarmData();
 
-        alarmRepository = new AlarmRepository(application);
-        alarmsLiveData = alarmRepository.getAlarmsLiveData();
+        solarAlarmRepository = new SolarAlarmRepository();
 
-        solarAlarmRepository = new SolarAlarmRepository(application);
         solarAlarmLiveData = solarAlarmRepository.getAll();
 
-        solarTimeRepository = new SolarTimeRepository(application);
-        solarTimeLiveData = solarTimeRepository.getAll();
+        solarTimeLiveData = new SolarTimeRepository().getAll();
 
-        locationRepository = new LocationRepository(application);
-        locationLiveData = locationRepository.getAll();
-
-        alarmDisplayDataDao = db.alarmDisplayDataDao();
-        alarmDisplayLiveData = alarmDisplayDataDao.loadAlarmData();
+        locationLiveData = new LocationRepository().getAll();
     }
 
-    public void update(Alarm alarm) {
-        alarmRepository.update(alarm);
+    public void update(SolarAlarm alarm) {
+        solarAlarmRepository.Update(alarm);
     }
 
-    public void delete(Alarm alarm) {
-        alarmRepository.delete(alarm);
+    public void delete(SolarAlarm alarm) {
+        solarAlarmRepository.Delete(alarm);
     }
 
-    public LiveData<List<Alarm>> getAlarmsLiveData() {
-        return alarmsLiveData;
+    public LiveData<List<SolarAlarm>> getAlarmsLiveData() {
+        return solarAlarmLiveData;
     }
 
     public LiveData<List<AlarmDisplayData>> getAlarmDisplayLiveData() { return alarmDisplayLiveData; }

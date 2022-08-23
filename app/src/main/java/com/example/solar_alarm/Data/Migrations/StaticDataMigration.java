@@ -10,17 +10,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
-import com.example.solar_alarm.Data.Enums.TimeUnitTypeEnum;
 import com.example.solar_alarm.Data.Tables.OffsetType;
 import com.example.solar_alarm.Data.Tables.SolarTimeType;
-import com.example.solar_alarm.Data.Tables.TimeUnitType;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Database
 (
     entities =
     {
-        TimeUnitType.class,
         OffsetType.class,
         SolarTimeType.class
     },
@@ -37,19 +34,7 @@ public abstract class StaticDataMigration extends RoomDatabase
         {
             database.beginTransaction();
 
-            String sql = "INSERT INTO TimeUnitTypes VALUES ";
-
-            for (TimeUnitTypeEnum enumType : TimeUnitTypeEnum.values())
-            {
-                sql = sql + String.format("(%d, %s),", enumType.Id, enumType.Name);
-            }
-
-            sql = removeLastChar(sql);
-            database.execSQL(sql);
-
-            //--------------------------
-
-            sql = "INSERT INTO OffsetTypes VALUES ";
+            String sql = "INSERT INTO OffsetTypes VALUES ";
 
             for (OffsetTypeEnum enumType : OffsetTypeEnum.values())
             {

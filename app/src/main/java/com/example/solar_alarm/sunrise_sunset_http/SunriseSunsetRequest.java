@@ -1,19 +1,17 @@
 package com.example.solar_alarm.sunrise_sunset_http;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 
 public class SunriseSunsetRequest
 {
-    public float Latitude;
-    public float Longitude;
-    public Calendar Date;
-    public Boolean Format;
+    public float     Latitude;
+    public float     Longitude;
+    public LocalDate RequestDate;
 
-    public SunriseSunsetRequest(float latitude, float longitude, Calendar date)
+    public SunriseSunsetRequest(float latitude, float longitude, LocalDate requestDate)
     {
-        this.Latitude  = latitude;
-        this.Longitude = longitude;
-        this.Date      = date;
-        this.Format    = false;   // hard coded because this will give us date and times in UTC strings
+        this.Latitude    = latitude;
+        this.Longitude   = longitude;
+        this.RequestDate = requestDate;
     }
 }

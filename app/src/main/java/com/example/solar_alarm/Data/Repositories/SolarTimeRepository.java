@@ -1,6 +1,5 @@
 package com.example.solar_alarm.Data.Repositories;
 
-import android.app.Application;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -13,16 +12,15 @@ import com.example.solar_alarm.Data.Tables.SolarTime;
 import java.time.LocalDate;
 import java.util.List;
 
-public class SolarTimeRepository
+public class SolarTimeRepository extends RepositoryBase
 {
-    private SolarTimeDao solarTimeDao;
-    private LiveData<List<SolarTime>> solarTimeLiveData;
+    private final SolarTimeDao solarTimeDao;
+    private final LiveData<List<SolarTime>> solarTimeLiveData;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public SolarTimeRepository(Application application)
+    public SolarTimeRepository()
     {
-        SolarAlarmDatabase db = SolarAlarmDatabase.getDatabase(application);
-        solarTimeDao = db.solarTimeDao();
+        solarTimeDao      = _SolarAlarmDatabase.solarTimeDao();
         solarTimeLiveData = solarTimeDao.getAll();
     }
 
@@ -53,6 +51,11 @@ public class SolarTimeRepository
     {
         return solarTimeDao.getSolarTime(locationId, date);
     }
-    
+
+    public SolarTime GetById(int Id)
+    {
+        return solarTimeDao.getById(Id);
+    }
+
     public LiveData<List<SolarTime>> getAll() {return solarTimeLiveData;}
 }

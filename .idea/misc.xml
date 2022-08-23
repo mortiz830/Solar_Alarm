@@ -3,8 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/GitHub/Solar_Alarm/app/src/main/res/layout/fragment_add_location.xml" value="0.35833333333333334" />
+        <entry key="..\:/Users/motb1/OneDrive/Desktop/Projects/Solar_Alarm/app/src/main/res/drawable-v24/ic_alarm_black_24dp.xml" value="0.2085" />
+        <entry key="..\:/Users/motb1/OneDrive/Desktop/Projects/Solar_Alarm/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2085" />
+        <entry key="..\:/Users/motb1/OneDrive/Desktop/Projects/Solar_Alarm/app/src/main/res/drawable-v24/ic_looks_one_black_24dp.xml" value="0.2085" />
+        <entry key="..\:/Users/motb1/OneDrive/Desktop/Projects/Solar_Alarm/app/src/main/res/drawable-v24/ic_repeat_black_24dp.xml" value="0.2085" />
+        <entry key="..\:/Users/motb1/OneDrive/Desktop/Projects/Solar_Alarm/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2085" />
         <entry key="..\:/Users/motb1/OneDrive/Desktop/Projects/Solar_Alarm/app/src/main/res/layout/fragment_add_location.xml" value="0.28396739130434784" />
         <entry key="..\:/Users/motb1/OneDrive/Desktop/Projects/Solar_Alarm/app/src/main/res/layout/fragment_createalarm.xml" value="0.33" />
+        <entry key="..\:/Users/motb1/OneDrive/Desktop/Projects/Solar_Alarm/app/src/main/res/layout/item_alarm.xml" value="0.25" />
         <entry key="..\:/Users/motb1/OneDrive/Desktop/Projects/Solar_Alarm/app/src/main/res/layout/location_spinner.xml" value="0.22447916666666667" />
       </map>
     </option>

@@ -29,6 +29,9 @@ public interface LocationDao
     @Query("SELECT EXISTS(SELECT * FROM Location WHERE Longitude = :longitude)")
     boolean isLocationLongitudeExists(double longitude);
 
+    @Query("SELECT * FROM Location WHERE Id = :id")
+    Location GetById(int id);
+
     @Update
     void Update(Location location);
 

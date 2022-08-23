@@ -1,4 +1,7 @@
 package com.example.solar_alarm.AlarmList;
+
+import android.os.AsyncTask;
+import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -6,13 +9,22 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.solar_alarm.Data.AlarmDisplayData;
+import com.example.solar_alarm.Data.Converters;
+import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
+import com.example.solar_alarm.Data.Tables.SolarAlarm;
+import com.example.solar_alarm.Data.Tables.SolarTime;
 import com.example.solar_alarm.R;
 
-public class AlarmViewHolder extends RecyclerView.ViewHolder {
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
+
+public class AlarmViewHolder extends RecyclerView.ViewHolder
+{
     private TextView alarmTime;
+    private TextView alarmDate;
     private ImageView alarmRecurring;
     private TextView alarmRecurringDays;
     private TextView alarmTitle;
@@ -22,10 +34,12 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder {
 
     private OnToggleAlarmListener listener;
 
-    public AlarmViewHolder(@NonNull View itemView, OnToggleAlarmListener listener) {
+    public AlarmViewHolder(@NonNull View itemView, OnToggleAlarmListener listener)
+    {
         super(itemView);
 
         alarmTime = itemView.findViewById(R.id.item_alarm_time);
+        alarmDate = itemView.findViewById(R.id.item_alarm_date);
         alarmStarted = itemView.findViewById(R.id.item_alarm_started);
         alarmRecurring = itemView.findViewById(R.id.item_alarm_recurring);
         alarmRecurringDays = itemView.findViewById(R.id.item_alarm_recurringDays);
@@ -35,30 +49,67 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder {
         this.listener = listener;
     }
 
-    public void bind(AlarmDisplayData alarm) {
-//        String alarmText = String.format("%02d:%02d", alarm.getHour(), alarm.getMinute());
-//
-//        alarmTime.setText(alarmText);
-//        alarmStarted.setChecked(alarm.isStarted());
-//
-//        if (alarm.isRecurring()) {
-//            alarmRecurring.setImageResource(R.drawable.ic_repeat_black_24dp);
-//            alarmRecurringDays.setText(alarm.getRecurringDaysText());
-//        } else {
-//            alarmRecurring.setImageResource(R.drawable.ic_looks_one_black_24dp);
-//            alarmRecurringDays.setText("Once Off");
-//        }
-//
-//        if (alarm.getTitle().length() != 0) {
-//            alarmTitle.setText(String.format("%s | %d | %d", alarm.getTitle(), alarm.getAlarmId(), alarm.getCreated()));
-//        } else {
-//            alarmTitle.setText(String.format("%s | %d | %d", "Alarm", alarm.getAlarmId(), alarm.getCreated()));
-//        }
 
-//        alarmStarted.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+    private class GetSolarTime extends AsyncTask<Integer, Void, SolarTime>
+    {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        //@Override
+        protected SolarTime doInBackground(Integer... id)
+        {
+            SolarTime solarTime = null;
+
+            try
+            {
+                solarTime = new SolarTimeRepository().GetById(id[0]);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            return solarTime;
+        }
+    }
+
+    /*
+    * SolarTime*/
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void bind(SolarAlarm solarAlarm) throws Exception
+    {
+        SolarTime solarTime = new GetSolarTime().execute(solarAlarm.SolarTimeId).get();
+
+        ZonedDateTime zonedDateTime = solarTime.GetLocalZonedDateTime(solarAlarm.SolarTimeTypeId);
+
+        zonedDateTime.getHour();
+        LocalTime localTime = zonedDateTime.toLocalTime();
+
+        String[] alarmText = Converters.toTimeString(zonedDateTime);
+
+        alarmDate.setText(alarmText[0]);
+        alarmTime.setText(alarmText[1]);
+        alarmStarted.setChecked(solarAlarm.Active);
+
+        if (solarAlarm.Recurring)
+        {
+            alarmRecurring.setImageResource(R.drawable.ic_repeat_black_24dp);
+            alarmRecurringDays.setText(solarAlarm.getRecurringDaysText());
+        }
+        else
+        {
+            alarmRecurring.setImageResource(R.drawable.ic_looks_one_black_24dp);
+            alarmRecurringDays.setText("Once Off");
+        }
+
+        alarmTitle.setText(String.format("%s | %d", solarAlarm.Name, solarAlarm.Id));
+
+//        alarmStarted.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+//        {
 //            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                listener.onToggle(alarm);
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+//            {
+//                listener.onToggle(solarAlarm);
 //            }
 //        });
     }

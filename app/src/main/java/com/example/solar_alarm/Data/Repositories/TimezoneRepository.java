@@ -1,7 +1,9 @@
 package com.example.solar_alarm.Data.Repositories;
 
 import android.app.Application;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
 import com.example.solar_alarm.Data.Daos.TimezoneDao;
@@ -10,15 +12,15 @@ import com.example.solar_alarm.Data.Tables.Timezone;
 
 import java.util.List;
 
-public class TimezoneRepository
+@RequiresApi(api = Build.VERSION_CODES.O)
+public class TimezoneRepository extends RepositoryBase
 {
     private TimezoneDao timezoneDao;
     private LiveData<List<Timezone>> timezonesLiveData;
 
     public TimezoneRepository(Application application)
     {
-        SolarAlarmDatabase db = SolarAlarmDatabase.getDatabase(application);
-        timezoneDao = db.timezoneDao();
+        timezoneDao       = _SolarAlarmDatabase.timezoneDao();
         timezonesLiveData = timezoneDao.getAll();
     }
 
@@ -38,4 +40,6 @@ public class TimezoneRepository
     }
 
     public LiveData<List<Timezone>> getAll() { return timezonesLiveData; }
+
+    public Timezone GetById(int id) { return timezoneDao.GetById(id); }
 }

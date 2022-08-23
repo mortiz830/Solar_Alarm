@@ -18,12 +18,23 @@
             android:orientation="horizontal"
             android:padding="6dp">
 
-            <TextView
-                android:id="@+id/item_alarm_time"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="00:00"
-                android:textSize="36sp" />
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/item_alarm_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00/00/0000"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/item_alarm_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00:00"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/item_alarm_recurring"
@@ -41,13 +52,13 @@
                     android:id="@+id/item_alarm_recurringDays"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="10sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/item_alarm_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp" />
+                    android:textSize="17sp" />
 
             </LinearLayout>
 
@@ -55,7 +66,8 @@
                 android:id="@+id/item_alarm_started"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:gravity="center"/>
 
         </LinearLayout>
 
