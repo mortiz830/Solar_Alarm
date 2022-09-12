@@ -21,14 +21,14 @@ import androidx.annotation.RequiresApi;
 
 import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver;
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
-import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
 
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 
-public class AlarmScheduler {
+public class AlarmScheduler
+{
     private SolarAlarm solarAlarm;
     private SolarTime solarTime;
     private int hours;
@@ -47,8 +47,7 @@ public class AlarmScheduler {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void schedule(Context context) throws Exception
     {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        ZonedDateTime localZonedDateTime;
+
 
         Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
         intent.putExtra(RECURRING, solarAlarm.Recurring);
@@ -59,12 +58,11 @@ public class AlarmScheduler {
         intent.putExtra(FRIDAY, solarAlarm.Friday);
         intent.putExtra(SATURDAY, solarAlarm.Saturday);
         intent.putExtra(SUNDAY, solarAlarm.Sunday);
-
         intent.putExtra(TITLE, solarAlarm.Name);
 
-        PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, solarAlarm.Id, intent, 0);
+        ZonedDateTime localZonedDateTime;
 
-        if(true) localZonedDateTime = ZonedDateTime.now().plusMinutes(mins); else // DEBUG_STATEMENT
+        if(true) localZonedDateTime = ZonedDateTime.now().plusMinutes(mins); else // DEBUG_STATEMENT makes alarm ring immediately
             localZonedDateTime = solarTime.GetLocalZonedDateTime(solarAlarm.SolarTimeTypeId);
 
         if(solarAlarm.OffsetTypeId == OffsetTypeEnum.Before)
@@ -78,8 +76,6 @@ public class AlarmScheduler {
             localZonedDateTime.plusMinutes(mins);
         }
 
-
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, localZonedDateTime.getHour());
@@ -88,42 +84,52 @@ public class AlarmScheduler {
         calendar.set(Calendar.MILLISECOND, 0);
 
         // if alarm time has already passed, increment day by 1
-        if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+        if (calendar.getTimeInMillis() <= System.currentTimeMillis())
+        {
             calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
         }
 
-        if (!solarAlarm.Recurring) {
-            String toastText = null;
-            try {
-                toastText = String.format("One Time Alarm %s scheduled for %s at %02d:%02d", solarAlarm.Name, DayUtil.toDay(calendar.get(Calendar.DAY_OF_WEEK)), localZonedDateTime.getHour(), localZonedDateTime.getMinute(), solarAlarm.Id);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
+        AlarmManager  alarmManager       = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, solarAlarm.Id, intent, 0);
 
-            alarmManager.setExact(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeInMillis(),
-                    alarmPendingIntent
-            );
-        } else {
+        if (solarAlarm.Recurring)
+        {
             String toastText = String.format("Recurring Alarm %s scheduled for %s at %02d:%02d", solarAlarm.Name, getRecurringDaysText(), localZonedDateTime.getHour(), localZonedDateTime.getMinute(), solarAlarm.Id);
-            Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show();
 
             final long RUN_DAILY = 24 * 60 * 60 * 1000;
-            alarmManager.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeInMillis(),
-                    RUN_DAILY,
-                    alarmPendingIntent
-            );
+
+            try
+            {
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), RUN_DAILY, alarmPendingIntent);
+            }
+            catch (Exception exception)
+            {
+                exception.printStackTrace();
+            }
+        }
+        else
+        {
+            String toastText = String.format("One Time Alarm %s scheduled for %s at %02d:%02d", solarAlarm.Name, DayUtil.toDay(calendar.get(Calendar.DAY_OF_WEEK)), localZonedDateTime.getHour(), localZonedDateTime.getMinute(), solarAlarm.Id);;
+            Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show();
+
+            try
+            {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmPendingIntent);
+            }
+            catch (Exception exception)
+            {
+                exception.printStackTrace();
+            }
         }
 
         this.started = true;
     }
 
-    public String getRecurringDaysText() {
-        if (!solarAlarm.Recurring) {
+    public String getRecurringDaysText()
+    {
+        if (!solarAlarm.Recurring)
+        {
             return null;
         }
 
