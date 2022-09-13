@@ -120,7 +120,8 @@ public class CreateAlarmFragment extends Fragment{
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
         View view = inflater.inflate(R.layout.fragment_createalarm, container, false);
 
         Spinner alarmTimeSpinner = (Spinner) view.findViewById(R.id.fragment_createalarm_alarmtime_spinner);
@@ -132,10 +133,12 @@ public class CreateAlarmFragment extends Fragment{
         List<SolarTime> solarTimes = new ArrayList<SolarTime>();
         ButterKnife.bind(this, view);
         setPickers();
-        locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int locationPosition, long l) {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int locationPosition, long l)
+            {
                 Location locationItem = (Location) adapterView.getItemAtPosition(locationPosition);
                 LocalDate date = LocalDate.now();
 
@@ -151,7 +154,9 @@ public class CreateAlarmFragment extends Fragment{
                         {
                             solarTimes.add(getSolarTime(locationItem, date));
                         }
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         e.printStackTrace();
                         Toast.makeText(getContext(), "Solar Time exists!", Toast.LENGTH_LONG).show();
                     }
@@ -172,9 +177,7 @@ public class CreateAlarmFragment extends Fragment{
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) { }
         });
 
         recurring.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
@@ -211,21 +214,29 @@ public class CreateAlarmFragment extends Fragment{
             public void onNothingSelected(AdapterView<?> adapterView) { }
         });
 
-        scheduleAlarm.setOnClickListener(new View.OnClickListener() {
-
+        scheduleAlarm.setOnClickListener(new View.OnClickListener()
+        {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v)
             {
-                OffsetTypeEnum alarmTimeItem = (OffsetTypeEnum) alarmTimeSpinner.getSelectedItem();
+                OffsetTypeEnum    alarmTimeItem     = (OffsetTypeEnum) alarmTimeSpinner.getSelectedItem();
                 SolarTimeTypeEnum solarTimeTypeItem = (SolarTimeTypeEnum) setTimeSpinner.getSelectedItem();
-                for(int i = 0; i < solarTimes.size(); i++)
+                Location          location          = (Location) locationSpinner.getSelectedItem();
+
+                try
                 {
-                    try {
-                        scheduleAlarm(solarTimes.get(i), alarmTimeItem, solarTimeTypeItem);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    SolarTime solarTime = solarTimes.stream()
+                                                    .filter(x -> x.LocationId == location.Id //&& x.SolarDate == LocalDate.now()
+                                                             )
+                                                    .findFirst()
+                                                    .get();
+
+                    scheduleAlarm(solarTime, alarmTimeItem, solarTimeTypeItem);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
 
                 Navigation.findNavController(v).navigate(R.id.action_createAlarmFragment_to_alarmsListFragment);

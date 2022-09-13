@@ -124,7 +124,8 @@ public class AlarmListFragment extends Fragment implements OnToggleAlarmListener
 
     private void configureOnClickRecyclerView(){
         ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
-                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener()
+                {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                         SolarAlarm alarm = alarmRecyclerViewAdapter.getAlarm(position);

@@ -47,8 +47,6 @@ public class AlarmScheduler
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void schedule(Context context) throws Exception
     {
-
-
         Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
         intent.putExtra(RECURRING, solarAlarm.Recurring);
         intent.putExtra(MONDAY, solarAlarm.Monday);
@@ -62,7 +60,7 @@ public class AlarmScheduler
 
         ZonedDateTime localZonedDateTime;
 
-        if(true) localZonedDateTime = ZonedDateTime.now().plusMinutes(mins); else // DEBUG_STATEMENT makes alarm ring immediately
+        if(true) localZonedDateTime = ZonedDateTime.now().plusMinutes(1); else // DEBUG_STATEMENT makes alarm ring immediately
             localZonedDateTime = solarTime.GetLocalZonedDateTime(solarAlarm.SolarTimeTypeId);
 
         if(solarAlarm.OffsetTypeId == OffsetTypeEnum.Before)
