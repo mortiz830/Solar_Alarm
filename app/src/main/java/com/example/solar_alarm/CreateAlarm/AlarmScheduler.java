@@ -124,6 +124,7 @@ public class AlarmScheduler
         this.started = true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public String getRecurringDaysText()
     {
         if (!solarAlarm.Recurring)
@@ -132,25 +133,38 @@ public class AlarmScheduler
         }
 
         String days = "";
-        if (solarAlarm.Monday) {
+        if (solarAlarm.Monday)
+        {
             days += "Mo ";
         }
-        if (solarAlarm.Tuesday) {
+
+        if (solarAlarm.Tuesday)
+        {
             days += "Tu ";
         }
-        if (solarAlarm.Wednesday) {
+
+        if (solarAlarm.Wednesday)
+        {
             days += "We ";
         }
-        if (solarAlarm.Thursday) {
+
+        if (solarAlarm.Thursday)
+        {
             days += "Th ";
         }
-        if (solarAlarm.Friday) {
+
+        if (solarAlarm.Friday)
+        {
             days += "Fr ";
         }
-        if (solarAlarm.Saturday) {
+
+        if (solarAlarm.Saturday)
+        {
             days += "Sa ";
         }
-        if (solarAlarm.Sunday) {
+
+        if (solarAlarm.Sunday)
+        {
             days += "Su ";
         }
 
