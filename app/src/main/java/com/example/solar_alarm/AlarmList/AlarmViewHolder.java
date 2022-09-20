@@ -1,6 +1,5 @@
 package com.example.solar_alarm.AlarmList;
 
-import android.os.AsyncTask;
 import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.solar_alarm.Data.AsyncDbAccess;
 import com.example.solar_alarm.Data.Converters;
-import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
 import com.example.solar_alarm.R;
@@ -49,41 +48,13 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder
         this.listener = listener;
     }
 
-
-
-    private class GetSolarTime extends AsyncTask<Integer, Void, SolarTime>
-    {
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        //@Override
-        protected SolarTime doInBackground(Integer... id)
-        {
-            SolarTime solarTime = null;
-
-            try
-            {
-                int i = 1;//id[0].intValue();
-                SolarTimeRepository solarTimeRepository = new SolarTimeRepository();
-
-                //List<SolarTime> allSolarTimes = solarTimeRepository.getAll().getValue();   // DEBUG_STATEMENT
-
-                solarTime = solarTimeRepository.GetById(i);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            return solarTime;
-        }
-    }
-
     /*
     * SolarTime*/
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void bind(SolarAlarm solarAlarm) throws Exception
     {
-        SolarTime solarTime = new GetSolarTime().execute(solarAlarm.SolarTimeId).get();
+        SolarTime solarTime = new AsyncDbAccess.GetSolarTime().execute(solarAlarm.SolarTimeId).get();
 
         ZonedDateTime zonedDateTime = solarTime.GetLocalZonedDateTime(solarAlarm.SolarTimeTypeId);
 

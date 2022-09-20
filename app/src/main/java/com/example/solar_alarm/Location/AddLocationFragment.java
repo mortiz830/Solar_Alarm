@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.solar_alarm.Data.AsyncDbAccess;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.Timezone;
@@ -94,8 +95,8 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
             public void onClick(View view) {
                 locationName = locationNameText.getText().toString();
                 try{
-                    isLocationNameExists = new LocationNameExistsTask().execute(locationName).get();
-                    isLocationPointExists = new LocationPointExistsTask().execute(latitude, longitude).get();
+                    isLocationNameExists = new AsyncDbAccess.LocationNameExistsTask().execute(locationName).get();
+                    isLocationPointExists = new AsyncDbAccess.LocationPointExistsTask().execute(latitude, longitude).get();
                 } catch(Exception e){
                     e.printStackTrace();
                 }
@@ -206,34 +207,6 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
             super.onPostExecute(unused);
             timeZoneText.setText(timeZoneResults.getZoneName());
             saveTimeZone();
-        }
-    }
-
-    private class LocationNameExistsTask extends AsyncTask<String, Void, Boolean> {
-        
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        protected Boolean doInBackground(String... strings ) {
-            Boolean result = false;
-            try{
-                result = locationRepository.isLocationNameExists(locationName);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            return result;
-        }
-    }
-
-    private class LocationPointExistsTask extends AsyncTask<Double, Void, Boolean> {
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        @Override
-        protected Boolean doInBackground(Double... doubles) {
-            try{
-                isLocationLatitudeExists = locationRepository.isLocationLatitudeExists(latitude);
-                isLocationLongitudeExists = locationRepository.isLocationLongitudeExists(longitude);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            return isLocationLatitudeExists && isLocationLongitudeExists;
         }
     }
 

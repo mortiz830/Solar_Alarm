@@ -1,6 +1,5 @@
 package com.example.solar_alarm.CreateAlarm;
 
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 
+import com.example.solar_alarm.Data.AsyncDbAccess;
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum;
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
@@ -34,9 +34,7 @@ import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
 import com.example.solar_alarm.R;
-import com.example.solar_alarm.sunrise_sunset_http.HttpRequests;
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest;
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -260,7 +258,7 @@ public class CreateAlarmFragment extends Fragment{
             try
             {
                 SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, date);
-                solarTime = new TimeResponseTask().execute(sunriseSunsetRequest, locationItem).get();
+                solarTime = new AsyncDbAccess.TimeResponseTask().execute(sunriseSunsetRequest, locationItem).get();
                 solarTimeRepository.Insert(solarTime);
             }
             catch (Exception e)
@@ -271,7 +269,7 @@ public class CreateAlarmFragment extends Fragment{
         }
         else
         {
-            solarTime = new GetSolarTimeTask().execute(locationItem.Id, date).get();
+            solarTime = new AsyncDbAccess.GetSolarTimeTask().execute(locationItem.Id, date).get();
         }
 
         return solarTime;
@@ -281,7 +279,7 @@ public class CreateAlarmFragment extends Fragment{
     {
         try
         {
-            return new LocationIdDatePairExistsTask().execute(locationItem, date).get();
+            return new AsyncDbAccess.LocationIdDatePairExistsTask().execute(locationItem, date).get();
         }
         catch (Exception e)
         {
@@ -295,7 +293,7 @@ public class CreateAlarmFragment extends Fragment{
         boolean result;
         try
         {
-            result = new SolarAlarmNameExistsTask().execute(solarAlarmItem).get();
+            result = new AsyncDbAccess.SolarAlarmNameExistsTask().execute(solarAlarmItem).get();
         }
         catch (Exception e)
         {
@@ -349,89 +347,6 @@ public class CreateAlarmFragment extends Fragment{
         AlarmScheduler alarmScheduler = new AlarmScheduler(solarAlarmItem, solarTimeItem, setHours.getValue(), setMins.getValue());
 
         alarmScheduler.schedule(getContext());
-    }
-
-    private class TimeResponseTask extends AsyncTask<Object, Void, SolarTime>
-    {
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        @Override
-        protected SolarTime doInBackground(Object... objects)
-        {
-            SolarTime solarTime = null;
-            try
-            {
-                SunriseSunsetRequest  sunriseSunsetRequest  = (SunriseSunsetRequest) objects[0];
-                Location              location              = (Location) objects[1];
-                HttpRequests          httpRequests          = new HttpRequests(sunriseSunsetRequest);
-                SunriseSunsetResponse sunriseSunsetResponse = httpRequests.GetSolarData(sunriseSunsetRequest);
-
-                solarTime = new SolarTime(location, sunriseSunsetResponse);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                //Toast.makeText(getContext(), "Unable to get times!", Toast.LENGTH_LONG).show();
-            }
-
-            return solarTime;
-        }
-    }
-
-    private class LocationIdDatePairExistsTask extends AsyncTask<Object, Void, Boolean>
-    {
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        @Override
-        protected Boolean doInBackground(Object... objects)
-        {
-            Location location = (Location) objects[0];
-            LocalDate localDate = (LocalDate) objects[1];
-            Boolean result = false;
-            try
-            {
-                result = solarTimeRepository.isLocationIDDatePairExists(location.Id, localDate);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                Toast.makeText(getContext(), "Location / Date Pair exists!", Toast.LENGTH_LONG).show();
-            }
-
-            return result;
-        }
-    }
-
-    private class GetSolarTimeTask extends AsyncTask<Object, Void, SolarTime>
-    {
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        @Override
-        protected SolarTime doInBackground(Object... objects)
-        {
-            int locationId = (Integer) objects[0];
-            LocalDate localDate = (LocalDate) objects[1];
-            return solarTimeRepository.getSolarTime(locationId, localDate);
-        }
-    }
-
-    private class SolarAlarmNameExistsTask extends AsyncTask<SolarAlarm, Void, Boolean>
-    {
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        @Override
-        protected Boolean doInBackground(SolarAlarm... solarAlarms)
-        {
-            Boolean result = false;
-            try
-            {
-                SolarAlarm solarAlarmItem = solarAlarms[0];
-                result = solarAlarmRepository.isSolarAlarmNameLocationIDExists(solarAlarmItem.Name, solarAlarmItem.LocationId);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                Toast.makeText(getContext(), "Solar Alarm already exists!", Toast.LENGTH_LONG).show();
-            }
-
-            return result;
-        }
     }
 
     public void setPickers()
