@@ -61,7 +61,12 @@ public class AlarmViewHolder extends RecyclerView.ViewHolder
 
             try
             {
-                solarTime = new SolarTimeRepository().GetById(id[0]);
+                int i = 1;//id[0].intValue();
+                SolarTimeRepository solarTimeRepository = new SolarTimeRepository();
+
+                //List<SolarTime> allSolarTimes = solarTimeRepository.getAll().getValue();   // DEBUG_STATEMENT
+
+                solarTime = solarTimeRepository.GetById(i);
             }
             catch (Exception e)
             {

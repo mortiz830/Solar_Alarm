@@ -38,15 +38,23 @@ public class AlarmRecycleViewAdapter extends RecyclerView.Adapter<AlarmViewHolde
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position)
+    {
         SolarAlarm alarm = alarms.get(position);
-        try {
+        try
+        {
             holder.bind(alarm);
-        } catch (ExecutionException e) {
+        }
+        catch (ExecutionException e)
+        {
             e.printStackTrace();
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e)
+        {
             e.printStackTrace();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }

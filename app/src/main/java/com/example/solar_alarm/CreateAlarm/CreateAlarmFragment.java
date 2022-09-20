@@ -146,7 +146,7 @@ public class CreateAlarmFragment extends Fragment{
                 {
                     try
                     {
-                        if(solarTimes.size() == 14)
+                        if (solarTimes.size() == 14)
                         {
                             solarTimes.set(i, getSolarTime(locationItem, date));
                         }
@@ -166,9 +166,12 @@ public class CreateAlarmFragment extends Fragment{
 
                 try
                 {
-                    sunriseData.setText(solarTimes.get(0).GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
-                    solarNoonData.setText(solarTimes.get(0).GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
-                    sunsetData.setText(solarTimes.get(0).GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
+                    SolarTime solarTime = new SolarTimeRepository().getSolarTime(locationItem.Id, LocalDate.now());
+                    //new AlarmViewHolder.GetSolarTime().execute(solarAlarm.SolarTimeId).get();
+
+                    sunriseData.setText(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
+                    solarNoonData.setText(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
+                    sunsetData.setText(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
                 }
                 catch (Exception e)
                 {
@@ -220,17 +223,17 @@ public class CreateAlarmFragment extends Fragment{
             @Override
             public void onClick(View v)
             {
-                OffsetTypeEnum    alarmTimeItem     = (OffsetTypeEnum) alarmTimeSpinner.getSelectedItem();
+                OffsetTypeEnum    alarmTimeItem     = (OffsetTypeEnum)    alarmTimeSpinner.getSelectedItem();
                 SolarTimeTypeEnum solarTimeTypeItem = (SolarTimeTypeEnum) setTimeSpinner.getSelectedItem();
-                Location          location          = (Location) locationSpinner.getSelectedItem();
+                Location          location          = (Location)          locationSpinner.getSelectedItem();
 
                 try
                 {
-                    SolarTime solarTime = solarTimes.stream()
-                                                    .filter(x -> x.LocationId == location.Id //&& x.SolarDate == LocalDate.now()
-                                                             )
-                                                    .findFirst()
-                                                    .get();
+                    SolarTimeRepository solarTimeRepository = new SolarTimeRepository();
+                    SolarTime solarTime = solarTimeRepository.getSolarTime(location.Id, LocalDate.now());
+                                                    //.filter(x -> x.LocationId == location.Id //&& x.SolarDate == LocalDate.now()                                                            )
+                                                    //.findFirst()
+                                                    //.get();
 
                     scheduleAlarm(solarTime, alarmTimeItem, solarTimeTypeItem);
                 }

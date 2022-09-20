@@ -12,6 +12,7 @@ import com.example.solar_alarm.Data.Tables.SolarTime;
 import java.time.LocalDate;
 import java.util.List;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class SolarTimeRepository extends RepositoryBase
 {
     private final SolarTimeDao solarTimeDao;
@@ -57,5 +58,8 @@ public class SolarTimeRepository extends RepositoryBase
         return solarTimeDao.getById(Id);
     }
 
-    public LiveData<List<SolarTime>> getAll() {return solarTimeLiveData;}
+    public LiveData<List<SolarTime>> getAll()
+    {
+        return solarTimeLiveData;
+    }
 }
