@@ -164,12 +164,11 @@ public class CreateAlarmFragment extends Fragment{
 
                 try
                 {
-                    SolarTime solarTime = new SolarTimeRepository().getSolarTime(locationItem.Id, LocalDate.now());
-                    //new AlarmViewHolder.GetSolarTime().execute(solarAlarm.SolarTimeId).get();
+                    SolarTime solarTime = new AsyncDbAccess.GetSolarTimeByLocationDate().execute(locationItem.Id, LocalDate.now()).get();
 
-                    sunriseData.setText(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
+                    sunriseData  .setText(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise)  .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
                     solarNoonData.setText(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
-                    sunsetData.setText(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
+                    sunsetData   .setText(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset)   .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)));
                 }
                 catch (Exception e)
                 {
@@ -250,14 +249,14 @@ public class CreateAlarmFragment extends Fragment{
     @RequiresApi(api = Build.VERSION_CODES.O)
     public SolarTime getSolarTime(Location locationItem, LocalDate date) throws Exception
     {
-        boolean isLocationIdDatePairExists = getLocationIdDatePareExists(locationItem, date);
-        SolarTime solarTime;
+        SolarTime solarTime = new AsyncDbAccess.GetSolarTimeByLocationDate().execute(locationItem.Id, date).get();
 
-        if (!isLocationIdDatePairExists)
+        if (solarTime == null)
         {
             try
             {
                 SunriseSunsetRequest sunriseSunsetRequest = new SunriseSunsetRequest((float) locationItem.Latitude, (float) locationItem.Longitude, date);
+
                 solarTime = new AsyncDbAccess.TimeResponseTask().execute(sunriseSunsetRequest, locationItem).get();
                 solarTimeRepository.Insert(solarTime);
             }
@@ -266,10 +265,6 @@ public class CreateAlarmFragment extends Fragment{
                 e.printStackTrace();
                 throw e;
             }
-        }
-        else
-        {
-            solarTime = new AsyncDbAccess.GetSolarTimeTask().execute(locationItem.Id, date).get();
         }
 
         return solarTime;

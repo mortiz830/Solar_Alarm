@@ -72,16 +72,17 @@ public class AsyncDbAccess
         }
     }
 
-    public static class GetSolarTimeTask extends AsyncTask<Object, Void, SolarTime>
+    public static class GetSolarTimeByLocationDate extends AsyncTask<Object, Void, SolarTime>
     {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         protected SolarTime doInBackground(Object... objects)
         {
-            int       locationId = (Integer) objects[0];
+            int       locationId = (Integer)   objects[0];
             LocalDate localDate  = (LocalDate) objects[1];
+            SolarTime solarTime  = new SolarTimeRepository().getSolarTime(locationId, localDate);
 
-            return new SolarTimeRepository().getSolarTime(locationId, localDate);
+            return solarTime;
         }
     }
 
@@ -107,12 +108,10 @@ public class AsyncDbAccess
         }
     }
 
-
-
     public static class GetSolarTime extends AsyncTask<Integer, Void, SolarTime>
     {
         @RequiresApi(api = Build.VERSION_CODES.O)
-        //@Override
+        @Override
         protected SolarTime doInBackground(Integer... id)
         {
             SolarTime solarTime = null;
