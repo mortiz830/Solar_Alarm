@@ -15,13 +15,11 @@ import com.example.solar_alarm.Data.Daos.LocationDao;
 import com.example.solar_alarm.Data.Daos.SolarAlarmDao;
 import com.example.solar_alarm.Data.Daos.SolarTimeDao;
 import com.example.solar_alarm.Data.Daos.StaticDataDao;
-import com.example.solar_alarm.Data.Daos.TimezoneDao;
 import com.example.solar_alarm.Data.Tables.OffsetType;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
 import com.example.solar_alarm.Data.Tables.SolarTimeType;
-import com.example.solar_alarm.Data.Tables.Timezone;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,8 +33,7 @@ import java.util.concurrent.Executors;
         Location.class,
         SolarAlarm.class,
         SolarTime.class,
-        SolarTimeType.class,
-        Timezone.class
+        SolarTimeType.class
     },
     version = 1,
     exportSchema = false
@@ -48,7 +45,6 @@ public abstract class SolarAlarmDatabase extends RoomDatabase
     public abstract LocationDao locationDao();
     public abstract SolarAlarmDao solarAlarmDao();
     public abstract SolarTimeDao solarTimeDao();
-    public abstract TimezoneDao timezoneDao();
 
     public abstract AlarmDisplayDataDao alarmDisplayDataDao();
 

@@ -11,7 +11,6 @@ import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
 import com.example.solar_alarm.Data.Tables.Location;
 import com.example.solar_alarm.Data.Tables.SolarAlarm;
 import com.example.solar_alarm.Data.Tables.SolarTime;
-import com.example.solar_alarm.Data.Tables.Timezone;
 
 import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
@@ -25,7 +24,6 @@ public class SolarAlarmDisplayModel extends AndroidViewModel
     private SolarAlarm              _SolarAlarm;
     private LocationDisplayModel    _LocationDisplayModel;
     private SolarTimeDisplayModel   _SolarTimeDisplayModel;
-    private Timezone                _Timezone;
 
     private HashMap<DayOfWeek, Boolean> _RecurrenceDays;
 

@@ -1,6 +1,5 @@
 package com.example.solar_alarm.Location;
 
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import androidx.navigation.Navigation;
 import com.example.solar_alarm.Data.AsyncDbAccess;
 import com.example.solar_alarm.Data.Repositories.LocationRepository;
 import com.example.solar_alarm.Data.Tables.Location;
-import com.example.solar_alarm.Data.Tables.Timezone;
 import com.example.solar_alarm.R;
 import com.example.solar_alarm.Service.GpsTracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,16 +25,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,7 +55,6 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
     boolean isLocationLongitudeExists;
     boolean isLocationPointExists;
     String locationName;
-    TimeZoneResults timeZoneResults;
 
     LocationRepository locationRepository;
 
@@ -129,35 +119,6 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         }
     }
 
-    public void getTimeZone(double latitude, double longitude) throws IOException {
-        String timeStamp = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
-
-        String query = String.format("?key=%s&format=%s&by=position&lat=%s&lng=%s",
-                URLEncoder.encode(String.valueOf(getResources().getString(R.string.time_zone_api_key)), "UTF-8"),
-                URLEncoder.encode(String.valueOf(getResources().getString(R.string.url_format)), "UTF-8"),
-                URLEncoder.encode(String.valueOf(latitude), "UTF-8"),
-                        URLEncoder.encode(String.valueOf(longitude), "UTF-8"),
-                URLEncoder.encode(timeStamp, "UTF-8"));
-        URL url = new URL("http://api.timezonedb.com/v2.1/get-time-zone" + query);
-
-        httpUrlConnection = (HttpURLConnection)url.openConnection();
-        httpUrlConnection.setRequestMethod("GET");
-        httpUrlConnection.setDoOutput(true);
-        httpUrlConnection.setConnectTimeout(5000);
-        httpUrlConnection.setReadTimeout(5000);
-
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
-        String inputLine;
-        StringBuilder content = new StringBuilder();
-
-        while ((inputLine = bufferedReader.readLine()) != null) {
-            content.append(inputLine);
-        }
-        Gson gson = new Gson();
-        timeZoneResults = gson.fromJson(content.toString(), TimeZoneResults.class);
-        bufferedReader.close();
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void saveLocation()
     {
@@ -165,49 +126,11 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
 
         Location location = new Location();
         location.Name = locationName;
-        location.TimezoneId = timeZoneID;
         location.Latitude = latitude;
         location.Longitude = longitude;
 
         locationRepository.Insert(location);
         Toast.makeText(getContext(), "New Location Created", Toast.LENGTH_LONG).show();
-    }
-
-    public void saveTimeZone()
-    {
-        Timezone timezone = new Timezone();
-        timezone.CountryCode = timeZoneResults.countryCode;
-        timezone.CountryName = timeZoneResults.countryName;
-        timezone.ZoneName = timeZoneResults.zoneName;
-        timezone.Abbreviation = timeZoneResults.abbreviation;
-        timezone.GmtOffset = timeZoneResults.gmtOffset;
-        timezone.Dst = timeZoneResults.dst;
-        timezone.ZoneStart = timeZoneResults.zoneStart;
-        timezone.ZoneEnd = timeZoneResults.zoneEnd;
-        timezone.NextAbbreviation = timeZoneResults.nextAbbreviation;
-        timezone.Timestamp = timeZoneResults.timestamp;
-        timezone.Id = timeZoneID;
-    }
-
-    private class TimeZoneTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                getTimeZone(latitude, longitude);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void unused)
-        {
-            super.onPostExecute(unused);
-            timeZoneText.setText(timeZoneResults.getZoneName());
-            saveTimeZone();
-        }
     }
 
     @Override
@@ -229,8 +152,6 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
                 longitude = latLng.longitude;
                 latitudeText.setText(String.valueOf(latitude));
                 longitudeText.setText(String.valueOf(longitude));
-
-                new TimeZoneTask().execute();
             }
         });
     }
