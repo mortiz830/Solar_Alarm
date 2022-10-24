@@ -1,5 +1,6 @@
 package com.example.solar_alarm.Location;
 
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -45,16 +46,8 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
     @BindView(R.id.fragment_add_location_LocationNameText)
     EditText locationNameText;
     GoogleMap googleMap;
-    private GpsTracker gpsTracker;
     private double latitude;
     private double longitude;
-    public int timeZoneID;
-    private HttpURLConnection httpUrlConnection;
-    Boolean isLocationNameExists;
-    boolean isLocationLatitudeExists;
-    boolean isLocationLongitudeExists;
-    boolean isLocationPointExists;
-    String locationName;
 
     LocationRepository locationRepository;
 
@@ -80,39 +73,96 @@ public class AddLocationFragment extends Fragment implements OnMapReadyCallback 
         longitudeText.setText(String.valueOf(longitude));
         timeZoneText.setText(TimeZone.getDefault().toZoneId().toString());
 
-        addLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                locationName = locationNameText.getText().toString();
-                try{
-                    isLocationNameExists = new AsyncDbAccess.LocationNameExistsTask().execute(locationName).get();
-                    isLocationPointExists = new AsyncDbAccess.LocationPointExistsTask().execute(latitude, longitude).get();
-                } catch(Exception e){
-                    e.printStackTrace();
-                }
+        addLocationButton.setOnClickListener(view1 ->
+        {
+            try
+            {
+                String  locationName           = locationNameText.getText().toString();
+                boolean isLocationNameExists  = new LocationNameExistsTask().execute(locationName).get();
+                boolean isLocationPointExists = new LocationPointExistsTask().execute(latitude, longitude).get();
 
                 if(!isLocationNameExists  && !isLocationPointExists)
                 {
                     saveLocation();
-                    Navigation.findNavController(view).navigate(R.id.action_addLocationFragment_to_alarmsListFragment);
+                    Navigation.findNavController(view1).navigate(R.id.action_addLocationFragment_to_alarmsListFragment);
                 }
                 else if(isLocationNameExists && isLocationPointExists)
                 {
                     Toast.makeText(getContext(), "Location Name & Point Already Exists!", Toast.LENGTH_LONG).show();
-                } else if (isLocationNameExists)
+                }
+                else if (isLocationNameExists)
+                {
                     Toast.makeText(getContext(), "Location Name Already Exists!", Toast.LENGTH_LONG).show();
+                }
                 else if(isLocationPointExists)
+                {
                     Toast.makeText(getContext(), "Location Point Already Exists!", Toast.LENGTH_LONG).show();
+                }
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
             }
         });
 
         return view;
     }
 
-    public void getCurrentLocation(View view){
-        gpsTracker = new GpsTracker(view.getContext());
-        if(gpsTracker.canGetLocation()){
-            latitude = gpsTracker.getLatitude();
+    private static class LocationNameExistsTask extends AsyncTask<String, Void, Boolean>
+    {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        protected Boolean doInBackground(String... strings )
+        {
+            Boolean result = false;
+
+            try
+            {
+                String locationName = strings[0];
+                LocationRepository locationRepository = new LocationRepository();
+                result = locationRepository.isLocationNameExists(locationName);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+    }
+
+    private static class LocationPointExistsTask extends AsyncTask<Double, Void, Boolean>
+    {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        protected Boolean doInBackground(Double... doubles)
+        {
+            boolean isLocationLatitudeExists  = false;
+            boolean isLocationLongitudeExists = false;
+
+            try
+            {
+                double latitude  = doubles[0];
+                double longitude = doubles[1];
+
+                isLocationLatitudeExists  = new LocationRepository().isLocationLatitudeExists(latitude);
+                isLocationLongitudeExists = new LocationRepository().isLocationLongitudeExists(longitude);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            return isLocationLatitudeExists && isLocationLongitudeExists;
+        }
+    }
+
+    public void getCurrentLocation(View view)
+    {
+        GpsTracker gpsTracker = new GpsTracker(view.getContext());
+
+        if (gpsTracker.canGetLocation())
+        {
+            latitude  = gpsTracker.getLatitude();
             longitude = gpsTracker.getLongitude();
         }else{
             gpsTracker.showSettingsAlert();

@@ -134,7 +134,7 @@ public class AsyncDbAccess
         }
     }
 
-    public static class LocationNameExistsTask extends AsyncTask<String, Void, Boolean> {
+    /*public static class LocationNameExistsTask extends AsyncTask<String, Void, Boolean> {
 
         @RequiresApi(api = Build.VERSION_CODES.O)
         protected Boolean doInBackground(String... strings )
@@ -144,7 +144,8 @@ public class AsyncDbAccess
             try
             {
                 String locationName = strings[0];
-                result = new LocationRepository().isLocationNameExists(locationName);
+                LocationRepository locationRepository = new LocationRepository();
+                result = locationRepository.isLocationNameExists(locationName);
             }
             catch (Exception e)
             {
@@ -153,7 +154,7 @@ public class AsyncDbAccess
 
             return result;
         }
-    }
+    }*/
 
     public static class LocationPointExistsTask extends AsyncTask<Double, Void, Boolean>
     {

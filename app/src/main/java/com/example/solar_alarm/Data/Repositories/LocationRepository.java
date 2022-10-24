@@ -26,8 +26,8 @@ public class LocationRepository extends RepositoryBase
 
     public LocationRepository()
     {
-        locationDao = _SolarAlarmDatabase.locationDao();
-        staticDataDao = _SolarAlarmDatabase.staticDataDao();
+        locationDao       = _SolarAlarmDatabase.locationDao();
+        staticDataDao     = _SolarAlarmDatabase.staticDataDao();
         locationsLiveData = locationDao.getAll();
 
         AddStaticData();
@@ -35,17 +35,17 @@ public class LocationRepository extends RepositoryBase
 
     public void Insert(Location location)
     {
-        SolarAlarmDatabase.databaseWriteExecutor.execute(() -> locationDao.Insert(location));
+        _SolarAlarmDatabase.databaseWriteExecutor.execute(() -> locationDao.Insert(location));
     }
 
     public void Update(Location location)
     {
-        SolarAlarmDatabase.databaseWriteExecutor.execute(() -> locationDao.Update(location));
+        _SolarAlarmDatabase.databaseWriteExecutor.execute(() -> locationDao.Update(location));
     }
 
     public void delete(Location location)
     {
-        SolarAlarmDatabase.databaseWriteExecutor.execute(() -> locationDao.delete(location));
+        _SolarAlarmDatabase.databaseWriteExecutor.execute(() -> locationDao.delete(location));
     }
 
     public LiveData<List<Location>> getAll() { return locationsLiveData; }
@@ -70,7 +70,7 @@ public class LocationRepository extends RepositoryBase
     private void AddStaticData()
     {
         try {
-            new IsTimeUnitTypesExistsTask().execute().get();
+            //new IsTimeUnitTypesExistsTask().execute().get();
         } catch (Exception e) {
             e.printStackTrace();
         }
