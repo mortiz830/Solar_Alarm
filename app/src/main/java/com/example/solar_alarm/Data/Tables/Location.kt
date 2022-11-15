@@ -1,10 +1,7 @@
 package com.example.solar_alarm.Data.Tables
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.Index
-import com.example.solar_alarm.Data.Tables.TableBase
-import com.example.solar_alarm.Data.Tables.Timezone
 
 @Entity(tableName = "Location", indices = [Index(value = ["Name"], unique = true), Index(value = ["Latitude", "Longitude"], unique = true)])
 class Location : TableBase() {
