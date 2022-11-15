@@ -10,6 +10,7 @@ import android.content.Intent
 import com.example.solar_alarm.Service.AlarmService
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.annotation.TargetApi
 import com.example.solar_alarm.AlarmList.OnToggleAlarmListener
 import com.example.solar_alarm.AlarmList.AlarmRecycleViewAdapter
 import com.example.solar_alarm.AlarmList.AlarmListViewModel
@@ -144,12 +145,12 @@ class AlarmViewHolder(itemView: View, listener: OnToggleAlarmListener) : Recycle
         this.listener = listener
     }
 
-    private inner class GetSolarTime : AsyncTask<Int?, Void?, SolarTime?>() {
-        @RequiresApi(api = Build.VERSION_CODES.O) //@Override
-        protected override fun doInBackground(vararg id: Int): SolarTime? {
+    inner class GetSolarTime : AsyncTask<Int?, Void?, SolarTime?>() {
+        @TargetApi(Build.VERSION_CODES.O) //@Override
+        protected override fun doInBackground(vararg p0: Int?): SolarTime? {
             var solarTime: SolarTime? = null
             try {
-                solarTime = SolarTimeRepository().GetById(id[0])
+                solarTime = SolarTimeRepository().GetById(0)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -163,10 +164,10 @@ class AlarmViewHolder(itemView: View, listener: OnToggleAlarmListener) : Recycle
     @Throws(Exception::class)
     fun bind(solarAlarm: SolarAlarm) {
         val solarTime = GetSolarTime().execute(solarAlarm.SolarTimeId).get()!!
-        val zonedDateTime = solarTime.GetLocalZonedDateTime(solarAlarm.SolarTimeTypeId)
-        zonedDateTime.hour
-        val localTime = zonedDateTime.toLocalTime()
-        val alarmText = Converters.toTimeString(zonedDateTime)
+        val zonedDateTime = solarAlarm.SolarTimeTypeId?.let { solarTime.GetLocalZonedDateTime(it) }
+        zonedDateTime?.hour
+        val localTime = zonedDateTime?.toLocalTime()
+        val alarmText = zonedDateTime?.let { Converters.toTimeString(it) }
         alarmDate.text = alarmText!![0]
         alarmTime.text = alarmText[1]
         alarmStarted.isChecked = solarAlarm.Active

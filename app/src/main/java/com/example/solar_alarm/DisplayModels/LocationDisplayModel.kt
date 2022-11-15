@@ -134,7 +134,7 @@ class LocationDisplayModel(private val _Application: Application, private val _L
         return _Location!!.Id
     }
 
-    fun GetName(): String {
+    fun GetName(): String? {
         return _Location!!.Name
     }
 

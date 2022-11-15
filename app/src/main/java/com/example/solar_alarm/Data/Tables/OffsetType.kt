@@ -7,5 +7,5 @@ import com.example.solar_alarm.Data.Tables.TableBase
 @Entity(tableName = "OffsetTypes", indices = [Index(value = ["Name"], unique = true)])
 class OffsetType : TableBase() {
     @JvmField
-    var Name: String = null
+    var Name: String? = null
 }

@@ -361,7 +361,7 @@ class CreateAlarmFragment : Fragment() {
         alarmScheduler.schedule(context)
     }
 
-    private inner class TimeResponseTask : AsyncTask<Any?, Void?, SolarTime?>() {
+    inner class TimeResponseTask : AsyncTask<Any?, Void?, SolarTime?>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
         protected override fun doInBackground(vararg objects: Any): SolarTime? {
             var solarTime: SolarTime? = null
@@ -379,7 +379,7 @@ class CreateAlarmFragment : Fragment() {
         }
     }
 
-    private inner class LocationIdDatePairExistsTask : AsyncTask<Any?, Void?, Boolean>() {
+    inner class LocationIdDatePairExistsTask : AsyncTask<Any?, Void?, Boolean>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
         protected override fun doInBackground(vararg objects: Any): Boolean {
             val location = objects[0] as Location
@@ -395,7 +395,7 @@ class CreateAlarmFragment : Fragment() {
         }
     }
 
-    private inner class GetSolarTimeTask : AsyncTask<Any?, Void?, SolarTime?>() {
+    inner class GetSolarTimeTask : AsyncTask<Any?, Void?, SolarTime?>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
         protected override fun doInBackground(vararg objects: Any): SolarTime? {
             val locationId = objects[0] as Int
@@ -404,7 +404,7 @@ class CreateAlarmFragment : Fragment() {
         }
     }
 
-    private inner class SolarAlarmNameExistsTask : AsyncTask<SolarAlarm?, Void?, Boolean>() {
+    inner class SolarAlarmNameExistsTask : AsyncTask<SolarAlarm?, Void?, Boolean>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
         protected override fun doInBackground(vararg solarAlarms: SolarAlarm): Boolean {
             var result = false

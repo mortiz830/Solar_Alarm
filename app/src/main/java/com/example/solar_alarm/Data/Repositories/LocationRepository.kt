@@ -137,7 +137,7 @@ class LocationRepository : RepositoryBase() {
     init {
         locationDao = _SolarAlarmDatabase!!.locationDao()
         staticDataDao = _SolarAlarmDatabase!!.staticDataDao()
-        all = locationDao.all
+        all = locationDao?.all
         AddStaticData()
     }
 
@@ -177,8 +177,8 @@ class LocationRepository : RepositoryBase() {
         }
     }
 
-    private inner class IsTimeUnitTypesExistsTask : AsyncTask<Double?, Void?, Boolean>() {
-        protected override fun doInBackground(vararg doubles: Double): Boolean {
+    inner class IsTimeUnitTypesExistsTask : AsyncTask<Double?, Void?, Boolean>() {
+        protected override fun doInBackground(vararg p0: Double?): Boolean? {
             try {
                 if (!staticDataDao!!.isOffsetTypesExists) {
                     for (enumType in OffsetTypeEnum.values()) {

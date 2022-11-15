@@ -132,19 +132,19 @@ import androidx.lifecycle.LifecycleService
 import com.example.solar_alarm.sunrise_sunset_http.Results
 
 class TimezoneDisplayModel(private val _Timezone: Timezone?) {
-    fun GetCountryCode(): String {
+    fun GetCountryCode(): String? {
         return _Timezone!!.CountryCode
     }
 
-    fun GetCountryName(): String {
+    fun GetCountryName(): String? {
         return _Timezone!!.CountryName
     }
 
-    fun GetZoneName(): String {
+    fun GetZoneName(): String? {
         return _Timezone!!.ZoneName
     }
 
-    fun GetAbbreviation(): String {
+    fun GetAbbreviation(): String? {
         return _Timezone!!.Abbreviation
     }
 
@@ -152,7 +152,7 @@ class TimezoneDisplayModel(private val _Timezone: Timezone?) {
         return _Timezone!!.GmtOffset
     }
 
-    fun IsDayLightSaving(): Boolean {
+    fun IsDayLightSaving(): Boolean? {
         return _Timezone!!.Dst
     }
 
@@ -164,7 +164,7 @@ class TimezoneDisplayModel(private val _Timezone: Timezone?) {
         return _Timezone!!.ZoneEnd
     }
 
-    fun GetNextAbbreviation(): String {
+    fun GetNextAbbreviation(): String? {
         return _Timezone!!.NextAbbreviation
     }
 

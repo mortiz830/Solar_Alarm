@@ -157,7 +157,7 @@ class SolarAlarmDisplayModel(private val _Application: Application, private val 
         return _SolarTimeDisplayModel!!
     }
 
-    fun GetName(): String {
+    fun GetName(): String? {
         return _SolarAlarm!!.Name
     }
 

@@ -136,14 +136,16 @@ class AlarmListViewModel(application: Application) : AndroidViewModel(applicatio
     val solarTimeLiveData: LiveData<List<SolarTime?>?>?
     val locationLiveData: LiveData<List<Location?>?>?
     private val alarmDisplayDataDao: AlarmDisplayDataDao? = null
-    val alarmDisplayLiveData: LiveData<List<AlarmDisplayData?>?>?
+    var alarmDisplayLiveData: LiveData<List<AlarmDisplayData?>?>? = null
 
     //String rawQuery = "SELECT DISTINCT " + Location.Id + ","
     init {
 
         // to be deleted
-        val db: SolarAlarmDatabase = SolarAlarmDatabase.Companion.getDatabase(application)
-        alarmDisplayLiveData = db.alarmDisplayDataDao().loadAlarmData()
+        val db: SolarAlarmDatabase? = SolarAlarmDatabase.Companion.getDatabase(application)
+        if (db != null) {
+            alarmDisplayLiveData = db.alarmDisplayDataDao().loadAlarmData()
+        }
         solarAlarmRepository = SolarAlarmRepository()
         alarmsLiveData = solarAlarmRepository.all
         solarTimeLiveData = SolarTimeRepository().all
@@ -156,5 +158,9 @@ class AlarmListViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun delete(alarm: SolarAlarm?) {
         solarAlarmRepository.Delete(alarm)
+    }
+
+    fun getSolarAlarmLiveData(): LiveData<List<SolarAlarm?>?>? {
+        return alarmsLiveData
     }
 }

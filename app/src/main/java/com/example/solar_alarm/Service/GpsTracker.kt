@@ -165,7 +165,7 @@ class GpsTracker(private val mContext: Context) : Service(), LocationListener {
             isGPSEnabled = locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
 
             // getting network status
-            isNetworkEnabled = locationManager
+            isNetworkEnabled = locationManager!!
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER)
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled

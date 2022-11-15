@@ -138,7 +138,7 @@ class SolarTimeRepository @RequiresApi(api = Build.VERSION_CODES.O) constructor(
 
     init {
         solarTimeDao = _SolarAlarmDatabase!!.solarTimeDao()
-        all = solarTimeDao.all
+        all = solarTimeDao?.all
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

@@ -142,7 +142,7 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
         super.onCreate(savedInstanceState)
         alarmRecyclerViewAdapter = AlarmRecycleViewAdapter(this)
         alarmsListViewModel = ViewModelProviders.of(this).get(AlarmListViewModel::class.java)
-        alarmsListViewModel.getSolarAlarmLiveData().observe(this) { alarmListViewModels ->
+        alarmsListViewModel!!.getSolarAlarmLiveData()?.observe(this) { alarmListViewModels ->
             if (alarmListViewModels != null) {
                 alarmRecyclerViewAdapter!!.setAlarms(alarmListViewModels)
             }

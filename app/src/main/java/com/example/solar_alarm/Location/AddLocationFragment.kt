@@ -261,7 +261,7 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback {
         timezone.Id = timeZoneID
     }
 
-    private inner class TimeZoneTask : AsyncTask<Void?, Void?, Void?>() {
+    inner class TimeZoneTask : AsyncTask<Void?, Void?, Void?>() {
         protected override fun doInBackground(vararg voids: Void): Void? {
             try {
                 getTimeZone(latitude, longitude)
@@ -278,7 +278,7 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private inner class LocationNameExistsTask : AsyncTask<String?, Void?, Boolean>() {
+    inner class LocationNameExistsTask : AsyncTask<String?, Void?, Boolean>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
         protected override fun doInBackground(vararg strings: String): Boolean {
             var result = false
@@ -291,7 +291,7 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private inner class LocationPointExistsTask : AsyncTask<Double?, Void?, Boolean>() {
+    inner class LocationPointExistsTask : AsyncTask<Double?, Void?, Boolean>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
         protected override fun doInBackground(vararg doubles: Double): Boolean {
             try {

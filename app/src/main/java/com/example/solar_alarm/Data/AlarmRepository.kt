@@ -131,14 +131,15 @@ import android.content.DialogInterface
 import androidx.lifecycle.LifecycleService
 import com.example.solar_alarm.sunrise_sunset_http.Results
 
+@RequiresApi(Build.VERSION_CODES.O)
 class AlarmRepository(application: Application) {
     private val alarmDao: AlarmDao?
     val alarmsLiveData: LiveData<List<Alarm?>?>?
 
     init {
-        val db: AlarmDatabase = AlarmDatabase.Companion.getDatabase(application)
-        alarmDao = db.alarmDao()
-        alarmsLiveData = alarmDao.alarms
+        val db: AlarmDatabase? = AlarmDatabase.Companion.getDatabase(application)
+        alarmDao = db?.alarmDao()
+        alarmsLiveData = alarmDao?.alarms
     }
 
     fun insert(alarm: Alarm?) {

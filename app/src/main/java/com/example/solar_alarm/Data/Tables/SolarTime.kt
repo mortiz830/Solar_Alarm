@@ -1,36 +1,28 @@
 package com.example.solar_alarm.Data.Tables
 
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse.dayLength
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse.sunrise
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse.sunset
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse.solarNoon
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse.civilTwilightBegin
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse.civilTwilightEnd
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse.nauticalTwilightBegin
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse.nauticalTwilightEnd
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse.astronomicalTwilightBegin
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse.astronomicalTwilightEnd
-import androidx.annotation.RequiresApi
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import com.example.solar_alarm.Data.Tables.TableBase
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse
-import kotlin.Throws
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
-import java.lang.Exception
+import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse
 import java.time.*
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-@Entity(tableName = "SolarTime", indices = [Index(value = ["SolarDate", "LocationId"], unique = true)])
+@Entity(tableName = "SolarTime", indices = [Index(value = ["SolarDate", "LocationId"], unique = true)], foreignKeys = [
+        ForeignKey(
+            entity = Location::class,
+            parentColumns = ["Id"],
+            childColumns = ["LocationId"],
+            onDelete = ForeignKey.CASCADE)]
+)
 class SolarTime : TableBase {
     @JvmField
-    var SolarDate: LocalDate = null
+    var SolarDate: LocalDate? = null
 
     @JvmField
-    @ForeignKey(entity = Location::class, parentColumns = ["Id"], childColumns = ["LocationId"])
     var LocationId = 0
     @JvmField
     var DayLength = 0

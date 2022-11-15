@@ -13,19 +13,41 @@ import com.example.solar_alarm.Data.Tables.SolarTimeType
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-@Entity(tableName = "SolarAlarm", indices = [Index(value = ["Name", "LocationId"], unique = true)])
+@Entity(tableName = "SolarAlarm", indices = [Index(value = ["Name", "LocationId"], unique = true)], foreignKeys = [
+    ForeignKey(
+        entity = Location::class,
+        parentColumns = ["Id"],
+        childColumns = ["LocationId"],
+        onDelete = ForeignKey.CASCADE),
+
+    ForeignKey(
+        entity = SolarTime::class,
+        parentColumns = ["Id"],
+        childColumns = ["SolarTimeId"],
+        onDelete = ForeignKey.CASCADE),
+
+    ForeignKey(
+        entity = OffsetType::class,
+        parentColumns = ["Id"],
+        childColumns = ["OffsetTypeId"],
+        onDelete = ForeignKey.CASCADE),
+
+    ForeignKey(
+        entity = SolarTimeType::class,
+        parentColumns = ["Id"],
+        childColumns = ["SolarTimeTypeId"],
+        onDelete = ForeignKey.CASCADE)]
+)
 class SolarAlarm : TableBase() {
     @JvmField
-    var Name: String = null
+    var Name: String? = null
     @JvmField
     var Active = false
 
     @JvmField
-    @ForeignKey(entity = Location::class, parentColumns = ["Id"], childColumns = ["LocationId"])
     var LocationId = 0
 
     @JvmField
-    @ForeignKey(entity = SolarTime::class, parentColumns = ["Id"], childColumns = ["SolarTimeId"])
     var SolarTimeId = 0
 
     // Recurrence Flags
@@ -47,11 +69,9 @@ class SolarAlarm : TableBase() {
     var Sunday = false
 
     @JvmField
-    @ForeignKey(entity = OffsetType::class, parentColumns = ["Id"], childColumns = ["OffsetTypeId"])
     var OffsetTypeId: OffsetTypeEnum? = null
 
     @JvmField
-    @ForeignKey(entity = SolarTimeType::class, parentColumns = ["Id"], childColumns = ["SolarTimeTypeId"])
     var SolarTimeTypeId: SolarTimeTypeEnum? = null
     val recurringDaysText: String?
         get() {

@@ -138,7 +138,7 @@ class SolarAlarmRepository @RequiresApi(api = Build.VERSION_CODES.O) constructor
 
     init {
         solarAlarmDao = _SolarAlarmDatabase!!.solarAlarmDao()
-        all = solarAlarmDao.all
+        all = solarAlarmDao?.all
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

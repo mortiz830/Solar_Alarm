@@ -138,7 +138,7 @@ class TimezoneRepository(application: Application?) : RepositoryBase() {
 
     init {
         timezoneDao = _SolarAlarmDatabase!!.timezoneDao()
-        all = timezoneDao.all
+        all = timezoneDao?.all
     }
 
     fun Insert(timezone: Timezone?) {

@@ -136,13 +136,14 @@ class RescheduleAlarmService : LifecycleService() {
         super.onCreate()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         val alarmRepository = AlarmRepository(application)
-        alarmRepository.alarmsLiveData.observe(this) { alarms ->
-            for (a in alarms) {
-                if (a.isStarted) {
-                    a.schedule(applicationContext)
+        alarmRepository.alarmsLiveData?.observe(this) { alarms ->
+            for (a in alarms!!) {
+                if (a?.isStarted!!) {
+                    a?.schedule(applicationContext)
                 }
             }
         }
