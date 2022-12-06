@@ -8,16 +8,6 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.solar_alarm.Data.Repositories.LocationRepository;
-import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository;
-import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
-import com.example.solar_alarm.Data.Tables.Location;
-import com.example.solar_alarm.Data.Tables.SolarAlarm;
-import com.example.solar_alarm.Data.Tables.SolarTime;
-import com.example.solar_alarm.sunrise_sunset_http.HttpRequests;
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest;
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
-
 import java.time.LocalDate;
 
 public class AsyncDbAccess

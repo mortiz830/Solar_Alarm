@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import com.example.solar_alarm.Data.Tables.SolarAlarm
 import java.time.ZoneId
 import java.util.*
 
@@ -26,7 +27,6 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
     private var addAlarm: Button? = null
     private var addLocation: Button? = null
     private var gpsTracker: GpsTracker? = null
-    var timeZone: TextView? = null
     var latitude: TextView? = null
     var longitude: TextView? = null
     var zoneId: ZoneId? = null
@@ -37,7 +37,7 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
         alarmsListViewModel = ViewModelProviders.of(this).get(AlarmListViewModel::class.java)
         alarmsListViewModel!!.getSolarAlarmLiveData()?.observe(this) { alarmListViewModels ->
             if (alarmListViewModels != null) {
-                alarmRecyclerViewAdapter!!.setAlarms(alarmListViewModels)
+                alarmRecyclerViewAdapter!!.setAlarms(alarmListViewModels as MutableList<SolarAlarm>)
             }
         }
     }
@@ -50,10 +50,8 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
         alarmsRecyclerView.setAdapter(alarmRecyclerViewAdapter)
         configureOnClickRecyclerView()
         zoneId = TimeZone.getDefault().toZoneId()
-        timeZone = view.findViewById(R.id.fragment_listalarms_timezone)
         latitude = view.findViewById(R.id.fragment_listalarms_latitude)
         longitude = view.findViewById(R.id.fragment_listalarms_longitude)
-        timeZone.setText(zoneId.toString())
         addAlarm = view.findViewById(R.id.fragment_listalarms_addAlarm)
         addAlarm.setOnClickListener(View.OnClickListener { v -> Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_createAlarmFragment) })
         addLocation = view.findViewById(R.id.fragment_listAlarms_addLocation)

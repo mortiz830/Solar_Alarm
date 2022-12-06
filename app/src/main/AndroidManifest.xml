@@ -26,27 +26,6 @@
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_key"/>
 
-        <activity android:name=".Activities.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".Activities.RingActivity">
-        </activity>
-
-        <receiver android:name=".BroadcastReceiver.AlarmBroadcastReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <service android:name=".Service.AlarmService" />
-        <service android:name=".Service.RescheduleAlarmService" />
     </application>
 
 </manifest>

@@ -17,7 +17,7 @@ class AlarmService : Service() {
     override fun onCreate() {
         super.onCreate()
         mediaPlayer = MediaPlayer.create(this, R.raw.alarm)
-        mediaPlayer.setLooping(true)
+        mediaPlayer?.isLooping
         vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
     }
 

@@ -50,10 +50,10 @@ class SolarTime : TableBase {
     constructor() {} // explicitly create default constructor for Android Room
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    constructor(location: Location, sunriseSunsetResponse: SunriseSunsetResponse) {
-        SolarDate = sunriseSunsetResponse.request!!.RequestDate
+    constructor(location: Location, sunriseSunsetResponse: SunriseSunsetResponse?) {
+        SolarDate = sunriseSunsetResponse?.request!!.RequestDate
         LocationId = location.Id
-        DayLength = sunriseSunsetResponse.dayLength
+        DayLength = sunriseSunsetResponse.dayLength!!
         SunriseUtc = sunriseSunsetResponse.sunrise
         SunsetUtc = sunriseSunsetResponse.sunset
         SolarNoonUtc = sunriseSunsetResponse.solarNoon

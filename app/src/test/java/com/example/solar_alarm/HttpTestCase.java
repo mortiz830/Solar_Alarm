@@ -1,9 +1,5 @@
 package com.example.solar_alarm;
 
-import com.example.solar_alarm.sunrise_sunset_http.HttpRequests;
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest;
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
-
 import org.junit.Assert;
 import org.junit.Test;
 

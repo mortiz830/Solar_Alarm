@@ -19,7 +19,6 @@ import com.google.gson.Gson
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.example.solar_alarm.Location.AddLocationFragment.TimeZoneTask
 import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -150,7 +149,7 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback {
 
     inner class LocationNameExistsTask : AsyncTask<String?, Void?, Boolean>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
-        protected override fun doInBackground(vararg strings: String): Boolean {
+        override fun doInBackground(vararg p0: String?): Boolean? {
             var result = false
             try {
                 result = locationRepository!!.isLocationNameExists(locationName)
@@ -163,7 +162,7 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback {
 
     inner class LocationPointExistsTask : AsyncTask<Double?, Void?, Boolean>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
-        protected override fun doInBackground(vararg doubles: Double): Boolean {
+        override fun doInBackground(vararg p0: Double?): Boolean? {
             try {
                 isLocationLatitudeExists = locationRepository!!.isLocationLatitudeExists(latitude)
                 isLocationLongitudeExists = locationRepository!!.isLocationLongitudeExists(longitude)
@@ -189,7 +188,6 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback {
             longitude = latLng.longitude
             latitudeText!!.text = latitude.toString()
             longitudeText!!.text = longitude.toString()
-            TimeZoneTask().execute()
         }
     }
 }

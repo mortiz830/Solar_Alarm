@@ -24,7 +24,7 @@ class DisplayModelRepository(private val _Application: Application) {
                 values = ArrayList()
             }
             for (solarAlarm in values) {
-                _SolarAlarmDisplayModels.add(SolarAlarmDisplayModel(_Application, solarAlarm))
+                (_SolarAlarmDisplayModels as ArrayList<SolarAlarmDisplayModel>).add(SolarAlarmDisplayModel(_Application, solarAlarm))
             }
             _LiveData = object : LiveData<List<SolarAlarmDisplayModel?>?>() {
                 override fun observe(owner: LifecycleOwner, _SolarAlarmDisplayModels: Observer<in List<SolarAlarmDisplayModel?>?>) {

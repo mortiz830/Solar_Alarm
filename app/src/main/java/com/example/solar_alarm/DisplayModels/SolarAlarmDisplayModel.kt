@@ -59,15 +59,16 @@ class SolarAlarmDisplayModel(private val _Application: Application, private val 
     fun GetSetAlarmTime(): ZonedDateTime? {
         try {
             return when (_SolarAlarm!!.SolarTimeTypeId) {
-                SolarTimeTypeEnum.Sunrise -> _SolarTimeDisplayModel.getSunrise()
-                SolarTimeTypeEnum.Sunset -> _SolarTimeDisplayModel.getSunset()
-                SolarTimeTypeEnum.SolarNoon -> _SolarTimeDisplayModel.getSolarNoon()
-                SolarTimeTypeEnum.CivilTwilightBegin -> _SolarTimeDisplayModel.getCivilTwilightBegin()
-                SolarTimeTypeEnum.CivilTwilightEnd -> _SolarTimeDisplayModel.getCivilTwilightEnd()
-                SolarTimeTypeEnum.NauticalTwilightBegin -> _SolarTimeDisplayModel.getNauticalTwilightBegin()
-                SolarTimeTypeEnum.NauticalTwilightEnd -> _SolarTimeDisplayModel.getNauticalTwilightEnd()
-                SolarTimeTypeEnum.AstronomicalTwilightBegin -> _SolarTimeDisplayModel.getAstronomicalTwilightBegin()
-                SolarTimeTypeEnum.AstronomicalTwilightEnd -> _SolarTimeDisplayModel.getAstronomicalTwilightEnd()
+                SolarTimeTypeEnum.Sunrise -> _SolarTimeDisplayModel?.sunrise
+                SolarTimeTypeEnum.Sunset -> _SolarTimeDisplayModel?.sunset
+                SolarTimeTypeEnum.SolarNoon -> _SolarTimeDisplayModel?.solarNoon
+                SolarTimeTypeEnum.CivilTwilightBegin -> _SolarTimeDisplayModel?.civilTwilightBegin
+                SolarTimeTypeEnum.CivilTwilightEnd -> _SolarTimeDisplayModel?.civilTwilightEnd
+                SolarTimeTypeEnum.NauticalTwilightBegin -> _SolarTimeDisplayModel?.nauticalTwilightBegin
+                SolarTimeTypeEnum.NauticalTwilightEnd -> _SolarTimeDisplayModel?.nauticalTwilightEnd
+                SolarTimeTypeEnum.AstronomicalTwilightBegin -> _SolarTimeDisplayModel?.astronomicalTwilightBegin
+                SolarTimeTypeEnum.AstronomicalTwilightEnd -> _SolarTimeDisplayModel?.astronomicalTwilightEnd
+                else -> {return null}
             }
         } catch (e: Exception) {
             e.printStackTrace()

@@ -33,7 +33,7 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
         intent.putExtra(AlarmBroadcastReceiver.Companion.TITLE, solarAlarm.Name)
         val localZonedDateTime: ZonedDateTime
         localZonedDateTime = if (true) ZonedDateTime.now().plusMinutes(mins.toLong()) else  // DEBUG_STATEMENT makes alarm ring immediately
-            solarTime.GetLocalZonedDateTime(solarAlarm.SolarTimeTypeId)
+            solarAlarm.SolarTimeTypeId?.let { solarTime.GetLocalZonedDateTime(it) }!!
         if (solarAlarm.OffsetTypeId == OffsetTypeEnum.Before) {
             localZonedDateTime.minusHours(hours.toLong())
             localZonedDateTime.minusMinutes(mins.toLong())

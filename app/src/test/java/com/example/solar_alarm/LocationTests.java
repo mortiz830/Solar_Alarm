@@ -5,10 +5,6 @@ import android.content.Context;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 
-import com.example.solar_alarm.Data.Daos.LocationDao;
-import com.example.solar_alarm.Data.SolarAlarmDatabase;
-import com.example.solar_alarm.Data.Tables.Location;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

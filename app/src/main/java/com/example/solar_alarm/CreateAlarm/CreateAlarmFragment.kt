@@ -109,19 +109,20 @@ class CreateAlarmFragment : Fragment() {
         solarTimeRepository = SolarTimeRepository()
         solarAlarmRepository = SolarAlarmRepository()
         val locationRepository = LocationRepository()
-        locationRepository.all.observe(this) { locations ->
-            Locations = locations
+        locationRepository.all?.observe(this) { locations ->
+            Locations = locations as List<Location>?
             locationSpinnerAdapter = SpinnerAdapter(activity, Locations)
             locationSpinner!!.adapter = locationSpinnerAdapter
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_createalarm, container, false)
         val alarmTimeSpinner = view.findViewById<View>(R.id.fragment_createalarm_alarmtime_spinner) as Spinner
-        alarmTimeSpinner.adapter = ArrayAdapter(activity!!.baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
+        alarmTimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
         val setTimeSpinner = view.findViewById<View>(R.id.fragment_createalarm_settime_spinner) as Spinner
-        setTimeSpinner.adapter = ArrayAdapter(activity!!.baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
+        setTimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
         val solarTimes: MutableList<SolarTime> = ArrayList()
         ButterKnife.bind(this, view)
         setPickers()
@@ -267,11 +268,11 @@ class CreateAlarmFragment : Fragment() {
 
     inner class TimeResponseTask : AsyncTask<Any?, Void?, SolarTime?>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
-        protected override fun doInBackground(vararg objects: Any): SolarTime? {
+        protected override fun doInBackground(vararg p0: Any?): SolarTime? {
             var solarTime: SolarTime? = null
             try {
-                val sunriseSunsetRequest = objects[0] as SunriseSunsetRequest
-                val location = objects[1] as Location
+                val sunriseSunsetRequest = p0[0] as SunriseSunsetRequest
+                val location = p0[1] as Location
                 val httpRequests = HttpRequests(sunriseSunsetRequest)
                 val sunriseSunsetResponse = httpRequests.GetSolarData(sunriseSunsetRequest)
                 solarTime = SolarTime(location, sunriseSunsetResponse)
@@ -285,9 +286,9 @@ class CreateAlarmFragment : Fragment() {
 
     inner class LocationIdDatePairExistsTask : AsyncTask<Any?, Void?, Boolean>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
-        protected override fun doInBackground(vararg objects: Any): Boolean {
-            val location = objects[0] as Location
-            val localDate = objects[1] as LocalDate
+        protected override fun doInBackground(vararg p0: Any?): Boolean? {
+            val location = p0[0] as Location
+            val localDate = p0[1] as LocalDate
             var result = false
             try {
                 result = solarTimeRepository!!.isLocationIDDatePairExists(location.Id, localDate)
@@ -301,20 +302,21 @@ class CreateAlarmFragment : Fragment() {
 
     inner class GetSolarTimeTask : AsyncTask<Any?, Void?, SolarTime?>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
-        protected override fun doInBackground(vararg objects: Any): SolarTime? {
-            val locationId = objects[0] as Int
-            val localDate = objects[1] as LocalDate
+        protected override fun doInBackground(vararg p0: Any?): SolarTime? {
+            val locationId = p0[0] as Int
+            val localDate = p0[1] as LocalDate
             return solarTimeRepository!!.getSolarTime(locationId, localDate)
         }
     }
 
     inner class SolarAlarmNameExistsTask : AsyncTask<SolarAlarm?, Void?, Boolean>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
-        protected override fun doInBackground(vararg solarAlarms: SolarAlarm): Boolean {
+        protected override fun doInBackground(vararg p0: SolarAlarm?): Boolean? {
             var result = false
             try {
-                val solarAlarmItem = solarAlarms[0]
-                result = solarAlarmRepository!!.isSolarAlarmNameLocationIDExists(solarAlarmItem.Name, solarAlarmItem.LocationId)
+                val solarAlarmItem = p0[0]
+                result = solarAlarmRepository!!.isSolarAlarmNameLocationIDExists(solarAlarmItem?.Name,
+                    solarAlarmItem?.LocationId ?:)
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(context, "Solar Alarm already exists!", Toast.LENGTH_LONG).show()
@@ -324,10 +326,6 @@ class CreateAlarmFragment : Fragment() {
     }
 
     fun setPickers() {
-//        setHours = new NumberPicker(getActivity().getApplicationContext());
-//        setMins = new NumberPicker(getActivity().getApplicationContext());
-//        setHours.findViewById(R.id.fragment_createalarm_set_hours);
-//        setMins.findViewById(R.id.fragment_createalarm_set_mins);
         setHours!!.minValue = 0
         setHours!!.maxValue = 23
         setMins!!.minValue = 0
