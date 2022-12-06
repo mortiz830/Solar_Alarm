@@ -18,13 +18,17 @@ abstract class AlarmDatabase : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var INSTANCE: AlarmDatabase? = null
+        private lateinit var INSTANCE: AlarmDatabase
         private const val NUMBER_OF_THREADS = 4
         val databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
-        fun getDatabase(context: Context): AlarmDatabase? {
-            if (INSTANCE == null) {
-                synchronized(AlarmDatabase::class.java) {
-                    if (INSTANCE == null) {
+        fun getDatabase(context: Context): AlarmDatabase
+        {
+            if (INSTANCE == null)
+            {
+                synchronized(AlarmDatabase::class.java)
+                {
+                    if (INSTANCE == null)
+                    {
                         INSTANCE = Room.databaseBuilder(context.applicationContext,
                                 AlarmDatabase::class.java,
                                 "alarm_database")
@@ -32,6 +36,7 @@ abstract class AlarmDatabase : RoomDatabase() {
                     }
                 }
             }
+
             return INSTANCE
         }
     }

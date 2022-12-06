@@ -23,9 +23,9 @@ import java.util.*
 class AlarmListFragment : Fragment(), OnToggleAlarmListener {
     private var alarmRecyclerViewAdapter: AlarmRecycleViewAdapter? = null
     private var alarmsListViewModel: AlarmListViewModel? = null
-    private var alarmsRecyclerView: RecyclerView? = null
-    private var addAlarm: Button? = null
-    private var addLocation: Button? = null
+    private lateinit var alarmsRecyclerView: RecyclerView
+    private lateinit var addAlarm: Button
+    private lateinit var addLocation: Button
     private var gpsTracker: GpsTracker? = null
     var latitude: TextView? = null
     var longitude: TextView? = null
@@ -48,7 +48,7 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
         alarmsRecyclerView = view.findViewById(R.id.fragment_listalarms_recylerView)
         alarmsRecyclerView.setLayoutManager(LinearLayoutManager(context))
         alarmsRecyclerView.setAdapter(alarmRecyclerViewAdapter)
-        configureOnClickRecyclerView()
+        //configureOnClickRecyclerView()
         zoneId = TimeZone.getDefault().toZoneId()
         latitude = view.findViewById(R.id.fragment_listalarms_latitude)
         longitude = view.findViewById(R.id.fragment_listalarms_longitude)
@@ -81,9 +81,9 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
             gpsTracker!!.showSettingsAlert()
         }
     }
-
+/*
     private fun configureOnClickRecyclerView() {
-        ItemClickSupport.Companion.addTo(alarmsRecyclerView, R.layout.item_alarm)
+        ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
                 .setOnItemClickListener(ItemClickSupport.OnItemClickListener { recyclerView, position, v ->
                     val alarm = alarmRecyclerViewAdapter!!.getAlarm(position)
                     val bundle = Bundle()
@@ -93,7 +93,7 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
                     val manager = fragmentManager
                     manager!!.beginTransaction().replace(R.id.activity_main_nav_host_fragment, updateAlarmFragment).commit()
                 })
-        ItemClickSupport.Companion.addTo(alarmsRecyclerView, R.layout.item_alarm)
+        ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
                 .setOnItemLongClickListener(ItemClickSupport.OnItemLongClickListener { recyclerView, position, v ->
                     val alarm = alarmRecyclerViewAdapter!!.getAlarm(position)
                     // 2 - Show result in a Toast
@@ -102,4 +102,5 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
                     false
                 })
     }
+    */
 }

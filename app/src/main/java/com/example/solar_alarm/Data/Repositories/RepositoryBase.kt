@@ -8,5 +8,5 @@ import com.example.solar_alarm.SolarAlarmApp
 @RequiresApi(api = Build.VERSION_CODES.O)
 abstract class RepositoryBase {
     protected var _SolarAlarmApp = SolarAlarmApp()
-    protected var _SolarAlarmDatabase: SolarAlarmDatabase? = SolarAlarmDatabase.Companion.getDatabase(_SolarAlarmApp)
+    protected var _SolarAlarmDatabase: SolarAlarmDatabase = SolarAlarmDatabase.Companion.getDatabase(_SolarAlarmApp)
 }

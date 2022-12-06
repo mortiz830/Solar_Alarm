@@ -8,6 +8,16 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.solar_alarm.Data.Repositories.LocationRepository;
+import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository;
+import com.example.solar_alarm.Data.Repositories.SolarTimeRepository;
+import com.example.solar_alarm.Data.Tables.Location;
+import com.example.solar_alarm.Data.Tables.SolarAlarm;
+import com.example.solar_alarm.Data.Tables.SolarTime;
+import com.example.solar_alarm.sunrise_sunset_http.HttpRequests;
+import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest;
+import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse;
+
 import java.time.LocalDate;
 
 public class AsyncDbAccess
@@ -21,9 +31,9 @@ public class AsyncDbAccess
             SolarTime solarTime = null;
             try
             {
-                SunriseSunsetRequest  sunriseSunsetRequest  = (SunriseSunsetRequest) objects[0];
-                Location              location              = (Location) objects[1];
-                HttpRequests          httpRequests          = new HttpRequests(sunriseSunsetRequest);
+                SunriseSunsetRequest sunriseSunsetRequest   = (SunriseSunsetRequest) objects[0];
+                Location location                           = (Location) objects[1];
+                HttpRequests httpRequests                   = new HttpRequests(sunriseSunsetRequest);
                 SunriseSunsetResponse sunriseSunsetResponse = httpRequests.GetSolarData(sunriseSunsetRequest);
 
                 solarTime = new SolarTime(location, sunriseSunsetResponse);
@@ -86,7 +96,7 @@ public class AsyncDbAccess
             try
             {
                 SolarAlarm solarAlarmItem = solarAlarms[0];
-                result = new SolarAlarmRepository().isSolarAlarmNameLocationIDExists(solarAlarmItem.Name, solarAlarmItem.LocationId);
+                result = true;// (Boolean) new SolarAlarmRepository().isSolarAlarmNameLocationIDExists(solarAlarmItem.Name, solarAlarmItem.LocationId);
             }
             catch (Exception e)
             {

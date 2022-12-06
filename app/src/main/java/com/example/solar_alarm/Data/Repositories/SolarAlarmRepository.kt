@@ -8,14 +8,11 @@ import com.example.solar_alarm.Data.SolarAlarmDatabase
 import com.example.solar_alarm.Data.Daos.SolarAlarmDao
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-class SolarAlarmRepository @RequiresApi(api = Build.VERSION_CODES.O) constructor() : RepositoryBase() {
-    private val solarAlarmDao: SolarAlarmDao?
-    val all: LiveData<List<SolarAlarm?>?>?
+class SolarAlarmRepository @RequiresApi(api = Build.VERSION_CODES.O) constructor() : RepositoryBase()
+{
+    private val solarAlarmDao: SolarAlarmDao = _SolarAlarmDatabase.solarAlarmDao()
 
-    init {
-        solarAlarmDao = _SolarAlarmDatabase!!.solarAlarmDao()
-        all = solarAlarmDao?.all
-    }
+    val all: LiveData<List<SolarAlarm?>?>? = solarAlarmDao.all
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun Insert(solarAlarm: SolarAlarm?) {
@@ -32,7 +29,8 @@ class SolarAlarmRepository @RequiresApi(api = Build.VERSION_CODES.O) constructor
         SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { solarAlarmDao!!.delete(solarAlarm) })
     }
 
-    fun isSolarAlarmNameLocationIDExists(name: String?, locationId: Int): Boolean {
-        return solarAlarmDao!!.isSolarAlarmNameLocationIDPairExists(name, locationId)
+    suspend fun isSolarAlarmNameLocationIDExists(name: String, locationId: Int): Boolean
+    {
+        return solarAlarmDao.isSolarAlarmNameLocationIDPairExists(name, locationId)
     }
 }

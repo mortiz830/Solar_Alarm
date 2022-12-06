@@ -14,33 +14,42 @@ import kotlin.jvm.Volatile
 import androidx.room.Room
 import android.content.Context
 import com.example.solar_alarm.Data.Tables.*
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Database(entities = [OffsetType::class, Location::class, SolarAlarm::class, SolarTime::class, SolarTimeType::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
-abstract class SolarAlarmDatabase : RoomDatabase() {
-    abstract fun locationDao(): LocationDao?
-    abstract fun solarAlarmDao(): SolarAlarmDao?
-    abstract fun solarTimeDao(): SolarTimeDao?
+abstract class SolarAlarmDatabase : RoomDatabase()
+{
+    abstract fun locationDao(): LocationDao
+    abstract fun solarAlarmDao(): SolarAlarmDao
+    abstract fun solarTimeDao(): SolarTimeDao
     abstract fun alarmDisplayDataDao(): AlarmDisplayDataDao
-    abstract fun staticDataDao(): StaticDataDao?
+    abstract fun staticDataDao(): StaticDataDao
 
-    companion object {
+    companion object
+    {
         @Volatile
-        private var INSTANCE: SolarAlarmDatabase? = null
+        private lateinit var INSTANCE: SolarAlarmDatabase
         private const val NUMBER_OF_THREADS = 4
-        val databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
-        fun getDatabase(context: Context): SolarAlarmDatabase? {
-            if (INSTANCE == null) {
-                synchronized(SolarAlarmDatabase::class.java) {
-                    if (INSTANCE == null) {
+        val databaseWriteExecutor: ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
+
+        fun getDatabase(context: Context): SolarAlarmDatabase
+        {
+            if (INSTANCE == null)
+            {
+                synchronized(SolarAlarmDatabase::class.java)
+                {
+                    if (INSTANCE == null)
+                    {
                         INSTANCE = Room.databaseBuilder(context.applicationContext, SolarAlarmDatabase::class.java, "SolarAlarmDatabase")
                                 .addMigrations(StaticDataMigration.Companion.MIGRATION_1_2)
                                 .build()
                     }
                 }
             }
+
             return INSTANCE
         }
     }

@@ -39,6 +39,7 @@ class GpsTracker(private val mContext: Context) : Service(), LocationListener {
         getLocation()
     }
 
+    @JvmName("getLocation1")
     fun getLocation(): Location? {
         try {
             locationManager = mContext.getSystemService(LOCATION_SERVICE) as LocationManager
@@ -116,6 +117,7 @@ class GpsTracker(private val mContext: Context) : Service(), LocationListener {
     /**
      * Function to get latitude
      */
+    @JvmName("getLatitude1")
     fun getLatitude(): Double {
         if (location != null) {
             latitude = location!!.latitude
@@ -128,6 +130,7 @@ class GpsTracker(private val mContext: Context) : Service(), LocationListener {
     /**
      * Function to get longitude
      */
+    @JvmName("getLongitude1")
     fun getLongitude(): Double {
         if (location != null) {
             longitude = location!!.longitude

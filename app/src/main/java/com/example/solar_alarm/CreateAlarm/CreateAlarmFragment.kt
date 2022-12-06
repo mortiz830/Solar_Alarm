@@ -29,6 +29,10 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.ArrayList
 
+import kotlinx.coroutines.*
+import kotlin.system.*
+import kotlin.text.Typography.tm
+
 class CreateAlarmFragment : Fragment() {
     @kotlin.jvm.JvmField
     @BindView(R.id.fragment_createalarm_title)
@@ -101,7 +105,8 @@ class CreateAlarmFragment : Fragment() {
     var setTimeAdapter: ArrayAdapter<CharSequence>? = null
     private var Locations: List<Location>? = null
     private var solarTimeRepository: SolarTimeRepository? = null
-    private var solarAlarmRepository: SolarAlarmRepository? = null
+    private lateinit var solarAlarmRepository: SolarAlarmRepository
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -220,24 +225,18 @@ class CreateAlarmFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Throws(Exception::class)
-    fun getSolarAlarmNameLocationIdPairExists(solarAlarmItem: SolarAlarm?): Boolean {
-        val result: Boolean
-        result = try {
-            SolarAlarmNameExistsTask().execute(solarAlarmItem).get()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw e
-        }
-        return result
+    suspend fun getSolarAlarmNameLocationIdPairExists(solarAlarm: SolarAlarm): Boolean
+    {
+        return solarAlarmRepository.isSolarAlarmNameLocationIDExists(solarAlarm.Name, solarAlarm.LocationId)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Throws(Exception::class)
     private fun scheduleAlarm(solarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum) {
         val solarAlarmItem = SolarAlarm()
-        val isSolarAlarmNameLocationIdPairExists: Boolean
-        solarAlarmItem.Name = if (title!!.text.toString() === "") null else title!!.text.toString()
+        solarAlarmItem.Name = if (title!!.text.toString() === "") "" else title!!.text.toString()
         solarAlarmItem.Active = true
         solarAlarmItem.LocationId = solarTimeItem.LocationId
         solarAlarmItem.SolarTimeId = solarTimeItem.Id
@@ -251,13 +250,13 @@ class CreateAlarmFragment : Fragment() {
         solarAlarmItem.Sunday = sun!!.isChecked
         solarAlarmItem.OffsetTypeId = alarmTypeId
         solarAlarmItem.SolarTimeTypeId = solarTimeTypeId
-        isSolarAlarmNameLocationIdPairExists = try {
-            getSolarAlarmNameLocationIdPairExists(solarAlarmItem)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw e
+        val isSolarAlarmNameLocationIdPairExists : Deferred<Boolean>
+
+        val time = measureTimeMillis  {
+            isSolarAlarmNameLocationIdPairExists = GlobalScope.async { getSolarAlarmNameLocationIdPairExists(solarAlarmItem) }
         }
-        if (!isSolarAlarmNameLocationIdPairExists) {
+
+        if (!isSolarAlarmNameLocationIdPairExists.getCompleted()) {
             solarAlarmRepository!!.Insert(solarAlarmItem)
         } else {
             Toast.makeText(context, "Alarm already exists!", Toast.LENGTH_LONG).show()
@@ -309,14 +308,14 @@ class CreateAlarmFragment : Fragment() {
         }
     }
 
+    /*
     inner class SolarAlarmNameExistsTask : AsyncTask<SolarAlarm?, Void?, Boolean>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
-        protected override fun doInBackground(vararg p0: SolarAlarm?): Boolean? {
+        protected override fun doInBackground(vararg p0: SolarAlarm): Boolean? {
             var result = false
             try {
                 val solarAlarmItem = p0[0]
-                result = solarAlarmRepository!!.isSolarAlarmNameLocationIDExists(solarAlarmItem?.Name,
-                    solarAlarmItem?.LocationId ?:)
+                result = solarAlarmRepository.isSolarAlarmNameLocationIDExists(solarAlarmItem.Name, solarAlarmItem.LocationId)
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(context, "Solar Alarm already exists!", Toast.LENGTH_LONG).show()
@@ -324,7 +323,7 @@ class CreateAlarmFragment : Fragment() {
             return result
         }
     }
-
+*/
     fun setPickers() {
         setHours!!.minValue = 0
         setHours!!.maxValue = 23

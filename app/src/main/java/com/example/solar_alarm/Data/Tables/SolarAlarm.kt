@@ -40,7 +40,8 @@ import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
 )
 class SolarAlarm : TableBase() {
     @JvmField
-    var Name: String? = null
+    var Name: String = ""
+
     @JvmField
     var Active = false
 
