@@ -31,23 +31,17 @@ abstract class SolarAlarmDatabase : RoomDatabase()
     companion object
     {
         @Volatile
-        private lateinit var INSTANCE: SolarAlarmDatabase
+        private var INSTANCE: SolarAlarmDatabase? = null
         private const val NUMBER_OF_THREADS = 4
         val databaseWriteExecutor: ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
 
-        fun getDatabase(context: Context): SolarAlarmDatabase
+        fun getDatabase(context: Context): SolarAlarmDatabase?
         {
             if (INSTANCE == null)
             {
-                synchronized(SolarAlarmDatabase::class.java)
-                {
-                    if (INSTANCE == null)
-                    {
-                        INSTANCE = Room.databaseBuilder(context.applicationContext, SolarAlarmDatabase::class.java, "SolarAlarmDatabase")
-                                .addMigrations(StaticDataMigration.Companion.MIGRATION_1_2)
-                                .build()
-                    }
-                }
+                INSTANCE = Room.databaseBuilder(context.applicationContext, SolarAlarmDatabase::class.java, "SolarAlarmDatabase")
+                        //.addMigrations(StaticDataMigration.Companion.MIGRATION_1_2)
+                        .build()
             }
 
             return INSTANCE

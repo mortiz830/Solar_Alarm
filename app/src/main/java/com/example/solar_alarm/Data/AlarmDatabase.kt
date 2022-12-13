@@ -8,10 +8,13 @@ import androidx.room.TypeConverters
 import kotlin.jvm.Volatile
 import androidx.room.Room
 import android.content.Context
+import com.example.solar_alarm.Data.Tables.Location
+import com.example.solar_alarm.Data.Tables.OffsetType
+import com.example.solar_alarm.Data.Tables.SolarAlarm
 import java.util.concurrent.Executors
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-@Database(entities = [Alarm::class], version = 1, exportSchema = false)
+@Database(entities = [Location::class, OffsetType::class, SolarAlarm::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AlarmDatabase : RoomDatabase() {
     abstract fun alarmDao(): AlarmDao?

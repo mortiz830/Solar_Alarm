@@ -15,13 +15,13 @@ import com.example.solar_alarm.Data.Tables.*
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 class AlarmListViewModel(application: Application) : AndroidViewModel(application) {
-    private val solarTimeRepository: SolarTimeRepository? = null
+    //private val solarTimeRepository: SolarTimeRepository? = null
     private val solarAlarmRepository: SolarAlarmRepository
-    private val locationRepository: LocationRepository? = null
+    //private val locationRepository: LocationRepository? = null
     val alarmsLiveData: LiveData<List<SolarAlarm?>?>?
     val solarTimeLiveData: LiveData<List<SolarTime?>?>?
     val locationLiveData: LiveData<List<Location?>?>?
-    private val alarmDisplayDataDao: AlarmDisplayDataDao? = null
+    //private val alarmDisplayDataDao: AlarmDisplayDataDao? = null
     var alarmDisplayLiveData: LiveData<List<AlarmDisplayData?>?>? = null
 
     //String rawQuery = "SELECT DISTINCT " + Location.Id + ","
