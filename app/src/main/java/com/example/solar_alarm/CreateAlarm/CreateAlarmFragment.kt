@@ -229,7 +229,7 @@ class CreateAlarmFragment : Fragment() {
     @Throws(Exception::class)
     suspend fun getSolarAlarmNameLocationIdPairExists(solarAlarm: SolarAlarm): Boolean
     {
-        return solarAlarmRepository.isSolarAlarmNameLocationIDExists(solarAlarm.Name, solarAlarm.LocationId)
+        return solarAlarmRepository.isSolarAlarmNameLocationIDExists(solarAlarm)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

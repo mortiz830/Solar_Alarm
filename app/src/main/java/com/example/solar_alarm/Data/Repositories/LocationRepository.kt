@@ -1,56 +1,62 @@
 package com.example.solar_alarm.Data.Repositories
 
-import androidx.annotation.RequiresApi
-import android.os.Build
-import androidx.lifecycle.LiveData
-import com.example.solar_alarm.Data.SolarAlarmDatabase
 import android.os.AsyncTask
-import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
-import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.annotation.WorkerThread
 import com.example.solar_alarm.Data.Daos.LocationDao
 import com.example.solar_alarm.Data.Daos.StaticDataDao
-import com.example.solar_alarm.Data.Tables.*
-import java.lang.Exception
+import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
+import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
+import com.example.solar_alarm.Data.Tables.Location
+import com.example.solar_alarm.Data.Tables.OffsetType
+import com.example.solar_alarm.Data.Tables.SolarTimeType
+import kotlinx.coroutines.flow.Flow
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-class LocationRepository : RepositoryBase() {
-    private val locationDao: LocationDao?
-    private val staticDataDao: StaticDataDao?
-    val all: LiveData<List<Location?>?>?
+class LocationRepository(private val locationDao: LocationDao) : RepositoryBase()
+{
+    private val staticDataDao: StaticDataDao = _SolarAlarmDatabase.staticDataDao()
 
+    val GetAll: Flow<List<Location>> = locationDao.GetAll()
+
+    @WorkerThread
+    suspend fun Insert(location: Location)
+    {
+        locationDao.Insert(location)
+    }
+/*
     init {
-        locationDao = _SolarAlarmDatabase!!.locationDao()
-        staticDataDao = _SolarAlarmDatabase!!.staticDataDao()
-        all = locationDao?.all
+        all = locationDao.all
         AddStaticData()
     }
 
-    fun Insert(location: Location?) {
-        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { locationDao!!.Insert(location) })
+    fun Insert(location: Location) {
+        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { locationDao.Insert(location) })
     }
 
-    fun Update(location: Location?) {
-        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { locationDao!!.Update(location) })
+    fun Update(location: Location) {
+        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { locationDao.Update(location) })
     }
 
-    fun delete(location: Location?) {
-        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { locationDao!!.delete(location) })
+    fun delete(location: Location) {
+        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { locationDao.delete(location) })
     }
 
     fun GetById(id: Int): Location? {
-        return locationDao!!.GetById(id)
+        return locationDao.GetById(id)
     }
 
     fun isLocationNameExists(name: String?): Boolean {
-        return locationDao!!.isLocationNameExists(name)
+        return locationDao.isLocationNameExists(name)
     }
 
     fun isLocationLatitudeExists(latitude: Double): Boolean {
-        return locationDao!!.isLocationLatitudeExists(latitude)
+        return locationDao.isLocationLatitudeExists(latitude)
     }
 
     fun isLocationLongitudeExists(longitude: Double): Boolean {
-        return locationDao!!.isLocationLongitudeExists(longitude)
+        return locationDao.isLocationLongitudeExists(longitude)
     }
 
     private fun AddStaticData() {
@@ -60,15 +66,15 @@ class LocationRepository : RepositoryBase() {
             e.printStackTrace()
         }
     }
-
+*/
     inner class IsTimeUnitTypesExistsTask : AsyncTask<Double?, Void?, Boolean>() {
         protected override fun doInBackground(vararg p0: Double?): Boolean? {
             try {
-                if (!staticDataDao!!.isOffsetTypesExists) {
+                if (!staticDataDao.isOffsetTypesExists) {
                     for (enumType in OffsetTypeEnum.values()) {
-                        val x = OffsetType()
-                        x.Id = enumType.Id
-                        x.Name = enumType.Name
+                        val x = OffsetType(enumType.Id, enumType.Name)
+                        //x.Id = enumType.Id
+                        //x.Name = enumType.Name
                         staticDataDao.Insert(x)
                     }
                 }
@@ -76,9 +82,9 @@ class LocationRepository : RepositoryBase() {
                 //--------------------------
                 if (!staticDataDao.isSolarTimeTypesExists) {
                     for (enumType in SolarTimeTypeEnum.values()) {
-                        val x = SolarTimeType()
-                        x.Id = enumType.Id
-                        x.Name = enumType.Name
+                        val x = SolarTimeType(enumType.Id, enumType.Name)
+                        //x.Id = enumType.Id
+                        //x.Name = enumType.Name
                         staticDataDao.Insert(x)
                     }
                 }

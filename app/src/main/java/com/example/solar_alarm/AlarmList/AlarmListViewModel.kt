@@ -1,26 +1,30 @@
 package com.example.solar_alarm.AlarmList
 
-import androidx.annotation.RequiresApi
+
+import androidx.activity.viewModels
 import android.os.Build
-import android.app.Application
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
-import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
-import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository
-import com.example.solar_alarm.Data.Repositories.LocationRepository
 import androidx.lifecycle.LiveData
-import com.example.solar_alarm.Data.AlarmDisplayDataDao
 import com.example.solar_alarm.Data.AlarmDisplayData
+import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository
+import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
 import com.example.solar_alarm.Data.SolarAlarmDatabase
 import com.example.solar_alarm.Data.Tables.*
+import com.example.solar_alarm.Data.ViewModels.LocationViewModel
+import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
+import com.example.solar_alarm.SolarAlarmApp
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-class AlarmListViewModel(application: Application) : AndroidViewModel(application) {
+class AlarmListViewModel(solarAlarmApp: SolarAlarmApp) : AndroidViewModel(solarAlarmApp)
+{
+    private val locationViewModel: LocationViewModel by viewModels { LocationViewModelFactory(solarAlarmApp.locationRepository) }
     //private val solarTimeRepository: SolarTimeRepository? = null
     private val solarAlarmRepository: SolarAlarmRepository
     //private val locationRepository: LocationRepository? = null
     val alarmsLiveData: LiveData<List<SolarAlarm?>?>?
     val solarTimeLiveData: LiveData<List<SolarTime?>?>?
-    val locationLiveData: LiveData<List<Location?>?>?
+    val locationLiveData = locationViewModel.AllLocations
     //private val alarmDisplayDataDao: AlarmDisplayDataDao? = null
     var alarmDisplayLiveData: LiveData<List<AlarmDisplayData?>?>? = null
 
@@ -28,14 +32,13 @@ class AlarmListViewModel(application: Application) : AndroidViewModel(applicatio
     init {
 
         // to be deleted
-        val db: SolarAlarmDatabase? = SolarAlarmDatabase.Companion.getDatabase(application)
+        val db: SolarAlarmDatabase? = SolarAlarmDatabase.getDatabase(solarAlarmApp)
         if (db != null) {
             alarmDisplayLiveData = db.alarmDisplayDataDao().loadAlarmData()
         }
         solarAlarmRepository = SolarAlarmRepository()
         alarmsLiveData = solarAlarmRepository.all
         solarTimeLiveData = SolarTimeRepository().all
-        locationLiveData = LocationRepository().all
     }
 
     fun update(alarm: SolarAlarm?) {

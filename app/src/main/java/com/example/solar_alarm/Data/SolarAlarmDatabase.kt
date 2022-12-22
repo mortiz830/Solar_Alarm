@@ -13,7 +13,10 @@ import androidx.room.TypeConverters
 import kotlin.jvm.Volatile
 import androidx.room.Room
 import android.content.Context
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.solar_alarm.Data.Tables.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -31,11 +34,11 @@ abstract class SolarAlarmDatabase : RoomDatabase()
     companion object
     {
         @Volatile
-        private var INSTANCE: SolarAlarmDatabase? = null
+        private lateinit var INSTANCE: SolarAlarmDatabase
         private const val NUMBER_OF_THREADS = 4
         val databaseWriteExecutor: ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
 
-        fun getDatabase(context: Context): SolarAlarmDatabase?
+        fun getDatabase(context: Context, scope: CoroutineScope): SolarAlarmDatabase
         {
             if (INSTANCE == null)
             {
@@ -45,6 +48,28 @@ abstract class SolarAlarmDatabase : RoomDatabase()
             }
 
             return INSTANCE
+        }
+    }
+
+    private class WordDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback()
+    {
+        override fun onCreate(db: SupportSQLiteDatabase)
+        {
+            super.onCreate(db)
+            INSTANCE?.let { database -> scope.launch { populateDatabase(database.locationDao()) } }
+        }
+
+        suspend fun populateDatabase(locationDao: LocationDao) {
+            // Delete all content here.
+            //locationDao.deleteAll()
+
+            // Add sample words.
+            //var word = Word("Hello")
+            //wordDao.insert(word)
+            //word = Word("World!")
+            //wordDao.insert(word)
+
+            // TODO: Add your own words!
         }
     }
 }

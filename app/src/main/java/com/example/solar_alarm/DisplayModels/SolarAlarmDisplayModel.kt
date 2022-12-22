@@ -14,34 +14,34 @@ import java.time.ZonedDateTime
 import java.util.HashMap
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-class SolarAlarmDisplayModel(private val _Application: Application, private val _SolarAlarm: SolarAlarm?) : AndroidViewModel(_Application) {
+class SolarAlarmDisplayModel(private val _Application: Application, private val _SolarAlarm: SolarAlarm) : AndroidViewModel(_Application) {
     private var _LocationDisplayModel: LocationDisplayModel? = null
     private var _SolarTimeDisplayModel: SolarTimeDisplayModel? = null
     private var _RecurrenceDays: HashMap<DayOfWeek, Boolean>? = null
     fun GetLocation(): LocationDisplayModel {
         if (_LocationDisplayModel == null) {
-            val location = LocationRepository().GetById(_SolarAlarm!!.LocationId)
-            _LocationDisplayModel = LocationDisplayModel(_Application, location)
+            val location = LocationRepository().GetById(_SolarAlarm.LocationId)
+            _LocationDisplayModel = location?.let { LocationDisplayModel(_Application, it) }
         }
         return _LocationDisplayModel!!
     }
 
     fun GetSolarTime(): SolarTimeDisplayModel {
         if (_SolarTimeDisplayModel == null) {
-            val solarTime = SolarTimeRepository().GetById(_SolarAlarm!!.LocationId)
+            val solarTime = SolarTimeRepository().GetById(_SolarAlarm.LocationId)
             _SolarTimeDisplayModel = SolarTimeDisplayModel(_Application, solarTime)
         }
         return _SolarTimeDisplayModel!!
     }
 
     fun GetName(): String? {
-        return _SolarAlarm!!.Name
+        return _SolarAlarm.Name
     }
 
     fun GetRecurrenceDays(): Map<DayOfWeek, Boolean> {
         if (_RecurrenceDays == null) {
             _RecurrenceDays = HashMap()
-            _RecurrenceDays!![DayOfWeek.MONDAY] = _SolarAlarm!!.Monday
+            _RecurrenceDays!![DayOfWeek.MONDAY] = _SolarAlarm.Monday
             _RecurrenceDays!![DayOfWeek.TUESDAY] = _SolarAlarm.Tuesday
             _RecurrenceDays!![DayOfWeek.WEDNESDAY] = _SolarAlarm.Wednesday
             _RecurrenceDays!![DayOfWeek.THURSDAY] = _SolarAlarm.Thursday

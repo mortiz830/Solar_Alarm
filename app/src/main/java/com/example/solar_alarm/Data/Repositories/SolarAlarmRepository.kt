@@ -29,8 +29,8 @@ class SolarAlarmRepository @RequiresApi(api = Build.VERSION_CODES.O) constructor
         SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { solarAlarmDao!!.delete(solarAlarm) })
     }
 
-    suspend fun isSolarAlarmNameLocationIDExists(name: String, locationId: Int): Boolean
+    suspend fun isSolarAlarmNameLocationIDExists(solarAlarm: SolarAlarm): Boolean
     {
-        return solarAlarmDao.isSolarAlarmNameLocationIDPairExists(name, locationId)
+        return solarAlarmDao.isSolarAlarmNameLocationIDPairExists(solarAlarm.Name, solarAlarm.LocationId)
     }
 }

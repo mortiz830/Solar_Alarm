@@ -2,9 +2,7 @@ package com.example.solar_alarm.Data.Tables
 
 import androidx.annotation.RequiresApi
 import android.os.Build
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
+import androidx.room.*
 import com.example.solar_alarm.Data.Tables.TableBase
 import com.example.solar_alarm.Data.Tables.SolarTime
 import com.example.solar_alarm.Data.Tables.OffsetType
@@ -13,7 +11,7 @@ import com.example.solar_alarm.Data.Tables.SolarTimeType
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-@Entity(tableName = "SolarAlarm", indices = [Index(value = ["Name", "LocationId"], unique = true)], foreignKeys = [
+@Entity(indices = [Index(value = ["Name", "LocationId"], unique = true)], foreignKeys = [
     ForeignKey(
         entity = Location::class,
         parentColumns = ["Id"],
@@ -38,48 +36,42 @@ import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
         childColumns = ["SolarTimeTypeId"],
         onDelete = ForeignKey.CASCADE)]
 )
-class SolarAlarm : TableBase() {
-    @JvmField
-    var Name: String = ""
+class SolarAlarm (
 
-    @JvmField
-    var Active = false
+    @PrimaryKey(autoGenerate = true) val Id: Int,
 
-    @JvmField
-    var LocationId = 0
+    @ColumnInfo(name = "Name") val Name: String?,
 
-    @JvmField
-    var SolarTimeId = 0
+    @ColumnInfo(name = "Active") val Active: Boolean,
+
+    @ColumnInfo(name = "LocationId") val LocationId: Int,
+
+    @ColumnInfo(name = "SolarTimeId") val SolarTimeId: Int,
 
     // Recurrence Flags
-    @JvmField
-    var Recurring = false
-    @JvmField
-    var Monday = false
-    @JvmField
-    var Tuesday = false
-    @JvmField
-    var Wednesday = false
-    @JvmField
-    var Thursday = false
-    @JvmField
-    var Friday = false
-    @JvmField
-    var Saturday = false
-    @JvmField
-    var Sunday = false
+    @ColumnInfo(name = "Recurring") val Recurring: Boolean,
+    @ColumnInfo(name = "Monday")    val Monday: Boolean,
+    @ColumnInfo(name = "Tuesday")   val Tuesday: Boolean,
+    @ColumnInfo(name = "Wednesday") val Wednesday: Boolean,
+    @ColumnInfo(name = "Thursday")  val Thursday: Boolean,
+    @ColumnInfo(name = "Friday")    val Friday: Boolean,
+    @ColumnInfo(name = "Saturday")  val Saturday: Boolean,
+    @ColumnInfo(name = "Sunday")    val Sunday: Boolean,
 
-    @JvmField
-    var OffsetTypeId: OffsetTypeEnum? = null
+    @ColumnInfo(name = "OffsetTypeId") val OffsetTypeId: OffsetTypeEnum,
 
-    @JvmField
-    var SolarTimeTypeId: SolarTimeTypeEnum? = null
+    @ColumnInfo(name = "SolarTimeTypeId") val SolarTimeTypeId: SolarTimeTypeEnum,
+)
+{
     val recurringDaysText: String?
         get() {
-            if (!Recurring) {
+            if (!Recurring)
+            {
                 return null
             }
+
             var days = ""
+
             if (Monday) {
                 days += "Mo "
             }

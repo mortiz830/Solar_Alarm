@@ -1,21 +1,24 @@
 package com.example.solar_alarm.Data.Tables
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
+import androidx.room.PrimaryKey
 
-@Entity(tableName = "Location", indices = [Index(value = ["Name"], unique = true), Index(value = ["Latitude", "Longitude"], unique = true)])
-class Location : TableBase() {
-    @JvmField
-    var Name: String? = null
+@Entity(
+    indices =
+    [
+        Index(value = ["Name"], unique = true),
+        Index(value = ["Latitude", "Longitude"], unique = true)
+    ])
 
-    @JvmField
-    var Latitude = 0.0
-    @JvmField
-    var Longitude = 0.0
-}
+class Location
+(
+    @PrimaryKey(autoGenerate = true) val Id: Int,
 
-//foreignKeys = [
-//        ForeignKey(entity = Bar::class,
-//                parentColumns = ["someCol"],
-//                childColumns = ["someOtherCol"],
-//                onDelete = CASCADE)])
+    @ColumnInfo(name = "Name") val Name: String?,
+
+    @ColumnInfo(name = "Latitude") val Latitude: Double,
+
+    @ColumnInfo(name = "Longitude") val Longitude: Double
+)

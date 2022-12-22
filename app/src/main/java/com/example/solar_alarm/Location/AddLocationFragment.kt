@@ -139,7 +139,7 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback {
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun saveLocation() {
         val locationName = locationNameText!!.text.toString()
-        val location = Location()
+        //val location = LocationRepository().Insert()
         location.Name = locationName
         location.Latitude = latitude
         location.Longitude = longitude
