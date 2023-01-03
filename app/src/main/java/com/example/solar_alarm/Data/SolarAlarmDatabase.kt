@@ -51,7 +51,7 @@ abstract class SolarAlarmDatabase : RoomDatabase()
         }
     }
 
-    private class WordDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback()
+    private class SolarAlarmDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback()
     {
         override fun onCreate(db: SupportSQLiteDatabase)
         {
