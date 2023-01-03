@@ -1,41 +1,41 @@
 package com.example.solar_alarm.Data.Tables
 
-import androidx.annotation.RequiresApi
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.*
-import com.example.solar_alarm.Data.Tables.TableBase
-import com.example.solar_alarm.Data.Tables.SolarTime
-import com.example.solar_alarm.Data.Tables.OffsetType
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
-import com.example.solar_alarm.Data.Tables.SolarTimeType
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-@Entity(indices = [Index(value = ["Name", "LocationId"], unique = true)], foreignKeys = [
-    ForeignKey(
-        entity = Location::class,
-        parentColumns = ["Id"],
-        childColumns = ["LocationId"],
-        onDelete = ForeignKey.CASCADE),
+@Entity(
+    indices = [Index(value = ["Name", "LocationId"], unique = true)],
+    foreignKeys = [
+        ForeignKey(
+            entity = Location::class,
+            parentColumns = ["Id"],
+            childColumns = ["LocationId"],
+            onDelete = ForeignKey.CASCADE),
 
-    ForeignKey(
-        entity = SolarTime::class,
-        parentColumns = ["Id"],
-        childColumns = ["SolarTimeId"],
-        onDelete = ForeignKey.CASCADE),
+        ForeignKey(
+            entity = SolarTime::class,
+            parentColumns = ["Id"],
+            childColumns = ["SolarTimeId"],
+            onDelete = ForeignKey.CASCADE),
 
-    ForeignKey(
-        entity = OffsetType::class,
-        parentColumns = ["Id"],
-        childColumns = ["OffsetTypeId"],
-        onDelete = ForeignKey.CASCADE),
+        ForeignKey(
+            entity = OffsetType::class,
+            parentColumns = ["Id"],
+            childColumns = ["OffsetTypeId"],
+            onDelete = ForeignKey.CASCADE),
 
-    ForeignKey(
-        entity = SolarTimeType::class,
-        parentColumns = ["Id"],
-        childColumns = ["SolarTimeTypeId"],
-        onDelete = ForeignKey.CASCADE)]
+        ForeignKey(
+            entity = SolarTimeType::class,
+            parentColumns = ["Id"],
+            childColumns = ["SolarTimeTypeId"],
+            onDelete = ForeignKey.CASCADE)
+    ]
 )
+
 class SolarAlarm (
 
     @PrimaryKey(autoGenerate = true) val Id: Int,
