@@ -14,13 +14,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.solar_alarm.CreateAlarm.UpdateAlarmFragment
 import android.view.View
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.test.core.app.ApplicationProvider
 import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.Data.ViewModels.LocationViewModel
+import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
+import com.example.solar_alarm.SolarAlarmApp
 import java.time.ZoneId
 import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 class AlarmListFragment : Fragment(), OnToggleAlarmListener {
+
+    private val locationViewModel: LocationViewModel by viewModels {
+        LocationViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository)
+    }
     private var alarmRecyclerViewAdapter: AlarmRecycleViewAdapter? = null
     private var alarmsListViewModel: AlarmListViewModel? = null
     private lateinit var alarmsRecyclerView: RecyclerView

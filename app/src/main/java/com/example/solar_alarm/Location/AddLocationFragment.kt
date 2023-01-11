@@ -22,8 +22,13 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.test.core.app.ApplicationProvider
 import com.example.solar_alarm.Data.Tables.*
+import com.example.solar_alarm.Data.ViewModels.LocationViewModel
+import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
+import com.example.solar_alarm.SolarAlarmApp
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -35,7 +40,11 @@ import java.net.URLEncoder
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class AddLocationFragment : Fragment(), OnMapReadyCallback {
+@RequiresApi(Build.VERSION_CODES.O)
+class AddLocationFragment : Fragment(), OnMapReadyCallback
+{
+    val locationRepository = (ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository
+
     @kotlin.jvm.JvmField
     @BindView(R.id.fragment_add_location_addLocationButton)
     var addLocationButton: Button? = null
@@ -65,11 +74,11 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback {
     var isLocationLongitudeExists = false
     var isLocationPointExists = false
     var locationName: String? = null
-    var locationRepository: LocationRepository? = null
+    //var locationRepository: LocationRepository? = null
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        locationRepository = LocationRepository()
+        //locationRepository = LocationRepository()
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -86,8 +95,8 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback {
         addLocationButton!!.setOnClickListener { view ->
             locationName = locationNameText!!.text.toString()
             try {
-                isLocationNameExists = LocationNameExistsTask().execute(locationName).get()
-                isLocationPointExists = LocationPointExistsTask().execute(latitude, longitude).get()
+                isLocationNameExists = locationRepository.DoesLocationNameExists(locationName)
+                isLocationPointExists = locationRepository.DoesLocationLatLongExists(latitude, longitude)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -149,10 +158,10 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback {
 
     inner class LocationNameExistsTask : AsyncTask<String?, Void?, Boolean>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
-        override fun doInBackground(vararg p0: String?): Boolean? {
+        override suspend fun doInBackground(vararg p0: String?): Boolean? {
             var result = false
             try {
-                result = locationRepository!!.isLocationNameExists(locationName)
+                result = locationRepository.DoesLocationLatLongExists(locationName)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

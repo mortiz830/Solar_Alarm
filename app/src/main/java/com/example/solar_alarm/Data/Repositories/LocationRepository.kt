@@ -14,16 +14,47 @@ import com.example.solar_alarm.Data.Tables.SolarTimeType
 import kotlinx.coroutines.flow.Flow
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-class LocationRepository(private val locationDao: LocationDao) : RepositoryBase()
+class LocationRepository(private val locationDao: LocationDao)
 {
-    private val staticDataDao: StaticDataDao = _SolarAlarmDatabase.staticDataDao()
+    //private val staticDataDao: StaticDataDao = _SolarAlarmDatabase.staticDataDao()
 
-    val GetAll: Flow<List<Location>> = locationDao.GetAll()
+    val allLocations: Flow<List<Location>> = locationDao.GetAll()
 
+    @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun Insert(location: Location)
     {
         locationDao.Insert(location)
+    }
+
+    @WorkerThread
+    suspend fun GetById(id: Int)
+    {
+        locationDao.GetById(id)
+    }
+
+    @WorkerThread
+    suspend fun Update(location: Location)
+    {
+        locationDao.Update(location)
+    }
+
+    @WorkerThread
+    suspend fun Delete(location: Location)
+    {
+        locationDao.Delete(location)
+    }
+
+    @WorkerThread
+    suspend fun DoesLocationLatLongExists(latitude: Double, longitude: Double)
+    {
+        locationDao.DoesLocationLatLongExists(latitude, longitude)
+    }
+
+    @WorkerThread
+    suspend fun DoesLocationNameExists(name: String?)
+    {
+        locationDao.DoesLocationNameExists(name)
     }
 /*
     init {
@@ -67,6 +98,7 @@ class LocationRepository(private val locationDao: LocationDao) : RepositoryBase(
         }
     }
 */
+/*
     inner class IsTimeUnitTypesExistsTask : AsyncTask<Double?, Void?, Boolean>() {
         protected override fun doInBackground(vararg p0: Double?): Boolean? {
             try {
@@ -94,4 +126,6 @@ class LocationRepository(private val locationDao: LocationDao) : RepositoryBase(
             return true
         }
     }
+
+ */
 }
