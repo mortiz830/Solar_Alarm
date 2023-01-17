@@ -11,7 +11,7 @@ abstract class LocationDao : BaseDao<Location>
     abstract fun GetAll(): Flow<List<Location>>
 
     @Query("SELECT * FROM Location WHERE Id = :id")
-    abstract fun GetById(id: Int): Location
+    abstract fun GetById(id: Int): Location?
 
     @Query("SELECT EXISTS(SELECT * FROM Location WHERE Name = :name)")
     abstract fun DoesLocationNameExists(name: String?): Boolean

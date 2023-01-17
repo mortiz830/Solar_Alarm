@@ -20,16 +20,16 @@ class SolarAlarmDisplayModel(private val _Application: Application, private val 
     private var _RecurrenceDays: HashMap<DayOfWeek, Boolean>? = null
     fun GetLocation(): LocationDisplayModel {
         if (_LocationDisplayModel == null) {
-            val location = LocationRepository().GetById(_SolarAlarm.LocationId)
-            _LocationDisplayModel = location?.let { LocationDisplayModel(_Application, it) }
+            //val location = LocationRepository().GetById(_SolarAlarm.LocationId)
+            //_LocationDisplayModel = location?.let { LocationDisplayModel(_Application, it) }
         }
         return _LocationDisplayModel!!
     }
 
     fun GetSolarTime(): SolarTimeDisplayModel {
         if (_SolarTimeDisplayModel == null) {
-            val solarTime = SolarTimeRepository().GetById(_SolarAlarm.LocationId)
-            _SolarTimeDisplayModel = SolarTimeDisplayModel(_Application, solarTime)
+            //val solarTime = SolarTimeRepository().GetById(_SolarAlarm.LocationId)
+            //_SolarTimeDisplayModel = SolarTimeDisplayModel(_Application, solarTime)
         }
         return _SolarTimeDisplayModel!!
     }

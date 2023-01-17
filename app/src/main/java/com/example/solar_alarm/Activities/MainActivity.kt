@@ -12,8 +12,8 @@ import com.example.solar_alarm.SolarAlarmApp
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-class MainActivity : AppCompatActivity() {
-
+class MainActivity : AppCompatActivity()
+{
     private val locationViewModel: LocationViewModel by viewModels {
         LocationViewModelFactory((application as SolarAlarmApp).locationRepository)
     }

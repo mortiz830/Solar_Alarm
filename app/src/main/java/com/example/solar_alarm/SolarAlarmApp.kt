@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.solar_alarm.Data.Repositories.LocationRepository
+import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
 import com.example.solar_alarm.Data.SolarAlarmDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -16,7 +17,9 @@ class SolarAlarmApp : Application()
     val applicationScope = CoroutineScope(SupervisorJob())
 
     val solarAlarmDatabase by lazy { SolarAlarmDatabase.getDatabase(this, applicationScope) }
-    val locationRepository by lazy { LocationRepository(solarAlarmDatabase.locationDao()) }
+
+    val locationRepository  by lazy { LocationRepository(solarAlarmDatabase.locationDao())   }
+    val solarTimeRepository by lazy { SolarTimeRepository(solarAlarmDatabase.solarTimeDao()) }
 
     override fun onCreate() {
         super.onCreate()

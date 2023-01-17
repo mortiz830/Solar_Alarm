@@ -1,16 +1,10 @@
 package com.example.solar_alarm.Data.Repositories
 
-import android.os.AsyncTask
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
 import com.example.solar_alarm.Data.Daos.LocationDao
-import com.example.solar_alarm.Data.Daos.StaticDataDao
-import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
-import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
 import com.example.solar_alarm.Data.Tables.Location
-import com.example.solar_alarm.Data.Tables.OffsetType
-import com.example.solar_alarm.Data.Tables.SolarTimeType
 import kotlinx.coroutines.flow.Flow
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -18,7 +12,7 @@ class LocationRepository(private val locationDao: LocationDao)
 {
     //private val staticDataDao: StaticDataDao = _SolarAlarmDatabase.staticDataDao()
 
-    val allLocations: Flow<List<Location>> = locationDao.GetAll()
+    val all: Flow<List<Location>> = locationDao.GetAll()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread

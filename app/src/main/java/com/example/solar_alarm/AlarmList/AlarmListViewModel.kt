@@ -19,16 +19,16 @@ import com.example.solar_alarm.SolarAlarmApp
 class AlarmListViewModel(solarAlarmApp: SolarAlarmApp) : AndroidViewModel(solarAlarmApp)
 {
     //private val locationViewModel: LocationViewModel by viewModels { LocationViewModelFactory(solarAlarmApp.locationRepository) }
-
+/*
     private val locationViewModel: LocationViewModel by viewModels {
         LocationViewModelFactory((getApplication() as SolarAlarmApp).locationRepository)
     }
-
+*/
     //private val solarTimeRepository: SolarTimeRepository? = null
-    private val solarAlarmRepository: SolarAlarmRepository
+    //private val solarAlarmRepository: SolarAlarmRepository
     //private val locationRepository: LocationRepository? = null
-    val alarmsLiveData: LiveData<List<SolarAlarm?>?>?
-    val solarTimeLiveData: LiveData<List<SolarTime?>?>?
+    //val alarmsLiveData: LiveData<List<SolarAlarm?>?>?
+    //val solarTimeLiveData: LiveData<List<SolarTime?>?>?
     //val locationLiveData = locationViewModel.AllLocations
     //private val alarmDisplayDataDao: AlarmDisplayDataDao? = null
     var alarmDisplayLiveData: LiveData<List<AlarmDisplayData?>?>? = null
@@ -37,24 +37,24 @@ class AlarmListViewModel(solarAlarmApp: SolarAlarmApp) : AndroidViewModel(solarA
     init {
 
         // to be deleted
-        val db: SolarAlarmDatabase? = SolarAlarmDatabase.getDatabase(solarAlarmApp, )
-        if (db != null) {
-            alarmDisplayLiveData = db.alarmDisplayDataDao().loadAlarmData()
-        }
-        solarAlarmRepository = SolarAlarmRepository()
-        alarmsLiveData = solarAlarmRepository.all
-        solarTimeLiveData = SolarTimeRepository().all
+        //val db: SolarAlarmDatabase? = SolarAlarmDatabase.getDatabase(solarAlarmApp, )
+        //if (db != null) {
+        //    alarmDisplayLiveData = db.alarmDisplayDataDao().loadAlarmData()
+        //}
+        //solarAlarmRepository = SolarAlarmRepository()
+        //alarmsLiveData = solarAlarmRepository.all
+        //solarTimeLiveData = SolarTimeRepository().all
     }
 
     fun update(alarm: SolarAlarm?) {
-        solarAlarmRepository.Update(alarm)
+        //solarAlarmRepository.Update(alarm)
     }
 
     fun delete(alarm: SolarAlarm?) {
-        solarAlarmRepository.Delete(alarm)
+        //solarAlarmRepository.Delete(alarm)
     }
 
     fun getSolarAlarmLiveData(): LiveData<List<SolarAlarm?>?>? {
-        return alarmsLiveData
+        return null//alarmsLiveData
     }
 }

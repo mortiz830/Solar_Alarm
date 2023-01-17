@@ -95,8 +95,8 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
         addLocationButton!!.setOnClickListener { view ->
             locationName = locationNameText!!.text.toString()
             try {
-                isLocationNameExists = locationRepository.DoesLocationNameExists(locationName)
-                isLocationPointExists = locationRepository.DoesLocationLatLongExists(latitude, longitude)
+                //isLocationNameExists = locationRepository.DoesLocationNameExists(locationName)
+                //isLocationPointExists = locationRepository.DoesLocationLatLongExists(latitude, longitude)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -149,38 +149,38 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
     fun saveLocation() {
         val locationName = locationNameText!!.text.toString()
         //val location = LocationRepository().Insert()
-        location.Name = locationName
-        location.Latitude = latitude
-        location.Longitude = longitude
-        locationRepository!!.Insert(location)
+//        location.Name = locationName
+//        location.Latitude = latitude
+//        location.Longitude = longitude
+//        locationRepository!!.Insert(location)
         Toast.makeText(context, "New Location Created", Toast.LENGTH_LONG).show()
     }
 
-    inner class LocationNameExistsTask : AsyncTask<String?, Void?, Boolean>() {
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        override suspend fun doInBackground(vararg p0: String?): Boolean? {
-            var result = false
-            try {
-                result = locationRepository.DoesLocationLatLongExists(locationName)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return result
-        }
-    }
+//    inner class LocationNameExistsTask : AsyncTask<String?, Void?, Boolean>() {
+//        @RequiresApi(api = Build.VERSION_CODES.O)
+//        override suspend fun doInBackground(vararg p0: String?): Boolean? {
+//            var result = false
+//            try {
+//                result = locationRepository.DoesLocationLatLongExists(locationName)
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//            return result
+//        }
+//    }
 
-    inner class LocationPointExistsTask : AsyncTask<Double?, Void?, Boolean>() {
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        override fun doInBackground(vararg p0: Double?): Boolean? {
-            try {
-                isLocationLatitudeExists = locationRepository!!.isLocationLatitudeExists(latitude)
-                isLocationLongitudeExists = locationRepository!!.isLocationLongitudeExists(longitude)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return isLocationLatitudeExists && isLocationLongitudeExists
-        }
-    }
+//    inner class LocationPointExistsTask : AsyncTask<Double?, Void?, Boolean>() {
+//        @RequiresApi(api = Build.VERSION_CODES.O)
+//        override fun doInBackground(vararg p0: Double?): Boolean? {
+//            try {
+//                isLocationLatitudeExists = locationRepository!!.isLocationLatitudeExists(latitude)
+//                isLocationLongitudeExists = locationRepository!!.isLocationLongitudeExists(longitude)
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//            return isLocationLatitudeExists && isLocationLongitudeExists
+//        }
+//    }
 
     override fun onMapReady(gMap: GoogleMap) {
         googleMap = gMap

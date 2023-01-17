@@ -2,45 +2,54 @@ package com.example.solar_alarm.Data.Repositories
 
 import androidx.annotation.RequiresApi
 import android.os.Build
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
+import com.example.solar_alarm.Data.Daos.LocationDao
 import com.example.solar_alarm.Data.Tables.SolarTime
 import com.example.solar_alarm.Data.SolarAlarmDatabase
 import com.example.solar_alarm.Data.Daos.SolarTimeDao
+import com.example.solar_alarm.Data.Tables.Location
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
-class SolarTimeRepository @RequiresApi(api = Build.VERSION_CODES.O) constructor() : RepositoryBase() {
-    private val solarTimeDao: SolarTimeDao?
-    val all: LiveData<List<SolarTime?>?>?
+@RequiresApi(api = Build.VERSION_CODES.O)
+class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
+{
+    val all: Flow<List<SolarTime>> = solarTimeDao.GetAll()
 
-    init {
-        solarTimeDao = _SolarAlarmDatabase!!.solarTimeDao()
-        all = solarTimeDao?.all
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun Insert(solarTime: SolarTime)
+    {
+        solarTimeDao.Insert(solarTime)
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    fun Insert(solarTime: SolarTime?) {
-        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { solarTimeDao!!.Insert(solarTime) })
+    @WorkerThread
+    suspend fun GetById(id: Int)
+    {
+        solarTimeDao.GetById(id)
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    fun Update(solarTime: SolarTime?) {
-        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { solarTimeDao!!.Update(solarTime) })
+    @WorkerThread
+    suspend fun Update(solarTime: SolarTime)
+    {
+        solarTimeDao.Update(solarTime)
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    fun delete(solarTime: SolarTime?) {
-        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { solarTimeDao!!.delete(solarTime) })
+    @WorkerThread
+    suspend fun Delete(solarTime: SolarTime)
+    {
+        solarTimeDao.Delete(solarTime)
     }
 
-    fun isLocationIDDatePairExists(locationId: Int, date: LocalDate?): Boolean {
-        return solarTimeDao!!.isLocationIDDatePairExists(locationId, date)
+    @WorkerThread
+    suspend fun doesLocationIdDatePairExists(locationId: Int, date: LocalDate): Boolean
+    {
+        return solarTimeDao.doesLocationIdDatePairExists(locationId, date)
     }
 
-    fun getSolarTime(locationId: Int, date: LocalDate?): SolarTime? {
-        return solarTimeDao!!.getSolarTime(locationId, date)
-    }
-
-    fun GetById(Id: Int): SolarTime? {
-        return solarTimeDao!!.getById(Id)
+    fun getSolarTime(locationId: Int, date: LocalDate): SolarTime?
+    {
+        return solarTimeDao.getSolarTime(locationId, date)
     }
 }

@@ -41,11 +41,11 @@ class AlarmViewHolder(itemView: View, listener: OnToggleAlarmListener) : Recycle
         protected override fun doInBackground(vararg p0: Int?): SolarTime? {
             var solarTime: SolarTime? = null
             try {
-                solarTime = SolarTimeRepository().GetById(0)
+                //solarTime = SolarTimeRepository().GetById(0)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            return solarTime
+            return null// solarTime
         }
     }
 

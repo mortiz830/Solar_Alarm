@@ -111,14 +111,14 @@ class CreateAlarmFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Locations = ArrayList()
-        solarTimeRepository = SolarTimeRepository()
-        solarAlarmRepository = SolarAlarmRepository()
-        val locationRepository = LocationRepository()
-        locationRepository.all?.observe(this) { locations ->
-            Locations = locations as List<Location>?
-            locationSpinnerAdapter = SpinnerAdapter(activity, Locations)
-            locationSpinner!!.adapter = locationSpinnerAdapter
-        }
+        //solarTimeRepository = SolarTimeRepository()
+        //solarAlarmRepository = SolarAlarmRepository()
+//        val locationRepository = LocationRepository()
+//        locationRepository.all.observe(this) { locations ->
+//            Locations = locations as List<Location>?
+//            locationSpinnerAdapter = SpinnerAdapter(activity, Locations)
+//            locationSpinner!!.adapter = locationSpinnerAdapter
+//        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -204,7 +204,7 @@ class CreateAlarmFragment : Fragment() {
             try {
                 val sunriseSunsetRequest = SunriseSunsetRequest(locationItem.Latitude.toFloat(), locationItem.Longitude.toFloat(), date)
                 solarTime = TimeResponseTask().execute(sunriseSunsetRequest, locationItem).get()!!
-                solarTimeRepository!!.Insert(solarTime)
+                //solarTimeRepository!!.Insert(solarTime)
             } catch (e: Exception) {
                 e.printStackTrace()
                 throw e
@@ -235,34 +235,34 @@ class CreateAlarmFragment : Fragment() {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Throws(Exception::class)
     private fun scheduleAlarm(solarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum) {
-        val solarAlarmItem = SolarAlarm()
-        solarAlarmItem.Name = if (title!!.text.toString() === "") "" else title!!.text.toString()
-        solarAlarmItem.Active = true
-        solarAlarmItem.LocationId = solarTimeItem.LocationId
-        solarAlarmItem.SolarTimeId = solarTimeItem.Id
-        solarAlarmItem.Recurring = recurring!!.isChecked
-        solarAlarmItem.Monday = mon!!.isChecked
-        solarAlarmItem.Tuesday = tue!!.isChecked
-        solarAlarmItem.Wednesday = wed!!.isChecked
-        solarAlarmItem.Thursday = thu!!.isChecked
-        solarAlarmItem.Friday = fri!!.isChecked
-        solarAlarmItem.Saturday = sat!!.isChecked
-        solarAlarmItem.Sunday = sun!!.isChecked
-        solarAlarmItem.OffsetTypeId = alarmTypeId
-        solarAlarmItem.SolarTimeTypeId = solarTimeTypeId
+//        val solarAlarmItem = SolarAlarm()
+//        solarAlarmItem.Name = if (title!!.text.toString() === "") "" else title!!.text.toString()
+//        solarAlarmItem.Active = true
+//        solarAlarmItem.LocationId = solarTimeItem.LocationId
+//        solarAlarmItem.SolarTimeId = solarTimeItem.Id
+//        solarAlarmItem.Recurring = recurring!!.isChecked
+//        solarAlarmItem.Monday = mon!!.isChecked
+//        solarAlarmItem.Tuesday = tue!!.isChecked
+//        solarAlarmItem.Wednesday = wed!!.isChecked
+//        solarAlarmItem.Thursday = thu!!.isChecked
+//        solarAlarmItem.Friday = fri!!.isChecked
+//        solarAlarmItem.Saturday = sat!!.isChecked
+//        solarAlarmItem.Sunday = sun!!.isChecked
+//        solarAlarmItem.OffsetTypeId = alarmTypeId
+//        solarAlarmItem.SolarTimeTypeId = solarTimeTypeId
         val isSolarAlarmNameLocationIdPairExists : Deferred<Boolean>
 
         val time = measureTimeMillis  {
-            isSolarAlarmNameLocationIdPairExists = GlobalScope.async { getSolarAlarmNameLocationIdPairExists(solarAlarmItem) }
+            //isSolarAlarmNameLocationIdPairExists = GlobalScope.async { getSolarAlarmNameLocationIdPairExists(solarAlarmItem) }
         }
 
-        if (!isSolarAlarmNameLocationIdPairExists.getCompleted()) {
-            solarAlarmRepository!!.Insert(solarAlarmItem)
-        } else {
-            Toast.makeText(context, "Alarm already exists!", Toast.LENGTH_LONG).show()
-        }
-        val alarmScheduler = AlarmScheduler(solarAlarmItem, solarTimeItem, setHours!!.value, setMins!!.value)
-        alarmScheduler.schedule(context)
+//        if (!isSolarAlarmNameLocationIdPairExists.getCompleted()) {
+//            solarAlarmRepository!!.Insert(solarAlarmItem)
+//        } else {
+//            Toast.makeText(context, "Alarm already exists!", Toast.LENGTH_LONG).show()
+//        }
+//        val alarmScheduler = AlarmScheduler(solarAlarmItem, solarTimeItem, setHours!!.value, setMins!!.value)
+//        alarmScheduler.schedule(context)
     }
 
     inner class TimeResponseTask : AsyncTask<Any?, Void?, SolarTime?>() {
@@ -274,7 +274,7 @@ class CreateAlarmFragment : Fragment() {
                 val location = p0[1] as Location
                 val httpRequests = HttpRequests(sunriseSunsetRequest)
                 val sunriseSunsetResponse = httpRequests.GetSolarData(sunriseSunsetRequest)
-                solarTime = SolarTime(location, sunriseSunsetResponse)
+                //solarTime = SolarTime(location, sunriseSunsetResponse)
             } catch (e: Exception) {
                 e.printStackTrace()
                 //Toast.makeText(getContext(), "Unable to get times!", Toast.LENGTH_LONG).show();
@@ -290,7 +290,7 @@ class CreateAlarmFragment : Fragment() {
             val localDate = p0[1] as LocalDate
             var result = false
             try {
-                result = solarTimeRepository!!.isLocationIDDatePairExists(location.Id, localDate)
+                //result = solarTimeRepository!!.isLocationIDDatePairExists(location.Id, localDate)
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(context, "Location / Date Pair exists!", Toast.LENGTH_LONG).show()

@@ -1,23 +1,19 @@
 package com.example.solar_alarm.Data.Daos
 
 import com.example.solar_alarm.Data.Tables.SolarAlarm
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.solar_alarm.Data.Tables.SolarTime
+import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface SolarAlarmDao {
-    @Insert
-    fun Insert(solarAlarm: SolarAlarm?)
+abstract class SolarAlarmDao : BaseDao<SolarAlarm>
+{
+    @Query("SELECT * FROM SolarAlarm ORDER BY Name")
+    abstract fun GetAll(): Flow<List<SolarAlarm>>
 
-    @get:Query("SELECT * FROM SolarAlarm ORDER BY Name")
-    val all: LiveData<List<SolarAlarm?>?>?
+    @Query("SELECT * FROM SolarAlarm WHERE Id = :id")
+    abstract fun GetById(id: Int): SolarTime?
 
     @Query("SELECT EXISTS(SELECT * FROM SolarAlarm WHERE Name = :name AND LocationId = :locationId)")
-    fun isSolarAlarmNameLocationIDPairExists(name: String?, locationId: Int): Boolean
-
-    @Update
-    fun Update(solarAlarm: SolarAlarm?)
-
-    @Delete
-    fun delete(solarAlarm: SolarAlarm?)
+    abstract fun isSolarAlarmNameLocationIDPairExists(name: String?, locationId: Int): Boolean
 }

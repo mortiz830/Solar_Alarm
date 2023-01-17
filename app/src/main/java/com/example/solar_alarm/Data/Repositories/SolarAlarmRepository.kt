@@ -2,34 +2,47 @@ package com.example.solar_alarm.Data.Repositories
 
 import androidx.annotation.RequiresApi
 import android.os.Build
+import androidx.annotation.WorkerThread
 import com.example.solar_alarm.Data.Tables.SolarAlarm
 import androidx.lifecycle.LiveData
 import com.example.solar_alarm.Data.SolarAlarmDatabase
 import com.example.solar_alarm.Data.Daos.SolarAlarmDao
+import com.example.solar_alarm.Data.Daos.SolarTimeDao
+import com.example.solar_alarm.Data.Tables.SolarTime
+import kotlinx.coroutines.flow.Flow
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-class SolarAlarmRepository @RequiresApi(api = Build.VERSION_CODES.O) constructor() : RepositoryBase()
+class SolarAlarmRepository(private val solarAlarmDao: SolarAlarmDao)
 {
-    private val solarAlarmDao: SolarAlarmDao = _SolarAlarmDatabase.solarAlarmDao()
+    val all: Flow<List<SolarAlarm>> = solarAlarmDao.GetAll()
 
-    val all: LiveData<List<SolarAlarm?>?>? = solarAlarmDao.all
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    fun Insert(solarAlarm: SolarAlarm?) {
-        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { solarAlarmDao!!.Insert(solarAlarm) })
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun Insert(solarAlarm: SolarAlarm)
+    {
+        solarAlarmDao.Insert(solarAlarm)
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    fun Update(solarAlarm: SolarAlarm?) {
-        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { solarAlarmDao!!.Update(solarAlarm) })
+    @WorkerThread
+    suspend fun GetById(id: Int)
+    {
+        solarAlarmDao.GetById(id)
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    fun Delete(solarAlarm: SolarAlarm?) {
-        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { solarAlarmDao!!.delete(solarAlarm) })
+    @WorkerThread
+    suspend fun Update(solarAlarm: SolarAlarm)
+    {
+        solarAlarmDao.Update(solarAlarm)
     }
 
-    suspend fun isSolarAlarmNameLocationIDExists(solarAlarm: SolarAlarm): Boolean
+    @WorkerThread
+    suspend fun Delete(solarAlarm: SolarAlarm)
+    {
+        solarAlarmDao.Delete(solarAlarm)
+    }
+
+    @WorkerThread
+    fun isSolarAlarmNameLocationIDExists(solarAlarm: SolarAlarm): Boolean
     {
         return solarAlarmDao.isSolarAlarmNameLocationIDPairExists(solarAlarm.Name, solarAlarm.LocationId)
     }
