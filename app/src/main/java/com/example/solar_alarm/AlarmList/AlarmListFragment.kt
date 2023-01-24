@@ -22,6 +22,8 @@ import androidx.test.core.app.ApplicationProvider
 import com.example.solar_alarm.Data.Tables.SolarAlarm
 import com.example.solar_alarm.Data.ViewModels.LocationViewModel
 import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
+import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModelFactory
 import com.example.solar_alarm.SolarAlarmApp
 import java.time.ZoneId
 import java.util.*
@@ -32,6 +34,12 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
     private val locationViewModel: LocationViewModel by viewModels {
         LocationViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository)
     }
+
+    // https://github.com/android/compose-samples
+    private val foo: SolarAlarmViewModel by viewModels {
+        SolarAlarmViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarAlarmRepository)
+    }
+
     private var alarmRecyclerViewAdapter: AlarmRecycleViewAdapter? = null
     private var alarmsListViewModel: AlarmListViewModel? = null
     private lateinit var alarmsRecyclerView: RecyclerView
