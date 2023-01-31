@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Activities.ui.dashboard
+/*package com.example.solar_alarm.Activities.ui.dashboard
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -40,3 +40,4 @@ class DashboardFragment : Fragment() {
         _binding = null
     }
 }
+*/

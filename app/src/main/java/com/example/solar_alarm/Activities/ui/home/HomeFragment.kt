@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Activities.ui.home
+/*package com.example.solar_alarm.Activities.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,4 +39,4 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-}
+}*/

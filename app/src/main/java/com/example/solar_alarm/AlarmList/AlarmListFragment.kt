@@ -71,9 +71,9 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
         zoneId = TimeZone.getDefault().toZoneId()
         latitude = view.findViewById(R.id.fragment_listalarms_latitude)
         longitude = view.findViewById(R.id.fragment_listalarms_longitude)
-        addAlarm = view.findViewById(R.id.fragment_listalarms_addAlarm)
+        //addAlarm = view.findViewById(R.id.fragment_listalarms_addAlarm)
         addAlarm.setOnClickListener(View.OnClickListener { v -> Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_createAlarmFragment) })
-        addLocation = view.findViewById(R.id.fragment_listAlarms_addLocation)
+        //addLocation = view.findViewById(R.id.fragment_listAlarms_addLocation)
         addLocation.setOnClickListener(View.OnClickListener { v -> Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_addLocationFragment) })
         getLocation(view)
         return view

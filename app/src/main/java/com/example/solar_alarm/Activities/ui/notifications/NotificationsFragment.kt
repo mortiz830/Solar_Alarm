@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Activities.ui.notifications
+/*package com.example.solar_alarm.Activities.ui.notifications
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,4 +39,4 @@ class NotificationsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-}
+}*/

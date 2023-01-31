@@ -12,26 +12,26 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.viewinterop.AndroidViewBinding
+//import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+//import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.example.compose.jetchat.components.JetchatDrawer
-import com.example.compose.jetchat.conversation.BackPressHandler
-import com.example.compose.jetchat.conversation.LocalBackPressedDispatcher
-import com.example.compose.jetchat.databinding.ContentMainBinding
+//import com.example.compose.jetchat.components.JetchatDrawer
+//import com.example.compose.jetchat.conversation.BackPressHandler
+//import com.example.compose.jetchat.conversation.LocalBackPressedDispatcher
+//import com.example.compose.jetchat.databinding.ContentMainBinding
 import com.example.solar_alarm.Data.ViewModels.MainViewModel
 import kotlinx.coroutines.launch
 
-/**
- * Main activity for the app.
- */
+
+// Main activity for the app.
+
 class NavActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    //@OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,10 +41,10 @@ class NavActivity : AppCompatActivity() {
 
         setContentView(
             ComposeView(this).apply {
-                consumeWindowInsets = false
+                //consumeWindowInsets = false
                 setContent {
                     CompositionLocalProvider(
-                        LocalBackPressedDispatcher provides this@NavActivity.onBackPressedDispatcher
+                        //LocalBackPressedDispatcher provides this@NavActivity.onBackPressedDispatcher
                     ) {
                         val drawerState = rememberDrawerState(initialValue = Closed)
                         val drawerOpen by viewModel.drawerShouldBeOpened
