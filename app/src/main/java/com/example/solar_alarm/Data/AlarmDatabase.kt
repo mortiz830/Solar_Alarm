@@ -11,6 +11,7 @@ import android.content.Context
 import com.example.solar_alarm.Data.Tables.Location
 import com.example.solar_alarm.Data.Tables.OffsetType
 import com.example.solar_alarm.Data.Tables.SolarAlarm
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -23,7 +24,7 @@ abstract class AlarmDatabase : RoomDatabase() {
         @Volatile
         private lateinit var INSTANCE: AlarmDatabase
         private const val NUMBER_OF_THREADS = 4
-        val databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
+        val databaseWriteExecutor: ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
         fun getDatabase(context: Context): AlarmDatabase
         {
             if (INSTANCE == null)
@@ -32,10 +33,8 @@ abstract class AlarmDatabase : RoomDatabase() {
                 {
                     if (INSTANCE == null)
                     {
-                        INSTANCE = Room.databaseBuilder(context.applicationContext,
-                                AlarmDatabase::class.java,
-                                "alarm_database")
-                                .build()
+                        INSTANCE = Room.databaseBuilder(context.applicationContext, AlarmDatabase::class.java, "alarm_database")
+                                       .build()
                     }
                 }
             }

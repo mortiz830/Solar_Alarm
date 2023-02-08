@@ -95,6 +95,7 @@ class UpdateAlarmFragment : Fragment() {
 //        });
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_updatealarm, container, false)
         ButterKnife.bind(this, view)

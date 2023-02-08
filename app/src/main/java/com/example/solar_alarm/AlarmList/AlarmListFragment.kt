@@ -1,27 +1,21 @@
 package com.example.solar_alarm.AlarmList
 
-import android.os.Bundle
-import com.example.solar_alarm.R
-import com.example.solar_alarm.Data.Alarm
-import androidx.recyclerview.widget.RecyclerView
-import com.example.solar_alarm.Service.GpsTracker
-import androidx.annotation.RequiresApi
 import android.os.Build
-import androidx.lifecycle.ViewModelProviders
+import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.solar_alarm.CreateAlarm.UpdateAlarmFragment
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
-import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
-import com.example.solar_alarm.Data.Tables.SolarAlarm
-import com.example.solar_alarm.Data.Tables.SolarTime
+import com.example.solar_alarm.Data.Alarm
 import com.example.solar_alarm.Data.ViewModels.*
+import com.example.solar_alarm.R
+import com.example.solar_alarm.Service.GpsTracker
 import com.example.solar_alarm.SolarAlarmApp
 import java.time.ZoneId
 import java.util.*
@@ -42,14 +36,11 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
     }
 
     private var alarmRecyclerViewAdapter: AlarmRecycleViewAdapter? = null
-    //private var alarmsListViewModel: AlarmListViewModel? = null
     private lateinit var alarmsRecyclerView: RecyclerView
-    //private lateinit var addAlarm: Button
-    //private lateinit var addLocation: Button
     private var gpsTracker: GpsTracker? = null
     var latitude: TextView? = null
     var longitude: TextView? = null
-    var zoneId: ZoneId? = null
+    private var zoneId: ZoneId? = null
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,15 +53,12 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
         alarmsRecyclerView = view.findViewById(R.id.fragment_listalarms_recylerView)
         alarmsRecyclerView.setLayoutManager(LinearLayoutManager(context))
         alarmsRecyclerView.setAdapter(alarmRecyclerViewAdapter)
-        //configureOnClickRecyclerView()
         zoneId = TimeZone.getDefault().toZoneId()
         latitude = view.findViewById(R.id.fragment_listalarms_latitude)
         longitude = view.findViewById(R.id.fragment_listalarms_longitude)
-        //addAlarm = view.findViewById(R.id.fragment_listalarms_addAlarm)
-        //addAlarm.setOnClickListener(View.OnClickListener { v -> Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_createAlarmFragment) })
-        //addLocation = view.findViewById(R.id.fragment_listAlarms_addLocation)
-        //addLocation.setOnClickListener(View.OnClickListener { v -> Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_addLocationFragment) })
+
         getLocation(view)
+
         return view
     }
 
