@@ -1,29 +1,21 @@
 package com.example.solar_alarm.Activities
 
+import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.material3.DrawerValue.Closed
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.ComposeView
-//import androidx.compose.ui.viewinterop.AndroidViewBinding
-import androidx.core.os.bundleOf
-import androidx.core.view.WindowCompat
-//import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-//import com.example.compose.jetchat.components.JetchatDrawer
-//import com.example.compose.jetchat.conversation.BackPressHandler
-//import com.example.compose.jetchat.conversation.LocalBackPressedDispatcher
-//import com.example.compose.jetchat.databinding.ContentMainBinding
+import androidx.fragment.app.Fragment
+
+import com.example.solar_alarm.AlarmList.AlarmListFragment
+import com.example.solar_alarm.CreateAlarm.CreateAlarmFragment
+
 import com.example.solar_alarm.Data.ViewModels.MainViewModel
-import kotlinx.coroutines.launch
+import com.example.solar_alarm.Location.AddLocationFragment
+import com.example.solar_alarm.R
+import com.example.solar_alarm.databinding.ActivityBottomNavigationBinding
+
 
 
 // Main activity for the app.
@@ -31,81 +23,38 @@ import kotlinx.coroutines.launch
 class NavActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
+    private lateinit var binding : ActivityBottomNavigationBinding
+
     //@OptIn(ExperimentalMaterial3Api::class)
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityBottomNavigationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        replaceFragment(AlarmListFragment())
 
-        // Turn off the decor fitting system windows, which allows us to handle insets,
-        // including IME animations
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        binding.navView.setOnItemSelectedListener {
 
-        setContentView(
-            ComposeView(this).apply {
-                //consumeWindowInsets = false
-                setContent {
-                    CompositionLocalProvider(
-                        //LocalBackPressedDispatcher provides this@NavActivity.onBackPressedDispatcher
-                    ) {
-                        val drawerState = rememberDrawerState(initialValue = Closed)
-                        val drawerOpen by viewModel.drawerShouldBeOpened
-                            .collectAsStateWithLifecycle()
+            when(it.itemId) {
 
-                        if (drawerOpen) {
-                            // Open drawer and reset state in VM.
-                            LaunchedEffect(Unit) {
-                                // wrap in try-finally to handle interruption whiles opening drawer
-                                try {
-                                    drawerState.open()
-                                } finally {
-                                    viewModel.resetOpenDrawerAction()
-                                }
-                            }
-                        }
+                R.id.navigation_home -> replaceFragment(AlarmListFragment())
+                R.id.navigation_dashboard -> replaceFragment(AddLocationFragment())
+                R.id.navigation_notifications -> replaceFragment(CreateAlarmFragment())
 
-                        // Intercepts back navigation when the drawer is open
-                        val scope = rememberCoroutineScope()
-                        if (drawerState.isOpen) {
-                            BackPressHandler {
-                                scope.launch {
-                                    drawerState.close()
-                                }
-                            }
-                        }
+                else ->{
 
-                        JetchatDrawer(
-                            drawerState = drawerState,
-                            onChatClicked = {
-                                findNavController().popBackStack(R.id.nav_home, false)
-                                scope.launch {
-                                    drawerState.close()
-                                }
-                            },
-                            onProfileClicked = {
-                                val bundle = bundleOf("userId" to it)
-                                findNavController().navigate(R.id.nav_profile, bundle)
-                                scope.launch {
-                                    drawerState.close()
-                                }
-                            }
-                        ) {
-                            AndroidViewBinding(ContentMainBinding::inflate)
-                        }
-                    }
                 }
+
             }
-        )
+            true
+        }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return findNavController().navigateUp() || super.onSupportNavigateUp()
-    }
-
-    /**
-     * See https://issuetracker.google.com/142847973
-     */
-    private fun findNavController(): NavController {
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        return navHostFragment.navController
+    private fun replaceFragment(fragment: Fragment)
+    {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frame_layout, fragment)
+        fragmentTransaction.commit()
     }
 }

@@ -13,10 +13,13 @@ import com.example.solar_alarm.Data.SolarAlarmDatabase
 import com.example.solar_alarm.Data.Tables.*
 import com.example.solar_alarm.Data.ViewModels.LocationViewModel
 import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
+import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
 import com.example.solar_alarm.SolarAlarmApp
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-class AlarmListViewModel(solarAlarmApp: SolarAlarmApp) : AndroidViewModel(solarAlarmApp)
+class AlarmListViewModel(solarAlarmApp: SolarAlarmApp, locationViewModel: LocationViewModel, solarTimeViewModel: SolarTimeViewModel,
+                         solarAlarmViewModel: SolarAlarmViewModel) : AndroidViewModel(solarAlarmApp)
 {
     //private val locationViewModel: LocationViewModel by viewModels { LocationViewModelFactory(solarAlarmApp.locationRepository) }
 /*

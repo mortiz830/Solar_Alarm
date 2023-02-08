@@ -20,10 +20,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.test.core.app.ApplicationProvider
 import com.example.solar_alarm.Data.Tables.SolarAlarm
-import com.example.solar_alarm.Data.ViewModels.LocationViewModel
-import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
-import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModelFactory
+import com.example.solar_alarm.Data.Tables.SolarTime
+import com.example.solar_alarm.Data.ViewModels.*
 import com.example.solar_alarm.SolarAlarmApp
 import java.time.ZoneId
 import java.util.*
@@ -35,8 +33,11 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
         LocationViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository)
     }
 
+    private val solarTimeViewModel: SolarTimeViewModel by viewModels {
+        SolarTimeViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarTimeRepository)
+    }
     // https://github.com/android/compose-samples
-    private val foo: SolarAlarmViewModel by viewModels {
+    private val solarAlarmViewModel: SolarAlarmViewModel by viewModels {
         SolarAlarmViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarAlarmRepository)
     }
 

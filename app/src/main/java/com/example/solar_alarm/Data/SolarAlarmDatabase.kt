@@ -8,7 +8,7 @@ import com.example.solar_alarm.Data.Daos.SolarAlarmDao
 import com.example.solar_alarm.Data.Daos.SolarTimeDao
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.solar_alarm.Data.Migrations.StaticDataMigration
+//import com.example.solar_alarm.Data.Migrations.StaticDataMigration
 import androidx.room.TypeConverters
 import kotlin.jvm.Volatile
 import androidx.room.Room
