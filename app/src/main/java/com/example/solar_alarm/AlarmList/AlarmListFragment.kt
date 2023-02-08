@@ -42,10 +42,10 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
     }
 
     private var alarmRecyclerViewAdapter: AlarmRecycleViewAdapter? = null
-    private var alarmsListViewModel: AlarmListViewModel? = null
+    //private var alarmsListViewModel: AlarmListViewModel? = null
     private lateinit var alarmsRecyclerView: RecyclerView
-    private lateinit var addAlarm: Button
-    private lateinit var addLocation: Button
+    //private lateinit var addAlarm: Button
+    //private lateinit var addLocation: Button
     private var gpsTracker: GpsTracker? = null
     var latitude: TextView? = null
     var longitude: TextView? = null
@@ -54,12 +54,6 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         alarmRecyclerViewAdapter = AlarmRecycleViewAdapter(this)
-        alarmsListViewModel = ViewModelProviders.of(this).get(AlarmListViewModel::class.java)
-        alarmsListViewModel!!.getSolarAlarmLiveData()?.observe(this) { alarmListViewModels ->
-            if (alarmListViewModels != null) {
-                alarmRecyclerViewAdapter!!.setAlarms(alarmListViewModels as MutableList<SolarAlarm>)
-            }
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -73,9 +67,9 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
         latitude = view.findViewById(R.id.fragment_listalarms_latitude)
         longitude = view.findViewById(R.id.fragment_listalarms_longitude)
         //addAlarm = view.findViewById(R.id.fragment_listalarms_addAlarm)
-        addAlarm.setOnClickListener(View.OnClickListener { v -> Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_createAlarmFragment) })
+        //addAlarm.setOnClickListener(View.OnClickListener { v -> Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_createAlarmFragment) })
         //addLocation = view.findViewById(R.id.fragment_listAlarms_addLocation)
-        addLocation.setOnClickListener(View.OnClickListener { v -> Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_addLocationFragment) })
+        //addLocation.setOnClickListener(View.OnClickListener { v -> Navigation.findNavController(v).navigate(R.id.action_alarmsListFragment_to_addLocationFragment) })
         getLocation(view)
         return view
     }
