@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.example.solar_alarm.Data.Repositories.LocationRepository
 import android.os.AsyncTask
 import kotlin.Throws
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -63,9 +62,8 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
 
     @kotlin.jvm.JvmField
     @BindView(R.id.fragment_add_location_LocationNameText)
+
     var locationNameText: EditText? = null
-    var googleMap: GoogleMap? = null
-    private var gpsTracker: GpsTracker? = null
     private var latitude = 0.0
     private var longitude = 0.0
     private var httpUrlConnection: HttpURLConnection? = null
@@ -82,16 +80,21 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    {
         val view = inflater.inflate(R.layout.fragment_add_location, container, false)
         getCurrentLocation(view)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.fragment_add_location_map) as SupportMapFragment?
-        mapFragment!!.getMapAsync(this)
+        val supportMapFragment = childFragmentManager.findFragmentById(R.id.fragment_add_location_map) as SupportMapFragment?
+        supportMapFragment!!.getMapAsync(this)
         ButterKnife.bind(this, view)
-        latitudeText?.setText(latitude.toString())
-        longitudeText?.setText(longitude.toString())
-        timeZoneText?.setText(TimeZone.getDefault().toZoneId().toString())
+
+        latitudeText  = TextView(context)
+        longitudeText = TextView(context)
+        timeZoneText  = TextView(context)
+
+        latitudeText?.text  = latitude.toString()
+        longitudeText?.text = longitude.toString()
+        timeZoneText?.text  = TimeZone.getDefault().toZoneId().toString()
 //        addLocationButton!!.setOnClickListener { view ->
 //            locationName = locationNameText!!.text.toString()
 //            try {
@@ -110,18 +113,24 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
         return view
     }
 
-    fun getCurrentLocation(view: View) {
-        gpsTracker = GpsTracker(view.context)
-        if (gpsTracker!!.canGetLocation()) {
-            latitude = gpsTracker!!.latitude
-            longitude = gpsTracker!!.longitude
-        } else {
-            gpsTracker!!.showSettingsAlert()
+    private fun getCurrentLocation(view: View)
+    {
+        var gpsTracker = GpsTracker(view.context)
+
+        if (gpsTracker.canGetLocation())
+        {
+            latitude  = gpsTracker.latitude
+            longitude = gpsTracker.longitude
+        }
+        else
+        {
+            gpsTracker.showSettingsAlert()
         }
     }
 
     @Throws(IOException::class)
-    fun getTimeZone(latitude: Double, longitude: Double) {
+    fun getTimeZone(latitude: Double, longitude: Double)
+    {
         val timeStamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()).toString()
         val query = String.format("?key=%s&format=%s&by=position&lat=%s&lng=%s",
                 URLEncoder.encode(resources.getString(R.string.time_zone_api_key), "UTF-8"),
@@ -182,21 +191,25 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
 //        }
 //    }
 
-    override fun onMapReady(gMap: GoogleMap) {
-        googleMap = gMap
-        val current = LatLng(latitude, longitude)
-        googleMap!!.addMarker(MarkerOptions().position(current).title("$latitude, $longitude"))
-        googleMap!!.animateCamera(CameraUpdateFactory.newLatLng(current))
-        googleMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 11.0f))
-        googleMap!!.setOnMapClickListener { latLng ->
-            googleMap!!.clear()
-            googleMap!!.addMarker(MarkerOptions().position(latLng).title(latLng.latitude.toString() + ", " + latLng.longitude))
-            googleMap!!.animateCamera(CameraUpdateFactory.newLatLng(latLng))
-            googleMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11.0f))
-            latitude = latLng.latitude
+    override fun onMapReady(googleMap: GoogleMap)
+    {
+        val latLng = LatLng(latitude, longitude)
+
+        googleMap.addMarker(MarkerOptions().position(latLng).title("$latitude, $longitude"))
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11.0f))
+
+        googleMap.setOnMapClickListener {latLng ->
+            googleMap.clear()
+            googleMap.addMarker(MarkerOptions().position(latLng).title(latLng.latitude.toString() + ", " + latLng.longitude))
+            googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11.0f))
+
+            latitude  = latLng.latitude
             longitude = latLng.longitude
-            latitudeText!!.text = latitude.toString()
-            longitudeText!!.text = longitude.toString()
+
+            latitudeText?.text  = latLng.latitude.toString()
+            longitudeText?.text = latLng.longitude.toString()
         }
     }
 }
