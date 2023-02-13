@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit
 @RequiresApi(Build.VERSION_CODES.O)
 class AddLocationFragment : Fragment(), OnMapReadyCallback
 {
-    val locationRepository = (ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository
+    //val locationRepository = (ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository
 
     @kotlin.jvm.JvmField
     @BindView(R.id.fragment_add_location_addLocationButton)
@@ -89,24 +89,24 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
         val mapFragment = childFragmentManager.findFragmentById(R.id.fragment_add_location_map) as SupportMapFragment?
         mapFragment!!.getMapAsync(this)
         ButterKnife.bind(this, view)
-        latitudeText!!.text = latitude.toString()
-        longitudeText!!.text = longitude.toString()
-        timeZoneText!!.text = TimeZone.getDefault().toZoneId().toString()
-        addLocationButton!!.setOnClickListener { view ->
-            locationName = locationNameText!!.text.toString()
-            try {
-                //isLocationNameExists = locationRepository.DoesLocationNameExists(locationName)
-                //isLocationPointExists = locationRepository.DoesLocationLatLongExists(latitude, longitude)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            if (!isLocationNameExists!! && !isLocationPointExists) {
-                saveLocation()
-                Navigation.findNavController(view).navigate(R.id.action_addLocationFragment_to_alarmsListFragment)
-            } else if (isLocationNameExists!! && isLocationPointExists) {
-                Toast.makeText(context, "Location Name & Point Already Exists!", Toast.LENGTH_LONG).show()
-            } else if (isLocationNameExists!!) Toast.makeText(context, "Location Name Already Exists!", Toast.LENGTH_LONG).show() else if (isLocationPointExists) Toast.makeText(context, "Location Point Already Exists!", Toast.LENGTH_LONG).show()
-        }
+        latitudeText?.setText(latitude.toString())
+        longitudeText?.setText(longitude.toString())
+        timeZoneText?.setText(TimeZone.getDefault().toZoneId().toString())
+//        addLocationButton!!.setOnClickListener { view ->
+//            locationName = locationNameText!!.text.toString()
+//            try {
+//                //isLocationNameExists = locationRepository.DoesLocationNameExists(locationName)
+//                //isLocationPointExists = locationRepository.DoesLocationLatLongExists(latitude, longitude)
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//            if (!isLocationNameExists!! && !isLocationPointExists) {
+//                saveLocation()
+//                Navigation.findNavController(view).navigate(R.id.action_addLocationFragment_to_alarmsListFragment)
+//            } else if (isLocationNameExists!! && isLocationPointExists) {
+//                Toast.makeText(context, "Location Name & Point Already Exists!", Toast.LENGTH_LONG).show()
+//            } else if (isLocationNameExists!!) Toast.makeText(context, "Location Name Already Exists!", Toast.LENGTH_LONG).show() else if (isLocationPointExists) Toast.makeText(context, "Location Point Already Exists!", Toast.LENGTH_LONG).show()
+//        }
         return view
     }
 

@@ -2,7 +2,6 @@ package com.example.solar_alarm.Activities
 
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -38,7 +37,7 @@ class NavActivity : AppCompatActivity() {
             when(it.itemId) {
 
                 R.id.navigation_home -> replaceFragment(AlarmListFragment())
-                R.id.navigation_dashboard -> replaceFragment(AddLocationFragment())
+                R.id.navigation_location -> replaceFragment(AddLocationFragment())
                 R.id.navigation_notifications -> replaceFragment(CreateAlarmFragment())
 
                 else ->{
