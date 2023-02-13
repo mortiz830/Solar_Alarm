@@ -1,38 +1,28 @@
 package com.example.solar_alarm.Location
 
+import android.os.Build
 import android.os.Bundle
-import com.example.solar_alarm.R
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.example.solar_alarm.Data.Tables.*
+import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.GpsTracker
-import androidx.annotation.RequiresApi
-import android.os.Build
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.os.AsyncTask
-import kotlin.Throws
-import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.gson.Gson
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.CameraUpdateFactory
-import android.view.View
-import android.widget.*
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
-import androidx.test.core.app.ApplicationProvider
-import com.example.solar_alarm.Data.Tables.*
-import com.example.solar_alarm.Data.ViewModels.LocationViewModel
-import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
-import com.example.solar_alarm.SolarAlarmApp
+import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
-import java.lang.Exception
-import java.lang.StringBuilder
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
@@ -64,8 +54,9 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
     @BindView(R.id.fragment_add_location_LocationNameText)
 
     var locationNameText: EditText? = null
-    private var latitude = 0.0
-    private var longitude = 0.0
+
+    private var latLng: LatLng? = null
+
     private var httpUrlConnection: HttpURLConnection? = null
     var isLocationNameExists: Boolean? = null
     var isLocationLatitudeExists = false
@@ -92,8 +83,8 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
         longitudeText = TextView(context)
         timeZoneText  = TextView(context)
 
-        latitudeText?.text  = latitude.toString()
-        longitudeText?.text = longitude.toString()
+        latitudeText?.text  = latLng!!.latitude.toString()
+        longitudeText?.text = latLng!!.longitude.toString()
         timeZoneText?.text  = TimeZone.getDefault().toZoneId().toString()
 //        addLocationButton!!.setOnClickListener { view ->
 //            locationName = locationNameText!!.text.toString()
@@ -119,8 +110,7 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
 
         if (gpsTracker.canGetLocation())
         {
-            latitude  = gpsTracker.latitude
-            longitude = gpsTracker.longitude
+            latLng = LatLng(gpsTracker.latitude, gpsTracker.longitude)
         }
         else
         {
@@ -193,20 +183,17 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
 
     override fun onMapReady(googleMap: GoogleMap)
     {
-        val latLng = LatLng(latitude, longitude)
+        val markerOptions = MarkerOptions().position(latLng!!).title("$latLng.latitude, $latLng.longitude")
 
-        googleMap.addMarker(MarkerOptions().position(latLng).title("$latitude, $longitude"))
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11.0f))
+        googleMap.addMarker(markerOptions)
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng!!))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng!!, 11.0f))
 
         googleMap.setOnMapClickListener {latLng ->
             googleMap.clear()
             googleMap.addMarker(MarkerOptions().position(latLng).title(latLng.latitude.toString() + ", " + latLng.longitude))
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11.0f))
-
-            latitude  = latLng.latitude
-            longitude = latLng.longitude
 
             latitudeText?.text  = latLng.latitude.toString()
             longitudeText?.text = latLng.longitude.toString()
