@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.test.core.app.ApplicationProvider
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.solar_alarm.Data.Tables.*
 import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.GpsTracker
+import com.example.solar_alarm.databinding.FragmentAddLocationBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -33,28 +35,7 @@ import java.util.concurrent.TimeUnit
 class AddLocationFragment : Fragment(), OnMapReadyCallback
 {
     //val locationRepository = (ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_add_location_addLocationButton)
-    var addLocationButton: Button? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_add_location_Latitude)
-    var latitudeText: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_add_location_Longitude)
-    var longitudeText: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_add_location_TimeZone)
-    var timeZoneText: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_add_location_LocationNameText)
-
-    var locationNameText: EditText? = null
-
+    lateinit var binding: FragmentAddLocationBinding
     private var latLng: LatLng? = null
 
     private var httpUrlConnection: HttpURLConnection? = null
@@ -67,25 +48,26 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = FragmentAddLocationBinding.inflate(layoutInflater)
         //locationRepository = LocationRepository()
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        val view = inflater.inflate(R.layout.fragment_add_location, container, false)
+        val view = binding.root
         getCurrentLocation(view)
         val supportMapFragment = childFragmentManager.findFragmentById(R.id.fragment_add_location_map) as SupportMapFragment?
         supportMapFragment!!.getMapAsync(this)
-        ButterKnife.bind(this, view)
+        //ButterKnife.bind(this, view)
+        binding.fragmentAddLocationLatitude.text = latLng?.latitude.toString()
+        binding.fragmentAddLocationLongitude.text = latLng?.longitude.toString()
+        binding.fragmentAddLocationTimeZone.text = TimeZone.getDefault().toZoneId().toString()
+        binding.fragmentAddLocationAddLocationButton.setOnClickListener(View.OnClickListener
+        {
+            locationName = binding.fragmentAddLocationLocationNameText.toString()
+        })
 
-        latitudeText  = TextView(context)
-        longitudeText = TextView(context)
-        timeZoneText  = TextView(context)
-
-        latitudeText?.text  = latLng!!.latitude.toString()
-        longitudeText?.text = latLng!!.longitude.toString()
-        timeZoneText?.text  = TimeZone.getDefault().toZoneId().toString()
 //        addLocationButton!!.setOnClickListener { view ->
 //            locationName = locationNameText!!.text.toString()
 //            try {
@@ -103,6 +85,7 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
 //        }
         return view
     }
+
 
     private fun getCurrentLocation(view: View)
     {
@@ -146,8 +129,8 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun saveLocation() {
-        val locationName = locationNameText!!.text.toString()
-        //val location = LocationRepository().Insert()
+//        val locationName = locationNameText!!.text.toString()
+//        //val location = LocationRepository().Insert()
 //        location.Name = locationName
 //        location.Latitude = latitude
 //        location.Longitude = longitude
@@ -195,8 +178,8 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11.0f))
 
-            latitudeText?.text  = latLng.latitude.toString()
-            longitudeText?.text = latLng.longitude.toString()
+            binding.fragmentAddLocationLatitude.text  = latLng.latitude.toString()
+            binding.fragmentAddLocationLongitude.text = latLng.longitude.toString()
         }
     }
 }
