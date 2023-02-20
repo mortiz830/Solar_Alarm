@@ -22,7 +22,10 @@ import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import com.example.solar_alarm.Activities.NavActivity
+import com.example.solar_alarm.AlarmList.AlarmListFragment
 import com.example.solar_alarm.Data.Tables.*
+import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
 import java.lang.Exception
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -34,75 +37,8 @@ import kotlin.system.*
 import kotlin.text.Typography.tm
 
 class CreateAlarmFragment : Fragment() {
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_title)
-    var title: EditText? = null
+    private lateinit var binding: FragmentCreatealarmBinding
 
-    @BindView(R.id.fragment_createalarm_scheduleAlarm)
-    var scheduleAlarm: Button? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_recurring)
-    var recurring: CheckBox? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_checkMon)
-    var mon: CheckBox? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_checkTue)
-    var tue: CheckBox? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_checkWed)
-    var wed: CheckBox? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_checkThu)
-    var thu: CheckBox? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_checkFri)
-    var fri: CheckBox? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_checkSat)
-    var sat: CheckBox? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_checkSun)
-    var sun: CheckBox? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_recurring_options)
-    var recurringOptions: LinearLayout? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_location_spinner)
-    var locationSpinner: Spinner? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_sunrise_data)
-    var sunriseData: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_solarnoon_data)
-    var solarNoonData: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_sunset_data)
-    var sunsetData: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_set_hours)
-    var setHours: NumberPicker? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.fragment_createalarm_set_mins)
-    var setMins: NumberPicker? = null
-    var locationSpinnerAdapter: SpinnerAdapter? = null
-    var alarmTimeAdapter: ArrayAdapter<CharSequence>? = null
-    var setTimeAdapter: ArrayAdapter<CharSequence>? = null
     private var Locations: List<Location>? = null
     private var solarTimeRepository: SolarTimeRepository? = null
     private lateinit var solarAlarmRepository: SolarAlarmRepository
@@ -110,6 +46,7 @@ class CreateAlarmFragment : Fragment() {
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = FragmentCreatealarmBinding.inflate(layoutInflater)
         Locations = ArrayList()
         //solarTimeRepository = SolarTimeRepository()
         //solarAlarmRepository = SolarAlarmRepository()
@@ -123,26 +60,25 @@ class CreateAlarmFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_createalarm, container, false)
-        val alarmTimeSpinner = view.findViewById<View>(R.id.fragment_createalarm_alarmtime_spinner) as Spinner
-        alarmTimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
-        val setTimeSpinner = view.findViewById<View>(R.id.fragment_createalarm_settime_spinner) as Spinner
-        setTimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
+        val view = binding.root
+        binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
+        binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
+
         val solarTimes: MutableList<SolarTime> = ArrayList()
         ButterKnife.bind(this, view)
         setPickers()
-        locationSpinner!!.onItemSelectedListener = object : OnItemSelectedListener {
+        binding.fragmentCreatealarmLocationSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             @RequiresApi(api = Build.VERSION_CODES.O)
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, locationPosition: Int, l: Long) {
-                val locationItem = adapterView.getItemAtPosition(locationPosition) as Location
+//                val locationItem = adapterView.getItemAtPosition(locationPosition) as Location
                 var date = LocalDate.now()
                 for (i in 0..13) {
                     try {
-                        if (solarTimes.size == 14) {
-                            solarTimes[i] = getSolarTime(locationItem, date)
-                        } else {
-                            solarTimes.add(getSolarTime(locationItem, date))
-                        }
+//                        if (solarTimes.size == 14) {
+//                            solarTimes[i] = getSolarTime(locationItem, date)
+//                        } else {
+//                            solarTimes.add(getSolarTime(locationItem, date))
+//                        }
                     } catch (e: Exception) {
                         e.printStackTrace()
                         Toast.makeText(context, "Solar Time exists!", Toast.LENGTH_LONG).show()
@@ -150,9 +86,9 @@ class CreateAlarmFragment : Fragment() {
                     date = date.plusDays(1)
                 }
                 try {
-                    sunriseData!!.text = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
-                    solarNoonData!!.text = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
-                    sunsetData!!.text = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
+                    binding.fragmentCreatealarmSunriseData.text = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
+                    binding.fragmentCreatealarmSolarnoonData.text = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
+                    binding.fragmentCreatealarmSunsetData.text = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -160,29 +96,29 @@ class CreateAlarmFragment : Fragment() {
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
-        recurring!!.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.fragmentCreatealarmRecurring.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                recurringOptions!!.visibility = View.VISIBLE
+                binding.fragmentCreatealarmRecurringOptions.visibility = View.VISIBLE
             } else {
-                recurringOptions!!.visibility = View.GONE
+                binding.fragmentCreatealarmRecurringOptions.visibility = View.GONE
             }
         }
-        alarmTimeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+        binding.fragmentCreatealarmAlarmtimeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, l: Long) {
                 if (adapterView.getItemAtPosition(position).toString() == "Before" || adapterView.getItemAtPosition(position).toString() == "After") {
-                    setHours!!.visibility = View.VISIBLE
-                    setMins!!.visibility = View.VISIBLE
+                    binding.fragmentCreatealarmSetHours.visibility = View.VISIBLE
+                    binding.fragmentCreatealarmSetMins.visibility = View.VISIBLE
                 } else {
-                    setHours!!.visibility = View.GONE
-                    setMins!!.visibility = View.GONE
+                    binding.fragmentCreatealarmSetHours.visibility = View.GONE
+                    binding.fragmentCreatealarmSetMins.visibility = View.GONE
                 }
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
-        scheduleAlarm!!.setOnClickListener { v ->
-            val alarmTimeItem = alarmTimeSpinner.selectedItem as OffsetTypeEnum
-            val solarTimeTypeItem = setTimeSpinner.selectedItem as SolarTimeTypeEnum
+        binding.fragmentCreatealarmScheduleAlarm.setOnClickListener { v ->
+            val alarmTimeItem = binding.fragmentCreatealarmAlarmtimeSpinner.selectedItem as OffsetTypeEnum
+            val solarTimeTypeItem = binding.fragmentCreatealarmLocationSpinner.selectedItem as SolarTimeTypeEnum
             for (i in solarTimes.indices) {
                 try {
                     scheduleAlarm(solarTimes[i], alarmTimeItem, solarTimeTypeItem)
@@ -190,7 +126,7 @@ class CreateAlarmFragment : Fragment() {
                     e.printStackTrace()
                 }
             }
-            Navigation.findNavController(v).navigate(R.id.action_createAlarmFragment_to_alarmsListFragment)
+            (activity as NavActivity).replaceFragment(AlarmListFragment())
         }
         return view
     }
@@ -236,18 +172,18 @@ class CreateAlarmFragment : Fragment() {
     @Throws(Exception::class)
     private fun scheduleAlarm(solarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum) {
 //        val solarAlarmItem = SolarAlarm()
-//        solarAlarmItem.Name = if (title!!.text.toString() === "") "" else title!!.text.toString()
+//        solarAlarmItem.Name = if (binding.fragmentCreatealarmTitle.text.toString() === "") "" else binding.fragmentCreatealarmTitle.text.toString()
 //        solarAlarmItem.Active = true
 //        solarAlarmItem.LocationId = solarTimeItem.LocationId
 //        solarAlarmItem.SolarTimeId = solarTimeItem.Id
-//        solarAlarmItem.Recurring = recurring!!.isChecked
-//        solarAlarmItem.Monday = mon!!.isChecked
-//        solarAlarmItem.Tuesday = tue!!.isChecked
-//        solarAlarmItem.Wednesday = wed!!.isChecked
-//        solarAlarmItem.Thursday = thu!!.isChecked
-//        solarAlarmItem.Friday = fri!!.isChecked
-//        solarAlarmItem.Saturday = sat!!.isChecked
-//        solarAlarmItem.Sunday = sun!!.isChecked
+//        solarAlarmItem.Recurring = binding.fragmentCreatealarmRecurring.isChecked
+//        solarAlarmItem.Monday = binding.fragmentCreatealarmCheckMon.isChecked
+//        solarAlarmItem.Tuesday = binding.fragmentCreatealarmCheckTue.isChecked
+//        solarAlarmItem.Wednesday = binding.fragmentCreatealarmCheckWed.isChecked
+//        solarAlarmItem.Thursday = binding.fragmentCreatealarmCheckThu.isChecked
+//        solarAlarmItem.Friday = binding.fragmentCreatealarmCheckFri.isChecked
+//        solarAlarmItem.Saturday = binding.fragmentCreatealarmCheckSat.isChecked
+//        solarAlarmItem.Sunday = binding.fragmentCreatealarmCheckSun.isChecked
 //        solarAlarmItem.OffsetTypeId = alarmTypeId
 //        solarAlarmItem.SolarTimeTypeId = solarTimeTypeId
         val isSolarAlarmNameLocationIdPairExists : Deferred<Boolean>
@@ -325,9 +261,9 @@ class CreateAlarmFragment : Fragment() {
     }
 */
     fun setPickers() {
-        setHours!!.minValue = 0
-        setHours!!.maxValue = 23
-        setMins!!.minValue = 0
-        setMins!!.maxValue = 59
+        binding.fragmentCreatealarmSetHours.minValue = 0
+        binding.fragmentCreatealarmSetHours.maxValue = 23
+        binding.fragmentCreatealarmSetMins.minValue = 0
+        binding.fragmentCreatealarmSetMins.maxValue = 59
     }
 }

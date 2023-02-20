@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.test.core.app.ApplicationProvider
-import butterknife.BindView
-import butterknife.ButterKnife
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import com.example.solar_alarm.Activities.NavActivity
+import com.example.solar_alarm.AlarmList.AlarmListFragment
 import com.example.solar_alarm.Data.Tables.*
+import com.example.solar_alarm.Data.ViewModels.LocationViewModel
 import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.GpsTracker
 import com.example.solar_alarm.databinding.FragmentAddLocationBinding
@@ -30,12 +33,14 @@ import java.net.URL
 import java.net.URLEncoder
 import java.util.*
 import java.util.concurrent.TimeUnit
+import com.example.solar_alarm.Data.Tables.Location
+import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
+import com.example.solar_alarm.SolarAlarmApp
 
 @RequiresApi(Build.VERSION_CODES.O)
 class AddLocationFragment : Fragment(), OnMapReadyCallback
 {
-    //val locationRepository = (ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository
-    lateinit var binding: FragmentAddLocationBinding
+    private lateinit var binding: FragmentAddLocationBinding
     private var latLng: LatLng? = null
 
     private var httpUrlConnection: HttpURLConnection? = null
@@ -43,13 +48,11 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
     var isLocationLatitudeExists = false
     var isLocationLongitudeExists = false
     var isLocationPointExists = false
-    var locationName: String? = null
-    //var locationRepository: LocationRepository? = null
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentAddLocationBinding.inflate(layoutInflater)
-        //locationRepository = LocationRepository()
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -65,7 +68,10 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
         binding.fragmentAddLocationTimeZone.text = TimeZone.getDefault().toZoneId().toString()
         binding.fragmentAddLocationAddLocationButton.setOnClickListener(View.OnClickListener
         {
-            locationName = binding.fragmentAddLocationLocationNameText.toString()
+            var locationName: String = binding.fragmentAddLocationLocationNameText.toString()
+            //var isLocationPointExists = locationViewModel.DoesLocationLatLongExists(latLng!!.latitude, latLng!!.longitude)
+            saveLocation()
+            (activity as NavActivity).replaceFragment(AlarmListFragment())
         })
 
 //        addLocationButton!!.setOnClickListener { view ->
@@ -129,12 +135,9 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun saveLocation() {
-//        val locationName = locationNameText!!.text.toString()
-//        //val location = LocationRepository().Insert()
-//        location.Name = locationName
-//        location.Latitude = latitude
-//        location.Longitude = longitude
-//        locationRepository!!.Insert(location)
+        val location = Location(0,binding.fragmentAddLocationLocationNameText.toString(),latLng?.latitude!!,latLng?.longitude!!)
+
+       // locationViewModel.Insert(location)
         Toast.makeText(context, "New Location Created", Toast.LENGTH_LONG).show()
     }
 

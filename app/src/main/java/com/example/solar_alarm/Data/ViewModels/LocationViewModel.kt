@@ -6,7 +6,9 @@ import androidx.lifecycle.*
 import com.example.solar_alarm.Data.Repositories.LocationRepository
 import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
 import com.example.solar_alarm.Data.Tables.Location
+import com.example.solar_alarm.SolarAlarmApp
 import kotlinx.coroutines.launch
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 class LocationViewModel(private val repository: LocationRepository) : ViewModel()
@@ -21,6 +23,7 @@ class LocationViewModel(private val repository: LocationRepository) : ViewModel(
      * Launching a new coroutine to insert the data in a non-blocking way
      */
     fun Insert(location: Location) = viewModelScope.launch { repository.Insert(location) }
+    fun DoesLocationLatLongExists(latitude: Double, longitude: Double) = viewModelScope.launch { repository.DoesLocationLatLongExists(latitude, longitude) }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

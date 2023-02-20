@@ -9,18 +9,25 @@ import androidx.fragment.app.Fragment
 
 import com.example.solar_alarm.AlarmList.AlarmListFragment
 import com.example.solar_alarm.CreateAlarm.CreateAlarmFragment
+import com.example.solar_alarm.Data.ViewModels.LocationViewModel
+import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
 
 import com.example.solar_alarm.Data.ViewModels.MainViewModel
 import com.example.solar_alarm.Location.AddLocationFragment
 import com.example.solar_alarm.R
+import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.ActivityBottomNavigationBinding
 
 
 
 // Main activity for the app.
 
+@RequiresApi(Build.VERSION_CODES.O)
 class NavActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
+    private val locationViewModel: LocationViewModel by viewModels {
+        LocationViewModelFactory((application as SolarAlarmApp).locationRepository)
+    }
 
     private lateinit var binding : ActivityBottomNavigationBinding
 
@@ -49,7 +56,7 @@ class NavActivity : AppCompatActivity() {
         }
     }
 
-    private fun replaceFragment(fragment: Fragment)
+    internal fun replaceFragment(fragment: Fragment)
     {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
