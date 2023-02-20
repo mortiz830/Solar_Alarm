@@ -62,7 +62,7 @@ class CreateAlarmFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = binding.root
         binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
-        binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
+        binding.fragmentCreatealarmSettimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
 
         val solarTimes: MutableList<SolarTime> = ArrayList()
         ButterKnife.bind(this, view)
@@ -118,7 +118,7 @@ class CreateAlarmFragment : Fragment() {
         }
         binding.fragmentCreatealarmScheduleAlarm.setOnClickListener { v ->
             val alarmTimeItem = binding.fragmentCreatealarmAlarmtimeSpinner.selectedItem as OffsetTypeEnum
-            val solarTimeTypeItem = binding.fragmentCreatealarmLocationSpinner.selectedItem as SolarTimeTypeEnum
+            val solarTimeTypeItem = binding.fragmentCreatealarmSettimeSpinner.selectedItem as SolarTimeTypeEnum
             for (i in solarTimes.indices) {
                 try {
                     scheduleAlarm(solarTimes[i], alarmTimeItem, solarTimeTypeItem)
