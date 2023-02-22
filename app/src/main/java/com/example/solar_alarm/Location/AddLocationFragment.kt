@@ -38,8 +38,9 @@ import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
 import com.example.solar_alarm.SolarAlarmApp
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AddLocationFragment : Fragment(), OnMapReadyCallback
+class AddLocationFragment constructor(location: LocationViewModel): Fragment(), OnMapReadyCallback
 {
+    private var locationViewModel: LocationViewModel = location
     private lateinit var binding: FragmentAddLocationBinding
     private var latLng: LatLng? = null
 
@@ -134,10 +135,11 @@ class AddLocationFragment : Fragment(), OnMapReadyCallback
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    fun saveLocation() {
+    fun saveLocation()
+    {
         val location = Location(0,binding.fragmentAddLocationLocationNameText.toString(),latLng?.latitude!!,latLng?.longitude!!)
 
-       // locationViewModel.Insert(location)
+        locationViewModel.Insert(location)
         Toast.makeText(context, "New Location Created", Toast.LENGTH_LONG).show()
     }
 

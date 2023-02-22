@@ -34,20 +34,30 @@ abstract class SolarAlarmDatabase : RoomDatabase()
     companion object
     {
         @Volatile
-        private lateinit var INSTANCE: SolarAlarmDatabase
+        private var INSTANCE: SolarAlarmDatabase? = null
         private const val NUMBER_OF_THREADS = 4
         val databaseWriteExecutor: ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
 
         fun getDatabase(context: Context, scope: CoroutineScope): SolarAlarmDatabase
         {
-            if (INSTANCE == null)
-            {
-                INSTANCE = Room.databaseBuilder(context.applicationContext, SolarAlarmDatabase::class.java, "SolarAlarmDatabase")
-                        //.addMigrations(StaticDataMigration.Companion.MIGRATION_1_2)
-                        .build()
+            // if the INSTANCE is not null, then return it,
+            // if it is, then create the database
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    SolarAlarmDatabase::class.java,
+                    "word_database"
+                )
+                    // Wipes and rebuilds instead of migrating if no Migration object.
+                    // Migration is not part of this codelab.
+                    .fallbackToDestructiveMigration()
+                    //.addMigrations(StaticDataMigration.Companion.MIGRATION_1_2)
+                    //.addCallback(SolarAlarmDatabaseCallback(scope))
+                    .build()
+                INSTANCE = instance
+                // return instance
+                instance
             }
-
-            return INSTANCE
         }
     }
 
