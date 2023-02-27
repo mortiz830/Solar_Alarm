@@ -46,7 +46,7 @@ abstract class SolarAlarmDatabase : RoomDatabase()
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     SolarAlarmDatabase::class.java,
-                    "word_database"
+                    "SolarAlarmDatabase"
                 )
                     // Wipes and rebuilds instead of migrating if no Migration object.
                     // Migration is not part of this codelab.

@@ -69,7 +69,7 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
         binding.fragmentAddLocationTimeZone.text = TimeZone.getDefault().toZoneId().toString()
         binding.fragmentAddLocationAddLocationButton.setOnClickListener(View.OnClickListener
         {
-            var locationName: String = binding.fragmentAddLocationLocationNameText.toString()
+            var locationName: String = binding.fragmentAddLocationLocationNameText.text.toString()
             //var isLocationPointExists = locationViewModel.DoesLocationLatLongExists(latLng!!.latitude, latLng!!.longitude)
             saveLocation()
             (activity as NavActivity).replaceFragment(AlarmListFragment())
@@ -137,7 +137,7 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun saveLocation()
     {
-        val location = Location(0,binding.fragmentAddLocationLocationNameText.toString(),latLng?.latitude!!,latLng?.longitude!!)
+        val location = Location(0,binding.fragmentAddLocationLocationNameText.text.toString(),latLng?.latitude!!,latLng?.longitude!!)
 
         locationViewModel.Insert(location)
         Toast.makeText(context, "New Location Created", Toast.LENGTH_LONG).show()

@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 33
@@ -51,7 +51,8 @@ dependencies {
 
     // room dependencies
     implementation "androidx.room:room-runtime:2.5.0"
-    annotationProcessor "androidx.room:room-compiler:2.5.0"
+    implementation "androidx.room:room-ktx:2.5.0"
+    kapt "androidx.room:room-compiler:2.5.0"
     androidTestImplementation "androidx.room:room-testing:2.5.0"
 
     // butterknife dependencies
@@ -135,7 +136,8 @@ dependencies {
 
     // room dependencies
     implementation "androidx.room:room-runtime:2.5.0"
-    annotationProcessor "androidx.room:room-compiler:2.5.0"
+    implementation "androidx.room:room-ktx:2.5.0"
+    kapt "androidx.room:room-compiler:2.5.0"
     androidTestImplementation "androidx.room:room-testing:2.5.0"
 
     // butterknife dependencies

@@ -12,7 +12,7 @@ abstract class SolarAlarmDao : BaseDao<SolarAlarm>
     abstract fun GetAll(): Flow<List<SolarAlarm>>
 
     @Query("SELECT * FROM SolarAlarm WHERE Id = :id")
-    abstract fun GetById(id: Int): SolarTime?
+    abstract fun GetById(id: Int): SolarAlarm?
 
     @Query("SELECT EXISTS(SELECT * FROM SolarAlarm WHERE Name = :name AND LocationId = :locationId)")
     abstract fun isSolarAlarmNameLocationIDPairExists(name: String?, locationId: Int): Boolean

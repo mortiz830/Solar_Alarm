@@ -5,7 +5,6 @@ import android.os.Bundle
 import com.example.solar_alarm.R
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.example.solar_alarm.Data.Alarm
 import android.content.Intent
 import com.example.solar_alarm.Service.AlarmService
 import android.animation.ObjectAnimator
@@ -34,23 +33,23 @@ class RingActivity : AppCompatActivity() {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = System.currentTimeMillis()
             calendar.add(Calendar.MINUTE, 10)
-            val alarm = Alarm(
-                    Random().nextInt(Int.MAX_VALUE),
-                    calendar[Calendar.HOUR_OF_DAY],
-                    calendar[Calendar.MINUTE],
-                    "Snooze",
-                    System.currentTimeMillis(),
-                    true,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false
-            )
-            alarm.schedule(applicationContext)
+//            val alarm = Alarm(
+//                    Random().nextInt(Int.MAX_VALUE),
+//                    calendar[Calendar.HOUR_OF_DAY],
+//                    calendar[Calendar.MINUTE],
+//                    "Snooze",
+//                    System.currentTimeMillis(),
+//                    true,
+//                    false,
+//                    false,
+//                    false,
+//                    false,
+//                    false,
+//                    false,
+//                    false,
+//                    false
+//            )
+//            alarm.schedule(applicationContext)
             StopService()
         }
         animateClock()

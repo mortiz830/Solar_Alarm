@@ -12,7 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
-import com.example.solar_alarm.Data.Alarm
 import com.example.solar_alarm.Data.ViewModels.*
 import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.GpsTracker
@@ -62,15 +61,15 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
         return view
     }
 
-    override fun onToggle(alarm: Alarm) {
-        if (alarm.isStarted) {
-            alarm.cancelAlarm(context)
-            //alarmsListViewModel.update(alarm);
-        } else {
-            alarm.schedule(context)
-            //alarmsListViewModel.update(alarm);
-        }
-    }
+//    override fun onToggle(alarm: Alarm) {
+//        if (alarm.isStarted) {
+//            alarm.cancelAlarm(context)
+//            //alarmsListViewModel.update(alarm);
+//        } else {
+//            alarm.schedule(context)
+//            //alarmsListViewModel.update(alarm);
+//        }
+//    }
 
     fun getLocation(view: View) {
         gpsTracker = GpsTracker(view.context)
