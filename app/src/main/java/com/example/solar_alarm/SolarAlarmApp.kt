@@ -15,9 +15,9 @@ import kotlinx.coroutines.SupervisorJob
 class SolarAlarmApp : Application()
 {
     // No need to cancel this scope as it'll be torn down with the process
-    val applicationScope = CoroutineScope(SupervisorJob())
+    private val applicationScope = CoroutineScope(SupervisorJob())
 
-    val solarAlarmDatabase by lazy { SolarAlarmDatabase.getDatabase(this, applicationScope) }
+    private val solarAlarmDatabase by lazy { SolarAlarmDatabase.getDatabase(this, applicationScope) }
 
     val locationRepository   by lazy { LocationRepository(solarAlarmDatabase.locationDao())   }
     val solarTimeRepository  by lazy { SolarTimeRepository(solarAlarmDatabase.solarTimeDao()) }

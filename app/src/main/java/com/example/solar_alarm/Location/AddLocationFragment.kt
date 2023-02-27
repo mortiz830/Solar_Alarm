@@ -70,7 +70,7 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
         binding.fragmentAddLocationAddLocationButton.setOnClickListener(View.OnClickListener
         {
             var locationName: String = binding.fragmentAddLocationLocationNameText.text.toString()
-            //var isLocationPointExists = locationViewModel.DoesLocationLatLongExists(latLng!!.latitude, latLng!!.longitude)
+            var isLocationPointExists = locationViewModel.DoesLocationLatLongExists(latLng!!.latitude, latLng!!.longitude)
             saveLocation()
             (activity as NavActivity).replaceFragment(AlarmListFragment())
         })

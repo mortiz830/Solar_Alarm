@@ -39,28 +39,24 @@ import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
 class SolarAlarm (
 
     @PrimaryKey(autoGenerate = true) val Id: Int,
-
-    @ColumnInfo(name = "Name") val Name: String?,
-
-    @ColumnInfo(name = "Active") val Active: Boolean,
-
-    @ColumnInfo(name = "LocationId") val LocationId: Int,
-
-    @ColumnInfo(name = "SolarTimeId") val SolarTimeId: Int,
+    @ColumnInfo(name = "Name") var Name: String?,
+    @ColumnInfo(name = "Active") var Active: Boolean,
+    @ColumnInfo(name = "LocationId") var LocationId: Int,
+    @ColumnInfo(name = "SolarTimeId") var SolarTimeId: Int,
 
     // Recurrence Flags
-    @ColumnInfo(name = "Recurring") val Recurring: Boolean,
-    @ColumnInfo(name = "Monday")    val Monday: Boolean,
-    @ColumnInfo(name = "Tuesday")   val Tuesday: Boolean,
-    @ColumnInfo(name = "Wednesday") val Wednesday: Boolean,
-    @ColumnInfo(name = "Thursday")  val Thursday: Boolean,
-    @ColumnInfo(name = "Friday")    val Friday: Boolean,
-    @ColumnInfo(name = "Saturday")  val Saturday: Boolean,
-    @ColumnInfo(name = "Sunday")    val Sunday: Boolean,
+    @ColumnInfo(name = "Recurring") var Recurring: Boolean,
+    @ColumnInfo(name = "Monday") var Monday: Boolean,
+    @ColumnInfo(name = "Tuesday") var Tuesday: Boolean,
+    @ColumnInfo(name = "Wednesday") var Wednesday: Boolean,
+    @ColumnInfo(name = "Thursday") var Thursday: Boolean,
+    @ColumnInfo(name = "Friday") var Friday: Boolean,
+    @ColumnInfo(name = "Saturday") var Saturday: Boolean,
+    @ColumnInfo(name = "Sunday") var Sunday: Boolean,
 
-    @ColumnInfo(name = "OffsetTypeId") val OffsetTypeId: OffsetTypeEnum,
+    @ColumnInfo(name = "OffsetTypeId") var OffsetTypeId: OffsetTypeEnum,
 
-    @ColumnInfo(name = "SolarTimeTypeId") val SolarTimeTypeId: SolarTimeTypeEnum,
+    @ColumnInfo(name = "SolarTimeTypeId") var SolarTimeTypeId: SolarTimeTypeEnum,
 )
 {
     val recurringDaysText: String?

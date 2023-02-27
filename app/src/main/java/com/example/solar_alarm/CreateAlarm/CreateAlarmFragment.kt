@@ -21,10 +21,15 @@ import com.example.solar_alarm.sunrise_sunset_http.HttpRequests
 import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.test.core.app.ApplicationProvider
 import com.example.solar_alarm.Activities.NavActivity
 import com.example.solar_alarm.AlarmList.AlarmListFragment
 import com.example.solar_alarm.Data.Tables.*
+import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModelFactory
+import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
 import java.lang.Exception
 import java.time.LocalDate
@@ -36,8 +41,13 @@ import kotlinx.coroutines.*
 import kotlin.system.*
 import kotlin.text.Typography.tm
 
+@RequiresApi(Build.VERSION_CODES.O)
 class CreateAlarmFragment : Fragment() {
     private lateinit var binding: FragmentCreatealarmBinding
+
+    private val solarAlarmViewModel: SolarAlarmViewModel by viewModels {
+        SolarAlarmViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarAlarmRepository)
+    }
 
     private var Locations: List<Location>? = null
     private var solarTimeRepository: SolarTimeRepository? = null
@@ -58,14 +68,14 @@ class CreateAlarmFragment : Fragment() {
 //        }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = binding.root
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    {
+        //val view = binding.root
         binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
         binding.fragmentCreatealarmSettimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
 
         val solarTimes: MutableList<SolarTime> = ArrayList()
-        ButterKnife.bind(this, view)
+        ButterKnife.bind(this, binding.root)
         setPickers()
         binding.fragmentCreatealarmLocationSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -121,7 +131,7 @@ class CreateAlarmFragment : Fragment() {
             val solarTimeTypeItem = binding.fragmentCreatealarmSettimeSpinner.selectedItem as SolarTimeTypeEnum
             for (i in solarTimes.indices) {
                 try {
-                    scheduleAlarm(solarTimes[i], alarmTimeItem, solarTimeTypeItem)
+                    this.scheduleAlarm(solarTimes[i], alarmTimeItem, solarTimeTypeItem)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -171,47 +181,71 @@ class CreateAlarmFragment : Fragment() {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Throws(Exception::class)
     private fun scheduleAlarm(solarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum) {
-//        val solarAlarmItem = SolarAlarm()
-//        solarAlarmItem.Name = if (binding.fragmentCreatealarmTitle.text.toString() === "") "" else binding.fragmentCreatealarmTitle.text.toString()
-//        solarAlarmItem.Active = true
-//        solarAlarmItem.LocationId = solarTimeItem.LocationId
-//        solarAlarmItem.SolarTimeId = solarTimeItem.Id
-//        solarAlarmItem.Recurring = binding.fragmentCreatealarmRecurring.isChecked
-//        solarAlarmItem.Monday = binding.fragmentCreatealarmCheckMon.isChecked
-//        solarAlarmItem.Tuesday = binding.fragmentCreatealarmCheckTue.isChecked
-//        solarAlarmItem.Wednesday = binding.fragmentCreatealarmCheckWed.isChecked
-//        solarAlarmItem.Thursday = binding.fragmentCreatealarmCheckThu.isChecked
-//        solarAlarmItem.Friday = binding.fragmentCreatealarmCheckFri.isChecked
-//        solarAlarmItem.Saturday = binding.fragmentCreatealarmCheckSat.isChecked
-//        solarAlarmItem.Sunday = binding.fragmentCreatealarmCheckSun.isChecked
-//        solarAlarmItem.OffsetTypeId = alarmTypeId
-//        solarAlarmItem.SolarTimeTypeId = solarTimeTypeId
+        val solarAlarmItem = SolarAlarm(0,
+        if (binding.fragmentCreatealarmTitle.text.toString() === "") "" else binding.fragmentCreatealarmTitle.text.toString(),
+        true,
+        solarTimeItem.LocationId,
+        solarTimeItem.Id,
+        binding.fragmentCreatealarmRecurring.isChecked,
+        binding.fragmentCreatealarmCheckMon.isChecked,
+        binding.fragmentCreatealarmCheckTue.isChecked,
+        binding.fragmentCreatealarmCheckWed.isChecked,
+        binding.fragmentCreatealarmCheckThu.isChecked,
+        binding.fragmentCreatealarmCheckFri.isChecked,
+        binding.fragmentCreatealarmCheckSat.isChecked,
+        binding.fragmentCreatealarmCheckSun.isChecked,
+        alarmTypeId,
+        solarTimeTypeId)
         val isSolarAlarmNameLocationIdPairExists : Deferred<Boolean>
 
         val time = measureTimeMillis  {
-            //isSolarAlarmNameLocationIdPairExists = GlobalScope.async { getSolarAlarmNameLocationIdPairExists(solarAlarmItem) }
+            isSolarAlarmNameLocationIdPairExists = GlobalScope.async { getSolarAlarmNameLocationIdPairExists(solarAlarmItem) }
         }
 
-//        if (!isSolarAlarmNameLocationIdPairExists.getCompleted()) {
-//            solarAlarmRepository!!.Insert(solarAlarmItem)
-//        } else {
-//            Toast.makeText(context, "Alarm already exists!", Toast.LENGTH_LONG).show()
-//        }
-//        val alarmScheduler = AlarmScheduler(solarAlarmItem, solarTimeItem, setHours!!.value, setMins!!.value)
-//        alarmScheduler.schedule(context)
+        if (!isSolarAlarmNameLocationIdPairExists.getCompleted())
+        {
+            solarAlarmViewModel.Insert(solarAlarmItem)
+        }
+        else
+        {
+            Toast.makeText(context, "Alarm already exists!", Toast.LENGTH_LONG).show()
+        }
+        val alarmScheduler = AlarmScheduler(solarAlarmItem, solarTimeItem, binding.fragmentCreatealarmSetHours.value, binding.fragmentCreatealarmSetHours.value)
+        alarmScheduler.schedule(context)
     }
 
     inner class TimeResponseTask : AsyncTask<Any?, Void?, SolarTime?>() {
         @RequiresApi(api = Build.VERSION_CODES.O)
         protected override fun doInBackground(vararg p0: Any?): SolarTime? {
-            var solarTime: SolarTime? = null
-            try {
-                val sunriseSunsetRequest = p0[0] as SunriseSunsetRequest
-                val location = p0[1] as Location
-                val httpRequests = HttpRequests(sunriseSunsetRequest)
+            lateinit var solarTime: SolarTime
+            try
+            {
+                val sunriseSunsetRequest  = p0[0] as SunriseSunsetRequest
+                val location              = p0[1] as Location
+                val httpRequests          = HttpRequests(sunriseSunsetRequest)
                 val sunriseSunsetResponse = httpRequests.GetSolarData(sunriseSunsetRequest)
-                //solarTime = SolarTime(location, sunriseSunsetResponse)
-            } catch (e: Exception) {
+
+                if (sunriseSunsetResponse != null)
+                {
+                    solarTime = SolarTime(
+                        0,
+                        sunriseSunsetResponse.request!!.RequestDate,
+                        location.Id,
+                        sunriseSunsetResponse.dayLength!!,
+                        sunriseSunsetResponse.sunrise,
+                        sunriseSunsetResponse.sunset,
+                        sunriseSunsetResponse.solarNoon,
+                        sunriseSunsetResponse.civilTwilightBegin,
+                        sunriseSunsetResponse.civilTwilightEnd,
+                        sunriseSunsetResponse.nauticalTwilightBegin,
+                        sunriseSunsetResponse.nauticalTwilightEnd,
+                        sunriseSunsetResponse.astronomicalTwilightBegin,
+                        sunriseSunsetResponse.astronomicalTwilightEnd
+                        )
+                }
+            }
+            catch (e: Exception)
+            {
                 e.printStackTrace()
                 //Toast.makeText(getContext(), "Unable to get times!", Toast.LENGTH_LONG).show();
             }

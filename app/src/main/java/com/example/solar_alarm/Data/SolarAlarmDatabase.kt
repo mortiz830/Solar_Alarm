@@ -51,6 +51,7 @@ abstract class SolarAlarmDatabase : RoomDatabase()
                     // Wipes and rebuilds instead of migrating if no Migration object.
                     // Migration is not part of this codelab.
                     .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries()
                     //.addMigrations(StaticDataMigration.Companion.MIGRATION_1_2)
                     //.addCallback(SolarAlarmDatabaseCallback(scope))
                     .build()
