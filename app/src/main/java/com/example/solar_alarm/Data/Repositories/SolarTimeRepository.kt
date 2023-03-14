@@ -1,14 +1,10 @@
 package com.example.solar_alarm.Data.Repositories
 
-import androidx.annotation.RequiresApi
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.LiveData
-import com.example.solar_alarm.Data.Daos.LocationDao
-import com.example.solar_alarm.Data.Tables.SolarTime
-import com.example.solar_alarm.Data.SolarAlarmDatabase
 import com.example.solar_alarm.Data.Daos.SolarTimeDao
-import com.example.solar_alarm.Data.Tables.Location
+import com.example.solar_alarm.Data.Tables.SolarTime
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
@@ -50,6 +46,16 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
 
     fun getSolarTime(locationId: Int, date: LocalDate): SolarTime?
     {
-        return solarTimeDao.getSolarTime(locationId, date)
+        var solarTime = solarTimeDao.getSolarTime(locationId, date)
+
+        if (solarTime == null)
+        {
+            // Make HTTP Request to API
+            // save response as a new SolarTime
+            solarTime = solarTimeDao.getSolarTime(locationId, date)
+        }
+
+
+        return solarTime
     }
 }

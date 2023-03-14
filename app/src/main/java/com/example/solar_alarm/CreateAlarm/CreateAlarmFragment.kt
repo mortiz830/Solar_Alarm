@@ -1,45 +1,35 @@
 package com.example.solar_alarm.CreateAlarm
 
-import android.os.Bundle
-import com.example.solar_alarm.R
-import butterknife.BindView
-import butterknife.ButterKnife
-import androidx.annotation.RequiresApi
-import android.os.Build
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
-import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository
-import com.example.solar_alarm.Data.Repositories.LocationRepository
 import android.os.AsyncTask
-import kotlin.Throws
-import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
-import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
-import android.widget.AdapterView.OnItemSelectedListener
-import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest
-import com.example.solar_alarm.sunrise_sunset_http.HttpRequests
+import android.os.Build
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
+import android.widget.AdapterView.OnItemSelectedListener
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
 import androidx.test.core.app.ApplicationProvider
+import butterknife.ButterKnife
 import com.example.solar_alarm.Activities.NavActivity
 import com.example.solar_alarm.AlarmList.AlarmListFragment
+import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
+import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
+import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository
+import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
 import com.example.solar_alarm.Data.Tables.*
-import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModelFactory
+import com.example.solar_alarm.Data.ViewModels.*
 import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
-import java.lang.Exception
+import com.example.solar_alarm.sunrise_sunset_http.HttpRequests
+import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest
+import kotlinx.coroutines.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import java.util.ArrayList
-
-import kotlinx.coroutines.*
 import kotlin.system.*
-import kotlin.text.Typography.tm
 
 @RequiresApi(Build.VERSION_CODES.O)
 class CreateAlarmFragment : Fragment() {
@@ -49,40 +39,47 @@ class CreateAlarmFragment : Fragment() {
         SolarAlarmViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarAlarmRepository)
     }
 
-    private var Locations: List<Location>? = null
+    private val locationViewModel: LocationViewModel by viewModels {
+        LocationViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository)
+    }
+
+    private val solarTimeViewModel: SolarTimeViewModel by viewModels {
+        SolarTimeViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarTimeRepository)
+    }
+
+    //private var Locations: List<Location>? = null
     private var solarTimeRepository: SolarTimeRepository? = null
     private lateinit var solarAlarmRepository: SolarAlarmRepository
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
-        binding = FragmentCreatealarmBinding.inflate(layoutInflater)
-        Locations = ArrayList()
-        //solarTimeRepository = SolarTimeRepository()
-        //solarAlarmRepository = SolarAlarmRepository()
-//        val locationRepository = LocationRepository()
-//        locationRepository.all.observe(this) { locations ->
-//            Locations = locations as List<Location>?
-//            locationSpinnerAdapter = SpinnerAdapter(activity, Locations)
-//            locationSpinner!!.adapter = locationSpinnerAdapter
-//        }
+
+        binding   = FragmentCreatealarmBinding.inflate(layoutInflater)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        //val view = binding.root
         binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
-        binding.fragmentCreatealarmSettimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
+        binding.fragmentCreatealarmSettimeSpinner.adapter   = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
 
-        val solarTimes: MutableList<SolarTime> = ArrayList()
+        // ******
+        // dropdown.additems(locationViewModel.AllLocations)
+
+        val solarTimes = solarTimeViewModel.AllSolarTimes
         ButterKnife.bind(this, binding.root)
         setPickers()
-        binding.fragmentCreatealarmLocationSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+        binding.fragmentCreatealarmLocationSpinner.onItemSelectedListener = object : OnItemSelectedListener
+        {
             @RequiresApi(api = Build.VERSION_CODES.O)
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, locationPosition: Int, l: Long) {
-//                val locationItem = adapterView.getItemAtPosition(locationPosition) as Location
+            override fun onItemSelected(adapterView: AdapterView<*>, view: View, locationPosition: Int, l: Long)
+            {
+                val locationItem = adapterView.getItemAtPosition(locationPosition) as Location
                 var date = LocalDate.now()
-                for (i in 0..13) {
+                for (i in 0..13)
+                {
                     try {
 //                        if (solarTimes.size == 14) {
 //                            solarTimes[i] = getSolarTime(locationItem, date)
@@ -95,21 +92,28 @@ class CreateAlarmFragment : Fragment() {
                     }
                     date = date.plusDays(1)
                 }
-                try {
-                    binding.fragmentCreatealarmSunriseData.text = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
-                    binding.fragmentCreatealarmSolarnoonData.text = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
-                    binding.fragmentCreatealarmSunsetData.text = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
-                } catch (e: Exception) {
+                try
+                {
+                    //binding.fragmentCreatealarmSunriseData.text   = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
+                    //binding.fragmentCreatealarmSolarnoonData.text = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
+                    //binding.fragmentCreatealarmSunsetData.text    = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
+                }
+                catch (e: Exception)
+                {
                     e.printStackTrace()
                 }
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
+
         binding.fragmentCreatealarmRecurring.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
+            if (isChecked)
+            {
                 binding.fragmentCreatealarmRecurringOptions.visibility = View.VISIBLE
-            } else {
+            }
+            else
+            {
                 binding.fragmentCreatealarmRecurringOptions.visibility = View.GONE
             }
         }
@@ -129,13 +133,14 @@ class CreateAlarmFragment : Fragment() {
         binding.fragmentCreatealarmScheduleAlarm.setOnClickListener { v ->
             val alarmTimeItem = binding.fragmentCreatealarmAlarmtimeSpinner.selectedItem as OffsetTypeEnum
             val solarTimeTypeItem = binding.fragmentCreatealarmSettimeSpinner.selectedItem as SolarTimeTypeEnum
+            /*
             for (i in solarTimes.indices) {
                 try {
                     this.scheduleAlarm(solarTimes[i], alarmTimeItem, solarTimeTypeItem)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-            }
+            }*/
             (activity as NavActivity).replaceFragment(AlarmListFragment())
         }
         return view

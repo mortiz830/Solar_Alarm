@@ -40,17 +40,12 @@ class NavActivity : AppCompatActivity() {
         replaceFragment(AlarmListFragment())
 
         binding.navView.setOnItemSelectedListener {
-
-            when(it.itemId) {
-
-                R.id.navigation_home -> replaceFragment(AlarmListFragment())
-                R.id.navigation_location -> replaceFragment(AddLocationFragment(locationViewModel))
-                R.id.navigation_notifications -> replaceFragment(CreateAlarmFragment())
-
-                else ->{
-
-                }
-
+            when (it.itemId)
+            {
+                R.id.navigation_home         -> replaceFragment(AlarmListFragment())
+                R.id.navigation_location     -> replaceFragment(AddLocationFragment(locationViewModel))
+                R.id.navigation_create_alarm -> replaceFragment(CreateAlarmFragment())
+                else -> { }
             }
             true
         }

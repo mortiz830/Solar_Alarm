@@ -14,6 +14,7 @@ abstract class SolarTimeDao : BaseDao<SolarTime>
     @Query("SELECT * FROM SolarTime WHERE Id = :id")
     abstract fun GetById(id: Int): SolarTime?
 
+    // Returns one item or null
     @Query("SELECT * FROM SolarTime WHERE LocationId = :locationId AND SolarDate = :date")
     abstract fun getSolarTime(locationId: Int, date: LocalDate): SolarTime?
 
