@@ -65,16 +65,17 @@ class CreateAlarmFragment constructor(location: LocationViewModel): Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-//        val locationObserver = Observer<Location> {value: Location ->
-//            binding.fragmentCreatealarmLocationSpinner.adapter = (ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, ))
-//        }
-//        var locationAdapter = ArrayAdapter<Location>(requireActivity().baseContext, android.R.layout.simple_spinner_item)
-//        locationViewModel.AllLocations.observe(this, Observer { locations ->
-//            locations?.forEach{
-//               locationAdapter.add(it)
-//            }
-//            binding.fragmentCreatealarmLocationSpinner.adapter = locationAdapter
-//        })
+        binding.fragmentCreatealarmLocationSpinner.adapter = locationViewModel.AllLocations.value?.let {
+            ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, it.toMutableList())
+        }
+
+        var locationAdapter = ArrayAdapter<Location>(requireActivity().baseContext, android.R.layout.simple_spinner_item)
+        locationViewModel.AllLocations.observe(this, Observer { locations ->
+            locations?.forEach{
+               locationAdapter.add(it)
+            }
+            binding.fragmentCreatealarmLocationSpinner.adapter = locationAdapter
+        })
         binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
         binding.fragmentCreatealarmSettimeSpinner.adapter   = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
 
@@ -130,6 +131,7 @@ class CreateAlarmFragment constructor(location: LocationViewModel): Fragment() {
                 binding.fragmentCreatealarmRecurringOptions.visibility = View.GONE
             }
         }
+
         binding.fragmentCreatealarmAlarmtimeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, l: Long) {
                 if (adapterView.getItemAtPosition(position).toString() == "Before" || adapterView.getItemAtPosition(position).toString() == "After") {
