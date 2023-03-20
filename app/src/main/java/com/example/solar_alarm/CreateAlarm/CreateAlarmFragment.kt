@@ -65,17 +65,18 @@ class CreateAlarmFragment constructor(location: LocationViewModel): Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        binding.fragmentCreatealarmLocationSpinner.adapter = locationViewModel.AllLocations.value?.let {
-            ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, it.toMutableList())
-        }
+        binding.fragmentCreatealarmLocationSpinner.adapter =
+            ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, locationViewModel.AllLocations.value!!.toMutableList())
 
-        var locationAdapter = ArrayAdapter<Location>(requireActivity().baseContext, android.R.layout.simple_spinner_item)
-        locationViewModel.AllLocations.observe(this, Observer { locations ->
+        //binding.fragmentCreatealarmLocationSpinner
+
+        //var locationAdapter = ArrayAdapter<Location>(requireActivity().baseContext, android.R.layout.simple_spinner_item)
+        /*locationViewModel.AllLocations.observe(this, Observer { locations ->
             locations?.forEach{
                locationAdapter.add(it)
             }
             binding.fragmentCreatealarmLocationSpinner.adapter = locationAdapter
-        })
+        })*/
         binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
         binding.fragmentCreatealarmSettimeSpinner.adapter   = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
 
