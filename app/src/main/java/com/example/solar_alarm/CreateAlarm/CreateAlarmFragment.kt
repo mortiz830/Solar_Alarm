@@ -11,6 +11,8 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.test.core.app.ApplicationProvider
 import butterknife.ButterKnife
 import com.example.solar_alarm.Activities.NavActivity
@@ -32,20 +34,21 @@ import java.time.format.FormatStyle
 import kotlin.system.*
 
 @RequiresApi(Build.VERSION_CODES.O)
-class CreateAlarmFragment : Fragment() {
+class CreateAlarmFragment constructor(location: LocationViewModel): Fragment() {
     private lateinit var binding: FragmentCreatealarmBinding
+    private var locationViewModel: LocationViewModel = location
 
     private val solarAlarmViewModel: SolarAlarmViewModel by viewModels {
         SolarAlarmViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarAlarmRepository)
     }
 
-    private val locationViewModel: LocationViewModel by viewModels {
-        LocationViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository)
-    }
+//    private val locationViewModel: LocationViewModel by viewModels {
+//        LocationViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository)
+//    }
 
-    private val solarTimeViewModel: SolarTimeViewModel by viewModels {
-        SolarTimeViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarTimeRepository)
-    }
+//    private val solarTimeViewModel: SolarTimeViewModel by viewModels {
+//        SolarTimeViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarTimeRepository)
+//    }
 
     //private var Locations: List<Location>? = null
     private var solarTimeRepository: SolarTimeRepository? = null
@@ -62,13 +65,23 @@ class CreateAlarmFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
+//        val locationObserver = Observer<Location> {value: Location ->
+//            binding.fragmentCreatealarmLocationSpinner.adapter = (ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, ))
+//        }
+//        var locationAdapter = ArrayAdapter<Location>(requireActivity().baseContext, android.R.layout.simple_spinner_item)
+//        locationViewModel.AllLocations.observe(this, Observer { locations ->
+//            locations?.forEach{
+//               locationAdapter.add(it)
+//            }
+//            binding.fragmentCreatealarmLocationSpinner.adapter = locationAdapter
+//        })
         binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
         binding.fragmentCreatealarmSettimeSpinner.adapter   = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
 
         // ******
         // dropdown.additems(locationViewModel.AllLocations)
 
-        val solarTimes = solarTimeViewModel.AllSolarTimes
+//        val solarTimes = solarTimeViewModel.AllSolarTimes
         ButterKnife.bind(this, binding.root)
         setPickers()
         binding.fragmentCreatealarmLocationSpinner.onItemSelectedListener = object : OnItemSelectedListener
