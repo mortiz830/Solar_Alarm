@@ -65,7 +65,6 @@ class CreateAlarmFragment constructor(location: LocationViewModel): Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        val view = binding.root
         binding.fragmentCreatealarmLocationSpinner.adapter = locationViewModel.AllLocations.value?.let {
             ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, it.toMutableList())
         }
@@ -158,7 +157,8 @@ class CreateAlarmFragment constructor(location: LocationViewModel): Fragment() {
             }*/
             (activity as NavActivity).replaceFragment(AlarmListFragment())
         }
-        return view
+
+        return binding.root
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
