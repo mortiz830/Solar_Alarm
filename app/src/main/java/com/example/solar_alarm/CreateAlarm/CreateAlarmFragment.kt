@@ -65,6 +65,7 @@ class CreateAlarmFragment constructor(location: LocationViewModel): Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
+        val view = binding.root
         binding.fragmentCreatealarmLocationSpinner.adapter = locationViewModel.AllLocations.value?.let {
             ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, it.toMutableList())
         }
@@ -83,7 +84,6 @@ class CreateAlarmFragment constructor(location: LocationViewModel): Fragment() {
         // dropdown.additems(locationViewModel.AllLocations)
 
 //        val solarTimes = solarTimeViewModel.AllSolarTimes
-        ButterKnife.bind(this, binding.root)
         setPickers()
         binding.fragmentCreatealarmLocationSpinner.onItemSelectedListener = object : OnItemSelectedListener
         {
