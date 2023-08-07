@@ -13,12 +13,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
 import androidx.test.core.app.ApplicationProvider
 import butterknife.ButterKnife
 import com.example.solar_alarm.Activities.NavActivity
 import com.example.solar_alarm.AlarmList.AlarmListFragment
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
+import com.example.solar_alarm.Data.Repositories.LocationRepository
 import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository
 import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
 import com.example.solar_alarm.Data.Tables.*
@@ -28,15 +30,17 @@ import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
 import com.example.solar_alarm.sunrise_sunset_http.HttpRequests
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import kotlin.system.*
 
 @RequiresApi(Build.VERSION_CODES.O)
-class CreateAlarmFragment constructor(location: LocationViewModel): Fragment() {
+class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fragment() {
     private lateinit var binding: FragmentCreatealarmBinding
-    private var locationViewModel: LocationViewModel = location
+    private var locationViewModel: LocationViewModel = locationViewModel
 
     private val solarAlarmViewModel: SolarAlarmViewModel by viewModels {
         SolarAlarmViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarAlarmRepository)
@@ -65,8 +69,16 @@ class CreateAlarmFragment constructor(location: LocationViewModel): Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
+        var r = locationViewModel.GetRepo()
+
+        var x = r.all
+
+        var l = x.asLiveData()
+
+        var t = l.value?.count()
+
         binding.fragmentCreatealarmLocationSpinner.adapter =
-            ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, locationViewModel.AllLocations.value!!.toMutableList())
+            ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, locationViewModel.All.value!!.toMutableList())
 
         //binding.fragmentCreatealarmLocationSpinner
 
@@ -201,22 +213,24 @@ class CreateAlarmFragment constructor(location: LocationViewModel): Fragment() {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Throws(Exception::class)
-    private fun scheduleAlarm(solarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum) {
+    private fun scheduleAlarm(solarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum)
+    {
         val solarAlarmItem = SolarAlarm(0,
-        if (binding.fragmentCreatealarmTitle.text.toString() === "") "" else binding.fragmentCreatealarmTitle.text.toString(),
-        true,
-        solarTimeItem.LocationId,
-        solarTimeItem.Id,
-        binding.fragmentCreatealarmRecurring.isChecked,
-        binding.fragmentCreatealarmCheckMon.isChecked,
-        binding.fragmentCreatealarmCheckTue.isChecked,
-        binding.fragmentCreatealarmCheckWed.isChecked,
-        binding.fragmentCreatealarmCheckThu.isChecked,
-        binding.fragmentCreatealarmCheckFri.isChecked,
-        binding.fragmentCreatealarmCheckSat.isChecked,
-        binding.fragmentCreatealarmCheckSun.isChecked,
-        alarmTypeId,
-        solarTimeTypeId)
+                                        if (binding.fragmentCreatealarmTitle.text.toString() === "") "" else binding.fragmentCreatealarmTitle.text.toString(),
+                                  true,
+                                        solarTimeItem.LocationId,
+                                        solarTimeItem.Id,
+                                        binding.fragmentCreatealarmRecurring.isChecked,
+                                        binding.fragmentCreatealarmCheckMon.isChecked,
+                                        binding.fragmentCreatealarmCheckTue.isChecked,
+                                        binding.fragmentCreatealarmCheckWed.isChecked,
+                                        binding.fragmentCreatealarmCheckThu.isChecked,
+                                        binding.fragmentCreatealarmCheckFri.isChecked,
+                                        binding.fragmentCreatealarmCheckSat.isChecked,
+                                        binding.fragmentCreatealarmCheckSun.isChecked,
+                                        alarmTypeId,
+                                        solarTimeTypeId)
+
         val isSolarAlarmNameLocationIdPairExists : Deferred<Boolean>
 
         val time = measureTimeMillis  {
@@ -248,21 +262,19 @@ class CreateAlarmFragment constructor(location: LocationViewModel): Fragment() {
 
                 if (sunriseSunsetResponse != null)
                 {
-                    solarTime = SolarTime(
-                        0,
-                        sunriseSunsetResponse.request!!.RequestDate,
-                        location.Id,
-                        sunriseSunsetResponse.dayLength!!,
-                        sunriseSunsetResponse.sunrise,
-                        sunriseSunsetResponse.sunset,
-                        sunriseSunsetResponse.solarNoon,
-                        sunriseSunsetResponse.civilTwilightBegin,
-                        sunriseSunsetResponse.civilTwilightEnd,
-                        sunriseSunsetResponse.nauticalTwilightBegin,
-                        sunriseSunsetResponse.nauticalTwilightEnd,
-                        sunriseSunsetResponse.astronomicalTwilightBegin,
-                        sunriseSunsetResponse.astronomicalTwilightEnd
-                        )
+                    solarTime = SolarTime(0,
+                                          sunriseSunsetResponse.request!!.RequestDate,
+                                          location.Id,
+                                          sunriseSunsetResponse.dayLength!!,
+                                          sunriseSunsetResponse.sunrise,
+                                          sunriseSunsetResponse.sunset,
+                                          sunriseSunsetResponse.solarNoon,
+                                          sunriseSunsetResponse.civilTwilightBegin,
+                                          sunriseSunsetResponse.civilTwilightEnd,
+                                          sunriseSunsetResponse.nauticalTwilightBegin,
+                                          sunriseSunsetResponse.nauticalTwilightEnd,
+                                          sunriseSunsetResponse.astronomicalTwilightBegin,
+                                          sunriseSunsetResponse.astronomicalTwilightEnd)
                 }
             }
             catch (e: Exception)

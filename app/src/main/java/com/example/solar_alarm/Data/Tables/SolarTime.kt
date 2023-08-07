@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Entity(
+        tableName = "SolarTime",
         indices = [Index(value = ["SolarDate", "LocationId"], unique = true)],
         foreignKeys =
         [
@@ -21,8 +22,7 @@ import java.time.format.DateTimeFormatter
 )
 class SolarTime
 (
-    @PrimaryKey(autoGenerate = true) val Id: Int,
-
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "Id")                   var Id: Int = 0,
     @ColumnInfo(name = "SolarDate")                    val SolarDate: LocalDate,
     @ColumnInfo(name = "LocationId")                   val LocationId: Int,
     @ColumnInfo(name = "DayLength")                    val DayLength: Int,
@@ -37,6 +37,8 @@ class SolarTime
     @ColumnInfo(name = "AstronomicalTwilightEndUtc")   val AstronomicalTwilightEndUtc: String?
 )
 {
+    companion object { const val TABLE_NAME = "SolarTime" }
+
     fun GetLocalZonedDateTime(solarTimeTypeEnum: SolarTimeTypeEnum): ZonedDateTime
     {
         val utcDateTime = GetUtcZonedDateTime(solarTimeTypeEnum)

@@ -18,7 +18,7 @@ class LocationRepository(private val locationDao: LocationDao)
     @WorkerThread
     suspend fun Insert(location: Location)
     {
-        locationDao.Insert(location)
+        locationDao.insert(location)
     }
 
     @WorkerThread
@@ -30,7 +30,7 @@ class LocationRepository(private val locationDao: LocationDao)
     @WorkerThread
     suspend fun Update(location: Location)
     {
-        locationDao.Update(location)
+        locationDao.update(location)
     }
 
     @WorkerThread

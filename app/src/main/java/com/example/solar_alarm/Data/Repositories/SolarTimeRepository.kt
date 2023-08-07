@@ -17,7 +17,7 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
     @WorkerThread
     suspend fun Insert(solarTime: SolarTime)
     {
-        solarTimeDao.Insert(solarTime)
+        solarTimeDao.insert(solarTime)
     }
 
     @WorkerThread
@@ -29,13 +29,13 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
     @WorkerThread
     suspend fun Update(solarTime: SolarTime)
     {
-        solarTimeDao.Update(solarTime)
+        solarTimeDao.update(solarTime)
     }
 
     @WorkerThread
     suspend fun Delete(solarTime: SolarTime)
     {
-        solarTimeDao.Delete(solarTime)
+        solarTimeDao.delete(solarTime)
     }
 
     @WorkerThread

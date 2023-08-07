@@ -43,18 +43,14 @@ abstract class SolarAlarmDatabase : RoomDatabase()
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    SolarAlarmDatabase::class.java,
-                    "SolarAlarmDatabase"
-                )
-                    // Wipes and rebuilds instead of migrating if no Migration object.
-                    // Migration is not part of this codelab.
-                    .fallbackToDestructiveMigration()
-                    .allowMainThreadQueries()
-                    //.addMigrations(StaticDataMigration.Companion.MIGRATION_1_2)
-                    //.addCallback(SolarAlarmDatabaseCallback(scope))
-                    .build()
+                val instance = Room.databaseBuilder(context.applicationContext, SolarAlarmDatabase::class.java, "SolarAlarmDatabase")
+                                    // Wipes and rebuilds instead of migrating if no Migration object.
+                                    // Migration is not part of this codelab.
+                                    .fallbackToDestructiveMigration()
+                                    .allowMainThreadQueries()
+                                    //.addMigrations(StaticDataMigration.Companion.MIGRATION_1_2)
+                                    //.addCallback(SolarAlarmDatabaseCallback(scope))
+                                    .build()
                 INSTANCE = instance
                 // return instance
                 instance

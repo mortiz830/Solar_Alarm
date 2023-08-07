@@ -5,20 +5,23 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(
+@Entity
+(
+    tableName = "Location",
     indices =
     [
-        Index(value = ["Name"], unique = true),
+        Index(value = ["Name"],                  unique = true),
         Index(value = ["Latitude", "Longitude"], unique = true)
-    ])
-
-class Location
-(
-    @PrimaryKey(autoGenerate = true) val Id: Int,
-
-    @ColumnInfo(name = "Name") val Name: String?,
-
-    @ColumnInfo(name = "Latitude") val Latitude: Double,
-
-    @ColumnInfo(name = "Longitude") val Longitude: Double
+    ]
 )
+
+data class Location
+(
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "Id") var Id:        Int = 0,
+    @ColumnInfo(name = "Name")                                var Name:      String,
+    @ColumnInfo(name = "Latitude")                            val Latitude:  Double,
+    @ColumnInfo(name = "Longitude")                           val Longitude: Double
+)
+//{
+//    companion object { const val TABLE_NAME = "Location" }
+//}

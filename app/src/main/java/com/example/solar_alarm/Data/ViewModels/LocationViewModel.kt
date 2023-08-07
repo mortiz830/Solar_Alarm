@@ -23,6 +23,7 @@ class LocationViewModel(private val repository: LocationRepository) : ViewModel(
      * Launching a new coroutine to insert the data in a non-blocking way
      */
     fun Insert(location: Location) = viewModelScope.launch { repository.Insert(location) }
+
     fun DoesLocationLatLongExists(latitude: Double, longitude: Double) = viewModelScope.launch { repository.DoesLocationLatLongExists(latitude, longitude) }
 }
 

@@ -5,11 +5,17 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(indices = [Index(value = ["Name"], unique = true)])
-
-class OffsetType
+@Entity
 (
-    @PrimaryKey(autoGenerate = true) val Id: Int,
-
-    @ColumnInfo(name = "Name") val Name: String?
+    tableName = "OffsetType",
+    indices   = [Index(value = ["Name"], unique = true)]
 )
+
+data class OffsetType
+(
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "Id") var Id: Int = 0,
+    @ColumnInfo(name = "Name") var Name: String
+)
+{
+    companion object { const val TABLE_NAME = "OffsetType" }
+}

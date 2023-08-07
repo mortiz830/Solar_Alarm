@@ -20,7 +20,7 @@ class SolarAlarmRepository(private val solarAlarmDao: SolarAlarmDao)
     @WorkerThread
     suspend fun Insert(solarAlarm: SolarAlarm)
     {
-        solarAlarmDao.Insert(solarAlarm)
+        solarAlarmDao.insert(solarAlarm)
     }
 
     @WorkerThread
@@ -32,13 +32,13 @@ class SolarAlarmRepository(private val solarAlarmDao: SolarAlarmDao)
     @WorkerThread
     suspend fun Update(solarAlarm: SolarAlarm)
     {
-        solarAlarmDao.Update(solarAlarm)
+        solarAlarmDao.update(solarAlarm)
     }
 
     @WorkerThread
     suspend fun Delete(solarAlarm: SolarAlarm)
     {
-        solarAlarmDao.Delete(solarAlarm)
+        solarAlarmDao.delete(solarAlarm)
     }
 
     @WorkerThread
