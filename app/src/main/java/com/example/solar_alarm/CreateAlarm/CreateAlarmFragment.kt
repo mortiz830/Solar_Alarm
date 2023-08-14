@@ -69,13 +69,13 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        var r = locationViewModel.GetRepo()
-
-        var x = r.all
-
-        var l = x.asLiveData()
-
-        var t = l.value?.count()
+//        var r = locationViewModel.All
+//
+//        var x = r.all
+//
+//        var l = x.asLiveData()
+//
+//        var t = l.value?.count()
 
         binding.fragmentCreatealarmLocationSpinner.adapter =
             ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, locationViewModel.All.value!!.toMutableList())
