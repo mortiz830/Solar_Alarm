@@ -14,51 +14,66 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
 
-class HttpRequests @RequiresApi(api = Build.VERSION_CODES.O) constructor(sunriseSunsetRequest: SunriseSunsetRequest) {
+class HttpRequests @RequiresApi(api = Build.VERSION_CODES.O) constructor(sunriseSunsetRequest: SunriseSunsetRequest)
+{
     private val httpUrlConnection: HttpURLConnection
 
-    init {
+    init
+    {
         val query = getParamsString(sunriseSunsetRequest)
-        val url = URL("https://api.sunrise-sunset.org/json$query")
+        val url   = URL("https://api.sunrise-sunset.org/json$query")
+
         httpUrlConnection = url.openConnection() as HttpURLConnection
         httpUrlConnection.requestMethod = "GET"
     }
 
     @Throws(IOException::class)
-    fun GetSolarData(sunriseSunsetRequest: SunriseSunsetRequest?): SunriseSunsetResponse? {
+    fun GetSolarData(sunriseSunsetRequest: SunriseSunsetRequest?): SunriseSunsetResponse?
+    {
         var sunriseSunsetResponse: SunriseSunsetResponse? = null
-        try {
+
+        try
+        {
             httpUrlConnection.doInput = true
             httpUrlConnection.doOutput = true
             httpUrlConnection.connectTimeout = 5000
             httpUrlConnection.readTimeout = 5000
+
             val bufferedReader = BufferedReader(InputStreamReader(httpUrlConnection.inputStream))
             var inputLine: String?
             val content = StringBuilder()
-            while (bufferedReader.readLine().also { inputLine = it } != null) {
+
+            while (bufferedReader.readLine().also { inputLine = it } != null)
+            {
                 content.append(inputLine)
             }
+
             val gson = Gson()
             sunriseSunsetResponse = gson.fromJson(content.toString(), SunriseSunsetResponse::class.java)
             bufferedReader.close()
             sunriseSunsetResponse.request = sunriseSunsetRequest
-        } catch (e: Exception) {
+        }
+        catch (e: Exception)
+        {
             e.printStackTrace()
         }
+
         return sunriseSunsetResponse
     }
 
-    companion object {
+    companion object
+    {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Throws(UnsupportedEncodingException::class)
-        fun getParamsString(sunriseSunsetRequest: SunriseSunsetRequest): String {
+        fun getParamsString(sunriseSunsetRequest: SunriseSunsetRequest): String
+        {
             //https://api.sunrise-sunset.org/json?date=2021-5-10&lat=40.67441&lng=-73.43162&formatted=0
             return String.format("?date=%s-%s-%s&lat=%s&lng=%s&formatted=0",
-                    URLEncoder.encode(sunriseSunsetRequest.RequestDate.year.toString(), "UTF-8"),
+                    URLEncoder.encode(sunriseSunsetRequest.RequestDate.year.toString(),        "UTF-8"),
                     URLEncoder.encode(sunriseSunsetRequest.RequestDate.month.value.toString(), "UTF-8"),
-                    URLEncoder.encode(sunriseSunsetRequest.RequestDate.dayOfMonth.toString(), "UTF-8"),
-                    URLEncoder.encode(sunriseSunsetRequest.Latitude.toString(), "UTF-8"),
-                    URLEncoder.encode(sunriseSunsetRequest.Longitude.toString(), "UTF-8"))
+                    URLEncoder.encode(sunriseSunsetRequest.RequestDate.dayOfMonth.toString(),  "UTF-8"),
+                    URLEncoder.encode(sunriseSunsetRequest.Latitude.toString(),                "UTF-8"),
+                    URLEncoder.encode(sunriseSunsetRequest.Longitude.toString(),               "UTF-8"))
         }
     }
 }

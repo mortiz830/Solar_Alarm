@@ -2,9 +2,9 @@ package com.example.solar_alarm.sunrise_sunset_http
 
 class SunriseSunsetResponse {
     var results: Results? = null
-    @kotlin.jvm.JvmField
+    @JvmField
     var status: String? = null
-    @kotlin.jvm.JvmField
+    @JvmField
     var request: SunriseSunsetRequest? = null
     val sunrise: String?
         get() = results?.sunrise

@@ -13,6 +13,7 @@ import kotlin.Throws
 import com.example.solar_alarm.Data.Converters
 import android.view.View
 import android.widget.*
+import androidx.appcompat.widget.SwitchCompat
 import java.lang.Exception
 
 class AlarmViewHolder(itemView: View, listener: OnToggleAlarmListener) : RecyclerView.ViewHolder(itemView) {
@@ -22,7 +23,7 @@ class AlarmViewHolder(itemView: View, listener: OnToggleAlarmListener) : Recycle
     private val alarmRecurringDays: TextView
     private val alarmTitle: TextView
     var parent_layout: LinearLayout
-    var alarmStarted: Switch
+    var alarmStarted: SwitchCompat
     private val listener: OnToggleAlarmListener
 
     init {
