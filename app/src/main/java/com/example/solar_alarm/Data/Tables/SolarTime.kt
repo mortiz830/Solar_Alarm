@@ -13,16 +13,18 @@ import java.time.format.DateTimeFormatter
         indices = [Index(value = ["SolarDate", "LocationId"], unique = true)],
         foreignKeys =
         [
-            ForeignKey(
-                entity = Location::class,
+            ForeignKey
+            (
+                entity        = Location::class,
                 parentColumns = ["Id"],
-                childColumns = ["LocationId"],
-                onDelete = ForeignKey.CASCADE)
+                childColumns  = ["LocationId"],
+                onDelete      = ForeignKey.CASCADE
+            )
         ]
 )
-class SolarTime
+
+data class SolarTime
 (
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "Id")                   var Id: Int = 0,
     @ColumnInfo(name = "SolarDate")                    val SolarDate: LocalDate,
     @ColumnInfo(name = "LocationId")                   val LocationId: Int,
     @ColumnInfo(name = "DayLength")                    val DayLength: Int,
@@ -37,7 +39,8 @@ class SolarTime
     @ColumnInfo(name = "AstronomicalTwilightEndUtc")   val AstronomicalTwilightEndUtc: String?
 )
 {
-    companion object { const val TABLE_NAME = "SolarTime" }
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "Id") var Id : Int = 0
+    @ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
 
     fun GetLocalZonedDateTime(solarTimeTypeEnum: SolarTimeTypeEnum): ZonedDateTime
     {

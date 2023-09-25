@@ -65,7 +65,7 @@ class AlarmViewHolder(itemView: View, listener: OnToggleAlarmListener) : Recycle
         alarmStarted.isChecked = solarAlarm.Active
         if (solarAlarm.Recurring) {
             alarmRecurring.setImageResource(R.drawable.ic_repeat_black_24dp)
-            alarmRecurringDays.text = solarAlarm.recurringDaysText
+            //alarmRecurringDays.text = solarAlarm.recurringDaysText
         } else {
             alarmRecurring.setImageResource(R.drawable.ic_looks_one_black_24dp)
             alarmRecurringDays.text = "Once Off"

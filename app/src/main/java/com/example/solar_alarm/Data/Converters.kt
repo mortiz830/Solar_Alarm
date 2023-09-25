@@ -6,11 +6,30 @@ import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
 import androidx.room.*
 import java.time.LocalDate
+import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Date
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-object Converters {
+object Converters
+{
+    private val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+
+    @TypeConverter
+    @JvmStatic
+    fun toOffsetDateTime(value: String?): OffsetDateTime? {
+        return value?.let {
+            return formatter.parse(value, OffsetDateTime::from)
+        }
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun fromOffsetDateTime(date: OffsetDateTime?): String? {
+        return date?.format(formatter)
+    }
+
     private val dateFormat = DateTimeFormatter.ISO_DATE
     @kotlin.jvm.JvmStatic
     @TypeConverter

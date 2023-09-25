@@ -215,9 +215,24 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
     @Throws(Exception::class)
     private fun scheduleAlarm(solarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum)
     {
-        val solarAlarmItem = SolarAlarm(0,
-                                        if (binding.fragmentCreatealarmTitle.text.toString() === "") "" else binding.fragmentCreatealarmTitle.text.toString(),
-                                  true,
+//        val solarAlarmItem = SolarAlarm(0,
+//                                        if (binding.fragmentCreatealarmTitle.text.toString() === "") "" else binding.fragmentCreatealarmTitle.text.toString(),
+//                                  true,
+//                                        solarTimeItem.LocationId,
+//                                        solarTimeItem.Id,
+//                                        binding.fragmentCreatealarmRecurring.isChecked,
+//                                        binding.fragmentCreatealarmCheckMon.isChecked,
+//                                        binding.fragmentCreatealarmCheckTue.isChecked,
+//                                        binding.fragmentCreatealarmCheckWed.isChecked,
+//                                        binding.fragmentCreatealarmCheckThu.isChecked,
+//                                        binding.fragmentCreatealarmCheckFri.isChecked,
+//                                        binding.fragmentCreatealarmCheckSat.isChecked,
+//                                        binding.fragmentCreatealarmCheckSun.isChecked,
+//                                        alarmTypeId,
+//                                        solarTimeTypeId)
+
+        val solarAlarmItem = SolarAlarm(true,
+                                  "NAME TO BE ADDED HERE",
                                         solarTimeItem.LocationId,
                                         solarTimeItem.Id,
                                         binding.fragmentCreatealarmRecurring.isChecked,
@@ -229,7 +244,8 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
                                         binding.fragmentCreatealarmCheckSat.isChecked,
                                         binding.fragmentCreatealarmCheckSun.isChecked,
                                         alarmTypeId,
-                                        solarTimeTypeId)
+                                        solarTimeTypeId
+        )
 
         val isSolarAlarmNameLocationIdPairExists : Deferred<Boolean>
 
@@ -262,8 +278,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
 
                 if (sunriseSunsetResponse != null)
                 {
-                    solarTime = SolarTime(0,
-                                          sunriseSunsetResponse.request!!.RequestDate,
+                    solarTime = SolarTime(sunriseSunsetResponse.request!!.RequestDate,
                                           location.Id,
                                           sunriseSunsetResponse.dayLength!!,
                                           sunriseSunsetResponse.sunrise,
