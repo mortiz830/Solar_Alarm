@@ -8,9 +8,10 @@ import java.time.*
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-@Entity(
-        tableName = "SolarTime",
-        indices = [Index(value = ["SolarDate", "LocationId"], unique = true)],
+@Entity
+(
+        tableName   = "SolarTime",
+        indices     = [Index(value = ["SolarDate", "LocationId"], unique = true)],
         foreignKeys =
         [
             ForeignKey

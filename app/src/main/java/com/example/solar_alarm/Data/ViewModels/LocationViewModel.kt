@@ -25,6 +25,8 @@ class LocationViewModel(private val repository: LocationRepository) : ViewModel(
     fun Insert(location: Location) = viewModelScope.launch { repository.Insert(location) }
 
     fun DoesLocationLatLongExists(latitude: Double, longitude: Double) = viewModelScope.launch { repository.DoesLocationLatLongExists(latitude, longitude) }
+
+    fun DoesLocationNameExists(locationName : String) = viewModelScope.launch { repository.DoesLocationNameExists(locationName) }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

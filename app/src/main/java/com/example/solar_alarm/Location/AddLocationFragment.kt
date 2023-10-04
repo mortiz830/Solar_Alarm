@@ -1,5 +1,6 @@
 package com.example.solar_alarm.Location
 
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +12,8 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
+import butterknife.BindView
 import com.example.solar_alarm.Activities.NavActivity
 import com.example.solar_alarm.AlarmList.AlarmListFragment
 import com.example.solar_alarm.Data.Tables.*
@@ -45,10 +48,11 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
     private var latLng: LatLng? = null
 
     private var httpUrlConnection: HttpURLConnection? = null
-    var isLocationNameExists: Boolean? = null
-    var isLocationLatitudeExists = false
-    var isLocationLongitudeExists = false
-    var isLocationPointExists = false
+
+    //var isLocationLatitudeExists = false
+    //var isLocationLongitudeExists = false
+
+    //var x = (application as SolarAlarmApp).locationRepository
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,17 +73,20 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
         binding.fragmentAddLocationTimeZone.text = TimeZone.getDefault().toZoneId().toString()
         binding.fragmentAddLocationAddLocationButton.setOnClickListener(View.OnClickListener
         {
-            var locationName: String = binding.fragmentAddLocationLocationNameText.text.toString()
+            //var locationName: String = binding.fragmentAddLocationLocationNameText.text.toString()
             //var isLocationPointExists = locationViewModel.DoesLocationLatLongExists(latLng!!.latitude, latLng!!.longitude)
             saveLocation()
             (activity as NavActivity).replaceFragment(AlarmListFragment())
         })
 
 //        addLocationButton!!.setOnClickListener { view ->
-//            locationName = locationNameText!!.text.toString()
+//            var locationName = binding.fragmentAddLocationLocationNameText.text.toString()
+//            var isLocationNameExists = false
+//            var isLocationPointExists = false
+//
 //            try {
-//                //isLocationNameExists = locationRepository.DoesLocationNameExists(locationName)
-//                //isLocationPointExists = locationRepository.DoesLocationLatLongExists(latitude, longitude)
+//                isLocationNameExists = locationViewModel.DoesLocationNameExists(locationName)
+//                isLocationPointExists = locationViewModel.DoesLocationLatLongExists(latLng?.latitude.toString(), latLng?.longitude.toString())
 //            } catch (e: Exception) {
 //                e.printStackTrace()
 //            }
@@ -145,31 +152,34 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
         Toast.makeText(context, "New Location Created", Toast.LENGTH_LONG).show()
     }
 
-//    inner class LocationNameExistsTask : AsyncTask<String?, Void?, Boolean>() {
-//        @RequiresApi(api = Build.VERSION_CODES.O)
-//        override suspend fun doInBackground(vararg p0: String?): Boolean? {
-//            var result = false
-//            try {
-//                result = locationRepository.DoesLocationLatLongExists(locationName)
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//            return result
-//        }
-//    }
+    inner class LocationNameExistsTask : AsyncTask<String?, Void?, Boolean>() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        override fun doInBackground(vararg p0: String?): Boolean? {
+            var result = false
+            try {
+                var locationName = binding.fragmentAddLocationLocationNameText.text.toString()
+                //result = locationViewModel.DoesLocationNameExists(locationName)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return result
+        }
+    }
 
-//    inner class LocationPointExistsTask : AsyncTask<Double?, Void?, Boolean>() {
-//        @RequiresApi(api = Build.VERSION_CODES.O)
-//        override fun doInBackground(vararg p0: Double?): Boolean? {
-//            try {
-//                isLocationLatitudeExists = locationRepository!!.isLocationLatitudeExists(latitude)
-//                isLocationLongitudeExists = locationRepository!!.isLocationLongitudeExists(longitude)
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//            return isLocationLatitudeExists && isLocationLongitudeExists
-//        }
-//    }
+    inner class LocationPointExistsTask : AsyncTask<Double?, Void?, Boolean>() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        override fun doInBackground(vararg p0: Double?): Boolean? {
+            var isLocationLatitudeExists : Boolean = false
+            var isLocationLongitudeExists : Boolean = false
+            try {
+                //isLocationLatitudeExists = locationRepository!!.isLocationLatitudeExists(latitude)
+                //isLocationLongitudeExists = locationRepository!!.isLocationLongitudeExists(longitude)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return isLocationLatitudeExists && isLocationLongitudeExists
+        }
+    }
 
     override fun onMapReady(googleMap: GoogleMap)
     {
