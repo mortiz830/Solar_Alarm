@@ -23,11 +23,14 @@ import java.time.ZoneOffset
 @RequiresApi(Build.VERSION_CODES.O)
 data class Location
 (
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "Id")        var Id        : Int,
     @ColumnInfo(name = "Name")      var Name      : String,
     @ColumnInfo(name = "Latitude")  var Latitude  : Double,
-    @ColumnInfo(name = "Longitude") var Longitude : Double
+    @ColumnInfo(name = "Longitude") var Longitude : Double,
+    @ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
 )
 {
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "Id") var Id : Int = 0
-    @ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
+    //@PrimaryKey(autoGenerate = true) @ColumnInfo(name = "Id") var Id : Int = 0
+    //@ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
 }

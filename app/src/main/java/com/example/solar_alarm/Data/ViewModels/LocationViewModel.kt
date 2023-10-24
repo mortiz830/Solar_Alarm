@@ -31,6 +31,8 @@ class LocationViewModel(private val repository: LocationRepository) : ViewModel(
     fun DoesLocationLatLongExists(latitude: Double, longitude: Double) = viewModelScope.launch { repository.DoesLocationLatLongExists(latitude, longitude) }
 
     fun DoesLocationNameExists(locationName : String) = viewModelScope.launch { repository.DoesLocationNameExists(locationName) }
+
+    fun MaxId() = viewModelScope.launch { repository.MaxId() }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

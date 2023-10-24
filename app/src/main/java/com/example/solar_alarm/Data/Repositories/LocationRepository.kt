@@ -53,6 +53,12 @@ class LocationRepository(private val locationDao: LocationDao)
     {
         locationDao.DoesLocationNameExists(name)
     }
+
+    @WorkerThread
+    suspend fun MaxId()
+    {
+        locationDao.MaxId()
+    }
 /*
     init {
         all = locationDao.all

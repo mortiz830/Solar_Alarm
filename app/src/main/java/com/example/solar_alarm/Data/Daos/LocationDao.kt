@@ -28,4 +28,7 @@ interface LocationDao// : BaseDao<Location>
 
     @Query("SELECT EXISTS(SELECT * FROM Location WHERE Latitude = :latitude AND Longitude = :longitude)")
     suspend fun DoesLocationLatLongExists(latitude: Double, longitude: Double): Boolean
+
+    @Query("SELECT MAX(Id) FROM Location")
+    suspend fun MaxId() : Int
 }
