@@ -39,6 +39,8 @@ import java.util.concurrent.TimeUnit
 import com.example.solar_alarm.Data.Tables.Location
 import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
 import com.example.solar_alarm.SolarAlarmApp
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.runBlocking
 
 @RequiresApi(Build.VERSION_CODES.O)
 class AddLocationFragment constructor(location: LocationViewModel): Fragment(), OnMapReadyCallback
@@ -145,13 +147,21 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
     fun saveLocation()
     {
 
-        val id = 1
+        //val id = 1
 
-        val job = locationViewModel.MaxId()
+//        runBlocking {
+//            // Use async to call the asynchronous function
+//            val result: Job = locationViewModel.MaxId()
+//
+//            // You can now use the result as needed
+//            println("Result: $result")
+//        }
+//        val maxId = locationViewModel.MaxId()
+//     //   maxId = maxId == 0 ? 1 : maxId+1;
 
-        val location = Location(0,binding.fragmentAddLocationLocationNameText.text.toString(),
-                                latLng?.latitude!!,
-                                latLng?.longitude!!)
+        val location = Location(Name      = binding.fragmentAddLocationLocationNameText.text.toString(),
+                                Latitude  = latLng?.latitude!!,
+                                Longitude = latLng?.longitude!!)
 
         locationViewModel.Insert(location)
         Toast.makeText(context, "New Location ${location.Id} ${location.Name} Created", Toast.LENGTH_LONG).show()

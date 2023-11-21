@@ -30,5 +30,5 @@ interface LocationDao// : BaseDao<Location>
     suspend fun DoesLocationLatLongExists(latitude: Double, longitude: Double): Boolean
 
     @Query("SELECT MAX(Id) FROM Location")
-    suspend fun MaxId() : Int
+    suspend fun MaxId() : Int?
 }

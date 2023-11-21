@@ -24,13 +24,9 @@ import java.time.ZoneOffset
 data class Location
 (
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "Id")        var Id        : Int,
-    @ColumnInfo(name = "Name")      var Name      : String,
-    @ColumnInfo(name = "Latitude")  var Latitude  : Double,
-    @ColumnInfo(name = "Longitude") var Longitude : Double,
-    @ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
+    @ColumnInfo(name = "Id")                val Id        : Int = 0,
+    @ColumnInfo(name = "Name")              val Name      : String,
+    @ColumnInfo(name = "Latitude")          val Latitude  : Double,
+    @ColumnInfo(name = "Longitude")         val Longitude : Double,
+    @ColumnInfo(name = "CreateDateTimeUtc") val CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
 )
-{
-    //@PrimaryKey(autoGenerate = true) @ColumnInfo(name = "Id") var Id : Int = 0
-    //@ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
-}
