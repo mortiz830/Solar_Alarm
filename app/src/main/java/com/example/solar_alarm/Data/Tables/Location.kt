@@ -7,6 +7,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -16,7 +17,7 @@ import java.time.ZoneOffset
     indices =
     [
         Index(value = ["Name"],                  unique = true),
-        Index(value = ["Latitude", "Longitude"], unique = true)
+        Index(value = ["Latitude", "Longitude"]) //, unique = true - point not correct onclick
     ]
 )
 
@@ -31,6 +32,9 @@ data class Location
     @ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
 )
 {
-    //@PrimaryKey(autoGenerate = true) @ColumnInfo(name = "Id") var Id : Int = 0
+//    @PrimaryKey(autoGenerate = true)
+//    @ColumnInfo(name = "Id")
+//    @SerializedName("Id")
+//    val Id : Int = 0
     //@ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
 }

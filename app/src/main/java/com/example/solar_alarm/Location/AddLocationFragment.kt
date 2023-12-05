@@ -144,12 +144,10 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun saveLocation()
     {
+//        var job : Int
+//        job = locationViewModel.MaxId()
 
-        val id = 1
-
-        val job = locationViewModel.MaxId()
-
-        val location = Location(0,binding.fragmentAddLocationLocationNameText.text.toString(),
+        val location = Location(0, binding.fragmentAddLocationLocationNameText.text.toString(),
                                 latLng?.latitude!!,
                                 latLng?.longitude!!)
 
