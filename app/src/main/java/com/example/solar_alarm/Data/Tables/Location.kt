@@ -17,7 +17,7 @@ import java.time.ZoneOffset
     indices =
     [
         Index(value = ["Name"],                  unique = true),
-        Index(value = ["Latitude", "Longitude"]) //, unique = true - point not correct onclick
+        Index(value = ["Latitude", "Longitude"], unique = true)
     ]
 )
 

@@ -147,8 +147,8 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
     fun saveLocation()
     {
         val location = Location(0, binding.fragmentAddLocationLocationNameText.text.toString(),
-                                latLng?.latitude!!,
-                                latLng?.longitude!!)
+                                binding.fragmentAddLocationLatitude.text.toString().toDouble(),
+                                binding.fragmentAddLocationLongitude.text.toString().toDouble())
 
         locationViewModel.Insert(location)
         Toast.makeText(context, "New Location ${location.Id} ${location.Name} Created", Toast.LENGTH_LONG).show()
