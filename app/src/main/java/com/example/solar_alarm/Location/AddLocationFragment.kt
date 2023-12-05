@@ -39,6 +39,8 @@ import java.util.concurrent.TimeUnit
 import com.example.solar_alarm.Data.Tables.Location
 import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
 import com.example.solar_alarm.SolarAlarmApp
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.runBlocking
 
 @RequiresApi(Build.VERSION_CODES.O)
 class AddLocationFragment constructor(location: LocationViewModel): Fragment(), OnMapReadyCallback
@@ -144,9 +146,6 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun saveLocation()
     {
-//        var job : Int
-//        job = locationViewModel.MaxId()
-
         val location = Location(0, binding.fragmentAddLocationLocationNameText.text.toString(),
                                 latLng?.latitude!!,
                                 latLng?.longitude!!)
