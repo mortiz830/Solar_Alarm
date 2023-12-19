@@ -4,6 +4,9 @@ import androidx.annotation.RequiresApi
 import android.os.Build
 import kotlin.Throws
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -28,34 +31,37 @@ class HttpRequests @RequiresApi(api = Build.VERSION_CODES.O) constructor(sunrise
     }
 
     @Throws(IOException::class)
-    fun GetSolarData(sunriseSunsetRequest: SunriseSunsetRequest?): SunriseSunsetResponse?
+    suspend fun GetSolarData(sunriseSunsetRequest: SunriseSunsetRequest?): SunriseSunsetResponse?
     {
-        var sunriseSunsetResponse: SunriseSunsetResponse? = null
+        var sunriseSunsetResponse = SunriseSunsetResponse()
 
-        try
+        GlobalScope.launch(Dispatchers.IO)
         {
-            httpUrlConnection.doInput = true
-            httpUrlConnection.doOutput = true
-            httpUrlConnection.connectTimeout = 5000
-            httpUrlConnection.readTimeout = 5000
-
-            val bufferedReader = BufferedReader(InputStreamReader(httpUrlConnection.inputStream))
-            var inputLine: String?
-            val content = StringBuilder()
-
-            while (bufferedReader.readLine().also { inputLine = it } != null)
+            try
             {
-                content.append(inputLine)
-            }
+                httpUrlConnection.doInput = true
+                httpUrlConnection.doOutput = true
+                httpUrlConnection.connectTimeout = 5000
+                httpUrlConnection.readTimeout = 5000
 
-            val gson = Gson()
-            sunriseSunsetResponse = gson.fromJson(content.toString(), SunriseSunsetResponse::class.java)
-            bufferedReader.close()
-            sunriseSunsetResponse.request = sunriseSunsetRequest
-        }
-        catch (e: Exception)
-        {
-            e.printStackTrace()
+                val bufferedReader = BufferedReader(InputStreamReader(httpUrlConnection.inputStream))
+                var inputLine: String?
+                val content = StringBuilder()
+
+                while (bufferedReader.readLine().also { inputLine = it } != null)
+                {
+                    content.append(inputLine)
+                }
+
+                val gson = Gson()
+                sunriseSunsetResponse = gson.fromJson(content.toString(), SunriseSunsetResponse::class.java)
+                bufferedReader.close()
+                sunriseSunsetResponse.request = sunriseSunsetRequest
+            }
+            catch (e: Exception)
+            {
+                e.printStackTrace()
+            }
         }
 
         return sunriseSunsetResponse

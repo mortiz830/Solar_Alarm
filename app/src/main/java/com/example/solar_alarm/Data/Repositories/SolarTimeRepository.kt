@@ -4,7 +4,10 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
 import com.example.solar_alarm.Data.Daos.SolarTimeDao
+import com.example.solar_alarm.Data.Tables.Location
 import com.example.solar_alarm.Data.Tables.SolarTime
+import com.example.solar_alarm.sunrise_sunset_http.HttpRequests
+import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
@@ -44,17 +47,32 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
         return solarTimeDao.doesLocationIdDatePairExists(locationId, date)
     }
 
-    fun getSolarTime(locationId: Int, date: LocalDate): SolarTime?
+    @WorkerThread
+    suspend fun getSolarTime(location: Location, date: LocalDate): SolarTime?
     {
-        var solarTime = solarTimeDao.getSolarTime(locationId, date)
+        var solarTime = solarTimeDao.getSolarTime(location.Id, date)
 
         if (solarTime == null)
         {
             // Make HTTP Request to API
             // save response as a new SolarTime
-            solarTime = solarTimeDao.getSolarTime(locationId, date)
-        }
+            val sunriseSunsetRequest  = SunriseSunsetRequest(location.Latitude.toFloat(), location.Longitude.toFloat(), date)
+            val httpRequests          = HttpRequests(sunriseSunsetRequest)
+            val sunriseSunsetResponse = httpRequests.GetSolarData(sunriseSunsetRequest)
 
+            solarTime = SolarTime(date,
+                                  location.Id,
+                                  sunriseSunsetResponse?.dayLength!!,
+                                  sunriseSunsetResponse.sunrise, sunriseSunsetResponse.sunset, sunriseSunsetResponse.solarNoon,
+                                  sunriseSunsetResponse.civilTwilightBegin,
+                                  sunriseSunsetResponse.civilTwilightEnd,
+                                  sunriseSunsetResponse.nauticalTwilightBegin,
+                                  sunriseSunsetResponse.nauticalTwilightEnd,
+                                  sunriseSunsetResponse.astronomicalTwilightBegin,
+                                  sunriseSunsetResponse.astronomicalTwilightEnd)
+
+            Insert(solarTime)
+        }
 
         return solarTime
     }
