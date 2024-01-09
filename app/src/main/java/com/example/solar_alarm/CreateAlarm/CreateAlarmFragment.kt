@@ -101,22 +101,22 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
                 var date = LocalDate.now()
                 for (i in 0..13)
                 {
-                    try
-                    {
-                        runBlocking {
-                            var solarTime = solarTimeRepository?.getSolarTime(locationItem, date)
+                    runBlocking {
+                        try {
 
-                            if (solarTime != null)
-                            {
+                            val solarTime = solarTimeRepository.getSolarTime(locationItem, date)
+
+                            if (solarTime != null) {
                                 solarTimes.add(solarTime)
                             }
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        Toast.makeText(context, "Solar Time exists!", Toast.LENGTH_LONG).show()
-                    }
 
-                    date = date.plusDays(1)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            Toast.makeText(context, "Solar Time exists!", Toast.LENGTH_LONG).show()
+                        }
+
+                        date = date.plusDays(1)
+                    }
                 }
                 try
                 {
