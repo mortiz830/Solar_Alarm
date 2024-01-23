@@ -1,5 +1,6 @@
 package com.example.solar_alarm.CreateAlarm
 
+import android.R
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -56,6 +57,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
 
     //private var Locations: List<Location>? = null
     private var solarTimeRepository = SolarAlarmApp().solarTimeRepository
+    private var locationRepository = SolarAlarmApp().locationRepository
     private lateinit var solarAlarmRepository: SolarAlarmRepository
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -71,7 +73,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
     {
         locationViewModel.All.observe(viewLifecycleOwner, Observer
         {
-            location -> binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, location)
+            locations -> binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, locations.map { x -> x.Name }.toList())
         })
 
         //binding.fragmentCreatealarmLocationSpinner
@@ -97,16 +99,19 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
             @RequiresApi(api = Build.VERSION_CODES.O)
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, locationPosition: Int, l: Long)
             {
-                val locationItem = adapterView.getItemAtPosition(locationPosition) as Location
+                val locationName = adapterView.getItemAtPosition(locationPosition) as String
                 var date = LocalDate.now()
                 for (i in 0..13)
                 {
                     runBlocking {
-                        try {
+                        try
+                        {
+                            val location  = locationRepository.GetByName(locationName)
+                            val solarTime =
+                                location?.let { solarTimeRepository.getSolarTime(it, date) }
 
-                            val solarTime = solarTimeRepository.getSolarTime(locationItem, date)
-
-                            if (solarTime != null) {
+                            if (solarTime != null)
+                            {
                                 solarTimes.add(solarTime)
                             }
 
@@ -140,6 +145,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
             }
             else
             {
+
                 binding.fragmentCreatealarmRecurringOptions.visibility = View.GONE
             }
         }

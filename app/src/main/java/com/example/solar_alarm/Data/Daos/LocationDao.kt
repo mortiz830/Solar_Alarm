@@ -17,6 +17,9 @@ interface LocationDao// : BaseDao<Location>
     @Query("SELECT * FROM Location WHERE Id = :id")
     suspend fun GetById(id: Int): Location?
 
+    @Query("SELECT * FROM Location WHERE Name = :name")
+    suspend fun GetByName(name: String): Location?
+
     @Update
     suspend fun update(location: Location): Int
 

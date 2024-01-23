@@ -31,6 +31,11 @@ class LocationRepository(private val locationDao: LocationDao)
     }
 
     @WorkerThread
+    suspend fun GetByName(name: String): Location? {
+        return locationDao.GetByName(name)
+    }
+
+    @WorkerThread
     suspend fun Update(location: Location)
     {
         locationDao.update(location)
