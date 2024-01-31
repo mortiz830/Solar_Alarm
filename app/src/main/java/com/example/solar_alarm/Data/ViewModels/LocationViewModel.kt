@@ -33,6 +33,14 @@ class LocationViewModel(private val repository: LocationRepository) : ViewModel(
     fun DoesLocationNameExists(locationName : String) = viewModelScope.launch { repository.DoesLocationNameExists(locationName) }
 
     fun MaxId() = viewModelScope.launch { repository.MaxId() }
+
+    fun getLocationString(location: Location?): String {
+        return location?.let { "${it.Id}, ${it.Name}, ${it.Latitude}, ${it.Longitude}, ${it.CreateDateTimeUtc}" } ?: "Location not found."
+    }
+
+    fun getLocationStrings(locations: List<Location>): List<String> {
+        return locations.map { getLocationString(it) }
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

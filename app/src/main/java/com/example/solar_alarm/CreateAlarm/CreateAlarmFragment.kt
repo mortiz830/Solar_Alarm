@@ -71,25 +71,16 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
+
         locationViewModel.All.observe(viewLifecycleOwner, Observer
         {
-            locations -> binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, locations.map { x -> x.Name }.toList())
+            locations ->
+            val locationStrings: List<String> = locationViewModel.getLocationStrings(locations)
+            binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, locationStrings)
         })
 
-        //binding.fragmentCreatealarmLocationSpinner
-
-        //var locationAdapter = ArrayAdapter<Location>(requireActivity().baseContext, android.R.layout.simple_spinner_item)
-        /*locationViewModel.AllLocations.observe(this, Observer { locations ->
-            locations?.forEach{
-               locationAdapter.add(it)
-            }
-            binding.fragmentCreatealarmLocationSpinner.adapter = locationAdapter
-        })*/
         binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
         binding.fragmentCreatealarmSettimeSpinner.adapter   = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
-
-        // ******
-        // dropdown.additems(locationViewModel.AllLocations)
 
         val solarTimes : /*solarTimeViewModel.AllSolarTimes.value as*/ MutableList<SolarTime> = arrayListOf()
 
