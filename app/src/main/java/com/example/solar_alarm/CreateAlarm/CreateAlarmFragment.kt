@@ -82,7 +82,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
         binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
         binding.fragmentCreatealarmSettimeSpinner.adapter   = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
 
-        val solarTimes : /*solarTimeViewModel.AllSolarTimes.value as*/ MutableList<SolarTime> = arrayListOf()
+        val solarTimes : /*solarTimeViewModel.AllSolarTimes.value as*/ ArrayList<SolarTime> = arrayListOf()
 
         setPickers()
         binding.fragmentCreatealarmLocationSpinner.onItemSelectedListener = object : OnItemSelectedListener
@@ -90,16 +90,17 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
             @RequiresApi(api = Build.VERSION_CODES.O)
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, locationPosition: Int, l: Long)
             {
-                val locationName = adapterView.getItemAtPosition(locationPosition) as String
+                val locationString : String = adapterView.getItemAtPosition(locationPosition) as String
+                val selectedLocation : Location = stringToLocation(locationString)
                 var date = LocalDate.now()
                 for (i in 0..13)
                 {
                     runBlocking {
                         try
                         {
-                            val location  = locationRepository.GetByName(locationName)
+                            val location : Location = selectedLocation
                             val solarTime =
-                                location?.let { solarTimeRepository.getSolarTime(it, date) }
+                                location?.let { solarTimeRepository.getSolarTime(location, date) }
 
                             if (solarTime != null)
                             {
@@ -351,6 +352,17 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
         }
     }
 */
+    fun stringToLocation(locationString: String): Location {
+        val values = locationString.split(",") // Split the string using comma as a delimiter
+
+        // Assuming the order is: Id, Name, Latitude, Longitude, CreateDateTimeUtc
+        return Location(
+            Id = values[0].toInt(),
+            Name = values[1],
+            Latitude = values[2].toDouble(),
+            Longitude = values[3].toDouble(),
+        )
+    }
     fun setPickers() {
         binding.fragmentCreatealarmSetHours.minValue = 0
         binding.fragmentCreatealarmSetHours.maxValue = 23
