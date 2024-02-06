@@ -55,7 +55,6 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
         if (solarTime == null)
         {
             // Make HTTP Request to API
-            // save response as a new SolarTime
             val sunriseSunsetRequest  = SunriseSunsetRequest(location.Latitude.toFloat(), location.Longitude.toFloat(), date)
             val httpRequests          = HttpRequests(sunriseSunsetRequest)
             val sunriseSunsetResponse = httpRequests.GetSolarData(sunriseSunsetRequest)
@@ -63,7 +62,9 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
             solarTime = SolarTime(date,
                                   location.Id,
                                   sunriseSunsetResponse?.dayLength!!,
-                                  sunriseSunsetResponse.sunrise, sunriseSunsetResponse.sunset, sunriseSunsetResponse.solarNoon,
+                                  sunriseSunsetResponse.sunrise,
+                                  sunriseSunsetResponse.sunset,
+                                  sunriseSunsetResponse.solarNoon,
                                   sunriseSunsetResponse.civilTwilightBegin,
                                   sunriseSunsetResponse.civilTwilightEnd,
                                   sunriseSunsetResponse.nauticalTwilightBegin,
@@ -71,7 +72,7 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
                                   sunriseSunsetResponse.astronomicalTwilightBegin,
                                   sunriseSunsetResponse.astronomicalTwilightEnd)
 
-            Insert(solarTime)
+            Insert(solarTime)   // save response as a new SolarTime
         }
 
         return solarTime

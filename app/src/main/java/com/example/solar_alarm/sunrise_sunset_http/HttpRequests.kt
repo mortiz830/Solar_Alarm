@@ -1,5 +1,6 @@
 package com.example.solar_alarm.sunrise_sunset_http
 
+import android.accounts.NetworkErrorException
 import androidx.annotation.RequiresApi
 import android.os.Build
 import kotlin.Throws
@@ -27,11 +28,16 @@ class HttpRequests @RequiresApi(api = Build.VERSION_CODES.O) constructor(sunrise
         val url   = URL("https://api.sunrise-sunset.org/json$query")
 
         httpUrlConnection = url.openConnection() as HttpURLConnection
+
         httpUrlConnection.requestMethod = "GET"
+        httpUrlConnection.doInput = true
+        httpUrlConnection.doOutput = true
+        httpUrlConnection.connectTimeout = 5000
+        httpUrlConnection.readTimeout = 5000
     }
 
     @Throws(IOException::class)
-    suspend fun GetSolarData(sunriseSunsetRequest: SunriseSunsetRequest?): SunriseSunsetResponse?
+    fun GetSolarData(sunriseSunsetRequest: SunriseSunsetRequest): SunriseSunsetResponse
     {
         var sunriseSunsetResponse = SunriseSunsetResponse()
 
@@ -39,29 +45,32 @@ class HttpRequests @RequiresApi(api = Build.VERSION_CODES.O) constructor(sunrise
         {
             try
             {
-                httpUrlConnection.doInput = true
-                httpUrlConnection.doOutput = true
-                httpUrlConnection.connectTimeout = 5000
-                httpUrlConnection.readTimeout = 5000
+                var inputLine: String?
+                val jsonResult = StringBuilder()
 
                 val bufferedReader = BufferedReader(InputStreamReader(httpUrlConnection.inputStream))
-                var inputLine: String?
-                val content = StringBuilder()
 
                 while (bufferedReader.readLine().also { inputLine = it } != null)
                 {
-                    content.append(inputLine)
+                    jsonResult.append(inputLine)
                 }
 
-                val gson = Gson()
-                sunriseSunsetResponse = gson.fromJson(content.toString(), SunriseSunsetResponse::class.java)
                 bufferedReader.close()
+
+                val gson = Gson()
+                sunriseSunsetResponse = gson.fromJson(jsonResult.toString(), SunriseSunsetResponse::class.java)
+
                 sunriseSunsetResponse.request = sunriseSunsetRequest
             }
             catch (e: Exception)
             {
                 e.printStackTrace()
             }
+        }
+
+        if (sunriseSunsetResponse.results == null)
+        {
+            throw NetworkErrorException("Failed to make request to https://api.sunrise-sunset.org")
         }
 
         return sunriseSunsetResponse

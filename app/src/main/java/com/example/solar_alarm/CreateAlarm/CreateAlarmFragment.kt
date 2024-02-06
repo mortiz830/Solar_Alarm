@@ -75,8 +75,9 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
         locationViewModel.All.observe(viewLifecycleOwner, Observer
         {
             locations ->
-            val locationStrings: List<String> = locationViewModel.getLocationStrings(locations)
-            binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, locationStrings)
+            //val locationStrings: List<String> = locationViewModel.getLocationStrings(locations)
+            binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_dropdown_item, locations)
+
         })
 
         binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
@@ -90,17 +91,16 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
             @RequiresApi(api = Build.VERSION_CODES.O)
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, locationPosition: Int, l: Long)
             {
-                val locationString : String = adapterView.getItemAtPosition(locationPosition) as String
-                val selectedLocation : Location = stringToLocation(locationString)
+                var locationString = adapterView.getItemAtPosition(locationPosition) as Location
+                var selectedLocation = adapterView.getItemAtPosition(locationPosition) as Location
                 var date = LocalDate.now()
                 for (i in 0..13)
                 {
                     runBlocking {
                         try
                         {
-                            val location : Location = selectedLocation
-                            val solarTime =
-                                location?.let { solarTimeRepository.getSolarTime(location, date) }
+                            //val location = selectedLocation
+                            val solarTime = selectedLocation?.let { solarTimeRepository.getSolarTime(selectedLocation, date) }
 
                             if (solarTime != null)
                             {
