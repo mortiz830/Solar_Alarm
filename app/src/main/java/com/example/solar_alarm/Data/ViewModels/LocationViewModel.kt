@@ -38,6 +38,8 @@ class LocationViewModel(private val repository: LocationRepository) : ViewModel(
         return location?.let { "${it.Id}, ${it.Name}, ${it.Latitude}, ${it.Longitude}, ${it.CreateDateTimeUtc}" } ?: "Location not found."
     }
 
+    suspend fun getByName(locationName: String) : Location? { return repository.GetByName(locationName) }
+
     fun getLocationStrings(locations: List<Location>): List<String> {
         return locations.map { getLocationString(it) }
     }

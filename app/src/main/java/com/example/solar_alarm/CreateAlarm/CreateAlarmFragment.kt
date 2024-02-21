@@ -1,6 +1,5 @@
 package com.example.solar_alarm.CreateAlarm
 
-import android.R
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -12,18 +11,14 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.test.core.app.ApplicationProvider
-import butterknife.ButterKnife
 import com.example.solar_alarm.Activities.NavActivity
 import com.example.solar_alarm.AlarmList.AlarmListFragment
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
-import com.example.solar_alarm.Data.Repositories.LocationRepository
 import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository
-import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
 import com.example.solar_alarm.Data.Tables.*
 import com.example.solar_alarm.Data.ViewModels.*
 import com.example.solar_alarm.SolarAlarmApp
@@ -31,9 +26,9 @@ import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
 import com.example.solar_alarm.sunrise_sunset_http.HttpRequests
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.count
-import kotlinx.coroutines.flow.first
 import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import kotlin.system.*
@@ -75,8 +70,10 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
         locationViewModel.All.observe(viewLifecycleOwner, Observer
         {
             locations ->
-            //val locationStrings: List<String> = locationViewModel.getLocationStrings(locations)
-            binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_dropdown_item, locations)
+
+            val locationStrings: List<String> = locationViewModel.getLocationStrings(locations)
+            val namesList: List<String> = locationStrings.map { stringToLocation(it).Name }
+            binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, namesList)
 
         })
 
@@ -91,16 +88,26 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
             @RequiresApi(api = Build.VERSION_CODES.O)
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, locationPosition: Int, l: Long)
             {
-                var locationString = adapterView.getItemAtPosition(locationPosition) as Location
-                var selectedLocation = adapterView.getItemAtPosition(locationPosition) as Location
+                val locationString : String = adapterView.getItemAtPosition(locationPosition) as String
+                var selectedLocation : Location? = Location(0,"",0.0,0.0,
+                    OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC))
+                lifecycleScope.launch {
+                    var newSelectedLocation = locationViewModel.getByName(locationString)
+
+
+
+
                 var date = LocalDate.now()
                 for (i in 0..13)
                 {
                     runBlocking {
                         try
                         {
-                            //val location = selectedLocation
-                            val solarTime = selectedLocation?.let { solarTimeRepository.getSolarTime(selectedLocation, date) }
+
+                            val location : Location? = newSelectedLocation
+                            val solarTime =
+                                location?.let { solarTimeRepository.getSolarTime(location, date) }
+
 
                             if (solarTime != null)
                             {
@@ -114,7 +121,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
 
                         date = date.plusDays(1)
                     }
-                }
+                }}
                 try
                 {
                     binding.fragmentCreatealarmSunriseData.text   = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL))
