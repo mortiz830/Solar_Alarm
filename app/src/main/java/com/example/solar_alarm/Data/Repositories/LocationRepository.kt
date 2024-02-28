@@ -6,7 +6,6 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import com.example.solar_alarm.Data.Daos.LocationDao
 import com.example.solar_alarm.Data.Tables.Location
-import kotlinx.coroutines.flow.Flow
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 class LocationRepository(private val locationDao: LocationDao)
@@ -25,13 +24,14 @@ class LocationRepository(private val locationDao: LocationDao)
     }
 
     @WorkerThread
-    suspend fun GetById(id: Int)
+    fun GetById(id: Int): Location?
     {
-        locationDao.GetById(id)
+        return locationDao.GetById(id)
     }
 
     @WorkerThread
-    suspend fun GetByName(name: String): Location? {
+    fun GetByName(name: String): Location?
+    {
         return locationDao.GetByName(name)
     }
 

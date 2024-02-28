@@ -6,7 +6,6 @@ import org.junit.Assert
 import org.junit.Test
 import java.io.IOException
 import java.time.LocalDate
-import java.util.Calendar
 
 class HttpTestCase
 {
@@ -17,11 +16,11 @@ class HttpTestCase
 
         try
         {
-            val httpRequests = HttpRequests(sunriseSunsetRequest)
-            val response     = httpRequests.GetSolarData(sunriseSunsetRequest)
+            val httpRequests          = HttpRequests()
+            val sunriseSunsetResponse = httpRequests.GetSolarData(sunriseSunsetRequest)
 
-            Assert.assertNotNull(response)
-            Assert.assertSame("OK", response!!.status)
+            Assert.assertNotNull(sunriseSunsetResponse)
+            Assert.assertSame("OK", sunriseSunsetResponse!!.status)
         }
         catch (e: IOException)
         {

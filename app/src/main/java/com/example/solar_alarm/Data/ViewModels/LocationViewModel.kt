@@ -2,11 +2,12 @@ package com.example.solar_alarm.Data.ViewModels
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.solar_alarm.Data.Repositories.LocationRepository
-import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
 import com.example.solar_alarm.Data.Tables.Location
-import com.example.solar_alarm.SolarAlarmApp
 import kotlinx.coroutines.launch
 
 
@@ -38,7 +39,15 @@ class LocationViewModel(private val repository: LocationRepository) : ViewModel(
         return location?.let { "${it.Id}, ${it.Name}, ${it.Latitude}, ${it.Longitude}, ${it.CreateDateTimeUtc}" } ?: "Location not found."
     }
 
-    suspend fun getByName(locationName: String) : Location? { return repository.GetByName(locationName) }
+    fun getByName(locationName: String) : Location?
+    {
+        return repository.GetByName(locationName)
+    }
+
+    fun getById(locationId: Int) : Location?
+    {
+        return repository.GetById(locationId)
+    }
 
     fun getLocationStrings(locations: List<Location>): List<String> {
         return locations.map { getLocationString(it) }
