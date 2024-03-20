@@ -60,16 +60,16 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
 
             solarTime = SolarTime(date,
                                   location.Id,
-                                  sunriseSunsetResponse?.dayLength!!,
-                                  sunriseSunsetResponse.sunrise,
-                                  sunriseSunsetResponse.sunset,
-                                  sunriseSunsetResponse.solarNoon,
-                                  sunriseSunsetResponse.civilTwilightBegin,
-                                  sunriseSunsetResponse.civilTwilightEnd,
-                                  sunriseSunsetResponse.nauticalTwilightBegin,
-                                  sunriseSunsetResponse.nauticalTwilightEnd,
-                                  sunriseSunsetResponse.astronomicalTwilightBegin,
-                                  sunriseSunsetResponse.astronomicalTwilightEnd)
+                                  sunriseSunsetResponse?.results?.day_length!!,
+                                  sunriseSunsetResponse.results?.sunrise,
+                                  sunriseSunsetResponse.results?.sunset,
+                                  sunriseSunsetResponse.results?.solar_noon,
+                                  sunriseSunsetResponse.results?.civil_twilight_begin,
+                                  sunriseSunsetResponse.results?.civil_twilight_end,
+                                  sunriseSunsetResponse.results?.nautical_twilight_begin,
+                                  sunriseSunsetResponse.results?.nautical_twilight_end,
+                                  sunriseSunsetResponse.results?.astronomical_twilight_begin,
+                                  sunriseSunsetResponse.results?.astronomical_twilight_end)
 
             Insert(solarTime)   // save response as a new SolarTime
         }
