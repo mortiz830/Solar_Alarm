@@ -15,4 +15,8 @@
         <item>At</item>
         <item>After</item>
     </string-array>
+    <string name="title_activity_bottom_navigation">BottomNavigation</string>
+    <string name="title_home">Home</string>
+    <string name="title_location">Location</string>
+    <string name="title_create_alarm">Create Alarm</string>
 </resources>
