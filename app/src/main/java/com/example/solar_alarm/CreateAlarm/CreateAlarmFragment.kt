@@ -37,15 +37,10 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
         SolarAlarmViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarAlarmRepository)
     }
 
-//    private val locationViewModel: LocationViewModel by viewModels {
-//        LocationViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository)
-//    }
-
     private val solarTimeViewModel: SolarTimeViewModel by viewModels {
         SolarTimeViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarTimeRepository)
     }
-
-    //private var Locations: List<Location>? = null
+    
     private var solarTimeRepository = SolarAlarmApp().solarTimeRepository
     private var locationRepository = SolarAlarmApp().locationRepository
     private lateinit var solarAlarmRepository: SolarAlarmRepository
@@ -61,15 +56,13 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-
+        var locationStrings: List<String> = emptyList()
         locationViewModel.All.observe(viewLifecycleOwner, Observer
         {
             locations ->
-
-            val locationStrings: List<String> = locationViewModel.getLocationStrings(locations)
+            locationStrings = locationViewModel.getLocationStrings(locations)
             val namesList: List<String> = locationStrings.map { stringToLocation(it).Name }
             binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, namesList)
-
         })
 
         binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
@@ -83,10 +76,9 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
             @RequiresApi(api = Build.VERSION_CODES.O)
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, locationPosition: Int, l: Long)
             {
-                //val locationString : String = adapterView.getItemAtPosition(locationPosition) as String
-
-                //var newSelectedLocation = locationViewModel.getByName(locationString)
-                var newSelectedLocation = locationViewModel.getById(1)
+                val locationString = locationStrings[locationPosition]
+                val locationSplit = locationString.split(",").toTypedArray()
+                var newSelectedLocation = locationViewModel.getById(locationSplit[0].toInt())
                 var date = LocalDate.now()
 
                 if (newSelectedLocation != null)

@@ -223,7 +223,7 @@
                     android:id="@+id/fragment_createalarm_sunrise_data"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                     android:gravity="center"
                     app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_solarnoon_data">
                 </TextView>
@@ -231,7 +231,7 @@
                     android:id="@+id/fragment_createalarm_solarnoon_data"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                     android:gravity="center"
                     app:layout_constraintTop_toBottomOf="@+id/fragment_createalarm_sunrise_data"
                     app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_sunset_data">

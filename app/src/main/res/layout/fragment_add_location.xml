@@ -129,7 +129,7 @@
             android:id="@+id/fragment_add_location_addLocationButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:text="Add Location"
             android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"/>
