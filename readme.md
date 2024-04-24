@@ -10,7 +10,7 @@ This is an Android alarm app that allows users to set alarms based on the sun. A
 
 [Downloads - DB Browser for SQLite](https://sqlitebrowser.org/dl/)
 
-![DB Browser for SQLite](.\images\image-1.png "DB Browser for SQLite")
+![DB Browser for SQLite](\images\image-1.png "DB Browser for SQLite")
 
 #### Find the Database Files in the Device Explorer
 
