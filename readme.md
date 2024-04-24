@@ -20,7 +20,7 @@ This is an Android alarm app that allows users to set alarms based on the sun. A
   - `SolarAlarmDatabase-shm`
   - `SolarAlarmDatabase-wal`
 
-![Device Explorer](.\images\image-3.png "Device Explorer")
+![Device Explorer](/images/image-3.png "Device Explorer")
 
 #### Open the Database Files with DB Browser for SQLite
 
@@ -28,6 +28,6 @@ This is an Android alarm app that allows users to set alarms based on the sun. A
 - File -> Open Database...
 - Select `SolarAlarmDatabase`. The file with no extension.
 
-![File Selection](.\images\image-4.png "File Selection")
+![File Selection](/images/image-4.png "File Selection")
 
-![DB View](.\images\image-5.png "DB View")
+![DB View](/images/image-5.png "DB View")
