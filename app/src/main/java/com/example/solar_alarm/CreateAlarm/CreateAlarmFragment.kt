@@ -43,7 +43,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
     
     private var solarTimeRepository = SolarAlarmApp().solarTimeRepository
     private var locationRepository = SolarAlarmApp().locationRepository
-    private lateinit var solarAlarmRepository: SolarAlarmRepository
+    private var solarAlarmRepository = SolarAlarmApp().solarAlarmRepository
 
     private var dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd-MMM-uuuu\nhh:mm a")
 
@@ -206,7 +206,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
 
     @RequiresApi(Build.VERSION_CODES.O)
     @Throws(Exception::class)
-    suspend fun getSolarAlarmNameLocationIdPairExists(solarAlarm: SolarAlarm): Boolean
+    fun getSolarAlarmNameLocationIdPairExists(solarAlarm: SolarAlarm): Boolean
     {
         return solarAlarmRepository.isSolarAlarmNameLocationIDExists(solarAlarm)
     }
@@ -215,24 +215,8 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
     @Throws(Exception::class)
     private fun scheduleAlarm(solarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum)
     {
-//        val solarAlarmItem = SolarAlarm(0,
-//                                        if (binding.fragmentCreatealarmTitle.text.toString() === "") "" else binding.fragmentCreatealarmTitle.text.toString(),
-//                                  true,
-//                                        solarTimeItem.LocationId,
-//                                        solarTimeItem.Id,
-//                                        binding.fragmentCreatealarmRecurring.isChecked,
-//                                        binding.fragmentCreatealarmCheckMon.isChecked,
-//                                        binding.fragmentCreatealarmCheckTue.isChecked,
-//                                        binding.fragmentCreatealarmCheckWed.isChecked,
-//                                        binding.fragmentCreatealarmCheckThu.isChecked,
-//                                        binding.fragmentCreatealarmCheckFri.isChecked,
-//                                        binding.fragmentCreatealarmCheckSat.isChecked,
-//                                        binding.fragmentCreatealarmCheckSun.isChecked,
-//                                        alarmTypeId,
-//                                        solarTimeTypeId)
-
         val solarAlarmItem = SolarAlarm(true,
-                                  "NAME TO BE ADDED HERE",
+                                        binding.fragmentCreatealarmTitle.text.toString(),
                                         solarTimeItem.LocationId,
                                         solarTimeItem.Id,
                                         binding.fragmentCreatealarmRecurring.isChecked,
@@ -247,20 +231,28 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
                                         solarTimeTypeId
         )
 
-        val isSolarAlarmNameLocationIdPairExists : Deferred<Boolean>
+        val isSolarAlarmNameLocationIdPairExists : Boolean
 
-        val time = measureTimeMillis  {
-            isSolarAlarmNameLocationIdPairExists = GlobalScope.async { getSolarAlarmNameLocationIdPairExists(solarAlarmItem) }
+        runBlocking  {
+            try
+            {
+                isSolarAlarmNameLocationIdPairExists = getSolarAlarmNameLocationIdPairExists(solarAlarmItem)
+
+                if (!isSolarAlarmNameLocationIdPairExists)
+                {
+                    solarAlarmRepository.Insert(solarAlarmItem)
+                } else
+                {
+                    Toast.makeText(context, "Alarm already exists!", Toast.LENGTH_LONG).show()
+                }
+            }
+            catch (e: Exception)
+            {
+                e.printStackTrace()
+                //Toast.makeText(getContext(), "Unable to get times!", Toast.LENGTH_LONG).show();
+            }
         }
 
-        if (!isSolarAlarmNameLocationIdPairExists.getCompleted())
-        {
-            solarAlarmViewModel.Insert(solarAlarmItem)
-        }
-        else
-        {
-            Toast.makeText(context, "Alarm already exists!", Toast.LENGTH_LONG).show()
-        }
         val alarmScheduler = AlarmScheduler(solarAlarmItem, solarTimeItem, binding.fragmentCreatealarmSetHours.value, binding.fragmentCreatealarmSetHours.value)
         alarmScheduler.schedule(context)
     }
