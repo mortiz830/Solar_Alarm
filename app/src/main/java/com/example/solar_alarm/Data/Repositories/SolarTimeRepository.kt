@@ -42,7 +42,7 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
     }
 
     @WorkerThread
-    suspend fun doesLocationIdDatePairExists(locationId: Int, date: LocalDate): Boolean
+    fun doesLocationIdDatePairExists(locationId: Int, date: LocalDate): Boolean
     {
         return solarTimeDao.doesLocationIdDatePairExists(locationId, date)
     }

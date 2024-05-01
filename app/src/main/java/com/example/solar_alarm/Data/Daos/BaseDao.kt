@@ -9,7 +9,7 @@ interface BaseDao<T>
     //@Query("SELECT * FROM ${T}")
     //fun getAll(): Flow<List<T>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(entity: T)
 
     @Update
