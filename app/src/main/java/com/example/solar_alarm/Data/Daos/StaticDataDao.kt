@@ -7,13 +7,13 @@ import androidx.room.*
 @Dao
 interface StaticDataDao {
     @Insert
-    fun Insert(offsetType: OffsetType?)
+    fun Insert(offsetType: OffsetType)
 
     @get:Query("SELECT EXISTS(SELECT * FROM OffsetType)")
     val isOffsetTypesExists: Boolean
 
     @Insert
-    fun Insert(solarTimeType: SolarTimeType?)
+    fun Insert(solarTimeType: SolarTimeType)
 
     @get:Query("SELECT EXISTS(SELECT * FROM SolarTimeType)")
     val isSolarTimeTypesExists: Boolean
