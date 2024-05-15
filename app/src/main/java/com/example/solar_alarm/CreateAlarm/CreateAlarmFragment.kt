@@ -240,7 +240,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
             }
             catch (sqLiteConstraintException: SQLiteConstraintException)
             {
-                Toast.makeText(getContext(), "Alarm named '${solarAlarmItem.Name}' with location ID ${solarTimeItem.LocationId} already exists", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Alarm named '${solarAlarmItem.Name}' with location ID ${solarTimeItem.LocationId} already exists\n ${sqLiteConstraintException.message}", Toast.LENGTH_LONG).show();
                 success = false
             }
             catch (exception: Exception)

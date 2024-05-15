@@ -3,7 +3,7 @@ package com.example.solar_alarm.Data
 import androidx.annotation.RequiresApi
 import android.os.Build
 import com.example.solar_alarm.Data.Daos.LocationDao
-import com.example.solar_alarm.Data.Daos.StaticDataDao
+//import com.example.solar_alarm.Data.Daos.StaticDataDao
 import com.example.solar_alarm.Data.Daos.SolarAlarmDao
 import com.example.solar_alarm.Data.Daos.SolarTimeDao
 import androidx.room.Database
@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-@Database(entities = [OffsetType::class, Location::class, SolarAlarm::class, SolarTime::class, SolarTimeType::class], version = 1, exportSchema = false)
+@Database(entities = [Location::class, SolarAlarm::class, SolarTime::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class SolarAlarmDatabase : RoomDatabase()
 {
@@ -29,7 +29,7 @@ abstract class SolarAlarmDatabase : RoomDatabase()
     abstract fun solarAlarmDao(): SolarAlarmDao
     abstract fun solarTimeDao(): SolarTimeDao
     abstract fun alarmDisplayDataDao(): AlarmDisplayDataDao
-    abstract fun staticDataDao(): StaticDataDao
+    //abstract fun staticDataDao(): StaticDataDao
 
     companion object
     {

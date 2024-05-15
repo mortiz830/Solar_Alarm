@@ -28,22 +28,6 @@ import java.time.ZoneOffset
             parentColumns = ["Id"],
             childColumns  = ["SolarTimeId"],
             onDelete      = ForeignKey.CASCADE
-        ),
-
-        ForeignKey
-        (
-            entity        = OffsetType::class,
-            parentColumns = ["Id"],
-            childColumns  = ["OffsetTypeId"],
-            onDelete      = ForeignKey.CASCADE
-        ),
-
-        ForeignKey
-        (
-            entity        = SolarTimeType::class,
-            parentColumns = ["Id"],
-            childColumns  = ["SolarTimeTypeId"],
-            onDelete      = ForeignKey.CASCADE
         )
     ]
 )
