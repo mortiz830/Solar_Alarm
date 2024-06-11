@@ -53,7 +53,7 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
             calendar[Calendar.DAY_OF_MONTH] = calendar[Calendar.DAY_OF_MONTH] + 1
         }
         val alarmManager = context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val alarmPendingIntent = PendingIntent.getBroadcast(context, solarAlarm.Id, intent, 0)
+        val alarmPendingIntent = PendingIntent.getBroadcast(context, solarAlarm.Id, intent, 0) // BROKEN AFTER CONVERSION
         if (solarAlarm.Recurring) {
             val toastText = String.format("Recurring Alarm %s scheduled for %s at %02d:%02d", solarAlarm.Name, recurringDaysText, localZonedDateTime.hour, localZonedDateTime.minute, solarAlarm.Id)
             Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
