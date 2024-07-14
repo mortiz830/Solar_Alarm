@@ -253,10 +253,12 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
 
         if (success)
         {
-            AlarmScheduler(solarAlarmItem,
-                           solarTimeItem,
-                           binding.fragmentCreatealarmSetHours.value,
-                           binding.fragmentCreatealarmSetHours.value).schedule(context)
+            context?.let {
+                AlarmScheduler(solarAlarmItem,
+                    solarTimeItem,
+                    binding.fragmentCreatealarmSetHours.value,
+                    binding.fragmentCreatealarmSetHours.value).schedule(it)
+            }
         }
     }
 

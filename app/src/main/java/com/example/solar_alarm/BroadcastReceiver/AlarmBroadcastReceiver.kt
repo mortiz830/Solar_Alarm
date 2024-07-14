@@ -7,25 +7,30 @@ import android.content.BroadcastReceiver
 import android.widget.Toast
 import com.example.solar_alarm.Service.RescheduleAlarmService
 import android.content.Context
+import android.util.Log
 import java.util.*
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
-            val toastText = String.format("Alarm Reboot")
-            Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
-            startRescheduleAlarmsService(context)
-        } else {
-            val toastText = String.format("Alarm Received")
-            Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
-            if (!intent.getBooleanExtra(RECURRING, false)) {
-                startAlarmService(context, intent)
-            }
-            run {
-                if (alarmIsToday(intent)) {
+        try {
+            if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
+                val toastText = String.format("Alarm Reboot")
+                Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+                startRescheduleAlarmsService(context)
+            } else {
+                val toastText = String.format("Alarm Received")
+                Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+                if (!intent.getBooleanExtra(RECURRING, false)) {
                     startAlarmService(context, intent)
                 }
+                run {
+                    if (alarmIsToday(intent)) {
+                        startAlarmService(context, intent)
+                    }
+                }
             }
+        } catch (e: Exception) {
+            Log.e("AlarmBroadcastReceiver", "Error", e)
         }
     }
 
