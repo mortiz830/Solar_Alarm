@@ -20,21 +20,23 @@ import java.util.*
 class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: SolarTime, private val hours: Int, private val mins: Int)
 {
     private var started = false
+    
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Throws(Exception::class)
 
     fun GetIntent(context: Context) : Intent
     {
         val intent = Intent(context, AlarmBroadcastReceiver::class.java)
-        intent.putExtra(AlarmBroadcastReceiver.Companion.RECURRING, solarAlarm.Recurring)
-        intent.putExtra(AlarmBroadcastReceiver.Companion.MONDAY, solarAlarm.Monday)
-        intent.putExtra(AlarmBroadcastReceiver.Companion.TUESDAY, solarAlarm.Tuesday)
-        intent.putExtra(AlarmBroadcastReceiver.Companion.WEDNESDAY, solarAlarm.Wednesday)
-        intent.putExtra(AlarmBroadcastReceiver.Companion.THURSDAY, solarAlarm.Thursday)
-        intent.putExtra(AlarmBroadcastReceiver.Companion.FRIDAY, solarAlarm.Friday)
-        intent.putExtra(AlarmBroadcastReceiver.Companion.SATURDAY, solarAlarm.Saturday)
-        intent.putExtra(AlarmBroadcastReceiver.Companion.SUNDAY, solarAlarm.Sunday)
-        intent.putExtra(AlarmBroadcastReceiver.Companion.TITLE, solarAlarm.Name)
+
+        intent.putExtra(AlarmBroadcastReceiver.RECURRING, solarAlarm.Recurring)
+        intent.putExtra(AlarmBroadcastReceiver.MONDAY,    solarAlarm.Monday)
+        intent.putExtra(AlarmBroadcastReceiver.TUESDAY,   solarAlarm.Tuesday)
+        intent.putExtra(AlarmBroadcastReceiver.WEDNESDAY, solarAlarm.Wednesday)
+        intent.putExtra(AlarmBroadcastReceiver.THURSDAY,  solarAlarm.Thursday)
+        intent.putExtra(AlarmBroadcastReceiver.FRIDAY,    solarAlarm.Friday)
+        intent.putExtra(AlarmBroadcastReceiver.SATURDAY,  solarAlarm.Saturday)
+        intent.putExtra(AlarmBroadcastReceiver.SUNDAY,    solarAlarm.Sunday)
+        intent.putExtra(AlarmBroadcastReceiver.TITLE,     solarAlarm.Name)
 
         return intent
     }
@@ -43,11 +45,17 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
     {
         val calendar = Calendar.getInstance()
 
-        calendar.timeInMillis = System.currentTimeMillis()
+        calendar.timeInMillis          = System.currentTimeMillis()
         calendar[Calendar.HOUR_OF_DAY] = localZonedDateTime.hour
-        calendar[Calendar.MINUTE] = localZonedDateTime.minute
-        calendar[Calendar.SECOND] = 0
+        calendar[Calendar.MINUTE]      = localZonedDateTime.minute
+        calendar[Calendar.SECOND]      = 0
         calendar[Calendar.MILLISECOND] = 0
+
+        // if alarm time has already passed, increment day by 1
+        if (calendar.timeInMillis <= System.currentTimeMillis())
+        {
+            calendar[Calendar.DAY_OF_MONTH] = calendar[Calendar.DAY_OF_MONTH] + 1
+        }
 
         return calendar
     }
@@ -65,13 +73,9 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
         }
     }
 
-    fun schedule(context: Context)
+    fun GetLocalZonedDateTime() : ZonedDateTime
     {
-        val intent = GetIntent(context)
-
-        val localZonedDateTime: ZonedDateTime
-
-        localZonedDateTime = if (true) ZonedDateTime.now().plusMinutes(mins.toLong() + 1) else  // DEBUG_STATEMENT makes alarm ring immediately
+        val localZonedDateTime = if (true) ZonedDateTime.now().plusMinutes(mins.toLong() + 1) else  // DEBUG_STATEMENT makes alarm ring immediately
             solarAlarm.SolarTimeTypeId?.let { solarTime.GetLocalZonedDateTime(it) }!!
 
         if (solarAlarm.OffsetTypeId == OffsetTypeEnum.Before)
@@ -85,16 +89,16 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
             localZonedDateTime.plusMinutes(mins.toLong())
         }
 
-        val calendar = getCalendarInstance(localZonedDateTime)
+        return localZonedDateTime
+    }
 
-        // if alarm time has already passed, increment day by 1
-        if (calendar.timeInMillis <= System.currentTimeMillis())
-        {
-            calendar[Calendar.DAY_OF_MONTH] = calendar[Calendar.DAY_OF_MONTH] + 1
-        }
-
-        val alarmManager  = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        var pendingIntent = GetPendingIntent(context, intent)
+    fun schedule(context: Context)
+    {
+        val intent             = GetIntent(context)
+        val localZonedDateTime = GetLocalZonedDateTime()
+        val calendar           = getCalendarInstance(localZonedDateTime)
+        val alarmManager       = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        var pendingIntent      = GetPendingIntent(context, intent)
 
         if (solarAlarm.Recurring)
         {
@@ -104,10 +108,7 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
 
             try
             {
-                if (alarmManager != null)
-                {
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, RUN_DAILY, pendingIntent)
-                }
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, RUN_DAILY, pendingIntent)
             }
             catch (exception: Exception)
             {
@@ -121,10 +122,7 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
 
             try
             {
-                if (alarmManager != null)
-                {
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-                }
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             }
             catch (exception: Exception)
             {
