@@ -72,6 +72,8 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
                                   sunriseSunsetResponse.results?.astronomical_twilight_end)
 
             Insert(solarTime)   // save response as a new SolarTime
+
+            solarTime = solarTimeDao.getSolarTime(location.Id, date)   // reload from DB to get ID number
         }
 
         return solarTime
