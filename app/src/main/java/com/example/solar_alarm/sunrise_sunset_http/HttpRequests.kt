@@ -20,19 +20,16 @@ class HttpRequests @RequiresApi(api = Build.VERSION_CODES.O) constructor()
     {
         var sunriseSunsetResponse = SunriseSunsetResponse()
 
-        //GlobalScope.launch(Dispatchers.IO)
-        //{
-            try
-            {
-                sunriseSunsetResponse         = makeGetRequest(sunriseSunsetRequest.getFullUrl())
-                sunriseSunsetResponse.request = sunriseSunsetRequest
-            }
-            catch (e: Exception)
-            {
-                // Handle exceptions, e.g., network errors
-                e.printStackTrace()
-            }
-        //}
+        try
+        {
+            sunriseSunsetResponse         = makeGetRequest(sunriseSunsetRequest.getFullUrl())
+            sunriseSunsetResponse.request = sunriseSunsetRequest
+        }
+        catch (e: Exception)
+        {
+            // Handle exceptions, e.g., network errors
+            e.printStackTrace()
+        }
 
         return sunriseSunsetResponse
     }
@@ -41,7 +38,7 @@ class HttpRequests @RequiresApi(api = Build.VERSION_CODES.O) constructor()
     @Throws(IOException::class)
     private suspend fun makeGetRequest(url: String): SunriseSunsetResponse
     {
-        return withContext(Dispatchers.IO)
+        val sunriseSunsetResponse = withContext(Dispatchers.IO)
         {
             val request = Request.Builder().url(url).build()
 
@@ -53,9 +50,15 @@ class HttpRequests @RequiresApi(api = Build.VERSION_CODES.O) constructor()
 
                 val responseBody = response.body!!.string()
 
-                gson.fromJson(responseBody, SunriseSunsetResponse::class.java)
+                try {
+                    gson.fromJson(responseBody, SunriseSunsetResponse::class.java)
+                } catch (e: Exception) {
+                    TODO("Not yet implemented")
+                }
             }
         }
+
+        return sunriseSunsetResponse
     }
 
 }

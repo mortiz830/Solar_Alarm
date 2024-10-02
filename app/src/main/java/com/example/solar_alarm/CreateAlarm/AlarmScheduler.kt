@@ -20,7 +20,7 @@ import java.util.*
 class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: SolarTime, private val hours: Int, private val mins: Int)
 {
     private var started = false
-    
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Throws(Exception::class)
 
