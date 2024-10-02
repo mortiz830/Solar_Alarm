@@ -56,7 +56,7 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
         latitude = view.findViewById(R.id.fragment_listalarms_latitude)
         longitude = view.findViewById(R.id.fragment_listalarms_longitude)
 
-        getLocation(view)
+        GetLocation(view)
 
         return view
     }
@@ -71,7 +71,7 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
 //        }
 //    }
 
-    fun getLocation(view: View) {
+    fun GetLocation(view: View) {
         gpsTracker = GpsTracker(view.context)
         if (gpsTracker!!.canGetLocation()) {
             val lat = gpsTracker!!.latitude
