@@ -54,11 +54,11 @@ class ItemClickSupport private constructor(private val mRecyclerView: RecyclerVi
         view.setTag(mItemID, null)
     }
 
-    interface OnItemClickListener {
+    fun interface OnItemClickListener {
         fun onItemClicked(recyclerView: RecyclerView?, position: Int, v: View?)
     }
 
-    interface OnItemLongClickListener {
+    fun interface OnItemLongClickListener {
         fun onItemLongClicked(recyclerView: RecyclerView?, position: Int, v: View?): Boolean
     }
 
