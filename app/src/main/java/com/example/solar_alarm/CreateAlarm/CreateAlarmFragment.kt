@@ -28,9 +28,9 @@ import java.time.format.DateTimeFormatter
 import kotlin.system.*
 
 @RequiresApi(Build.VERSION_CODES.O)
-class CreateAlarmFragment constructor(locationViewModel: LocationViewModel) : Fragment() {
+class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fragment() {
     private lateinit var binding: FragmentCreatealarmBinding
-    private var locationViewModel = locationViewModel
+    private var locationViewModel: LocationViewModel = locationViewModel
 
     private val solarAlarmViewModel: SolarAlarmViewModel by viewModels {
         SolarAlarmViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarAlarmRepository)

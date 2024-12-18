@@ -12,20 +12,19 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
-import com.example.solar_alarm.CreateAlarm.UpdateAlarmFragment
 import com.example.solar_alarm.Data.ViewModels.*
 import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.GpsTracker
 import com.example.solar_alarm.SolarAlarmApp
-import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
 import java.time.ZoneId
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AlarmListFragment constructor(locationViewModel: LocationViewModel) : Fragment(), OnToggleAlarmListener
-{
-    private lateinit var fragmentCreatealarmBinding: FragmentCreatealarmBinding
-    private var locationViewModel = locationViewModel
+class AlarmListFragment : Fragment(), OnToggleAlarmListener {
+
+    private val locationViewModel: LocationViewModel by viewModels {
+        LocationViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository)
+    }
 
     private val solarTimeViewModel: SolarTimeViewModel by viewModels {
         SolarTimeViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarTimeRepository)
@@ -48,15 +47,7 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel) : Frag
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-    {
-        locationViewModel.All.observe(viewLifecycleOwner, Observer
-        {
-            locations ->
-            fragmentCreatealarmBinding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, locations)
-        })
-
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_listalarms, container, false)
         alarmsRecyclerView = view.findViewById(R.id.fragment_listalarms_recylerView)
         alarmsRecyclerView.setLayoutManager(LinearLayoutManager(context))
@@ -64,15 +55,6 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel) : Frag
         zoneId = TimeZone.getDefault().toZoneId()
         latitude = view.findViewById(R.id.fragment_listalarms_latitude)
         longitude = view.findViewById(R.id.fragment_listalarms_longitude)
-
-
-        try {
-            var x = locationViewModel.GetAll()
-
-            x = x
-        } catch (e: Exception) {
-            TODO("Not yet implemented")
-        }
 
         GetLocation(view)
 
@@ -100,7 +82,7 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel) : Frag
             gpsTracker!!.showSettingsAlert()
         }
     }
-
+/*
     private fun configureOnClickRecyclerView() {
         ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
                 .setOnItemClickListener(ItemClickSupport.OnItemClickListener { recyclerView, position, v ->
@@ -121,5 +103,5 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel) : Frag
                     false
                 })
     }
-
+    */
 }
