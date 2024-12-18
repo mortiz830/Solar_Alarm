@@ -70,9 +70,10 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
         val supportMapFragment = childFragmentManager.findFragmentById(R.id.fragment_add_location_map) as SupportMapFragment?
         supportMapFragment!!.getMapAsync(this)
         //ButterKnife.bind(this, view)
-        binding.fragmentAddLocationLatitude.text = latLng?.latitude.toString()
+        binding.fragmentAddLocationLatitude.text  = latLng?.latitude.toString()
         binding.fragmentAddLocationLongitude.text = latLng?.longitude.toString()
-        binding.fragmentAddLocationTimeZone.text = TimeZone.getDefault().toZoneId().toString()
+        binding.fragmentAddLocationTimeZone.text  = TimeZone.getDefault().toZoneId().toString()
+
         binding.fragmentAddLocationAddLocationButton.setOnClickListener(View.OnClickListener
         {
             //var locationName: String = binding.fragmentAddLocationLocationNameText.text.toString()
