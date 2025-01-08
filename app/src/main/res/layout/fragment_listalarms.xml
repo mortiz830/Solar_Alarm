@@ -11,16 +11,6 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/fragment_listalarms_timezone"
-            android:layout_width="203dp"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintStart_toEndOf="@+id/fragment_listalarms_timezone_txt"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
             android:id="@+id/fragment_listalarms_latitude"
             android:layout_width="203dp"
             android:layout_height="wrap_content"
@@ -28,8 +18,9 @@
             android:text="test"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintStart_toEndOf="@+id/fragment_listalarms_latitude_txt"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/fragment_listalarms_latitude_txt"
+            app:layout_constraintBottom_toTopOf="@id/fragment_listalarms_longitude"/>
 
         <TextView
             android:id="@+id/fragment_listalarms_longitude"
@@ -38,17 +29,9 @@
             android:text="test"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintStart_toEndOf="@+id/fragment_listalarms_longitude_txt"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_listalarms_latitude" />
+            app:layout_constraintTop_toBottomOf="@id/fragment_listalarms_latitude"
+            app:layout_constraintLeft_toRightOf="@id/fragment_listalarms_longitude_txt"/>
 
-        <TextView
-            android:id="@+id/fragment_listalarms_timezone_txt"
-            android:layout_width="208dp"
-            android:layout_height="wrap_content"
-            android:text="Time Zone: "
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/fragment_listalarms_latitude_txt"
@@ -57,7 +40,8 @@
             android:text="Latitude: "
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_listalarms_timezone_txt"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/fragment_listalarms_latitude"
             tools:layout_editor_absoluteX="0dp" />
 
         <TextView
