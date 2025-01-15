@@ -14,6 +14,7 @@ import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
 
 import com.example.solar_alarm.Data.ViewModels.MainViewModel
 import com.example.solar_alarm.Location.AddLocationFragment
+import com.example.solar_alarm.Location.LocationListFragment
 import com.example.solar_alarm.R
 import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.ActivityBottomNavigationBinding
@@ -42,7 +43,8 @@ class NavActivity : AppCompatActivity() {
         binding.navView.setOnItemSelectedListener {
             when (it.itemId)
             {
-                R.id.navigation_home         -> replaceFragment(AlarmListFragment())
+//                R.id.navigation_home         -> replaceFragment(AlarmListFragment())
+                R.id.navigation_home         -> replaceFragment(LocationListFragment())
                 R.id.navigation_location     -> replaceFragment(AddLocationFragment(locationViewModel))
                 R.id.navigation_create_alarm -> replaceFragment(CreateAlarmFragment(locationViewModel))
                 else -> { }
