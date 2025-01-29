@@ -41,6 +41,8 @@ import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
 import com.example.solar_alarm.SolarAlarmApp
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 @RequiresApi(Build.VERSION_CODES.O)
 class AddLocationFragment constructor(location: LocationViewModel): Fragment(), OnMapReadyCallback
@@ -148,8 +150,8 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
     fun saveLocation()
     {
         val location = Location(0, binding.fragmentAddLocationLocationNameText.text.toString(),
-                                binding.fragmentAddLocationLatitude.text.toString().toDouble(),
-                                binding.fragmentAddLocationLongitude.text.toString().toDouble())
+                                BigDecimal(binding.fragmentAddLocationLatitude.text.toString()).setScale(4, RoundingMode.HALF_UP).toDouble(),
+                                BigDecimal(binding.fragmentAddLocationLongitude.text.toString()).setScale(4, RoundingMode.HALF_UP).toDouble())
 
         locationViewModel.Insert(location)
         Toast.makeText(context, "New Location ${location.Id} ${location.Name} Created", Toast.LENGTH_LONG).show()
