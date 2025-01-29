@@ -83,7 +83,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
                 var date = LocalDate.now()
 
                 if (newSelectedLocation != null)
-                    for (i in 0..13)
+                    for (i in 0..8)
                     {
                         try
                         {
@@ -97,7 +97,6 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
                             }
 
                             date = date.plusDays(1)
-
                         }
                         catch (e: Exception)
                         {
