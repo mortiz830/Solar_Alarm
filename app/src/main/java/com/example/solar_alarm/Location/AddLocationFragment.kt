@@ -155,7 +155,10 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
                                 BigDecimal(binding.fragmentAddLocationLongitude.text.toString()).setScale(newScale, RoundingMode.HALF_UP).toDouble())
 
         locationViewModel.Insert(location)
-        Toast.makeText(context, "New Location ${location.Id} ${location.Name} Created", Toast.LENGTH_LONG).show()
+        val locationNew = locationViewModel.getByName(location.Name)
+        if (locationNew != null) {
+            Toast.makeText(context, "New Location ${locationNew.Id} ${locationNew.Name} Created", Toast.LENGTH_LONG).show()
+        }
     }
 
     inner class LocationNameExistsTask : AsyncTask<String?, Void?, Boolean>() {
