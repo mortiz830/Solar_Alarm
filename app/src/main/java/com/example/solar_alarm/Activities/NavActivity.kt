@@ -2,6 +2,10 @@ package com.example.solar_alarm.Activities
 
 import android.os.Build
 import android.os.Bundle
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -40,6 +44,10 @@ class NavActivity : AppCompatActivity() {
         setContentView(binding.root)
         replaceFragment(AlarmListFragment())
 
+        binding.fab.setOnClickListener { view ->
+            showPopupMenu(view)
+        }
+
         binding.navView.setOnItemSelectedListener {
             when (it.itemId)
             {
@@ -59,5 +67,26 @@ class NavActivity : AppCompatActivity() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frame_layout, fragment)
         fragmentTransaction.commit()
+    }
+    private fun showPopupMenu(view: android.view.View) {
+        val popup = PopupMenu(this, view)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.fab_menu, popup.menu)
+
+        popup.setOnMenuItemClickListener { item: MenuItem ->
+            when (item.itemId) {
+                R.id.action_option_create_location -> {
+                    replaceFragment(AddLocationFragment(locationViewModel))
+                    true
+                }
+                R.id.action_option_create_alarm -> {
+                    replaceFragment(CreateAlarmFragment(locationViewModel))
+                    true
+                }
+                else -> false
+            }
+        }
+
+        popup.show()
     }
 }
