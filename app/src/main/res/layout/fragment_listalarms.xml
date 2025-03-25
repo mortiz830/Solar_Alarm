@@ -18,7 +18,6 @@
             android:text="test"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@id/fragment_listalarms_latitude_txt"
             app:layout_constraintBottom_toTopOf="@id/fragment_listalarms_longitude"/>
 
@@ -31,7 +30,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintTop_toBottomOf="@id/fragment_listalarms_latitude"
             app:layout_constraintLeft_toRightOf="@id/fragment_listalarms_longitude_txt"/>
-
 
         <TextView
             android:id="@+id/fragment_listalarms_latitude_txt"
@@ -54,12 +52,22 @@
             app:layout_constraintTop_toBottomOf="@+id/fragment_listalarms_latitude_txt"
             tools:layout_editor_absoluteX="0dp" />
 
+        <Button
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:src="@drawable/ic_more_vert"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_listalarms_recylerView"
+            app:layout_constraintTop_toBottomOf="@id/fragment_listalarms_longitude"
+            tools:layout_editor_absoluteX="323dp" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fragment_listalarms_recylerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            app:layout_constraintTop_toBottomOf="@+id/fragment_listalarms_longitude_txt"
+            app:layout_constraintTop_toBottomOf="@+id/add_button"
             tools:layout_editor_absoluteX="16dp">
 
         </androidx.recyclerview.widget.RecyclerView>

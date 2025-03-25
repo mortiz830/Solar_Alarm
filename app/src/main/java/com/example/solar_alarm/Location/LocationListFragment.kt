@@ -10,16 +10,23 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.Data.ViewModels.LocationViewModel
 import com.example.solar_alarm.R
 
+<<<<<<< Updated upstream
 @RequiresApi(Build.VERSION_CODES.O)
 class LocationListFragment : Fragment()
 {
     private val locationViewModel : LocationViewModel by activityViewModels()
+=======
+class LocationListFragment : Fragment(){
+
+    private val locationViewModel : LocationViewModel by viewModels()
+>>>>>>> Stashed changes
 
     private lateinit var locationRecyclerView: RecyclerView
     private lateinit var locationAdapter: LocationAdapter
