@@ -46,10 +46,6 @@ class NavActivity : AppCompatActivity() {
 
         replaceFragment(AlarmListFragment())
 
-        binding..setOnClickListener { view ->
-            showPopupMenu(view, binding.fab)
-        }
-
         binding.navView.setOnItemSelectedListener {
             when (it.itemId)
             {
@@ -69,28 +65,5 @@ class NavActivity : AppCompatActivity() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frame_layout, fragment)
         fragmentTransaction.commit()
-    }
-    private fun showPopupMenu(view: android.view.View, fab: Button) {
-        val popup = PopupMenu(this, view)
-        val inflater: MenuInflater = popup.menuInflater
-        inflater.inflate(R.menu.fab_menu, popup.menu)
-
-        popup.setOnMenuItemClickListener { item: MenuItem ->
-            when (item.itemId) {
-                R.id.action_option_create_location -> {
-                    replaceFragment(AddLocationFragment(locationViewModel))
-                    //fab.hide()
-                    true
-                }
-                R.id.action_option_create_alarm -> {
-                    replaceFragment(CreateAlarmFragment(locationViewModel))
-                    //fab.hide()
-                    true
-                }
-                else -> false
-            }
-        }
-
-        popup.show()
     }
 }

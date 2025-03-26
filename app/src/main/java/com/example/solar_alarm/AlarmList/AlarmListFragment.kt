@@ -3,6 +3,8 @@ package com.example.solar_alarm.AlarmList
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -12,10 +14,13 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
+import com.example.solar_alarm.CreateAlarm.CreateAlarmFragment
 import com.example.solar_alarm.Data.ViewModels.*
+import com.example.solar_alarm.Location.AddLocationFragment
 import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.GpsTracker
 import com.example.solar_alarm.SolarAlarmApp
+import com.example.solar_alarm.databinding.FragmentListalarmsBinding
 import java.time.ZoneId
 import java.util.*
 
@@ -34,6 +39,7 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
         SolarAlarmViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarAlarmRepository)
     }
 
+    private lateinit var binding: FragmentListalarmsBinding
     private var alarmRecyclerViewAdapter: AlarmRecycleViewAdapter? = null
     private lateinit var alarmsRecyclerView: RecyclerView
     private var gpsTracker: GpsTracker? = null
@@ -43,22 +49,26 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         alarmRecyclerViewAdapter = AlarmRecycleViewAdapter(this)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_listalarms, container, false)
-        alarmsRecyclerView = view.findViewById(R.id.fragment_listalarms_recylerView)
+        binding = FragmentListalarmsBinding.inflate(layoutInflater, container, false)
+
+        alarmsRecyclerView = binding.fragmentListalarmsRecylerView
         alarmsRecyclerView.setLayoutManager(LinearLayoutManager(context))
         alarmsRecyclerView.setAdapter(alarmRecyclerViewAdapter)
         zoneId = TimeZone.getDefault().toZoneId()
-        latitude = view.findViewById(R.id.fragment_listalarms_latitude)
-        longitude = view.findViewById(R.id.fragment_listalarms_longitude)
+        latitude = binding.fragmentListalarmsLatitude
+        longitude = binding.fragmentListalarmsLongitude
+        binding.addButton.setOnClickListener {
+            showPopupMenu(it)
+        }
+        GetLocation(binding.root)
 
-        GetLocation(view)
-
-        return view
+        return binding.getRoot()
     }
 
 //    override fun onToggle(alarm: Alarm) {
@@ -81,6 +91,29 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
         } else {
             gpsTracker!!.showSettingsAlert()
         }
+    }
+    private fun showPopupMenu(view: View) {
+        val popup = PopupMenu(requireContext(), view)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.fab_menu, popup.menu)
+
+        popup.setOnMenuItemClickListener { item: MenuItem ->
+            when (item.itemId) {
+//                R.id.action_option_create_location -> {
+//                    replaceFragment(AddLocationFragment(locationViewModel))
+//                    //fab.hide()
+//                    true
+//                }
+//                R.id.action_option_create_alarm -> {
+//                    replaceFragment(CreateAlarmFragment(locationViewModel))
+//                    //fab.hide()
+//                    true
+//                }
+                else -> false
+            }
+        }
+
+        popup.show()
     }
 /*
     private fun configureOnClickRecyclerView() {
