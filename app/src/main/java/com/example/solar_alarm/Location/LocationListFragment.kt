@@ -17,16 +17,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.Data.ViewModels.LocationViewModel
 import com.example.solar_alarm.R
 
-<<<<<<< Updated upstream
 @RequiresApi(Build.VERSION_CODES.O)
 class LocationListFragment : Fragment()
 {
-    private val locationViewModel : LocationViewModel by activityViewModels()
-=======
-class LocationListFragment : Fragment(){
-
+    //private val locationViewModel : LocationViewModel by activityViewModels()
     private val locationViewModel : LocationViewModel by viewModels()
->>>>>>> Stashed changes
 
     private lateinit var locationRecyclerView: RecyclerView
     private lateinit var locationAdapter: LocationAdapter

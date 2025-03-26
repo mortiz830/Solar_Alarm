@@ -46,21 +46,16 @@ class NavActivity : AppCompatActivity() {
 
         replaceFragment(AlarmListFragment())
 
-        binding.fab.setOnClickListener { view ->
+        binding..setOnClickListener { view ->
             showPopupMenu(view, binding.fab)
         }
 
         binding.navView.setOnItemSelectedListener {
             when (it.itemId)
             {
-<<<<<<< Updated upstream
 //                R.id.navigation_home         -> replaceFragment(AlarmListFragment())
                 R.id.navigation_home         -> replaceFragment(LocationListFragment())
                 R.id.navigation_location     -> replaceFragment(LocationListFragment())//replaceFragment(AddLocationFragment(locationViewModel))
-=======
-                R.id.navigation_home         -> replaceFragment(AlarmListFragment())
-                R.id.navigation_location     -> replaceFragment(LocationListFragment())
->>>>>>> Stashed changes
                 R.id.navigation_create_alarm -> replaceFragment(CreateAlarmFragment(locationViewModel))
                 else -> { }
             }
