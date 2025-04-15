@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -28,7 +29,7 @@ import java.util.*
 class AlarmListFragment : Fragment(), OnToggleAlarmListener {
 
     private val locationViewModel: LocationViewModel by viewModels {
-        LocationViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).locationRepository)
+        LocationViewModelFactory((requireActivity().application as SolarAlarmApp).locationRepository)
     }
 
     private val solarTimeViewModel: SolarTimeViewModel by viewModels {
@@ -92,6 +93,14 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
             gpsTracker!!.showSettingsAlert()
         }
     }
+
+    internal fun replaceFragment(fragment: Fragment)
+    {
+        val fragmentManager = parentFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frame_layout, fragment)
+        fragmentTransaction.commit()
+    }
     private fun showPopupMenu(view: View) {
         val popup = PopupMenu(requireContext(), view)
         val inflater: MenuInflater = popup.menuInflater
@@ -99,16 +108,16 @@ class AlarmListFragment : Fragment(), OnToggleAlarmListener {
 
         popup.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
-//                R.id.action_option_create_location -> {
-//                    replaceFragment(AddLocationFragment(locationViewModel))
-//                    //fab.hide()
-//                    true
-//                }
-//                R.id.action_option_create_alarm -> {
-//                    replaceFragment(CreateAlarmFragment(locationViewModel))
-//                    //fab.hide()
-//                    true
-//                }
+                R.id.action_option_create_location -> {
+                    replaceFragment(AddLocationFragment(locationViewModel))
+                    //fab.hide()
+                    true
+                }
+                R.id.action_option_create_alarm -> {
+                    replaceFragment(CreateAlarmFragment(locationViewModel))
+                    //fab.hide()
+                    true
+                }
                 else -> false
             }
         }

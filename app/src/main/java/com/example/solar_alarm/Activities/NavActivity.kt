@@ -50,7 +50,7 @@ class NavActivity : AppCompatActivity() {
             when (it.itemId)
             {
 //                R.id.navigation_home         -> replaceFragment(AlarmListFragment())
-                R.id.navigation_home         -> replaceFragment(LocationListFragment())
+                R.id.navigation_home         -> replaceFragment(AlarmListFragment())
                 R.id.navigation_location     -> replaceFragment(LocationListFragment())//replaceFragment(AddLocationFragment(locationViewModel))
                 R.id.navigation_create_alarm -> replaceFragment(CreateAlarmFragment(locationViewModel))
                 else -> { }

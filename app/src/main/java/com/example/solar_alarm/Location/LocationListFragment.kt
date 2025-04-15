@@ -15,13 +15,16 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.Data.ViewModels.LocationViewModel
+import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
 import com.example.solar_alarm.R
+import com.example.solar_alarm.SolarAlarmApp
 
 @RequiresApi(Build.VERSION_CODES.O)
 class LocationListFragment : Fragment()
 {
-    //private val locationViewModel : LocationViewModel by activityViewModels()
-    private val locationViewModel : LocationViewModel by viewModels()
+    private val locationViewModel: LocationViewModel by viewModels {
+        LocationViewModelFactory((requireActivity().application as SolarAlarmApp).locationRepository)
+    }
 
     private lateinit var locationRecyclerView: RecyclerView
     private lateinit var locationAdapter: LocationAdapter
