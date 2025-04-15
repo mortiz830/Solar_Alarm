@@ -26,12 +26,9 @@ import java.time.ZoneId
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AlarmListFragment : Fragment(), OnToggleAlarmListener {
+class AlarmListFragment constructor(locationViewModel: LocationViewModel): Fragment(), OnToggleAlarmListener {
 
-    private val locationViewModel: LocationViewModel by viewModels {
-        LocationViewModelFactory((requireActivity().application as SolarAlarmApp).locationRepository)
-    }
-
+    private var locationViewModel: LocationViewModel = locationViewModel
     private val solarTimeViewModel: SolarTimeViewModel by viewModels {
         SolarTimeViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarTimeRepository)
     }

@@ -106,12 +106,12 @@ class UpdateAlarmFragment : Fragment() {
                 recurringOptions!!.visibility = View.GONE
             }
         }
-        scheduleAlarm!!.setOnClickListener {
-            updateAlarm()
-            val alarmListFragment = AlarmListFragment()
-            val manager = fragmentManager
-            manager!!.beginTransaction().replace(R.id.activity_main_nav_host_fragment, alarmListFragment).commit()
-        }
+//        scheduleAlarm!!.setOnClickListener {
+//            updateAlarm()
+//           // val alarmListFragment = AlarmListFragment()
+//            val manager = fragmentManager
+//            manager!!.beginTransaction().replace(R.id.activity_main_nav_host_fragment, alarmListFragment).commit()
+//        }
         return view
     }
 

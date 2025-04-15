@@ -20,11 +20,9 @@ import com.example.solar_alarm.R
 import com.example.solar_alarm.SolarAlarmApp
 
 @RequiresApi(Build.VERSION_CODES.O)
-class LocationListFragment : Fragment()
+class LocationListFragment constructor(locationViewModel: LocationViewModel): Fragment()
 {
-    private val locationViewModel: LocationViewModel by viewModels {
-        LocationViewModelFactory((requireActivity().application as SolarAlarmApp).locationRepository)
-    }
+    private var locationViewModel: LocationViewModel = locationViewModel
 
     private lateinit var locationRecyclerView: RecyclerView
     private lateinit var locationAdapter: LocationAdapter

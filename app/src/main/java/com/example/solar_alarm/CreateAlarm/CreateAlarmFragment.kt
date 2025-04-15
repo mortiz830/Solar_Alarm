@@ -160,7 +160,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
                 e.printStackTrace()
             }
 
-            (activity as NavActivity).replaceFragment(AlarmListFragment())
+            (activity as NavActivity).replaceFragment(AlarmListFragment(locationViewModel))
         }
 
         return binding.root

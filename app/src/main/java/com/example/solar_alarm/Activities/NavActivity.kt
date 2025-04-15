@@ -44,14 +44,14 @@ class NavActivity : AppCompatActivity() {
         binding = ActivityBottomNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        replaceFragment(AlarmListFragment())
+        replaceFragment(AlarmListFragment(locationViewModel))
 
         binding.navView.setOnItemSelectedListener {
             when (it.itemId)
             {
 //                R.id.navigation_home         -> replaceFragment(AlarmListFragment())
-                R.id.navigation_home         -> replaceFragment(AlarmListFragment())
-                R.id.navigation_location     -> replaceFragment(LocationListFragment())//replaceFragment(AddLocationFragment(locationViewModel))
+                R.id.navigation_home         -> replaceFragment(AlarmListFragment(locationViewModel))
+                R.id.navigation_location     -> replaceFragment(LocationListFragment(locationViewModel))//replaceFragment(AddLocationFragment(locationViewModel))
                 R.id.navigation_create_alarm -> replaceFragment(CreateAlarmFragment(locationViewModel))
                 else -> { }
             }
