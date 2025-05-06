@@ -29,17 +29,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 // Main activity for the app.
 
 @RequiresApi(Build.VERSION_CODES.O)
-class NavActivity : AppCompatActivity() {
+class NavActivity : AppCompatActivity()
+{
     private val viewModel: MainViewModel by viewModels()
-    private val locationViewModel: LocationViewModel by viewModels {
-        LocationViewModelFactory((application as SolarAlarmApp).locationRepository)
-    }
+    private val locationViewModel: LocationViewModel by viewModels { LocationViewModelFactory((application as SolarAlarmApp).locationRepository) }
 
     private lateinit var binding : ActivityBottomNavigationBinding
 
     //@OptIn(ExperimentalMaterial3Api::class)
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         binding = ActivityBottomNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)

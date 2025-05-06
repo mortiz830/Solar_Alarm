@@ -44,15 +44,16 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel): Fragm
     var latitude: TextView? = null
     var longitude: TextView? = null
     private var zoneId: ZoneId? = null
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
+        super.onCreate(savedInstanceState)
         alarmRecyclerViewAdapter = AlarmRecycleViewAdapter(this)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    {
         binding = FragmentListalarmsBinding.inflate(layoutInflater, container, false)
 
         alarmsRecyclerView = binding.fragmentListalarmsRecylerView
@@ -61,9 +62,7 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel): Fragm
         zoneId = TimeZone.getDefault().toZoneId()
         latitude = binding.fragmentListalarmsLatitude
         longitude = binding.fragmentListalarmsLongitude
-        binding.addButton.setOnClickListener {
-            showPopupMenu(it)
-        }
+        binding.addButton.setOnClickListener { showPopupMenu(it) }
         GetLocation(binding.root)
 
         return binding.getRoot()
@@ -79,14 +78,19 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel): Fragm
 //        }
 //    }
 
-    fun GetLocation(view: View) {
+    fun GetLocation(view: View)
+    {
         gpsTracker = GpsTracker(view.context)
-        if (gpsTracker!!.canGetLocation()) {
+
+        if (gpsTracker!!.canGetLocation())
+        {
             val lat = gpsTracker!!.latitude
             val lon = gpsTracker!!.longitude
             latitude!!.text = lat.toString()
             longitude!!.text = lon.toString()
-        } else {
+        }
+        else
+        {
             gpsTracker!!.showSettingsAlert()
         }
     }
@@ -98,6 +102,7 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel): Fragm
         fragmentTransaction.replace(R.id.frame_layout, fragment)
         fragmentTransaction.commit()
     }
+
     private fun showPopupMenu(view: View) {
         val popup = PopupMenu(requireContext(), view)
         val inflater: MenuInflater = popup.menuInflater

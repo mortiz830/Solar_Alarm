@@ -42,9 +42,12 @@ class LocationListFragment constructor(locationViewModel: LocationViewModel): Fr
         locationRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         locationRecyclerView.adapter = locationAdapter
 
-        try {
+        try
+        {
             locationViewModel.All.observe(viewLifecycleOwner, Observer { locationList -> locationAdapter.updateLocations(locationList) })
-        } catch (e: Exception) {
+        }
+        catch (e: Exception)
+        {
             Toast.makeText(getContext(), e.message, Toast.LENGTH_LONG).show()
         }
     }
