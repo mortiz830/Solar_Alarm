@@ -3,8 +3,10 @@ package com.example.solar_alarm.Data.Tables
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.*
+import com.example.solar_alarm.AlarmList.AlarmViewHolder
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
+import com.example.solar_alarm.SolarAlarmApp
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -58,4 +60,9 @@ data class SolarAlarm
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "Id")                var Id                : Int = 0
     @ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
+
+    suspend fun GetSolarTime() : SolarTime?
+    {
+        return SolarAlarmApp().solarTimeRepository.GetById(SolarTimeId)
+    }
 }
