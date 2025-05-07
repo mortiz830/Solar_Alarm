@@ -24,9 +24,9 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
     }
 
     @WorkerThread
-    suspend fun GetById(id: Int)
+    suspend fun GetById(id: Int) : SolarTime?
     {
-        solarTimeDao.GetById(id)
+        return solarTimeDao.GetById(id)
     }
 
     @WorkerThread
