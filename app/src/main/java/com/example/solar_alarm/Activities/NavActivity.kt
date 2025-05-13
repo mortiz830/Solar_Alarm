@@ -18,6 +18,10 @@ import com.example.solar_alarm.Data.ViewModels.LocationViewModel
 import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
 
 import com.example.solar_alarm.Data.ViewModels.MainViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModelFactory
+import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModelFactory
 import com.example.solar_alarm.Location.AddLocationFragment
 import com.example.solar_alarm.Location.LocationListFragment
 import com.example.solar_alarm.R
@@ -32,7 +36,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class NavActivity : AppCompatActivity()
 {
     private val viewModel: MainViewModel by viewModels()
-    private val locationViewModel: LocationViewModel by viewModels { LocationViewModelFactory((application as SolarAlarmApp).locationRepository) }
+    private val locationViewModel : LocationViewModel by viewModels {LocationViewModelFactory((application as SolarAlarmApp).locationRepository) }
+    private val solarTimeViewModel : SolarTimeViewModel by viewModels {SolarTimeViewModelFactory((application as SolarAlarmApp).solarTimeRepository)}
+    private val solarAlarmViewModel : SolarAlarmViewModel by viewModels {SolarAlarmViewModelFactory((application as SolarAlarmApp).solarAlarmRepository) }
 
     private lateinit var binding : ActivityBottomNavigationBinding
 
@@ -44,15 +50,15 @@ class NavActivity : AppCompatActivity()
         binding = ActivityBottomNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        replaceFragment(AlarmListFragment(locationViewModel))
+        replaceFragment(AlarmListFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
 
         binding.navView.setOnItemSelectedListener {
             when (it.itemId)
             {
 //                R.id.navigation_home         -> replaceFragment(AlarmListFragment())
-                R.id.navigation_home         -> replaceFragment(AlarmListFragment(locationViewModel))
+                R.id.navigation_home         -> replaceFragment(AlarmListFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
                 R.id.navigation_location     -> replaceFragment(LocationListFragment(locationViewModel))//replaceFragment(AddLocationFragment(locationViewModel))
-                R.id.navigation_create_alarm -> replaceFragment(CreateAlarmFragment(locationViewModel))
+                R.id.navigation_create_alarm -> replaceFragment(CreateAlarmFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
                 else -> { }
             }
             true

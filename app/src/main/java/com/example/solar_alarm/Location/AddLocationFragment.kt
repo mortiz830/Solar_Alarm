@@ -38,6 +38,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import com.example.solar_alarm.Data.Tables.Location
 import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
+import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
 import com.example.solar_alarm.SolarAlarmApp
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
@@ -45,9 +47,12 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AddLocationFragment constructor(location: LocationViewModel): Fragment(), OnMapReadyCallback
+class AddLocationFragment constructor(location: LocationViewModel, solarTimeViewModel: SolarTimeViewModel,
+                                      solarAlarmViewModel: SolarAlarmViewModel): Fragment(), OnMapReadyCallback
 {
     private var locationViewModel: LocationViewModel = location
+    private val solarTimeViewModel: SolarTimeViewModel = solarTimeViewModel
+    private val solarAlarmViewModel: SolarAlarmViewModel = solarAlarmViewModel
     private lateinit var binding: FragmentAddLocationBinding
     private var latLng: LatLng? = null
 
@@ -81,7 +86,7 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
             //var locationName: String = binding.fragmentAddLocationLocationNameText.text.toString()
             //var isLocationPointExists = locationViewModel.DoesLocationLatLongExists(latLng!!.latitude, latLng!!.longitude)
             saveLocation()
-            (activity as NavActivity).replaceFragment(AlarmListFragment(locationViewModel))
+            (activity as NavActivity).replaceFragment(AlarmListFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
         })
 
 //        addLocationButton!!.setOnClickListener { view ->

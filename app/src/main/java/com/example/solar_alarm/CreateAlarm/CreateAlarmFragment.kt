@@ -28,18 +28,13 @@ import java.time.format.DateTimeFormatter
 import kotlin.system.*
 
 @RequiresApi(Build.VERSION_CODES.O)
-class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fragment() {
+class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, solarTimeViewModel: SolarTimeViewModel,
+                                      solarAlarmViewModel: SolarAlarmViewModel): Fragment() {
     private lateinit var binding: FragmentCreatealarmBinding
     private var locationViewModel: LocationViewModel = locationViewModel
+    private val solarTimeViewModel: SolarTimeViewModel = solarTimeViewModel
+    private val solarAlarmViewModel: SolarAlarmViewModel = solarAlarmViewModel
 
-    private val solarAlarmViewModel: SolarAlarmViewModel by viewModels {
-        SolarAlarmViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarAlarmRepository)
-    }
-
-    private val solarTimeViewModel: SolarTimeViewModel by viewModels {
-        SolarTimeViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarTimeRepository)
-    }
-    
     private var solarTimeRepository = SolarAlarmApp().solarTimeRepository
     private var locationRepository = SolarAlarmApp().locationRepository
     private var solarAlarmRepository = SolarAlarmApp().solarAlarmRepository
@@ -160,7 +155,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel): Fra
                 e.printStackTrace()
             }
 
-            (activity as NavActivity).replaceFragment(AlarmListFragment(locationViewModel))
+            (activity as NavActivity).replaceFragment(AlarmListFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
         }
 
         return binding.root

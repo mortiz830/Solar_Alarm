@@ -26,39 +26,34 @@ import java.time.ZoneId
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AlarmListFragment constructor(locationViewModel: LocationViewModel): Fragment(), OnToggleAlarmListener {
+class AlarmListFragment constructor(locationViewModel: LocationViewModel, solarTimeViewModel: SolarTimeViewModel,
+                                    solarAlarmViewModel: SolarAlarmViewModel): Fragment(), OnToggleAlarmListener {
 
     private var locationViewModel: LocationViewModel = locationViewModel
-    private val solarTimeViewModel: SolarTimeViewModel by viewModels {
-        SolarTimeViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarTimeRepository)
-    }
-    // https://github.com/android/compose-samples
-    private val solarAlarmViewModel: SolarAlarmViewModel by viewModels {
-        SolarAlarmViewModelFactory((ApplicationProvider.getApplicationContext() as SolarAlarmApp).solarAlarmRepository)
-    }
+    private val solarTimeViewModel: SolarTimeViewModel = solarTimeViewModel
+    private val solarAlarmViewModel: SolarAlarmViewModel = solarAlarmViewModel
 
     private lateinit var binding: FragmentListalarmsBinding
-    private var alarmRecyclerViewAdapter: AlarmRecycleViewAdapter? = null
-    private lateinit var alarmsRecyclerView: RecyclerView
+    private lateinit var alarmListAdapter: AlarmListAdapter
+    private lateinit var alarmListRecyclerView: RecyclerView
+
     private var gpsTracker: GpsTracker? = null
     var latitude: TextView? = null
     var longitude: TextView? = null
     private var zoneId: ZoneId? = null
-
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        super.onCreate(savedInstanceState)
-        alarmRecyclerViewAdapter = AlarmRecycleViewAdapter(this)
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
         binding = FragmentListalarmsBinding.inflate(layoutInflater, container, false)
 
-        alarmsRecyclerView = binding.fragmentListalarmsRecylerView
-        alarmsRecyclerView.setLayoutManager(LinearLayoutManager(context))
-        alarmsRecyclerView.setAdapter(alarmRecyclerViewAdapter)
+        alarmListAdapter = AlarmListAdapter(emptyList())
+        alarmListRecyclerView = binding.fragmentListalarmsRecylerView
+        alarmListRecyclerView.setLayoutManager(LinearLayoutManager(context))
+        alarmListRecyclerView.setAdapter(alarmListAdapter)
+
+        solarAlarmViewModel.AllSolarAlarms.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> alarmListAdapter.updateSolarAlarms(solarAlarms)})
+
         zoneId = TimeZone.getDefault().toZoneId()
         latitude = binding.fragmentListalarmsLatitude
         longitude = binding.fragmentListalarmsLongitude
@@ -111,12 +106,12 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel): Fragm
         popup.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.action_option_create_location -> {
-                    replaceFragment(AddLocationFragment(locationViewModel))
+                    replaceFragment(AddLocationFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
                     //fab.hide()
                     true
                 }
                 R.id.action_option_create_alarm -> {
-                    replaceFragment(CreateAlarmFragment(locationViewModel))
+                    replaceFragment(CreateAlarmFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
                     //fab.hide()
                     true
                 }
