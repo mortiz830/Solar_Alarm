@@ -8,6 +8,7 @@ import com.example.solar_alarm.R
 class SolarAlarmViewHolder  (itemView: View) : RecyclerView.ViewHolder(itemView)
 {
 
+    val name : TextView = itemView.findViewById(R.id.item_alarm_title)
     val alarmTime : TextView = itemView.findViewById(R.id.item_alarm_time)
     /*
     *

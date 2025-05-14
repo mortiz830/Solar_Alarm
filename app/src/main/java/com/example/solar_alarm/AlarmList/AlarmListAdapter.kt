@@ -35,6 +35,7 @@ class AlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : RecyclerView
                 if (solarTime != null)
                 {
                     solarAlarmViewHolder.alarmTime.text = solarTime.GetLocalZonedDateTime(solarAlarm.SolarTimeTypeId).toString()
+                    solarAlarmViewHolder.name.text = solarAlarm.Name
                 }
             }
         }
