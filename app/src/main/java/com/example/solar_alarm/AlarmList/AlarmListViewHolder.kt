@@ -5,11 +5,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.R
 
-class SolarAlarmViewHolder  (itemView: View) : RecyclerView.ViewHolder(itemView)
+class SolarAlarmViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView)
 {
 
-    val name : TextView = itemView.findViewById(R.id.item_alarm_title)
-    val alarmTime : TextView = itemView.findViewById(R.id.item_alarm_time)
+    val alarmName     : TextView = itemView.findViewById(R.id.alarmName)
+    val alarmDateTime : TextView = itemView.findViewById(R.id.alarmDateTime)
+    val locationName  : TextView = itemView.findViewById(R.id.alarmName)
     /*
     *
     val locationName : TextView = itemView.findViewById(R.id.item_location_location_name)

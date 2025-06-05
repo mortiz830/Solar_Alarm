@@ -14,60 +14,28 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:padding="6dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
-                    android:id="@+id/item_alarm_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="00/00/0000"
-                    android:textSize="20sp" />
-                <TextView
-                    android:id="@+id/item_alarm_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="00:00"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/item_alarm_recurring"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp"
-                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/item_alarm_recurringDays"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/item_alarm_title"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/alarmName"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="17sp" />
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/alarmDateTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp" />
 
-            <Switch
-                android:id="@+id/item_alarm_started"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"/>
+            </LinearLayout>
 
         </LinearLayout>
 

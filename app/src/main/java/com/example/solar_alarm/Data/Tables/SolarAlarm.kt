@@ -65,4 +65,9 @@ data class SolarAlarm
     {
         return SolarAlarmApp().solarTimeRepository.GetById(SolarTimeId)
     }
+
+    suspend fun GetLocation() : Location?
+    {
+        return SolarAlarmApp().locationRepository.GetById(LocationId)
+    }
 }

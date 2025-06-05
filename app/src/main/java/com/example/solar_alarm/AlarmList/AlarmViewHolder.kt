@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.annotation.RequiresApi
 import android.os.Build
 import com.example.solar_alarm.Data.Tables.SolarAlarm
-import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
 import com.example.solar_alarm.Data.Tables.SolarTime
 import android.os.AsyncTask
 import kotlin.Throws
@@ -19,20 +18,20 @@ import java.lang.Exception
 class AlarmViewHolder(itemView: View, listener: OnToggleAlarmListener) : RecyclerView.ViewHolder(itemView) {
     private val alarmTime: TextView
     private val alarmDate: TextView
-    private val alarmRecurring: ImageView
-    private val alarmRecurringDays: TextView
+    //private val alarmRecurring: ImageView
+    //private val alarmRecurringDays: TextView
     private val alarmTitle: TextView
     var parent_layout: LinearLayout
-    var alarmStarted: SwitchCompat
+    //var alarmStarted: SwitchCompat
     private val listener: OnToggleAlarmListener
 
     init {
-        alarmTime = itemView.findViewById(R.id.item_alarm_time)
-        alarmDate = itemView.findViewById(R.id.item_alarm_date)
-        alarmStarted = itemView.findViewById(R.id.item_alarm_started)
-        alarmRecurring = itemView.findViewById(R.id.item_alarm_recurring)
-        alarmRecurringDays = itemView.findViewById(R.id.item_alarm_recurringDays)
-        alarmTitle = itemView.findViewById(R.id.item_alarm_title)
+        alarmTime = itemView.findViewById(R.id.alarmDateTime)
+        alarmDate = itemView.findViewById(R.id.alarmDateTime)
+        //alarmStarted = itemView.findViewById(R.id.item_alarm_started)
+        //alarmRecurring = itemView.findViewById(R.id.item_alarm_recurring)
+        //alarmRecurringDays = itemView.findViewById(R.id.item_alarm_recurringDays)
+        alarmTitle = itemView.findViewById(R.id.alarmName)
         parent_layout = itemView.findViewById(R.id.parent_layout)
         this.listener = listener
     }
@@ -62,13 +61,13 @@ class AlarmViewHolder(itemView: View, listener: OnToggleAlarmListener) : Recycle
         val alarmText = zonedDateTime?.let { Converters.toTimeString(it) }
         alarmDate.text = alarmText!![0]
         alarmTime.text = alarmText[1]
-        alarmStarted.isChecked = solarAlarm.Active
+        //alarmStarted.isChecked = solarAlarm.Active
         if (solarAlarm.Recurring) {
-            alarmRecurring.setImageResource(R.drawable.ic_repeat_black_24dp)
+            //alarmRecurring.setImageResource(R.drawable.ic_repeat_black_24dp)
             //alarmRecurringDays.text = solarAlarm.recurringDaysText
         } else {
-            alarmRecurring.setImageResource(R.drawable.ic_looks_one_black_24dp)
-            alarmRecurringDays.text = "Once Off"
+            //alarmRecurring.setImageResource(R.drawable.ic_looks_one_black_24dp)
+            //alarmRecurringDays.text = "Once Off"
         }
         alarmTitle.text = String.format("%s | %d", solarAlarm.Name, solarAlarm.Id)
 

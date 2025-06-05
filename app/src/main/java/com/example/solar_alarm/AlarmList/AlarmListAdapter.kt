@@ -31,11 +31,16 @@ class AlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : RecyclerView
         {
             runBlocking {
                 val solarTime = solarAlarm.GetSolarTime()
+                val location  = solarAlarm.GetLocation()
 
-                if (solarTime != null)
+                if (solarTime != null && location != null)
                 {
-                    solarAlarmViewHolder.alarmTime.text = solarTime.GetLocalZonedDateTime(solarAlarm.SolarTimeTypeId).toString()
-                    solarAlarmViewHolder.name.text = solarAlarm.Name
+                    val zonedDateTime = solarTime.GetLocalZonedDateTime(solarAlarm.SolarTimeTypeId)
+                    val hour          = if (zonedDateTime.hour > 12)  zonedDateTime.hour - 12 else zonedDateTime.hour
+                    val ampm          = if (zonedDateTime.hour > 12)  "PM" else "AM"
+
+                    solarAlarmViewHolder.alarmDateTime.text = "${zonedDateTime.dayOfWeek} ${zonedDateTime.dayOfMonth} ${zonedDateTime.month} ${zonedDateTime.year} ${hour}:${zonedDateTime.minute} $ampm"
+                    solarAlarmViewHolder.alarmName.text     = "${solarAlarm.Name} - ${solarAlarm.OffsetTypeId} ${solarAlarm.SolarTimeTypeId} - ${location.Name}"
                 }
             }
         }

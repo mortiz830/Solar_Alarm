@@ -53,7 +53,7 @@ class AlarmRecycleViewAdapter(listener: OnToggleAlarmListener) : RecyclerView.Ad
 
     override fun onViewRecycled(holder: AlarmViewHolder) {
         super.onViewRecycled(holder)
-        holder.alarmStarted.setOnCheckedChangeListener(null)
+        //holder.alarmStarted.setOnCheckedChangeListener(null)
     }
 
     fun removeItem(position: Int): SolarAlarm {
