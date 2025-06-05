@@ -7,6 +7,7 @@ import com.example.solar_alarm.AlarmList.AlarmViewHolder
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
 import com.example.solar_alarm.SolarAlarmApp
+import kotlinx.coroutines.runBlocking
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -61,13 +62,35 @@ data class SolarAlarm
     @ColumnInfo(name = "Id")                var Id                : Int = 0
     @ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
 
-    suspend fun GetSolarTime() : SolarTime?
+    val solarTime : SolarTime
+        get() {
+            return GetSolarTime()
+        }
+
+    private fun GetSolarTime() : SolarTime
     {
-        return SolarAlarmApp().solarTimeRepository.GetById(SolarTimeId)
+        val solarTime : SolarTime
+
+        runBlocking {
+            solarTime = SolarAlarmApp().solarTimeRepository.GetById(SolarTimeId)
+        }
+
+        return solarTime
     }
 
-    suspend fun GetLocation() : Location?
+    val location : Location
+        get() {
+            return GetLocation()
+        }
+
+    private fun GetLocation() : Location
     {
-        return SolarAlarmApp().locationRepository.GetById(LocationId)
+        val location : Location
+
+        runBlocking {
+            location = SolarAlarmApp().locationRepository.GetById(LocationId)
+        }
+
+        return location
     }
 }

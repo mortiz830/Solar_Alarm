@@ -52,7 +52,7 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel, solarT
         alarmListRecyclerView.setLayoutManager(LinearLayoutManager(context))
         alarmListRecyclerView.setAdapter(alarmListAdapter)
 
-        solarAlarmViewModel.AllSolarAlarms.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> alarmListAdapter.updateSolarAlarms(solarAlarms)})
+        solarAlarmViewModel.AllSolarAlarms.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> alarmListAdapter.UpdateSolarAlarms(solarAlarms)})
 
         zoneId = TimeZone.getDefault().toZoneId()
         latitude = binding.fragmentListalarmsLatitude

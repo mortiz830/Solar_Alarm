@@ -15,10 +15,10 @@ interface LocationDao// : BaseDao<Location>
     fun GetAll(): LiveData<List<Location>>
 
     @Query("SELECT * FROM Location WHERE Id = :id")
-    fun GetById(id: Int): Location?
+    fun GetById(id: Int): Location
 
     @Query("SELECT * FROM Location WHERE Name = :name")
-    fun GetByName(name: String): Location?
+    fun GetByName(name: String): Location
 
     @Update
     suspend fun update(location: Location): Int

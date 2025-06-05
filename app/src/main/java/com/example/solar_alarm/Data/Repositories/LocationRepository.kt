@@ -24,13 +24,13 @@ class LocationRepository(private val locationDao: LocationDao)
     }
 
     @WorkerThread
-    fun GetById(id: Int): Location?
+    fun GetById(id: Int): Location
     {
         return locationDao.GetById(id)
     }
 
     @WorkerThread
-    fun GetByName(name: String): Location?
+    fun GetByName(name: String): Location
     {
         return locationDao.GetByName(name)
     }

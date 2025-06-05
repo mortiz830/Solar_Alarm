@@ -12,7 +12,7 @@ abstract class SolarTimeDao : BaseDao<SolarTime>
     abstract fun GetAll(): Flow<List<SolarTime>>
 
     @Query("SELECT * FROM SolarTime WHERE Id = :id")
-    abstract fun GetById(id: Int): SolarTime?
+    abstract fun GetById(id: Int): SolarTime
 
     // Returns one item or null
     @Query("SELECT * FROM SolarTime WHERE LocationId = :locationId AND SolarDate = :date")
