@@ -40,7 +40,7 @@ class AlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : RecyclerView
                     val ampm          = if (zonedDateTime.hour > 12)  "PM" else "AM"
 
                     solarAlarmViewHolder.alarmDateTime.text = "${zonedDateTime.dayOfWeek} ${zonedDateTime.dayOfMonth} ${zonedDateTime.month} ${zonedDateTime.year} ${hour}:${zonedDateTime.minute} $ampm"
-                    solarAlarmViewHolder.alarmName.text     = "${solarAlarm.Name} - ${solarAlarm.OffsetTypeId} ${solarAlarm.SolarTimeTypeId} - ${location.Name}"
+                    solarAlarmViewHolder.alarmName.text     = "${solarAlarm.Id} - ${solarAlarm.Name} - ${solarAlarm.OffsetTypeId} ${solarAlarm.SolarTimeTypeId} - ${location.Name}"
                 }
             }
         }
