@@ -12,7 +12,6 @@ import kotlin.Throws
 import com.example.solar_alarm.Data.Converters
 import android.view.View
 import android.widget.*
-import androidx.appcompat.widget.SwitchCompat
 import java.lang.Exception
 
 class AlarmViewHolder(itemView: View, listener: OnToggleAlarmListener) : RecyclerView.ViewHolder(itemView) {
@@ -54,8 +53,7 @@ class AlarmViewHolder(itemView: View, listener: OnToggleAlarmListener) : Recycle
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Throws(Exception::class)
     fun bind(solarAlarm: SolarAlarm) {
-        val solarTime = GetSolarTime().execute(solarAlarm.SolarTimeId).get()!!
-        val zonedDateTime = solarAlarm.SolarTimeTypeId?.let { solarTime.GetLocalZonedDateTime(it) }
+        val zonedDateTime = solarAlarm.SolarTimeTypeId?.let { solarAlarm.solarTime.GetLocalZonedDateTime(it) }
         zonedDateTime?.hour
         val localTime = zonedDateTime?.toLocalTime()
         val alarmText = zonedDateTime?.let { Converters.toTimeString(it) }
