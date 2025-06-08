@@ -18,26 +18,19 @@
             android:orientation="vertical"
             android:padding="6dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/locationData1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="8dp">
+                android:layout_weight="1"
+                android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/locationData1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="TextView" />
-
-                <TextView
-                    android:id="@+id/locationData2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="TextView" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/locationData2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="15sp" />
 
 
         </LinearLayout>

@@ -10,7 +10,7 @@ class LocationAdapter(private var locations: List<Location>) : RecyclerView.Adap
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder
     {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_location, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.location_list_item, parent, false)
         return LocationViewHolder(view)
     }
 

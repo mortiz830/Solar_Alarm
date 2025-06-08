@@ -23,7 +23,7 @@ class AlarmRecycleViewAdapter(listener: OnToggleAlarmListener) : RecyclerView.Ad
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlarmViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_alarm, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.solar_alarm_list_item, parent, false)
         context = parent.context
         return AlarmViewHolder(itemView, listener)
     }

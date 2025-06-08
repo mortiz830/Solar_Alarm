@@ -13,7 +13,7 @@ class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : Recycle
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SolarAlarmViewHolder
     {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_alarm, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.solar_alarm_list_item, parent, false)
         return SolarAlarmViewHolder(view)
     }
 

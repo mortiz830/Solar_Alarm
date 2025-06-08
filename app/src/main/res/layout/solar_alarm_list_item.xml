@@ -14,28 +14,20 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="6dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/alarmName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/alarmName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/alarmDateTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp" />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/alarmDateTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp" />
 
         </LinearLayout>
 
