@@ -9,7 +9,7 @@ import com.example.solar_alarm.Data.Tables.SolarAlarm
 import com.example.solar_alarm.R
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : RecyclerView.Adapter<SolarAlarmViewHolder>()
+class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : RecyclerView.Adapter<SolarAlarmViewHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SolarAlarmViewHolder
     {

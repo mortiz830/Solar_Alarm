@@ -8,19 +8,15 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.core.app.ApplicationProvider
 import com.example.solar_alarm.CreateAlarm.CreateAlarmFragment
 import com.example.solar_alarm.Data.ViewModels.*
 import com.example.solar_alarm.Location.AddLocationFragment
 import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.GpsTracker
-import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.FragmentListalarmsBinding
 import java.time.ZoneId
 import java.util.*
@@ -34,7 +30,7 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel, solarT
     private val solarAlarmViewModel: SolarAlarmViewModel = solarAlarmViewModel
 
     private lateinit var binding: FragmentListalarmsBinding
-    private lateinit var alarmListAdapter: AlarmListAdapter
+    private lateinit var solarAlarmListAdapter: SolarAlarmListAdapter
     private lateinit var alarmListRecyclerView: RecyclerView
 
     private var gpsTracker: GpsTracker? = null
@@ -47,12 +43,12 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel, solarT
     {
         binding = FragmentListalarmsBinding.inflate(layoutInflater, container, false)
 
-        alarmListAdapter = AlarmListAdapter(emptyList())
+        solarAlarmListAdapter = SolarAlarmListAdapter(emptyList())
         alarmListRecyclerView = binding.fragmentListalarmsRecylerView
         alarmListRecyclerView.setLayoutManager(LinearLayoutManager(context))
-        alarmListRecyclerView.setAdapter(alarmListAdapter)
+        alarmListRecyclerView.setAdapter(solarAlarmListAdapter)
 
-        solarAlarmViewModel.AllSolarAlarms.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> alarmListAdapter.UpdateSolarAlarms(solarAlarms)})
+        solarAlarmViewModel.AllSolarAlarms.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> solarAlarmListAdapter.UpdateSolarAlarms(solarAlarms)})
 
         zoneId = TimeZone.getDefault().toZoneId()
         latitude = binding.fragmentListalarmsLatitude
