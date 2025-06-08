@@ -7,8 +7,6 @@ import com.example.solar_alarm.R
 
 class LocationViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView)
 {
-    val locationID : TextView = itemView.findViewById(R.id.item_location_location_ID)
-    val locationName : TextView = itemView.findViewById(R.id.item_location_location_name)
-    val locationLatitude : TextView = itemView.findViewById(R.id.item_location_latitude)
-    val locationLongitude : TextView = itemView.findViewById(R.id.item_location_longitude)
+    val locationData1 : TextView = itemView.findViewById(R.id.locationData1)
+    val locationData2 : TextView = itemView.findViewById(R.id.locationData2)
 }
