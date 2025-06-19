@@ -11,7 +11,11 @@ import java.time.format.DateTimeFormatter
 @Entity
 (
         tableName   = "SolarTime",
-        indices     = [Index(value = ["SolarDate", "LocationId"], unique = true)],
+        indices     =
+        [
+            Index(value = ["SolarDate", "LocationId"], unique = true,  name = "UniqueDateAndLocation"),
+            Index(value = ["LocationId"],              unique = false, name = "SolarTimeLocationIndex")
+        ],
         foreignKeys =
         [
             ForeignKey

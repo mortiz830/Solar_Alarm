@@ -3,7 +3,6 @@ package com.example.solar_alarm.Data.Tables
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.*
-import com.example.solar_alarm.AlarmList.AlarmViewHolder
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
 import com.example.solar_alarm.SolarAlarmApp
@@ -14,7 +13,12 @@ import java.time.ZoneOffset
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Entity(
     tableName   = "SolarAlarm",
-    indices     = [Index(value = ["Name", "LocationId"], unique = true)],
+    indices     =
+    [
+        Index(value = ["Name", "LocationId"], unique = true,  name = "UniqueLocationName"),
+        Index(value = ["LocationId"],         unique = false, name = "SolarAlarmLocationIndex"),
+        Index(value = ["SolarTimeId"],        unique = false, name = "SolarTimeIndex")
+    ],
     foreignKeys =
     [
         ForeignKey
