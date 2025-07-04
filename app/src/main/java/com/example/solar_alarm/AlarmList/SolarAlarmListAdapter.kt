@@ -19,7 +19,7 @@ class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : Recycle
 
     override fun onBindViewHolder(solarAlarmViewHolder: SolarAlarmViewHolder, position: Int)
     {
-        val solarAlarm : SolarAlarm = solarAlarms[position]
+        val solarAlarm = solarAlarms[position]
 
         try
         {
