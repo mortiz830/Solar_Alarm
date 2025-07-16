@@ -1,8 +1,12 @@
 package com.example.solar_alarm.Data.Daos
 
-import androidx.lifecycle.LiveData
-import androidx.room.*
-import com.example.solar_alarm.Data.Tables.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import com.example.solar_alarm.Data.Tables.Location
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -11,8 +15,8 @@ interface LocationDao// : BaseDao<Location>
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(location: Location)
 
-    @Query("SELECT * FROM Location")
-    fun GetAll(): LiveData<List<Location>>
+    @Query("SELECT * FROM Location ORDER BY Name")
+    fun GetAll(): Flow<List<Location>>
 
     @Query("SELECT * FROM Location WHERE Id = :id")
     fun GetById(id: Int): Location

@@ -7,31 +7,32 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.CreateAlarm.CreateAlarmFragment
-import com.example.solar_alarm.Data.ViewModels.*
-import com.example.solar_alarm.Location.AddLocationFragment
+import com.example.solar_alarm.Data.ViewModels.LocationViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
+import com.example.solar_alarm.Location.LocationCreateFragment
 import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.GpsTracker
 import com.example.solar_alarm.databinding.FragmentListalarmsBinding
 import java.time.ZoneId
-import java.util.*
+import java.util.TimeZone
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AlarmListFragment constructor(locationViewModel: LocationViewModel, solarTimeViewModel: SolarTimeViewModel,
-                                    solarAlarmViewModel: SolarAlarmViewModel): Fragment(), OnToggleAlarmListener {
-
-    private var locationViewModel: LocationViewModel = locationViewModel
-    private val solarTimeViewModel: SolarTimeViewModel = solarTimeViewModel
-    private val solarAlarmViewModel: SolarAlarmViewModel = solarAlarmViewModel
-
-    private lateinit var binding: FragmentListalarmsBinding
+class SolarAlarmListFragment constructor(private var locationViewModel   : LocationViewModel,
+                                         private val solarTimeViewModel  : SolarTimeViewModel,
+                                         private val solarAlarmViewModel : SolarAlarmViewModel)
+    : Fragment(), OnToggleAlarmListener
+{
+    private lateinit var fragmentListalarmsBinding: FragmentListalarmsBinding
     private lateinit var solarAlarmListAdapter: SolarAlarmListAdapter
-    private lateinit var alarmListRecyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
 
     private var gpsTracker: GpsTracker? = null
     var latitude: TextView? = null
@@ -39,24 +40,24 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel, solarT
     private var zoneId: ZoneId? = null
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
     {
-        binding = FragmentListalarmsBinding.inflate(layoutInflater, container, false)
+        fragmentListalarmsBinding = FragmentListalarmsBinding.inflate(layoutInflater, container, false)
+        solarAlarmListAdapter     = SolarAlarmListAdapter(emptyList())
+        recyclerView              = fragmentListalarmsBinding.fragmentListalarmsRecylerView
 
-        solarAlarmListAdapter = SolarAlarmListAdapter(emptyList())
-        alarmListRecyclerView = binding.fragmentListalarmsRecylerView
-        alarmListRecyclerView.setLayoutManager(LinearLayoutManager(context))
-        alarmListRecyclerView.setAdapter(solarAlarmListAdapter)
+        recyclerView.setLayoutManager(LinearLayoutManager(context))
+        recyclerView.setAdapter(solarAlarmListAdapter)
 
         solarAlarmViewModel.AllSolarAlarms.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> solarAlarmListAdapter.UpdateSolarAlarms(solarAlarms)})
 
         zoneId = TimeZone.getDefault().toZoneId()
-        latitude = binding.fragmentListalarmsLatitude
-        longitude = binding.fragmentListalarmsLongitude
-        binding.addButton.setOnClickListener { showPopupMenu(it) }
-        GetLocation(binding.root)
+        latitude = fragmentListalarmsBinding.fragmentListalarmsLatitude
+        longitude = fragmentListalarmsBinding.fragmentListalarmsLongitude
+        fragmentListalarmsBinding.addButton.setOnClickListener { showPopupMenu(it) }
+        GetLocation(fragmentListalarmsBinding.root)
 
-        return binding.getRoot()
+        return fragmentListalarmsBinding.getRoot()
     }
 
 //    override fun onToggle(alarm: Alarm) {
@@ -102,7 +103,7 @@ class AlarmListFragment constructor(locationViewModel: LocationViewModel, solarT
         popup.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.action_option_create_location -> {
-                    replaceFragment(AddLocationFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
+                    replaceFragment(LocationCreateFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
                     //fab.hide()
                     true
                 }

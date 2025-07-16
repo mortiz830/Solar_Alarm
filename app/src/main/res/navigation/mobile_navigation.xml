@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/alarmsListFragment"
-        android:name="com.example.solar_alarm.AlarmList.AlarmListFragment"
+        android:name="com.example.solar_alarm.AlarmList.SolarAlarmListFragment"
         android:label="fragment_allalarms"
         tools:layout="@layout/fragment_listalarms" >
         <action
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/addLocationFragment"
-        android:name="com.example.solar_alarm.Location.AddLocationFragment"
+        android:name="com.example.solar_alarm.Location.LocationCreateFragment"
         android:label="AddLocationFragment" >
         <action
             android:id="@id/action_addLocationFragment_to_alarmsListFragment"

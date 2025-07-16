@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.solar_alarm.DisplayModels.SolarAlarmDisplayModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.solar_alarm.AlarmList.AlarmListFragment
 import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment

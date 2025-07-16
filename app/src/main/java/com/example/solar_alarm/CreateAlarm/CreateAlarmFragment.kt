@@ -11,11 +11,9 @@ import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.test.core.app.ApplicationProvider
 import com.example.solar_alarm.Activities.NavActivity
-import com.example.solar_alarm.AlarmList.AlarmListFragment
+import com.example.solar_alarm.AlarmList.SolarAlarmListFragment
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
 import com.example.solar_alarm.Data.Tables.*
@@ -29,7 +27,8 @@ import kotlin.system.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, solarTimeViewModel: SolarTimeViewModel,
-                                      solarAlarmViewModel: SolarAlarmViewModel): Fragment() {
+                                      solarAlarmViewModel: SolarAlarmViewModel): Fragment()
+{
     private lateinit var binding: FragmentCreatealarmBinding
     private var locationViewModel: LocationViewModel = locationViewModel
     private val solarTimeViewModel: SolarTimeViewModel = solarTimeViewModel
@@ -53,7 +52,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
         var locationStrings: List<String> = emptyList()
-        locationViewModel.All.observe(viewLifecycleOwner, Observer
+        locationViewModel.AllLocations.observe(viewLifecycleOwner, Observer
         {
             locations ->
             locationStrings = locationViewModel.getLocationStrings(locations)
@@ -64,7 +63,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
         binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
         binding.fragmentCreatealarmSettimeSpinner.adapter   = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
 
-        val solarTimes : /*solarTimeViewModel.AllSolarTimes.value as*/ ArrayList<SolarTime> = arrayListOf()
+        var solarTimes : ArrayList<SolarTime> = arrayListOf()
 
         setPickers()
         binding.fragmentCreatealarmLocationSpinner.onItemSelectedListener = object : OnItemSelectedListener
@@ -74,8 +73,10 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
             {
                 val locationString = locationStrings[locationPosition]
                 val locationSplit = locationString.split(",").toTypedArray()
-                var newSelectedLocation = locationViewModel.getById(locationSplit[0].toInt())
+                var newSelectedLocation = locationViewModel.getById(locationSplit[locationPosition].toInt())
                 var date = LocalDate.now()
+
+                solarTimes = arrayListOf()
 
                 if (newSelectedLocation != null)
                     for (i in 0..8)
@@ -155,7 +156,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
                 e.printStackTrace()
             }
 
-            (activity as NavActivity).replaceFragment(AlarmListFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
+            (activity as NavActivity).replaceFragment(SolarAlarmListFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
         }
 
         return binding.root

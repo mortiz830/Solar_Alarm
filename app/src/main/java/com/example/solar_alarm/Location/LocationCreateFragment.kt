@@ -7,17 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
-import butterknife.BindView
 import com.example.solar_alarm.Activities.NavActivity
-import com.example.solar_alarm.AlarmList.AlarmListFragment
+import com.example.solar_alarm.AlarmList.SolarAlarmListFragment
 import com.example.solar_alarm.Data.Tables.*
 import com.example.solar_alarm.Data.ViewModels.LocationViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
 import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.GpsTracker
 import com.example.solar_alarm.databinding.FragmentAddLocationBinding
@@ -31,24 +28,17 @@ import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
 import java.util.*
 import java.util.concurrent.TimeUnit
-import com.example.solar_alarm.Data.Tables.Location
-import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
-import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
-import com.example.solar_alarm.SolarAlarmApp
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.runBlocking
-import java.math.BigDecimal
-import java.math.RoundingMode
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AddLocationFragment constructor(location: LocationViewModel, solarTimeViewModel: SolarTimeViewModel,
-                                      solarAlarmViewModel: SolarAlarmViewModel): Fragment(), OnMapReadyCallback
+class LocationCreateFragment constructor(location: LocationViewModel, solarTimeViewModel: SolarTimeViewModel,
+                                         solarAlarmViewModel: SolarAlarmViewModel): Fragment(), OnMapReadyCallback
 {
     private var locationViewModel: LocationViewModel = location
     private val solarTimeViewModel: SolarTimeViewModel = solarTimeViewModel
@@ -86,7 +76,7 @@ class AddLocationFragment constructor(location: LocationViewModel, solarTimeView
             //var locationName: String = binding.fragmentAddLocationLocationNameText.text.toString()
             //var isLocationPointExists = locationViewModel.DoesLocationLatLongExists(latLng!!.latitude, latLng!!.longitude)
             saveLocation()
-            (activity as NavActivity).replaceFragment(AlarmListFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
+            (activity as NavActivity).replaceFragment(SolarAlarmListFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
         })
 
 //        addLocationButton!!.setOnClickListener { view ->
