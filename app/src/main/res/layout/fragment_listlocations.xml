@@ -11,10 +11,11 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fragment_listlocations_recylerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp"
+            android:layout_height="wrap_content"
             tools:layout_editor_absoluteX="16dp">
 
         </androidx.recyclerview.widget.RecyclerView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </LinearLayout>
