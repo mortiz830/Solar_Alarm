@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.Data.ViewModels.LocationViewModel
@@ -30,11 +29,9 @@ class LocationListFragment constructor(private var locationViewModel: LocationVi
         recyclerView.setLayoutManager(LinearLayoutManager(context))
         recyclerView.setAdapter(locationListAdapter)
 
-        locationViewModel.AllLocations.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> locationListAdapter.UpdateLocations(solarAlarms)})
-
         try
         {
-            locationViewModel.AllLocations.observe(viewLifecycleOwner, Observer { locations -> locationListAdapter.UpdateLocations(locations) })
+            locationViewModel.AllLocations.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> locationListAdapter.UpdateLocations(solarAlarms)})
         }
         catch (e: Exception)
         {
