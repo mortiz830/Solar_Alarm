@@ -12,7 +12,8 @@
             android:id="@+id/fragment_listlocations_recylerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="16dp">
+            tools:layout_editor_absoluteX="16dp"
+            >
 
         </androidx.recyclerview.widget.RecyclerView>
 
