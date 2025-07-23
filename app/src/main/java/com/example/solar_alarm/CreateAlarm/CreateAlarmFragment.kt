@@ -1,7 +1,6 @@
 package com.example.solar_alarm.CreateAlarm
 
 import android.database.sqlite.SQLiteConstraintException
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -35,7 +34,6 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
     private val solarAlarmViewModel: SolarAlarmViewModel = solarAlarmViewModel
 
     private var solarTimeRepository = SolarAlarmApp().solarTimeRepository
-    private var locationRepository = SolarAlarmApp().locationRepository
     private var solarAlarmRepository = SolarAlarmApp().solarAlarmRepository
 
     private var dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd-MMM-uuuu\nhh:mm a")
@@ -44,20 +42,16 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-
-        binding   = FragmentCreatealarmBinding.inflate(layoutInflater)
-
+        binding = FragmentCreatealarmBinding.inflate(layoutInflater)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        var locationStrings: List<String> = emptyList()
         locationViewModel.AllLocations.observe(viewLifecycleOwner, Observer
         {
             locations ->
-            locationStrings = locationViewModel.getLocationStrings(locations)
-            val namesList: List<String> = locationStrings.map { stringToLocation(it).Name }
-            binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, namesList)
+            val namesList = locationViewModel.AllLocations.value.orEmpty().map { it.Name }
+            binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, namesList )
         })
 
         binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
@@ -71,9 +65,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
             @RequiresApi(api = Build.VERSION_CODES.O)
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, locationPosition: Int, l: Long)
             {
-                val locationString = locationStrings[locationPosition]
-                val locationSplit = locationString.split(",").toTypedArray()
-                var newSelectedLocation = locationViewModel.getById(locationSplit[locationPosition].toInt())
+                val newSelectedLocation = locationViewModel.AllLocations.value.orEmpty()[locationPosition]
                 var date = LocalDate.now()
 
                 solarTimes = arrayListOf()
@@ -190,22 +182,22 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
 //        return solarTime
 //    }
 
-    @Throws(Exception::class)
-    fun getLocationIdDatePareExists(locationItem: Location?, date: LocalDate?): Boolean {
-        return try {
-            LocationIdDatePairExistsTask().execute(locationItem, date).get()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw e
-        }
-    }
+//    @Throws(Exception::class)
+//    fun getLocationIdDatePareExists(locationItem: Location?, date: LocalDate?): Boolean {
+//        return try {
+//            LocationIdDatePairExistsTask().execute(locationItem, date).get()
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            throw e
+//        }
+//    }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Throws(Exception::class)
-    fun getSolarAlarmNameLocationIdPairExists(solarAlarm: SolarAlarm): Boolean
-    {
-        return solarAlarmRepository.isSolarAlarmNameLocationIDExists(solarAlarm)
-    }
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    @Throws(Exception::class)
+//    fun getSolarAlarmNameLocationIdPairExists(solarAlarm: SolarAlarm): Boolean
+//    {
+//        return solarAlarmRepository.isSolarAlarmNameLocationIDExists(solarAlarm)
+//    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Throws(Exception::class)
@@ -296,21 +288,21 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
 //        }
 //    }
 
-    inner class LocationIdDatePairExistsTask : AsyncTask<Any?, Void?, Boolean>() {
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        protected override fun doInBackground(vararg p0: Any?): Boolean? {
-            val location = p0[0] as Location
-            val localDate = p0[1] as LocalDate
-            var result = false
-            try {
-                result = solarTimeRepository.doesLocationIdDatePairExists(location.Id, localDate)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(context, "Location / Date Pair exists!", Toast.LENGTH_LONG).show()
-            }
-            return result
-        }
-    }
+//    inner class LocationIdDatePairExistsTask : AsyncTask<Any?, Void?, Boolean>() {
+//        @RequiresApi(api = Build.VERSION_CODES.O)
+//        protected override fun doInBackground(vararg p0: Any?): Boolean? {
+//            val location = p0[0] as Location
+//            val localDate = p0[1] as LocalDate
+//            var result = false
+//            try {
+//                result = solarTimeRepository.doesLocationIdDatePairExists(location.Id, localDate)
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//                Toast.makeText(context, "Location / Date Pair exists!", Toast.LENGTH_LONG).show()
+//            }
+//            return result
+//        }
+//    }
 
 //    inner class GetSolarTimeTask : AsyncTask<Any?, Void?, SolarTime?>() {
 //        @RequiresApi(api = Build.VERSION_CODES.O)
@@ -337,17 +329,18 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
         }
     }
 */
-    fun stringToLocation(locationString: String): Location {
-        val values = locationString.split(",") // Split the string using comma as a delimiter
+//    fun stringToLocation(locationString: String): Location {
+//        val values = locationString.split(",") // Split the string using comma as a delimiter
+//
+//        // Assuming the order is: Id, Name, Latitude, Longitude, CreateDateTimeUtc
+//        return Location(
+//            Id = values[0].toInt(),
+//            Name = values[1],
+//            Latitude = values[2].toDouble(),
+//            Longitude = values[3].toDouble(),
+//        )
+//    }
 
-        // Assuming the order is: Id, Name, Latitude, Longitude, CreateDateTimeUtc
-        return Location(
-            Id = values[0].toInt(),
-            Name = values[1],
-            Latitude = values[2].toDouble(),
-            Longitude = values[3].toDouble(),
-        )
-    }
     fun setPickers() {
         binding.fragmentCreatealarmSetHours.minValue = 0
         binding.fragmentCreatealarmSetHours.maxValue = 23
