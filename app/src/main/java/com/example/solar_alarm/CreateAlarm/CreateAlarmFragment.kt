@@ -20,7 +20,6 @@ import com.example.solar_alarm.Data.ViewModels.*
 import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
 import kotlinx.coroutines.*
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.system.*
 
@@ -33,7 +32,6 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
     private val solarTimeViewModel: SolarTimeViewModel = solarTimeViewModel
     private val solarAlarmViewModel: SolarAlarmViewModel = solarAlarmViewModel
 
-    private var solarTimeRepository = SolarAlarmApp().solarTimeRepository
     private var solarAlarmRepository = SolarAlarmApp().solarAlarmRepository
 
     private var dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd-MMM-uuuu\nhh:mm a")
@@ -66,33 +64,8 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, locationPosition: Int, l: Long)
             {
                 val newSelectedLocation = locationViewModel.AllLocations.value.orEmpty()[locationPosition]
-                var date = LocalDate.now()
+                solarTimes              = newSelectedLocation.solarTimes
 
-                solarTimes = arrayListOf()
-
-                if (newSelectedLocation != null)
-                    for (i in 0..8)
-                    {
-                        try
-                        {
-                            runBlocking {
-                                var solarTime = solarTimeRepository.getSolarTime(newSelectedLocation, date)
-
-                                if (solarTime != null)
-                                {
-                                    solarTimes.add(solarTime)
-                                }
-                            }
-
-                            date = date.plusDays(1)
-                        }
-                        catch (e: Exception)
-                        {
-                            e.printStackTrace()
-                            Toast.makeText(context, "Solar Time exists!", Toast.LENGTH_LONG).show()
-                            //throw e
-                        }
-                    }
                 try
                 {
                     binding.fragmentCreatealarmSunriseData.text   = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(dateTimeFormatter)
@@ -141,7 +114,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
 
             try
             {
-                this.scheduleAlarm(solarTimes[0], offsetTypeEnum, solarTimeTypeItem)
+                this.ScheduleAlarm(solarTimes[0], offsetTypeEnum, solarTimeTypeItem)
             }
             catch (e: Exception)
             {
@@ -201,7 +174,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Throws(Exception::class)
-    private fun scheduleAlarm(solarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum)
+    private fun ScheduleAlarm(solarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum)
     {
         val solarAlarmItem = SolarAlarm(true,
                                         binding.fragmentCreatealarmTitle.text.toString(),
