@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.CreateAlarm.CreateAlarmFragment
-import com.example.solar_alarm.Data.ViewModels.LocationViewModel
+import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
 import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
 import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
 import com.example.solar_alarm.Location.LocationCreateFragment
@@ -25,7 +25,7 @@ import java.time.ZoneId
 import java.util.TimeZone
 
 @RequiresApi(Build.VERSION_CODES.O)
-class SolarAlarmListFragment constructor(private var locationViewModel   : LocationViewModel,
+class SolarAlarmListFragment constructor(private var locationListViewModel   : LocationListViewModel,
                                          private val solarTimeViewModel  : SolarTimeViewModel,
                                          private val solarAlarmViewModel : SolarAlarmViewModel)
     : Fragment(), OnToggleAlarmListener
@@ -103,12 +103,12 @@ class SolarAlarmListFragment constructor(private var locationViewModel   : Locat
         popup.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.action_option_create_location -> {
-                    replaceFragment(LocationCreateFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
+                    replaceFragment(LocationCreateFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
                     //fab.hide()
                     true
                 }
                 R.id.action_option_create_alarm -> {
-                    replaceFragment(CreateAlarmFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
+                    replaceFragment(CreateAlarmFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
                     //fab.hide()
                     true
                 }

@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.example.solar_alarm.Data.ViewModels.LocationViewModel
+import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
 import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
 import com.example.solar_alarm.R
 import com.example.solar_alarm.SolarAlarmApp
@@ -14,7 +14,7 @@ import com.example.solar_alarm.SolarAlarmApp
 @RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity()
 {
-    private val locationViewModel: LocationViewModel by viewModels {
+    private val locationListViewModel: LocationListViewModel by viewModels {
         LocationViewModelFactory((application as SolarAlarmApp).locationRepository)
     }
     override fun onCreate(savedInstanceState: Bundle?) {

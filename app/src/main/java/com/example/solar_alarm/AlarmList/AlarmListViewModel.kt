@@ -2,23 +2,18 @@ package com.example.solar_alarm.AlarmList
 
 
 import android.os.Build
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.example.solar_alarm.Data.AlarmDisplayData
-import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository
-import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
-import com.example.solar_alarm.Data.SolarAlarmDatabase
-import com.example.solar_alarm.Data.Tables.*
-import com.example.solar_alarm.Data.ViewModels.LocationViewModel
-import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
+import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
 import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
 import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
 import com.example.solar_alarm.SolarAlarmApp
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-class AlarmListViewModel(solarAlarmApp: SolarAlarmApp, locationViewModel: LocationViewModel, solarTimeViewModel: SolarTimeViewModel,
+class AlarmListViewModel(solarAlarmApp: SolarAlarmApp, locationListViewModel: LocationListViewModel, solarTimeViewModel: SolarTimeViewModel,
                          solarAlarmViewModel: SolarAlarmViewModel) : AndroidViewModel(solarAlarmApp)
 {
     //private val locationViewModel: LocationViewModel by viewModels { LocationViewModelFactory(solarAlarmApp.locationRepository) }

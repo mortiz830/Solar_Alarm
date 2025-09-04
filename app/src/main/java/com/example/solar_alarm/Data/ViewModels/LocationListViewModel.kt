@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-class LocationViewModel(private val repository: LocationRepository) : ViewModel()
+class LocationListViewModel(private val repository: LocationRepository) : ViewModel()
 {
     val AllLocations: LiveData<List<Location>> = repository.all.asLiveData()
 
@@ -44,10 +44,10 @@ class LocationViewModelFactory(private val repository: LocationRepository) : Vie
 {
     override fun <T : ViewModel> create(modelClass: Class<T>): T
     {
-        if (modelClass.isAssignableFrom(LocationViewModel::class.java))
+        if (modelClass.isAssignableFrom(LocationListViewModel::class.java))
         {
             @Suppress("UNCHECKED_CAST")
-            return LocationViewModel(repository) as T
+            return LocationListViewModel(repository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class")

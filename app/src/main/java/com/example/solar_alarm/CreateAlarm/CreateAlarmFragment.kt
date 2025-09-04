@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -15,20 +17,24 @@ import com.example.solar_alarm.Activities.NavActivity
 import com.example.solar_alarm.AlarmList.SolarAlarmListFragment
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
-import com.example.solar_alarm.Data.Tables.*
-import com.example.solar_alarm.Data.ViewModels.*
+import com.example.solar_alarm.Data.Tables.Location
+import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.Data.Tables.SolarTime
+import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
 import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
-import kotlinx.coroutines.*
+import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import kotlin.system.*
 
 @RequiresApi(Build.VERSION_CODES.O)
-class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, solarTimeViewModel: SolarTimeViewModel,
+class CreateAlarmFragment constructor(locationListViewModel: LocationListViewModel, solarTimeViewModel: SolarTimeViewModel,
                                       solarAlarmViewModel: SolarAlarmViewModel): Fragment()
 {
     private lateinit var binding: FragmentCreatealarmBinding
-    private var locationViewModel: LocationViewModel = locationViewModel
+    private var locationListViewModel: LocationListViewModel = locationListViewModel
     private val solarTimeViewModel: SolarTimeViewModel = solarTimeViewModel
     private val solarAlarmViewModel: SolarAlarmViewModel = solarAlarmViewModel
 
@@ -43,12 +49,43 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
         binding = FragmentCreatealarmBinding.inflate(layoutInflater)
     }
 
+    fun Location.GetSolarTimes() : ArrayList<SolarTime>
+    {
+        val solarTimes : ArrayList<SolarTime> = arrayListOf()
+        var date                              = LocalDate.now()
+        val thisLocation = this
+
+        for (i in 1..7)
+        {
+            try
+            {
+                runBlocking {
+                    val solarTime = SolarAlarmApp().solarTimeRepository.getSolarTime(thisLocation, date)
+
+                    if (solarTime != null)
+                    {
+                        solarTimes.add(solarTime)
+                    }
+                }
+
+                date = date.plusDays(1)
+            }
+            catch (e: Exception)
+            {
+                e.printStackTrace()
+                throw e
+            }
+        }
+
+        return solarTimes
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        locationViewModel.AllLocations.observe(viewLifecycleOwner, Observer
+        locationListViewModel.AllLocations.observe(viewLifecycleOwner, Observer
         {
             locations ->
-            val namesList = locationViewModel.AllLocations.value.orEmpty().map { it.Name }
+            val namesList = locationListViewModel.AllLocations.value.orEmpty().map { it.Name }
             binding.fragmentCreatealarmLocationSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, namesList )
         })
 
@@ -63,8 +100,8 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
             @RequiresApi(api = Build.VERSION_CODES.O)
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, locationPosition: Int, l: Long)
             {
-                val newSelectedLocation = locationViewModel.AllLocations.value.orEmpty()[locationPosition]
-                solarTimes              = newSelectedLocation.solarTimes
+                val newSelectedLocation = locationListViewModel.AllLocations.value.orEmpty()[locationPosition]
+                solarTimes              = newSelectedLocation.GetSolarTimes()
 
                 try
                 {
@@ -121,7 +158,7 @@ class CreateAlarmFragment constructor(locationViewModel: LocationViewModel, sola
                 e.printStackTrace()
             }
 
-            (activity as NavActivity).replaceFragment(SolarAlarmListFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
+            (activity as NavActivity).replaceFragment(SolarAlarmListFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
         }
 
         return binding.root

@@ -6,13 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.solar_alarm.Activities.NavActivity
 import com.example.solar_alarm.AlarmList.SolarAlarmListFragment
-import com.example.solar_alarm.Data.Tables.*
-import com.example.solar_alarm.Data.ViewModels.LocationViewModel
+import com.example.solar_alarm.Data.Tables.Location
+import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
 import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
 import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
 import com.example.solar_alarm.R
@@ -33,14 +33,14 @@ import java.math.RoundingMode
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
-import java.util.*
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 @RequiresApi(Build.VERSION_CODES.O)
-class LocationCreateFragment constructor(location: LocationViewModel, solarTimeViewModel: SolarTimeViewModel,
+class LocationCreateFragment constructor(locationListViewModel: LocationListViewModel, solarTimeViewModel: SolarTimeViewModel,
                                          solarAlarmViewModel: SolarAlarmViewModel): Fragment(), OnMapReadyCallback
 {
-    private var locationViewModel: LocationViewModel = location
+    private var locationListViewModel : LocationListViewModel = locationListViewModel
     private val solarTimeViewModel: SolarTimeViewModel = solarTimeViewModel
     private val solarAlarmViewModel: SolarAlarmViewModel = solarAlarmViewModel
     private lateinit var binding: FragmentAddLocationBinding
@@ -76,7 +76,7 @@ class LocationCreateFragment constructor(location: LocationViewModel, solarTimeV
             //var locationName: String = binding.fragmentAddLocationLocationNameText.text.toString()
             //var isLocationPointExists = locationViewModel.DoesLocationLatLongExists(latLng!!.latitude, latLng!!.longitude)
             saveLocation()
-            (activity as NavActivity).replaceFragment(SolarAlarmListFragment(locationViewModel, solarTimeViewModel, solarAlarmViewModel))
+            (activity as NavActivity).replaceFragment(SolarAlarmListFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
         })
 
 //        addLocationButton!!.setOnClickListener { view ->
@@ -149,8 +149,8 @@ class LocationCreateFragment constructor(location: LocationViewModel, solarTimeV
                                 BigDecimal(binding.fragmentAddLocationLatitude.text.toString()).setScale(newScale, RoundingMode.HALF_UP).toDouble(),
                                 BigDecimal(binding.fragmentAddLocationLongitude.text.toString()).setScale(newScale, RoundingMode.HALF_UP).toDouble())
 
-        locationViewModel.Insert(location)
-        val locationNew = locationViewModel.getByName(location.Name)
+        locationListViewModel.Insert(location)
+        val locationNew = locationListViewModel.getByName(location.Name)
         if (locationNew != null) {
             Toast.makeText(context, "New Location ${locationNew.Id} ${locationNew.Name} Created", Toast.LENGTH_LONG).show()
         }

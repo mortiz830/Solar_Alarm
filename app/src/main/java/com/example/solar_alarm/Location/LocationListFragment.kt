@@ -10,11 +10,11 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.solar_alarm.Data.ViewModels.LocationViewModel
+import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
 import com.example.solar_alarm.databinding.FragmentListlocationsBinding
 
 @RequiresApi(Build.VERSION_CODES.O)
-class LocationListFragment constructor(private var locationViewModel: LocationViewModel) : Fragment()
+class LocationListFragment constructor(private var locationListViewModel: LocationListViewModel) : Fragment()
 {
     private lateinit var fragmentListlocationsBinding : FragmentListlocationsBinding
     private lateinit var locationListAdapter          : LocationListAdapter
@@ -31,7 +31,7 @@ class LocationListFragment constructor(private var locationViewModel: LocationVi
 
         try
         {
-            locationViewModel.AllLocations.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> locationListAdapter.UpdateLocations(solarAlarms)})
+            locationListViewModel.AllLocations.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> locationListAdapter.UpdateLocations(solarAlarms)})
         }
         catch (e: Exception)
         {
