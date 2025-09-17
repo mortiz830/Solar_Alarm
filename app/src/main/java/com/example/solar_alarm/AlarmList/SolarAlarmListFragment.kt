@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,8 +34,6 @@ class SolarAlarmListFragment constructor(private var locationListViewModel   : L
     private lateinit var recyclerView: RecyclerView
 
     private var gpsTracker: GpsTracker? = null
-    var latitude: TextView? = null
-    var longitude: TextView? = null
     private var zoneId: ZoneId? = null
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -52,8 +49,6 @@ class SolarAlarmListFragment constructor(private var locationListViewModel   : L
         solarAlarmViewModel.AllSolarAlarms.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> solarAlarmListAdapter.UpdateSolarAlarms(solarAlarms)})
 
         zoneId = TimeZone.getDefault().toZoneId()
-        latitude = fragmentListalarmsBinding.fragmentListalarmsLatitude
-        longitude = fragmentListalarmsBinding.fragmentListalarmsLongitude
         fragmentListalarmsBinding.addButton.setOnClickListener { showPopupMenu(it) }
         GetLocation(fragmentListalarmsBinding.root)
 
@@ -74,14 +69,7 @@ class SolarAlarmListFragment constructor(private var locationListViewModel   : L
     {
         gpsTracker = GpsTracker(view.context)
 
-        if (gpsTracker!!.canGetLocation())
-        {
-            val lat = gpsTracker!!.latitude
-            val lon = gpsTracker!!.longitude
-            latitude!!.text = lat.toString()
-            longitude!!.text = lon.toString()
-        }
-        else
+        if (!gpsTracker!!.canGetLocation())
         {
             gpsTracker!!.showSettingsAlert()
         }
