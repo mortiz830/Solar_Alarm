@@ -52,6 +52,9 @@ class NavActivity : AppCompatActivity()
                 R.id.navigation_home         -> replaceFragment(SolarAlarmListFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
                 R.id.navigation_location     -> replaceFragment(LocationListFragment(locationListViewModel))//replaceFragment(AddLocationFragment(locationViewModel))
                 R.id.navigation_create_alarm -> replaceFragment(CreateAlarmFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
+
+                // NEED TO CHANGE ICON AND ADD NEW SCREE FOR SOLAR TIMES
+                R.id.navigation_solar_times -> replaceFragment(CreateAlarmFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
                 else -> { }
             }
             true
