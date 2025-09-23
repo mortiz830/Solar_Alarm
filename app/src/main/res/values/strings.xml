@@ -20,4 +20,6 @@
     <string name="title_location">Location</string>
     <string name="title_create_alarm">Create Alarm</string>
     <string name="title_solar_time">Solar Times</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

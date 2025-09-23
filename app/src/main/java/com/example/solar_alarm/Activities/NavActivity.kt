@@ -20,6 +20,7 @@ import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModelFactory
 import com.example.solar_alarm.Location.LocationListFragment
 import com.example.solar_alarm.R
 import com.example.solar_alarm.SolarAlarmApp
+import com.example.solar_alarm.SolarTime.SolarTimeFragment
 import com.example.solar_alarm.databinding.ActivityBottomNavigationBinding
 
 
@@ -54,7 +55,7 @@ class NavActivity : AppCompatActivity()
                 R.id.navigation_create_alarm -> replaceFragment(CreateAlarmFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
 
                 // NEED TO CHANGE ICON AND ADD NEW SCREE FOR SOLAR TIMES
-                R.id.navigation_solar_times -> replaceFragment(CreateAlarmFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
+                R.id.navigation_solar_times -> replaceFragment(SolarTimeFragment(solarTimeViewModel))
                 else -> { }
             }
             true
