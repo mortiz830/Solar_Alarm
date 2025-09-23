@@ -29,3 +29,9 @@ data class Location
     @ColumnInfo(name = "Longitude")         val Longitude         : Double,
     @ColumnInfo(name = "CreateDateTimeUtc") val CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
 )
+{
+    init
+    {
+        require(Name.isNotBlank()) { "Location name cannot be empty or consist only of whitespace." }
+    }
+}

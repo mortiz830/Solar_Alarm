@@ -2,7 +2,11 @@ package com.example.solar_alarm.Data.Tables
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
 import com.example.solar_alarm.SolarAlarmApp
@@ -65,6 +69,11 @@ data class SolarAlarm
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "Id")                var Id                : Int = 0
     @ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
+
+    init
+    {
+        require(Name.isNotBlank()) { "SolarAlarm name cannot be empty or consist only of whitespace." }
+    }
 
     val solarTime : SolarTime
         get() {
