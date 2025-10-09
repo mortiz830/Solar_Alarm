@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-parcelize'
 
 android {
     compileSdk 35
@@ -27,7 +28,6 @@ android {
         jvmTarget = "1.8"
     }
 }
-
 
 dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
