@@ -1,10 +1,20 @@
 package com.example.solar_alarm.Data.Tables
-
 import android.os.Build
+import android.os.Parcelable
 import androidx.annotation.RequiresApi
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
-import java.time.*
+import kotlinx.parcelize.Parcelize
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -28,6 +38,7 @@ import java.time.format.DateTimeFormatter
         ]
 )
 
+@Parcelize
 data class SolarTime
 (
     @ColumnInfo(name = "SolarDate")                    val SolarDate: LocalDate,
@@ -42,7 +53,7 @@ data class SolarTime
     @ColumnInfo(name = "NauticalTwilightEndUtc")       val NauticalTwilightEndUtc: String?,
     @ColumnInfo(name = "AstronomicalTwilightBeginUtc") val AstronomicalTwilightBeginUtc: String?,
     @ColumnInfo(name = "AstronomicalTwilightEndUtc")   val AstronomicalTwilightEndUtc: String?
-)
+) : Parcelable
 {
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "Id") var Id : Int = 0
     @ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)

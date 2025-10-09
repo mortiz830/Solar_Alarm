@@ -1,20 +1,18 @@
 package com.example.solar_alarm.CreateAlarm
 
-import android.content.Intent
-import androidx.annotation.RequiresApi
-import android.os.Build
-import com.example.solar_alarm.Data.Tables.SolarAlarm
-import com.example.solar_alarm.Data.Tables.SolarTime
-import kotlin.Throws
-import android.widget.Toast
-import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver
-import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
-import java.lang.Exception
+import android.content.Intent
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver
+import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
+import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.Data.Tables.SolarTime
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
 class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: SolarTime, private val hours: Int, private val mins: Int)
@@ -37,6 +35,8 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
         intent.putExtra(AlarmBroadcastReceiver.SATURDAY,  solarAlarm.Saturday)
         intent.putExtra(AlarmBroadcastReceiver.SUNDAY,    solarAlarm.Sunday)
         intent.putExtra(AlarmBroadcastReceiver.TITLE,     solarAlarm.Name)
+
+        intent.putExtra("SolarAlarm", solarAlarm)
 
         return intent
     }

@@ -1,6 +1,7 @@
 package com.example.solar_alarm.Data.Tables
 
 import android.os.Build
+import android.os.Parcelable
 import androidx.annotation.RequiresApi
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -11,6 +12,7 @@ import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
 import com.example.solar_alarm.SolarAlarmApp
 import kotlinx.coroutines.runBlocking
+import kotlinx.parcelize.Parcelize
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
@@ -43,6 +45,7 @@ import java.time.ZoneOffset
     ]
 )
 
+@Parcelize
 data class SolarAlarm
 (
     @ColumnInfo(name = "Active") var Active : Boolean,
@@ -64,7 +67,7 @@ data class SolarAlarm
 
     @ColumnInfo(name = "OffsetTypeId")    var OffsetTypeId:    OffsetTypeEnum,
     @ColumnInfo(name = "SolarTimeTypeId") var SolarTimeTypeId: SolarTimeTypeEnum
-)
+) : Parcelable
 {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "Id")                var Id                : Int = 0

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import com.example.solar_alarm.Data.Tables.SolarAlarm
 import com.example.solar_alarm.Service.AlarmService
 import com.example.solar_alarm.Service.RescheduleAlarmService
 import java.util.Calendar
@@ -55,6 +56,18 @@ class AlarmBroadcastReceiver : BroadcastReceiver()
         val today = calendar[Calendar.DAY_OF_WEEK]
 
         val dd = intent.getBooleanExtra(WEDNESDAY, false)
+
+
+        // RETURNS NULL DEBUG!!!!
+        val solarAlarm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        {
+            intent.getParcelableExtra("SolarAlarm", SolarAlarm::class.java)
+        }
+        else
+        {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra<SolarAlarm>("SolarAlarm")
+        }
 
         when (today)
         {
