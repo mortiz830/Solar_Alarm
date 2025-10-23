@@ -1,21 +1,30 @@
 package com.example.solar_alarm.Service
 
-import com.example.solar_alarm.R
-import android.content.Intent
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_MUTABLE
+import android.app.Service
 import android.content.Context
-import com.example.solar_alarm.Application.App
-import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Build
-import android.os.Vibrator
-import com.example.solar_alarm.Activities.RingActivity
-import androidx.core.app.NotificationCompat
 import android.os.IBinder
+import android.os.Vibrator
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+import com.example.solar_alarm.Activities.RingActivity
+import com.example.solar_alarm.Application.App
 import com.example.solar_alarm.Application.App.Companion.CHANNEL_ID
+import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver
+import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.R
 
-class AlarmService : Service() {
+class AlarmService : Service()
+{
+    private lateinit var solarAlarm: SolarAlarm
     private var mediaPlayer: MediaPlayer? = null
     private var vibrator: Vibrator? = null
 
@@ -24,17 +33,19 @@ class AlarmService : Service() {
         createNotificationChannel()
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        return try{
-        val notificationIntent = Intent(this, RingActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
-        val alarmTitle = String.format("%s Alarm", intent.getStringExtra(AlarmBroadcastReceiver.Companion.TITLE))
-        val notification: Notification = NotificationCompat.Builder(this, App.Companion.CHANNEL_ID)
-                .setContentTitle(alarmTitle)
-                .setContentText("Ring Ring .. Ring Ring")
-                .setSmallIcon(R.drawable.ic_alarm_black_24dp)
-                .setContentIntent(pendingIntent)
-                .build()
+        return try
+        {
+            val notificationIntent = Intent(this, RingActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, FLAG_MUTABLE)
+            solarAlarm = AlarmBroadcastReceiver.Companion.GetSolarAlarmFromIntent(intent)
+            val notification : Notification = NotificationCompat.Builder(this, App.Companion.CHANNEL_ID)
+                                                                .setContentTitle(solarAlarm.Name)
+                                                                .setContentText("Ring Ring .. Ring Ring")
+                                                                .setSmallIcon(R.drawable.ic_alarm_black_24dp)
+                                                                .setContentIntent(pendingIntent)
+                                                                .build()
 
         startForeground(1, notification)
 

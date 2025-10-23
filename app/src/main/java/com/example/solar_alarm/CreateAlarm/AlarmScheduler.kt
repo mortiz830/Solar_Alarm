@@ -26,16 +26,6 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
     {
         val intent = Intent(context, AlarmBroadcastReceiver::class.java)
 
-        intent.putExtra(AlarmBroadcastReceiver.RECURRING, solarAlarm.Recurring)
-        intent.putExtra(AlarmBroadcastReceiver.MONDAY,    solarAlarm.Monday)
-        intent.putExtra(AlarmBroadcastReceiver.TUESDAY,   solarAlarm.Tuesday)
-        intent.putExtra(AlarmBroadcastReceiver.WEDNESDAY, solarAlarm.Wednesday)
-        intent.putExtra(AlarmBroadcastReceiver.THURSDAY,  solarAlarm.Thursday)
-        intent.putExtra(AlarmBroadcastReceiver.FRIDAY,    solarAlarm.Friday)
-        intent.putExtra(AlarmBroadcastReceiver.SATURDAY,  solarAlarm.Saturday)
-        intent.putExtra(AlarmBroadcastReceiver.SUNDAY,    solarAlarm.Sunday)
-        intent.putExtra(AlarmBroadcastReceiver.TITLE,     solarAlarm.Name)
-
         intent.putExtra("SolarAlarm", solarAlarm)
 
         return intent
@@ -122,7 +112,7 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
 
             try
             {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             }
             catch (exception: Exception)
             {

@@ -6,17 +6,23 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.example.solar_alarm.Data.Tables.SolarAlarm
 import com.example.solar_alarm.Service.AlarmService
 import com.example.solar_alarm.Service.RescheduleAlarmService
 import java.util.Calendar
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 class AlarmBroadcastReceiver : BroadcastReceiver()
 {
+    private lateinit var solarAlarm: SolarAlarm
+
     override fun onReceive(context: Context, intent: Intent)
     {
         try
         {
+            solarAlarm = GetSolarAlarmFromIntent(intent)
+
             if (Intent.ACTION_BOOT_COMPLETED == intent.action)
             {
                 val toastText = String.format("Alarm Reboot")
@@ -28,7 +34,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver()
                 val toastText = String.format("Alarm Received")
                 Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
 
-                if (!intent.getBooleanExtra(RECURRING, false))
+                if (!solarAlarm.Recurring)
                 {
                     startAlarmService(context, intent)
                 }
@@ -47,75 +53,31 @@ class AlarmBroadcastReceiver : BroadcastReceiver()
         }
     }
 
-    private fun alarmIsToday(intent: Intent): Boolean {
+    private fun alarmIsToday(intent: Intent): Boolean
+    {
         var alarmIsToday = false
         val calendar = Calendar.getInstance()
-
         calendar.timeInMillis = System.currentTimeMillis()
-
         val today = calendar[Calendar.DAY_OF_WEEK]
 
-        val dd = intent.getBooleanExtra(WEDNESDAY, false)
-
-
-        // RETURNS NULL DEBUG!!!!
-        val solarAlarm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        if (solarAlarm.Active)
         {
-            intent.getParcelableExtra("SolarAlarm", SolarAlarm::class.java)
-        }
-        else
-        {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra<SolarAlarm>("SolarAlarm")
-        }
-
-        when (today)
-        {
-            Calendar.MONDAY ->
+            if (solarAlarm.Recurring)
             {
-                if (intent.getBooleanExtra(MONDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(TUESDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(WEDNESDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(THURSDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(FRIDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(SATURDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(SUNDAY, false)) alarmIsToday = true
-            }
-            Calendar.TUESDAY -> {
-                if (intent.getBooleanExtra(TUESDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(WEDNESDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(THURSDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(FRIDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(SATURDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(SUNDAY, false)) alarmIsToday = true
-            }
-            Calendar.WEDNESDAY -> {
-                if (intent.getBooleanExtra(WEDNESDAY, false))
+                when (today)
                 {
-                    alarmIsToday = true
+                    Calendar.MONDAY    -> alarmIsToday = solarAlarm.Monday
+                    Calendar.TUESDAY   -> alarmIsToday = solarAlarm.Tuesday
+                    Calendar.WEDNESDAY -> alarmIsToday = solarAlarm.Wednesday
+                    Calendar.THURSDAY  -> alarmIsToday = solarAlarm.Thursday
+                    Calendar.FRIDAY    -> alarmIsToday = solarAlarm.Friday
+                    Calendar.SATURDAY  -> alarmIsToday = solarAlarm.Saturday
+                    Calendar.SUNDAY    -> alarmIsToday = solarAlarm.Sunday
+                    else               -> alarmIsToday = false
                 }
-                if (intent.getBooleanExtra(THURSDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(FRIDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(SATURDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(SUNDAY, false)) alarmIsToday = true
             }
-            Calendar.THURSDAY -> {
-                if (intent.getBooleanExtra(THURSDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(FRIDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(SATURDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(SUNDAY, false)) alarmIsToday = true
-            }
-            Calendar.FRIDAY -> {
-                if (intent.getBooleanExtra(FRIDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(SATURDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(SUNDAY, false)) alarmIsToday = true
-            }
-            Calendar.SATURDAY -> {
-                if (intent.getBooleanExtra(SATURDAY, false)) alarmIsToday = true
-                if (intent.getBooleanExtra(SUNDAY, false)) alarmIsToday = true
-            }
-            Calendar.SUNDAY -> if (intent.getBooleanExtra(SUNDAY, false)) alarmIsToday = true
         }
+
         return alarmIsToday
     }
 
@@ -123,7 +85,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver()
     {
         val intentService = Intent(context, AlarmService::class.java)
 
-        intentService.putExtra(TITLE, intent.getStringExtra(TITLE))
+        intentService.putExtra("TITLE", solarAlarm.Name)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
@@ -150,15 +112,38 @@ class AlarmBroadcastReceiver : BroadcastReceiver()
         }
     }
 
-    companion object {
-        const val MONDAY = "MONDAY"
-        const val TUESDAY = "TUESDAY"
-        const val WEDNESDAY = "WEDNESDAY"
-        const val THURSDAY = "THURSDAY"
-        const val FRIDAY = "FRIDAY"
-        const val SATURDAY = "SATURDAY"
-        const val SUNDAY = "SUNDAY"
-        const val RECURRING = "RECURRING"
-        const val TITLE = "TITLE"
+    companion object
+    {
+        fun GetSolarAlarmFromIntent(intent: Intent) : SolarAlarm
+        {
+            try
+            {
+                val solarAlarm = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU)
+                {
+                    intent.getParcelableExtra("SolarAlarm", SolarAlarm::class.java)
+                }
+                else
+                {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra("SolarAlarm")
+                }
+
+                if (solarAlarm != null)
+                {
+                    Log.d("AlarmBroadcastReceiver", "solarAlarm is not null")
+                }
+                else
+                {
+                    Log.d("AlarmBroadcastReceiver", "solarAlarm is null")
+                    throw NullPointerException()
+                }
+
+                return solarAlarm
+            }
+            catch (e: Exception)
+            {
+                throw e
+            }
+        }
     }
 }
