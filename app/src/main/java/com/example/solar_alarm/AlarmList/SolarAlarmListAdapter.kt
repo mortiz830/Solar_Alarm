@@ -7,6 +7,8 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.Data.Tables.SolarAlarm
 import com.example.solar_alarm.R
+import java.time.DayOfWeek
+import java.time.Month
 
 @RequiresApi(Build.VERSION_CODES.O)
 class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : RecyclerView.Adapter<SolarAlarmViewHolder>()
@@ -28,13 +30,48 @@ class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : Recycle
             val zonedDateTime = solarAlarm.solarTime.GetLocalZonedDateTime(solarAlarm.SolarTimeTypeId)
             val hour          = if (zonedDateTime.hour > 12)  zonedDateTime.hour - 12 else zonedDateTime.hour
             val ampm          = if (zonedDateTime.hour > 12)  "PM" else "AM"
+            val shorDay       = getShorDay(zonedDateTime.dayOfWeek)
+            val shortMonth    = getShortMonth(zonedDateTime.month)
 
             solarAlarmViewHolder.alarmName.text     = "${solarAlarm.Id} - ${solarAlarm.Name} - ${solarAlarm.OffsetTypeId.Name} ${solarAlarm.SolarTimeTypeId.Name} - ${solarAlarm.location.Name}"
-            solarAlarmViewHolder.alarmDateTime.text = "${zonedDateTime.dayOfWeek} ${zonedDateTime.dayOfMonth} ${zonedDateTime.month} ${zonedDateTime.year} ${hour}:${zonedDateTime.minute} $ampm"
+            solarAlarmViewHolder.alarmDateTime.text = "${shorDay} ${zonedDateTime.dayOfMonth}-$shortMonth-${zonedDateTime.year} ${hour}:${zonedDateTime.minute} $ampm"
         }
         catch (e: Exception)
         {
             e.printStackTrace()
+        }
+    }
+
+    private fun getShortMonth(month: Month): String
+    {
+        return when (month)
+        {
+            Month.JANUARY   -> "Jan"
+            Month.FEBRUARY  -> "Feb"
+            Month.MARCH     -> "Mar"
+            Month.APRIL     -> "Apr"
+            Month.MAY       -> "May"
+            Month.JUNE      -> "Jun"
+            Month.JULY      -> "Jul"
+            Month.AUGUST    -> "Aug"
+            Month.SEPTEMBER -> "Sep"
+            Month.OCTOBER   -> "Oct"
+            Month.NOVEMBER  -> "Nov"
+            Month.DECEMBER  -> "Dec"
+        }
+    }
+
+    private fun getShorDay(dayOfWeek: DayOfWeek): String
+    {
+        return when (dayOfWeek)
+        {
+            DayOfWeek.MONDAY    -> "Man"
+            DayOfWeek.TUESDAY   -> "Tue"
+            DayOfWeek.WEDNESDAY -> "Wed"
+            DayOfWeek.THURSDAY  -> "Thu"
+            DayOfWeek.FRIDAY    -> "Fri"
+            DayOfWeek.SATURDAY  -> "Sat"
+            DayOfWeek.SUNDAY    -> "Sun"
         }
     }
 
