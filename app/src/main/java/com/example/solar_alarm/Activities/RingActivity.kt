@@ -1,18 +1,21 @@
 package com.example.solar_alarm.Activities
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.KeyguardManager // Fixed the undefined error
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import com.example.solar_alarm.R
+import android.view.WindowManager
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import butterknife.BindView
 import butterknife.ButterKnife
-import android.content.Intent
+import com.example.solar_alarm.BroadcastReceiver.MusicControl
+import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.AlarmService
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
-import android.widget.*
-import java.util.*
 
 class RingActivity : AppCompatActivity() {
+
     @kotlin.jvm.JvmField
     @BindView(R.id.activity_ring_dismiss)
     var dismiss: Button? = null
@@ -21,50 +24,50 @@ class RingActivity : AppCompatActivity() {
     @BindView(R.id.activity_ring_snooze)
     var snooze: Button? = null
 
-    @kotlin.jvm.JvmField
-    @BindView(R.id.activity_ring_clock)
-    var clock: ImageView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_ring)
-        ButterKnife.bind(this)
-        dismiss!!.setOnClickListener { StopService() }
-        snooze!!.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = System.currentTimeMillis()
-            calendar.add(Calendar.MINUTE, 10)
-//            val alarm = Alarm(
-//                    Random().nextInt(Int.MAX_VALUE),
-//                    calendar[Calendar.HOUR_OF_DAY],
-//                    calendar[Calendar.MINUTE],
-//                    "Snooze",
-//                    System.currentTimeMillis(),
-//                    true,
-//                    false,
-//                    false,
-//                    false,
-//                    false,
-//                    false,
-//                    false,
-//                    false,
-//                    false
-//            )
-//            alarm.schedule(applicationContext)
-            StopService()
+
+        // 1. Setup Lockscreen Visibility BEFORE setContentView
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+            val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+            keyguardManager.requestDismissKeyguard(this, null)
+        } else {
+            @Suppress("DEPRECATION")
+            window.addFlags(
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+            )
         }
-        animateClock()
+
+        setContentView(R.layout.activity_ring)
+
+        // 2. Initialize ButterKnife so buttons aren't null
+        ButterKnife.bind(this)
+
+        // 3. Set up Click Listeners
+        dismiss?.setOnClickListener {
+            dismissAlarm()
+        }
+
+        snooze?.setOnClickListener {
+            // Add your snooze logic here if needed
+            dismissAlarm()
+        }
     }
 
-    private fun StopService() {
+    private fun dismissAlarm() {
+        // Stop the music!
+        MusicControl.getInstance(this).stopMusic()
+
+        // Stop the background service
         val intentService = Intent(applicationContext, AlarmService::class.java)
-        applicationContext.stopService(intentService)
-        finish()
-    }
+        stopService(intentService)
 
-    private fun animateClock() {
-        val rotateAnimation = ObjectAnimator.ofFloat(clock, "rotation", 0f, 20f, 0f, -20f, 0f)
-        rotateAnimation.repeatCount = ValueAnimator.INFINITE
-        rotateAnimation.duration = 800
-        rotateAnimation.start()
+        // Close the activity
+        finish()
     }
 }
