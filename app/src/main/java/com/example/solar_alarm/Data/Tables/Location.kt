@@ -1,8 +1,6 @@
 package com.example.solar_alarm.Data.Tables
 
-import android.os.Build
 import android.os.Parcelable
-import androidx.annotation.RequiresApi
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
@@ -21,7 +19,6 @@ import java.time.ZoneOffset
     ]
 )
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Parcelize
 data class Location
 (

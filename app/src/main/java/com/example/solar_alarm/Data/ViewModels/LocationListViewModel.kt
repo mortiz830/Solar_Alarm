@@ -1,7 +1,5 @@
 package com.example.solar_alarm.Data.ViewModels
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -12,7 +10,6 @@ import com.example.solar_alarm.Data.Tables.Location
 import kotlinx.coroutines.launch
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 class LocationListViewModel(private val repository: LocationRepository) : ViewModel()
 {
     val AllLocations: LiveData<List<Location>> = repository.all.asLiveData()
@@ -39,14 +36,13 @@ class LocationListViewModel(private val repository: LocationRepository) : ViewMo
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 class LocationViewModelFactory(private val repository: LocationRepository) : ViewModelProvider.Factory
 {
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T
     {
-        if (modelClass.isAssignableFrom(LocationListViewModel::class.java))
+        if (modelClass == LocationListViewModel::class.java)
         {
-            @Suppress("UNCHECKED_CAST")
             return LocationListViewModel(repository) as T
         }
 
