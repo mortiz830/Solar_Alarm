@@ -48,21 +48,21 @@ class LocationRepository(private val locationDao: LocationDao)
     }
 
     @WorkerThread
-    suspend fun DoesLocationLatLongExists(latitude: Double, longitude: Double)
+    suspend fun DoesLocationLatLongExists(latitude: Double, longitude: Double): Boolean
     {
-        locationDao.DoesLocationLatLongExists(latitude, longitude)
+        return locationDao.DoesLocationLatLongExists(latitude, longitude)
     }
 
     @WorkerThread
-    suspend fun DoesLocationNameExists(name: String?)
+    suspend fun DoesLocationNameExists(name: String?): Boolean
     {
-        locationDao.DoesLocationNameExists(name)
+        return locationDao.DoesLocationNameExists(name)
     }
 
     @WorkerThread
-    suspend fun MaxId()
+    suspend fun MaxId(): Int?
     {
-        locationDao.MaxId()
+        return locationDao.MaxId()
     }
 /*
     init {
