@@ -10,7 +10,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.example.solar_alarm.BroadcastReceiver.MusicControl
+import com.example.solar_alarm.AlarmBroadcastReceiver.MusicControl
 import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.AlarmService
 

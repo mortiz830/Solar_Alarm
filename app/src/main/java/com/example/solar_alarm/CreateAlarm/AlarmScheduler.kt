@@ -7,7 +7,7 @@ import android.content.Intent
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver
+import com.example.solar_alarm.AlarmBroadcastReceiver.AlarmBroadcastReceiver
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Tables.SolarAlarm
 import com.example.solar_alarm.Data.Tables.SolarTime
