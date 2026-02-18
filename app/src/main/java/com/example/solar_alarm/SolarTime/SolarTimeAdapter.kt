@@ -7,7 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
 import com.example.solar_alarm.Data.Tables.SolarTime
-import com.example.solar_alarm.R
+import com.example.solar_alarm.databinding.SolartimeListItemBinding
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -16,22 +16,20 @@ class SolarTimeAdapter (private var solarTimes: List<SolarTime>) : RecyclerView.
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SolarTimeViewHolder
     {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.solartime_list_item, parent, false)
-
-        return SolarTimeViewHolder(view)
+        val binding = SolartimeListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return SolarTimeViewHolder(binding)
     }
 
-    override fun onBindViewHolder(solarTimeViewHolder: SolarTimeViewHolder, position: Int)
+    override fun onBindViewHolder(holder: SolarTimeViewHolder, position: Int)
     {
         val solarTime = solarTimes[position]
 
         try
         {
-            solarTimeViewHolder.solarTimeData1.text = "${solarTime.Id} - ${solarTime.SolarDate} - Location ID: ${solarTime.LocationId}"
-            solarTimeViewHolder.solarTimeData2.text = "Sunrise - ${FormatDateString(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise))}"
-            solarTimeViewHolder.solarTimeData3.text = "SolarNoon - ${FormatDateString(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon))}"
-            solarTimeViewHolder.solarTimeData4.text = "Sunset - ${FormatDateString(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset))}"
+            holder.binding.solarTimeData1.text = "${solarTime.Id} - ${solarTime.SolarDate} - Location ID: ${solarTime.LocationId}"
+            holder.binding.solarTimeData2.text = "Sunrise - ${formatDateString(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise))}"
+            holder.binding.solarTimeData3.text = "SolarNoon - ${formatDateString(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon))}"
+            holder.binding.solarTimeData4.text = "Sunset - ${formatDateString(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset))}"
         }
         catch (e: Exception)
         {
@@ -41,13 +39,13 @@ class SolarTimeAdapter (private var solarTimes: List<SolarTime>) : RecyclerView.
 
     override fun getItemCount(): Int = solarTimes.size
 
-    fun UpdateSolarTimes(newSolarTimes: List<SolarTime>)
+    fun updateSolarTimes(newSolarTimes: List<SolarTime>)
     {
         solarTimes = newSolarTimes
         notifyDataSetChanged()
     }
 
-    private fun FormatDateString(zonedDateTime : ZonedDateTime) : String
+    private fun formatDateString(zonedDateTime : ZonedDateTime) : String
     {
         val dateTimeFormatter : DateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd-MMM-uuuu hh:mm a")
         return zonedDateTime.format(dateTimeFormatter)

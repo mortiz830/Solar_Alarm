@@ -1,45 +1,29 @@
 package com.example.solar_alarm.AlarmList
 
-import com.example.solar_alarm.R
-import androidx.recyclerview.widget.RecyclerView
-import androidx.annotation.RequiresApi
+import android.content.Context
 import android.os.Build
-import com.example.solar_alarm.Data.Tables.SolarAlarm
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.content.Context
-import java.lang.Exception
+import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.RecyclerView
+import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.databinding.SolarAlarmListItemBinding
 import java.util.ArrayList
-import java.util.concurrent.ExecutionException
 
-class AlarmRecycleViewAdapter(listener: OnToggleAlarmListener) : RecyclerView.Adapter<AlarmViewHolder>() {
-    private var alarms: MutableList<SolarAlarm>
-    private val listener: OnToggleAlarmListener
+class AlarmRecycleViewAdapter(private val listener: OnToggleAlarmListener) : RecyclerView.Adapter<AlarmViewHolder>() {
+    private var alarms: MutableList<SolarAlarm> = ArrayList()
     var context: Context? = null
 
-    init {
-        alarms = ArrayList()
-        this.listener = listener
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlarmViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.solar_alarm_list_item, parent, false)
+        val binding = SolarAlarmListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         context = parent.context
-        return AlarmViewHolder(itemView, listener)
+        return AlarmViewHolder(binding, listener)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: AlarmViewHolder, position: Int) {
         val alarm = alarms[position]
-        try {
-            holder.bind(alarm)
-        } catch (e: ExecutionException) {
-            e.printStackTrace()
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        holder.bind(alarm)
     }
 
     override fun getItemCount(): Int {
@@ -49,18 +33,6 @@ class AlarmRecycleViewAdapter(listener: OnToggleAlarmListener) : RecyclerView.Ad
     fun setAlarms(alarms: MutableList<SolarAlarm>) {
         this.alarms = alarms
         notifyDataSetChanged()
-    }
-
-    override fun onViewRecycled(holder: AlarmViewHolder) {
-        super.onViewRecycled(holder)
-        //holder.alarmStarted.setOnCheckedChangeListener(null)
-    }
-
-    fun removeItem(position: Int): SolarAlarm {
-        val alarm = alarms[position]
-        alarms.remove(alarm)
-        notifyItemRemoved(position)
-        return alarm
     }
 
     fun getAlarm(position: Int): SolarAlarm {

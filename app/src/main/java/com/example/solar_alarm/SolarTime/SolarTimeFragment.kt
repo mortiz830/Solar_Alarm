@@ -2,16 +2,15 @@ package com.example.solar_alarm.SolarTime
 
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
-import com.example.solar_alarm.R
 import com.example.solar_alarm.databinding.FragmentSolarTimeBinding
 
 class SolarTimeFragment constructor(private var solarTimeViewModel: SolarTimeViewModel) : Fragment()
@@ -32,7 +31,7 @@ class SolarTimeFragment constructor(private var solarTimeViewModel: SolarTimeVie
 
         try
         {
-            solarTimeViewModel.AllSolarTimes.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarTimes -> solarTimeAdapter.UpdateSolarTimes(solarTimes)})
+            solarTimeViewModel.AllSolarTimes.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarTimes -> solarTimeAdapter.updateSolarTimes(solarTimes)})
         }
         catch (e: Exception)
         {

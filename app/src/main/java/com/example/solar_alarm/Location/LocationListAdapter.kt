@@ -6,32 +6,22 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.Data.Tables.Location
-import com.example.solar_alarm.R
+import com.example.solar_alarm.databinding.LocationListItemBinding
 
 @RequiresApi(Build.VERSION_CODES.O)
 class LocationListAdapter(private var locations: List<Location>) : RecyclerView.Adapter<LocationViewHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder
     {
-        val view = LayoutInflater.from(parent.context)
-                                 .inflate(R.layout.location_list_item, parent, false)
-
-        return LocationViewHolder(view)
+        val binding = LocationListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return LocationViewHolder(binding)
     }
 
-    override fun onBindViewHolder(locationViewHolder: LocationViewHolder, position: Int)
+    override fun onBindViewHolder(holder: LocationViewHolder, position: Int)
     {
         val location = locations[position]
-
-        try
-        {
-            locationViewHolder.locationData1.text = "${location.Id} - ${location.Name}"
-            locationViewHolder.locationData2.text = "${location.Latitude}, ${location.Longitude}"
-        }
-        catch (e: Exception)
-        {
-            e.printStackTrace()
-        }
+        holder.binding.locationData1.text = "${location.Id} - ${location.Name}"
+        holder.binding.locationData2.text = "${location.Latitude}, ${location.Longitude}"
     }
 
     override fun getItemCount(): Int = locations.size

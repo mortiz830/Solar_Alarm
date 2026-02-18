@@ -6,28 +6,19 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.example.solar_alarm.BroadcastReceiver.MusicControl
-import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.AlarmService
+import com.example.solar_alarm.databinding.ActivityRingBinding
 
 class RingActivity : AppCompatActivity() {
 
-    @kotlin.jvm.JvmField
-    @BindView(R.id.activity_ring_dismiss)
-    var dismiss: Button? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.activity_ring_snooze)
-    var snooze: Button? = null
+    private lateinit var binding: ActivityRingBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. Setup Lockscreen Visibility BEFORE setContentView
+        // 1. Setup Lockscreen Visibility
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
@@ -43,31 +34,24 @@ class RingActivity : AppCompatActivity() {
             )
         }
 
-        setContentView(R.layout.activity_ring)
+        // 2. Initialize View Binding
+        binding = ActivityRingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // 2. Initialize ButterKnife so buttons aren't null
-        ButterKnife.bind(this)
-
-        // 3. Set up Click Listeners
-        dismiss?.setOnClickListener {
+        // 3. Set up Click Listeners using binding
+        binding.activityRingDismiss.setOnClickListener {
             dismissAlarm()
         }
 
-        snooze?.setOnClickListener {
-            // Add your snooze logic here if needed
+        binding.activityRingSnooze.setOnClickListener {
             dismissAlarm()
         }
     }
 
     private fun dismissAlarm() {
-        // Stop the music!
         MusicControl.getInstance(this).stopMusic()
-
-        // Stop the background service
         val intentService = Intent(applicationContext, AlarmService::class.java)
         stopService(intentService)
-
-        // Close the activity
         finish()
     }
 }

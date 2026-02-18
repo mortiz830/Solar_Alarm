@@ -10,7 +10,6 @@ import android.media.MediaPlayer
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.solar_alarm.Activities.RingActivity
 import com.example.solar_alarm.Data.Tables.SolarAlarm
@@ -20,7 +19,6 @@ import java.util.Calendar
 class AlarmBroadcastReceiver : BroadcastReceiver() {
     private lateinit var solarAlarm: SolarAlarm
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context, intent: Intent) {
         // Ensure Notification Channel exists (Crucial for Android 8+)
         createNotificationChannel(context)
@@ -73,18 +71,16 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
     }
 
     private fun createNotificationChannel(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "alarm_channel",
-                "Solar Alarm Notifications",
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                description = "Channel for Solar Alarm triggers"
-                setSound(null, null) // We handle sound manually via MusicControl
-            }
-            val manager = context.getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(channel)
+        val channel = NotificationChannel(
+            "alarm_channel",
+            "Solar Alarm Notifications",
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = "Channel for Solar Alarm triggers"
+            setSound(null, null) // We handle sound manually via MusicControl
         }
+        val manager = context.getSystemService(NotificationManager::class.java)
+        manager.createNotificationChannel(channel)
     }
 
     private fun alarmIsToday(): Boolean {

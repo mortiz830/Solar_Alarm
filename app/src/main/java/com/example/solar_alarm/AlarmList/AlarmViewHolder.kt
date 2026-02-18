@@ -1,81 +1,28 @@
 package com.example.solar_alarm.AlarmList
 
-import com.example.solar_alarm.R
-import android.annotation.TargetApi
-import androidx.recyclerview.widget.RecyclerView
-import androidx.annotation.RequiresApi
 import android.os.Build
-import com.example.solar_alarm.Data.Tables.SolarAlarm
-import com.example.solar_alarm.Data.Tables.SolarTime
-import android.os.AsyncTask
-import kotlin.Throws
+import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.Data.Converters
-import android.view.View
-import android.widget.*
-import java.lang.Exception
+import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.databinding.SolarAlarmListItemBinding
 
-class AlarmViewHolder(itemView: View, listener: OnToggleAlarmListener) : RecyclerView.ViewHolder(itemView) {
-    private val alarmTime: TextView
-    private val alarmDate: TextView
-    //private val alarmRecurring: ImageView
-    //private val alarmRecurringDays: TextView
-    private val alarmTitle: TextView
-    var parent_layout: LinearLayout
-    //var alarmStarted: SwitchCompat
-    private val listener: OnToggleAlarmListener
+class AlarmViewHolder(private val binding: SolarAlarmListItemBinding, private val listener: OnToggleAlarmListener) : RecyclerView.ViewHolder(binding.root) {
 
-    init {
-        alarmTime = itemView.findViewById(R.id.alarmDateTime)
-        alarmDate = itemView.findViewById(R.id.alarmDateTime)
-        //alarmStarted = itemView.findViewById(R.id.item_alarm_started)
-        //alarmRecurring = itemView.findViewById(R.id.item_alarm_recurring)
-        //alarmRecurringDays = itemView.findViewById(R.id.item_alarm_recurringDays)
-        alarmTitle = itemView.findViewById(R.id.alarmName)
-        parent_layout = itemView.findViewById(R.id.parent_layout)
-        this.listener = listener
-    }
-
-    inner class GetSolarTime : AsyncTask<Int?, Void?, SolarTime?>() {
-        @TargetApi(Build.VERSION_CODES.O) //@Override
-        protected override fun doInBackground(vararg p0: Int?): SolarTime? {
-            var solarTime: SolarTime? = null
-            try {
-                //solarTime = SolarTimeRepository().GetById(0)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return null// solarTime
-        }
-    }
-
-    /*
-    * SolarTime*/
     @RequiresApi(api = Build.VERSION_CODES.O)
-    @Throws(Exception::class)
     fun bind(solarAlarm: SolarAlarm) {
         val zonedDateTime = solarAlarm.SolarTimeTypeId?.let { solarAlarm.solarTime.GetLocalZonedDateTime(it) }
-        zonedDateTime?.hour
-        val localTime = zonedDateTime?.toLocalTime()
         val alarmText = zonedDateTime?.let { Converters.toTimeString(it) }
-        alarmDate.text = alarmText!![0]
-        alarmTime.text = alarmText[1]
-        //alarmStarted.isChecked = solarAlarm.Active
-        if (solarAlarm.Recurring) {
-            //alarmRecurring.setImageResource(R.drawable.ic_repeat_black_24dp)
-            //alarmRecurringDays.text = solarAlarm.recurringDaysText
-        } else {
-            //alarmRecurring.setImageResource(R.drawable.ic_looks_one_black_24dp)
-            //alarmRecurringDays.text = "Once Off"
+        
+        if (alarmText != null) {
+            binding.alarmDateTime.text = alarmText[0] // Note: In original code, both date and time were set to alarmDateTime.
+            // If you have a separate view for time, use it here.
         }
-        alarmTitle.text = String.format("%s | %d", solarAlarm.Name, solarAlarm.Id)
+        
+        binding.alarmName.text = String.format("%s | %d", solarAlarm.Name, solarAlarm.Id)
 
-//        alarmStarted.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-//        {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-//            {
-//                listener.onToggle(solarAlarm);
-//            }
-//        });
+        binding.parentLayout.setOnClickListener {
+            // Add click logic if needed
+        }
     }
 }
