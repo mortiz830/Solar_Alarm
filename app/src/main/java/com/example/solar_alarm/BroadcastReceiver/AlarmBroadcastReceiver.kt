@@ -1,4 +1,4 @@
-package com.example.solar_alarm.AlarmBroadcastReceiver
+package com.example.solar_alarm.BroadcastReceiver
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

@@ -1,6 +1,6 @@
 package com.example.solar_alarm.Activities
 
-import android.app.KeyguardManager // Fixed the undefined error
+import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -10,7 +10,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.example.solar_alarm.AlarmBroadcastReceiver.MusicControl
+import com.example.solar_alarm.BroadcastReceiver.MusicControl
 import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.AlarmService
 

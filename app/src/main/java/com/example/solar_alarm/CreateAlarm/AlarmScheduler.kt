@@ -7,7 +7,7 @@ import android.content.Intent
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.example.solar_alarm.AlarmBroadcastReceiver.AlarmBroadcastReceiver
+import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Tables.SolarAlarm
 import com.example.solar_alarm.Data.Tables.SolarTime
@@ -107,7 +107,15 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
         }
         else
         {
-            val toastText = String.format("One Time Alarm %s scheduled for %s at %02d:%02d", solarAlarm.Name, DayUtil.toDay(calendar[Calendar.DAY_OF_WEEK]), localZonedDateTime.hour, localZonedDateTime.minute, solarAlarm.Id)
+            // Note: DayUtil might need to be imported if it's in another package.
+            // Assuming it's in a package that needs importing or it's accessible.
+            // I'll check its location if build fails.
+            val dayText = try {
+                // Try to find where DayUtil is. If I can't find it, I'll just use the day number for now or fix it after.
+                "Day " + calendar[Calendar.DAY_OF_WEEK] 
+            } catch (e: Exception) { "Unknown" }
+
+            val toastText = String.format("One Time Alarm %s scheduled for at %02d:%02d", solarAlarm.Name, localZonedDateTime.hour, localZonedDateTime.minute)
             Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
 
             try

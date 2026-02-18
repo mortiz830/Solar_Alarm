@@ -16,7 +16,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.solar_alarm.Activities.RingActivity
-import com.example.solar_alarm.AlarmBroadcastReceiver.AlarmBroadcastReceiver
+import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver
 import com.example.solar_alarm.Application.App
 import com.example.solar_alarm.Application.App.Companion.CHANNEL_ID
 import com.example.solar_alarm.Data.Tables.SolarAlarm
