@@ -1,17 +1,30 @@
 package com.example.solar_alarm.Data.Tables
 
 import android.os.Build
+import android.os.Parcelable
 import androidx.annotation.RequiresApi
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
+import com.example.solar_alarm.SolarAlarmApp
+import kotlinx.coroutines.runBlocking
+import kotlinx.parcelize.Parcelize
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Entity(
     tableName   = "SolarAlarm",
-    indices     = [Index(value = ["Name", "LocationId"], unique = true)],
+    indices     =
+    [
+        Index(value = ["Name", "LocationId"], unique = true,  name = "UniqueLocationName"),
+        Index(value = ["LocationId"],         unique = false, name = "SolarAlarmLocationIndex"),
+        Index(value = ["SolarTimeId"],        unique = false, name = "SolarTimeIndex")
+    ],
     foreignKeys =
     [
         ForeignKey
@@ -28,26 +41,11 @@ import java.time.ZoneOffset
             parentColumns = ["Id"],
             childColumns  = ["SolarTimeId"],
             onDelete      = ForeignKey.CASCADE
-        ),
-
-        ForeignKey
-        (
-            entity        = OffsetType::class,
-            parentColumns = ["Id"],
-            childColumns  = ["OffsetTypeId"],
-            onDelete      = ForeignKey.CASCADE
-        ),
-
-        ForeignKey
-        (
-            entity        = SolarTimeType::class,
-            parentColumns = ["Id"],
-            childColumns  = ["SolarTimeTypeId"],
-            onDelete      = ForeignKey.CASCADE
         )
     ]
 )
 
+@Parcelize
 data class SolarAlarm
 (
     @ColumnInfo(name = "Active") var Active : Boolean,
@@ -69,9 +67,46 @@ data class SolarAlarm
 
     @ColumnInfo(name = "OffsetTypeId")    var OffsetTypeId:    OffsetTypeEnum,
     @ColumnInfo(name = "SolarTimeTypeId") var SolarTimeTypeId: SolarTimeTypeEnum
-)
+) : Parcelable
 {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "Id")                var Id                : Int = 0
     @ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
+
+    init
+    {
+        require(Name.isNotBlank()) { "SolarAlarm name cannot be empty or consist only of whitespace." }
+    }
+
+    val solarTime : SolarTime
+        get() {
+            return GetSolarTime()
+        }
+
+    private fun GetSolarTime() : SolarTime
+    {
+        val solarTime : SolarTime
+
+        runBlocking {
+            solarTime = SolarAlarmApp().solarTimeRepository.GetById(SolarTimeId)
+        }
+
+        return solarTime
+    }
+
+    val location : Location
+        get() {
+            return GetLocation()
+        }
+
+    private fun GetLocation() : Location
+    {
+        val location : Location
+
+        runBlocking {
+            location = SolarAlarmApp().locationRepository.GetById(LocationId)
+        }
+
+        return location
+    }
 }

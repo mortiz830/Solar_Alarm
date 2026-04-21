@@ -3,18 +3,18 @@ package com.example.solar_alarm.Data.Repositories
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.LiveData
 import com.example.solar_alarm.Data.Daos.LocationDao
 import com.example.solar_alarm.Data.Tables.Location
+import kotlinx.coroutines.flow.Flow
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 class LocationRepository(private val locationDao: LocationDao)
 {
     //private val staticDataDao: StaticDataDao = _SolarAlarmDatabase.staticDataDao()
 
-    val all: LiveData<List<Location>> = locationDao.GetAll()
+    val all: Flow<List<Location>> = locationDao.GetAll()
 
-    fun GetAllLocations() : LiveData<List<Location>> {return locationDao.GetAll()}
+    //fun GetAllLocations() : LiveData<List<Location>> {return locationDao.GetAll()}
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -24,13 +24,13 @@ class LocationRepository(private val locationDao: LocationDao)
     }
 
     @WorkerThread
-    fun GetById(id: Int): Location?
+    fun GetById(id: Int): Location
     {
         return locationDao.GetById(id)
     }
 
     @WorkerThread
-    fun GetByName(name: String): Location?
+    fun GetByName(name: String): Location
     {
         return locationDao.GetByName(name)
     }
@@ -48,21 +48,21 @@ class LocationRepository(private val locationDao: LocationDao)
     }
 
     @WorkerThread
-    suspend fun DoesLocationLatLongExists(latitude: Double, longitude: Double)
+    suspend fun DoesLocationLatLongExists(latitude: Double, longitude: Double): Boolean
     {
-        locationDao.DoesLocationLatLongExists(latitude, longitude)
+        return locationDao.DoesLocationLatLongExists(latitude, longitude)
     }
 
     @WorkerThread
-    suspend fun DoesLocationNameExists(name: String?)
+    suspend fun DoesLocationNameExists(name: String?): Boolean
     {
-        locationDao.DoesLocationNameExists(name)
+        return locationDao.DoesLocationNameExists(name)
     }
 
     @WorkerThread
-    suspend fun MaxId()
+    suspend fun MaxId(): Int?
     {
-        locationDao.MaxId()
+        return locationDao.MaxId()
     }
 /*
     init {

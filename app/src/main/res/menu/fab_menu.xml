@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_option_create_location"
+        android:title="Create Location"
+        android:icon="@drawable/ic_create_location"/>
+    <item
+        android:id="@+id/action_option_create_alarm"
+        android:title="Create Alarm"
+        android:icon="@drawable/ic_create_alarm"/>
+</menu>

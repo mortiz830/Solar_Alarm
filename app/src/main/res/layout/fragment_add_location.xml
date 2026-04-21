@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Location.AddLocationFragment">
+    tools:context=".Location.LocationCreateFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -129,7 +129,7 @@
             android:id="@+id/fragment_add_location_addLocationButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:text="Add Location"
             android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"/>

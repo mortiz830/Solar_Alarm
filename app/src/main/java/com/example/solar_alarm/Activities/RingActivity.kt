@@ -1,70 +1,57 @@
 package com.example.solar_alarm.Activities
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import com.example.solar_alarm.R
-import butterknife.BindView
-import butterknife.ButterKnife
+import android.app.KeyguardManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
+import com.example.solar_alarm.BroadcastReceiver.MusicControl
 import com.example.solar_alarm.Service.AlarmService
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
-import android.widget.*
-import java.util.*
+import com.example.solar_alarm.databinding.ActivityRingBinding
 
 class RingActivity : AppCompatActivity() {
-    @kotlin.jvm.JvmField
-    @BindView(R.id.activity_ring_dismiss)
-    var dismiss: Button? = null
 
-    @kotlin.jvm.JvmField
-    @BindView(R.id.activity_ring_snooze)
-    var snooze: Button? = null
+    private lateinit var binding: ActivityRingBinding
 
-    @kotlin.jvm.JvmField
-    @BindView(R.id.activity_ring_clock)
-    var clock: ImageView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_ring)
-        ButterKnife.bind(this)
-        dismiss!!.setOnClickListener { StopService() }
-        snooze!!.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = System.currentTimeMillis()
-            calendar.add(Calendar.MINUTE, 10)
-//            val alarm = Alarm(
-//                    Random().nextInt(Int.MAX_VALUE),
-//                    calendar[Calendar.HOUR_OF_DAY],
-//                    calendar[Calendar.MINUTE],
-//                    "Snooze",
-//                    System.currentTimeMillis(),
-//                    true,
-//                    false,
-//                    false,
-//                    false,
-//                    false,
-//                    false,
-//                    false,
-//                    false,
-//                    false
-//            )
-//            alarm.schedule(applicationContext)
-            StopService()
+
+        // 1. Setup Lockscreen Visibility
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+            val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+            keyguardManager.requestDismissKeyguard(this, null)
+        } else {
+            @Suppress("DEPRECATION")
+            window.addFlags(
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+            )
         }
-        animateClock()
+
+        // 2. Initialize View Binding
+        binding = ActivityRingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // 3. Set up Click Listeners using binding
+        binding.activityRingDismiss.setOnClickListener {
+            dismissAlarm()
+        }
+
+        binding.activityRingSnooze.setOnClickListener {
+            dismissAlarm()
+        }
     }
 
-    private fun StopService() {
+    private fun dismissAlarm() {
+        MusicControl.getInstance(this).stopMusic()
         val intentService = Intent(applicationContext, AlarmService::class.java)
-        applicationContext.stopService(intentService)
+        stopService(intentService)
         finish()
-    }
-
-    private fun animateClock() {
-        val rotateAnimation = ObjectAnimator.ofFloat(clock, "rotation", 0f, 20f, 0f, -20f, 0f)
-        rotateAnimation.repeatCount = ValueAnimator.INFINITE
-        rotateAnimation.duration = 800
-        rotateAnimation.start()
     }
 }

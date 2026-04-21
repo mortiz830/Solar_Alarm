@@ -1,17 +1,33 @@
 package com.example.solar_alarm.Data.Tables
 
 import android.os.Build
+import android.os.Parcelable
 import androidx.annotation.RequiresApi
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
-import java.time.*
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Entity
 (
         tableName   = "SolarTime",
-        indices     = [Index(value = ["SolarDate", "LocationId"], unique = true)],
+        indices     =
+        [
+            Index(value = ["SolarDate", "LocationId"], unique = true,  name = "UniqueDateAndLocation"),
+            Index(value = ["LocationId"],              unique = false, name = "SolarTimeLocationIndex")
+        ],
         foreignKeys =
         [
             ForeignKey
@@ -24,6 +40,7 @@ import java.time.format.DateTimeFormatter
         ]
 )
 
+@Parcelize
 data class SolarTime
 (
     @ColumnInfo(name = "SolarDate")                    val SolarDate: LocalDate,
@@ -38,11 +55,18 @@ data class SolarTime
     @ColumnInfo(name = "NauticalTwilightEndUtc")       val NauticalTwilightEndUtc: String?,
     @ColumnInfo(name = "AstronomicalTwilightBeginUtc") val AstronomicalTwilightBeginUtc: String?,
     @ColumnInfo(name = "AstronomicalTwilightEndUtc")   val AstronomicalTwilightEndUtc: String?
-)
+) : Parcelable
 {
+    @IgnoredOnParcel
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "Id") var Id : Int = 0
+    @IgnoredOnParcel
     @ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
 
+    /**
+     * @param solarTimeTypeEnum the type of time.
+     * @return UTC date time string in UTC time zone as a ZonedDateTime
+     * @see ZonedDateTime
+     */
     fun GetLocalZonedDateTime(solarTimeTypeEnum: SolarTimeTypeEnum): ZonedDateTime
     {
         val utcDateTime = GetUtcZonedDateTime(solarTimeTypeEnum)
@@ -51,6 +75,11 @@ data class SolarTime
         return utcDateTime.withZoneSameInstant(zoneId)
     }
 
+    /**
+     * @param solarTimeTypeEnum the type of time.
+     * @return UTC date time string in UTC time zone as a ZonedDateTime
+     * @see ZonedDateTime
+     */
     private fun GetUtcZonedDateTime(solarTimeTypeEnum: SolarTimeTypeEnum): ZonedDateTime
     {
         val localDateTime = getLocalDateTime(solarTimeTypeEnum)
@@ -59,6 +88,11 @@ data class SolarTime
         return localDateTime.atZone(zoneId)
     }
 
+    /**
+     * @param solarTimeTypeEnum the type of time.
+     * @return UTC date time string converted to the device's time zone as a LocalDateTime
+     * @see LocalDateTime
+     */
     private fun getLocalDateTime(solarTimeTypeEnum: SolarTimeTypeEnum): LocalDateTime
     {
         val utcString: String? = when (solarTimeTypeEnum)

@@ -24,9 +24,9 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
     }
 
     @WorkerThread
-    suspend fun GetById(id: Int)
+    suspend fun GetById(id: Int) : SolarTime
     {
-        solarTimeDao.GetById(id)
+        return solarTimeDao.GetById(id)
     }
 
     @WorkerThread
@@ -42,7 +42,7 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
     }
 
     @WorkerThread
-    suspend fun doesLocationIdDatePairExists(locationId: Int, date: LocalDate): Boolean
+    fun doesLocationIdDatePairExists(locationId: Int, date: LocalDate): Boolean
     {
         return solarTimeDao.doesLocationIdDatePairExists(locationId, date)
     }
@@ -72,6 +72,8 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
                                   sunriseSunsetResponse.results?.astronomical_twilight_end)
 
             Insert(solarTime)   // save response as a new SolarTime
+
+            solarTime = solarTimeDao.getSolarTime(location.Id, date)   // reload from DB to get ID number
         }
 
         return solarTime

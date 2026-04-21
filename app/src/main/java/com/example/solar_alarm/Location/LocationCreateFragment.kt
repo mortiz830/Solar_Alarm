@@ -6,18 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.activity.viewModels
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
-import butterknife.BindView
+import androidx.lifecycle.lifecycleScope
 import com.example.solar_alarm.Activities.NavActivity
-import com.example.solar_alarm.AlarmList.AlarmListFragment
-import com.example.solar_alarm.Data.Tables.*
-import com.example.solar_alarm.Data.ViewModels.LocationViewModel
+import com.example.solar_alarm.AlarmList.SolarAlarmListFragment
+import com.example.solar_alarm.Data.Tables.Location
+import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
+import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
 import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.GpsTracker
 import com.example.solar_alarm.databinding.FragmentAddLocationBinding
@@ -28,24 +26,25 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
-import java.util.*
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
-import com.example.solar_alarm.Data.Tables.Location
-import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
-import com.example.solar_alarm.SolarAlarmApp
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.runBlocking
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AddLocationFragment constructor(location: LocationViewModel): Fragment(), OnMapReadyCallback
+class LocationCreateFragment constructor(locationListViewModel: LocationListViewModel, solarTimeViewModel: SolarTimeViewModel,
+                                         solarAlarmViewModel: SolarAlarmViewModel): Fragment(), OnMapReadyCallback
 {
-    private var locationViewModel: LocationViewModel = location
+    private var locationListViewModel : LocationListViewModel = locationListViewModel
+    private val solarTimeViewModel: SolarTimeViewModel = solarTimeViewModel
+    private val solarAlarmViewModel: SolarAlarmViewModel = solarAlarmViewModel
     private lateinit var binding: FragmentAddLocationBinding
     private var latLng: LatLng? = null
 
@@ -70,15 +69,35 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
         val supportMapFragment = childFragmentManager.findFragmentById(R.id.fragment_add_location_map) as SupportMapFragment?
         supportMapFragment!!.getMapAsync(this)
         //ButterKnife.bind(this, view)
-        binding.fragmentAddLocationLatitude.text = latLng?.latitude.toString()
+        binding.fragmentAddLocationLatitude.text  = latLng?.latitude.toString()
         binding.fragmentAddLocationLongitude.text = latLng?.longitude.toString()
-        binding.fragmentAddLocationTimeZone.text = TimeZone.getDefault().toZoneId().toString()
+        binding.fragmentAddLocationTimeZone.text  = TimeZone.getDefault().toZoneId().toString()
+
         binding.fragmentAddLocationAddLocationButton.setOnClickListener(View.OnClickListener
         {
-            //var locationName: String = binding.fragmentAddLocationLocationNameText.text.toString()
-            //var isLocationPointExists = locationViewModel.DoesLocationLatLongExists(latLng!!.latitude, latLng!!.longitude)
-            saveLocation()
-            (activity as NavActivity).replaceFragment(AlarmListFragment())
+            val locationName = binding.fragmentAddLocationLocationNameText.text.toString()
+            if (locationName.isBlank()) {
+                Toast.makeText(context, "Location name cannot be empty", Toast.LENGTH_SHORT).show()
+                return@OnClickListener
+            }
+
+            val newScale = 4
+            val latitude = BigDecimal(binding.fragmentAddLocationLatitude.text.toString()).setScale(newScale, RoundingMode.HALF_UP).toDouble()
+            val longitude = BigDecimal(binding.fragmentAddLocationLongitude.text.toString()).setScale(newScale, RoundingMode.HALF_UP).toDouble()
+
+            lifecycleScope.launch {
+                val nameExists = locationListViewModel.DoesLocationNameExists(locationName)
+                val latLongExists = locationListViewModel.DoesLocationLatLongExists(latitude, longitude)
+
+                if (nameExists) {
+                    Toast.makeText(context, "Location Name Already Exists!", Toast.LENGTH_LONG).show()
+                } else if (latLongExists) {
+                    Toast.makeText(context, "Location Point Already Exists!", Toast.LENGTH_LONG).show()
+                } else {
+                    saveLocation(locationName, latitude, longitude)
+                    (activity as NavActivity).replaceFragment(SolarAlarmListFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
+                }
+            }
         })
 
 //        addLocationButton!!.setOnClickListener { view ->
@@ -144,14 +163,15 @@ class AddLocationFragment constructor(location: LocationViewModel): Fragment(), 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    fun saveLocation()
+    fun saveLocation(name: String, latitude: Double, longitude: Double)
     {
-        val location = Location(0, binding.fragmentAddLocationLocationNameText.text.toString(),
-                                binding.fragmentAddLocationLatitude.text.toString().toDouble(),
-                                binding.fragmentAddLocationLongitude.text.toString().toDouble())
+        val location = Location(0, name, latitude, longitude)
 
-        locationViewModel.Insert(location)
-        Toast.makeText(context, "New Location ${location.Id} ${location.Name} Created", Toast.LENGTH_LONG).show()
+        locationListViewModel.Insert(location)
+        // val locationNew = locationListViewModel.getByName(location.Name)
+        // if (locationNew != null) {
+        //     Toast.makeText(context, "New Location ${locationNew.Id} ${locationNew.Name} Created", Toast.LENGTH_LONG).show()
+        // }
     }
 
     inner class LocationNameExistsTask : AsyncTask<String?, Void?, Boolean>() {

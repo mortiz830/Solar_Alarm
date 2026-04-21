@@ -1,7 +1,8 @@
 package com.example.solar_alarm.Data
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Query
 
 @Dao
 interface AlarmDisplayDataDao {
@@ -11,5 +12,5 @@ interface AlarmDisplayDataDao {
             " JOIN SolarAlarm ON (Location.Id = SolarAlarm.LocationId)" +
             " JOIN SolarTime ON (Location.Id = SolarTime.LocationId)" +
             " ORDER BY 1,2,3")
-    fun loadAlarmData(): LiveData<List<AlarmDisplayData?>?>?
+    fun loadAlarmData(): LiveData<List<AlarmDisplayData>>
 }
