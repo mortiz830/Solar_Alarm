@@ -209,7 +209,6 @@ class CreateAlarmFragment constructor(locationListViewModel: LocationListViewMod
 //        return solarAlarmRepository.isSolarAlarmNameLocationIDExists(solarAlarm)
 //    }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Throws(Exception::class)
     private fun ScheduleAlarm(solarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum)
     {
@@ -257,6 +256,11 @@ class CreateAlarmFragment constructor(locationListViewModel: LocationListViewMod
                     binding.fragmentCreatealarmSetHours.value).schedule(it)
             }
         }
+    }
+
+    public fun UpdateAlarmAfterDismiss()
+    {
+
     }
 
 //    inner class TimeResponseTask : AsyncTask<Any?, Void?, SolarTime?>() {
