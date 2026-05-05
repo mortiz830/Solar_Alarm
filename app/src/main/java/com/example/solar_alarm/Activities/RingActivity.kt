@@ -15,8 +15,8 @@ class RingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRingBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreate(bundle: Bundle?) {
+        super.onCreate(bundle)
 
         // 1. Setup Lockscreen Visibility
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
@@ -28,11 +28,11 @@ class RingActivity : AppCompatActivity() {
             @Suppress("DEPRECATION")
             window.addFlags(
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
-                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
-                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
             )
         }
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         // 2. Initialize View Binding
         binding = ActivityRingBinding.inflate(layoutInflater)
@@ -51,6 +51,8 @@ class RingActivity : AppCompatActivity() {
     private fun dismissAlarm() {
         MusicControl.getInstance(this).stopMusic()
         val intentService = Intent(applicationContext, AlarmService::class.java)
+        // NEED SolarAlarm object or ID IN HERE
+        // send to CreateAlarmFragment.UpdateAlarmAfterDismiss() to be updated and reset in broadcast receiver
         stopService(intentService)
         finish()
     }

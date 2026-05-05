@@ -1,28 +1,21 @@
 package com.example.solar_alarm.BroadcastReceiver
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
-import androidx.core.app.NotificationCompat
-import com.example.solar_alarm.Activities.RingActivity
 import com.example.solar_alarm.Data.Tables.SolarAlarm
 import com.example.solar_alarm.R
+import com.example.solar_alarm.Service.AlarmService
 import java.util.Calendar
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
     private lateinit var solarAlarm: SolarAlarm
 
     override fun onReceive(context: Context, intent: Intent) {
-        // Ensure Notification Channel exists (Crucial for Android 8+)
-        createNotificationChannel(context)
-
         try {
             // 1. Initialize data
             solarAlarm = GetSolarAlarmFromIntent(intent)
@@ -34,53 +27,20 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                 return
             }
 
-            // 3. Play Music (Using your MusicControl singleton)
-            MusicControl.getInstance(context).PlayMusic(context)
-            Toast.makeText(context, "Alarm Triggered!", Toast.LENGTH_SHORT).show()
-
-            // 4. Build the Full Screen Intent for RingActivity
-            val ringIntent = Intent(context, RingActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            // 3. Start the AlarmService to handle notification, music and full screen intent
+            val serviceIntent = Intent(context, AlarmService::class.java).apply {
                 putExtra("SolarAlarm", solarAlarm)
             }
-
-            val pendingIntent = PendingIntent.getActivity(
-                context,
-                solarAlarm.Id, // Unique ID for this alarm
-                ringIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-            // 5. Build and Show the Notification
-            val builder = NotificationCompat.Builder(context, "alarm_channel")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("Solar Alarm")
-                .setContentText(solarAlarm.Name)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .setFullScreenIntent(pendingIntent, true) // Pops the screen
-                .setAutoCancel(true)
-                .setOngoing(true) // Keeps notification visible
-
-            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.notify(123, builder.build())
+            
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(serviceIntent)
+            } else {
+                context.startService(serviceIntent)
+            }
 
         } catch (e: Exception) {
             Log.e("ALARM_DEBUG", "Error in onReceive: ${e.message}")
         }
-    }
-
-    private fun createNotificationChannel(context: Context) {
-        val channel = NotificationChannel(
-            "alarm_channel",
-            "Solar Alarm Notifications",
-            NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            description = "Channel for Solar Alarm triggers"
-            setSound(null, null) // We handle sound manually via MusicControl
-        }
-        val manager = context.getSystemService(NotificationManager::class.java)
-        manager.createNotificationChannel(channel)
     }
 
     private fun alarmIsToday(): Boolean {
@@ -112,7 +72,6 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
     }
 }
 
-// Keeping your MusicControl and MediaNotificationReceiver as they were (mostly)
 class MusicControl private constructor(private var context: Context) {
     private var mediaPlayer: MediaPlayer? = null
 
@@ -129,14 +88,26 @@ class MusicControl private constructor(private var context: Context) {
 
     fun PlayMusic(context: Context) {
         stopMusic() // Stop any current playback first
+        
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_ALARM)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+
         mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
+        mediaPlayer?.setAudioAttributes(audioAttributes)
         mediaPlayer?.isLooping = true
         mediaPlayer?.start()
     }
 
     fun stopMusic() {
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
-        mediaPlayer = null
+        try {
+            mediaPlayer?.stop()
+            mediaPlayer?.release()
+        } catch (e: Exception) {
+            Log.e("MusicControl", "Error stopping music", e)
+        } finally {
+            mediaPlayer = null
+        }
     }
 }

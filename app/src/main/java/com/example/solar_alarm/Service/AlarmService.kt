@@ -4,13 +4,13 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.IBinder
 import android.os.Vibrator
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.solar_alarm.Activities.RingActivity
 import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver
+import com.example.solar_alarm.BroadcastReceiver.MusicControl
 import com.example.solar_alarm.Data.Tables.SolarAlarm
 import com.example.solar_alarm.R
 import com.example.solar_alarm.SolarAlarmApp
@@ -18,10 +18,11 @@ import com.example.solar_alarm.SolarAlarmApp
 class AlarmService : Service()
 {
     private lateinit var solarAlarm: SolarAlarm
-    private var mediaPlayer: MediaPlayer? = null
     private var vibrator: Vibrator? = null
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent == null) return START_STICKY
+
         try {
             solarAlarm = AlarmBroadcastReceiver.GetSolarAlarmFromIntent(intent)
             
@@ -48,7 +49,7 @@ class AlarmService : Service()
                 .setContentText("Solar Alarm is ringing!")
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .setFullScreenIntent(pendingIntent, true) // THIS IS THE TRIGGER
+                .setFullScreenIntent(pendingIntent, true)
                 .setContentIntent(pendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOngoing(true)
@@ -64,9 +65,10 @@ class AlarmService : Service()
                 it.vibrate(pattern, 0)
             }
 
-            mediaPlayer = MediaPlayer.create(this, R.raw.alarm)
-            mediaPlayer?.isLooping = true
-            mediaPlayer?.start()
+            MusicControl.getInstance(this).PlayMusic(this)
+
+            // 6. Force start the activity
+            startActivity(ringIntent)
 
         } catch (e: Exception) {
             Log.e("AlarmService", "Error in onStartCommand", e)
@@ -77,8 +79,7 @@ class AlarmService : Service()
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
+        MusicControl.getInstance(this).stopMusic()
         vibrator?.cancel()
     }
 
