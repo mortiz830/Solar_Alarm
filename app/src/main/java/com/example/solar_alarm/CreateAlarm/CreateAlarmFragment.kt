@@ -17,7 +17,6 @@ import com.example.solar_alarm.Activities.NavActivity
 import com.example.solar_alarm.AlarmList.SolarAlarmListFragment
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
-import com.example.solar_alarm.Data.Tables.Location
 import com.example.solar_alarm.Data.Tables.SolarAlarm
 import com.example.solar_alarm.Data.Tables.SolarTime
 import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
@@ -26,7 +25,6 @@ import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
 import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
 import kotlinx.coroutines.runBlocking
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -39,6 +37,7 @@ class CreateAlarmFragment constructor(locationListViewModel: LocationListViewMod
     private val solarAlarmViewModel: SolarAlarmViewModel = solarAlarmViewModel
 
     private var solarAlarmRepository = SolarAlarmApp().solarAlarmRepository
+    private var solarTimeRepository = SolarAlarmApp().solarTimeRepository
 
     private var dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd-MMM-uuuu\nhh:mm a")
 
@@ -49,36 +48,36 @@ class CreateAlarmFragment constructor(locationListViewModel: LocationListViewMod
         binding = FragmentCreatealarmBinding.inflate(layoutInflater)
     }
 
-    fun Location.GetSolarTimes() : ArrayList<SolarTime>
-    {
-        val solarTimes : ArrayList<SolarTime> = arrayListOf()
-        var date                              = LocalDate.now()
-        val thisLocation = this
-
-        for (i in 1..7)
-        {
-            try
-            {
-                runBlocking {
-                    val solarTime = SolarAlarmApp().solarTimeRepository.getSolarTime(thisLocation, date)
-
-                    if (solarTime != null)
-                    {
-                        solarTimes.add(solarTime)
-                    }
-                }
-
-                date = date.plusDays(1)
-            }
-            catch (e: Exception)
-            {
-                e.printStackTrace()
-                throw e
-            }
-        }
-
-        return solarTimes
-    }
+//    fun Location.GetSolarTimes() : ArrayList<SolarTime>
+//    {
+//        val solarTimes : ArrayList<SolarTime> = arrayListOf()
+//        var date                              = LocalDate.now()
+//        val thisLocation = this
+//
+//        for (i in 1..7)
+//        {
+//            try
+//            {
+//                runBlocking {
+//                    val solarTime = SolarAlarmApp().solarTimeRepository.getSolarTime(thisLocation, date)
+//
+//                    if (solarTime != null)
+//                    {
+//                        solarTimes.add(solarTime)
+//                    }
+//                }
+//
+//                date = date.plusDays(1)
+//            }
+//            catch (e: Exception)
+//            {
+//                e.printStackTrace()
+//                throw e
+//            }
+//        }
+//
+//        return solarTimes
+//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
@@ -101,10 +100,14 @@ class CreateAlarmFragment constructor(locationListViewModel: LocationListViewMod
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, locationPosition: Int, l: Long)
             {
                 val newSelectedLocation = locationListViewModel.AllLocations.value.orEmpty()[locationPosition]
-                solarTimes              = newSelectedLocation.GetSolarTimes()
+
+                runBlocking {
+                    solarTimes = solarTimeRepository.getSolarTimeWeek(newSelectedLocation)//newSelectedLocation.GetSolarTimes()
+                }
 
                 try
                 {
+                    // TODO Assumes Alarm will ring today
                     binding.fragmentCreatealarmSunriseData.text   = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(dateTimeFormatter)
                     binding.fragmentCreatealarmSolarnoonData.text = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(dateTimeFormatter)
                     binding.fragmentCreatealarmSunsetData.text    = solarTimes[0].GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(dateTimeFormatter)

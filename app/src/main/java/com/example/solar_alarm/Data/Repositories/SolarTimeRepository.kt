@@ -6,9 +6,11 @@ import androidx.annotation.WorkerThread
 import com.example.solar_alarm.Data.Daos.SolarTimeDao
 import com.example.solar_alarm.Data.Tables.Location
 import com.example.solar_alarm.Data.Tables.SolarTime
+import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.sunrise_sunset_http.HttpRequests
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -77,5 +79,35 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
         }
 
         return solarTime
+    }
+
+    suspend fun getSolarTimeWeek(location: Location): ArrayList<SolarTime>
+    {
+        val solarTimes : ArrayList<SolarTime> = arrayListOf()
+        var date                              = LocalDate.now()
+
+        for (i in 1..7)
+        {
+            try
+            {
+                runBlocking {
+                    val solarTime = SolarAlarmApp().solarTimeRepository.getSolarTime(location, date)
+
+                    if (solarTime != null)
+                    {
+                        solarTimes.add(solarTime)
+                    }
+                }
+
+                date = date.plusDays(1)
+            }
+            catch (e: Exception)
+            {
+                e.printStackTrace()
+                throw e
+            }
+        }
+
+        return solarTimes
     }
 }
