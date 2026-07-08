@@ -18,26 +18,26 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         try {
             // 1. Initialize data
-            solarAlarm = GetSolarAlarmFromIntent(intent)
-            Log.d("ALARM_DEBUG", "Received alarm: ${solarAlarm.Name}")
+            val dd = GetSolarAlarmFromIntent(intent);
 
-            // 2. Logic check: If it's recurring, check if today is an active day
-            if (solarAlarm.Recurring && !alarmIsToday()) {
-                Log.d("ALARM_DEBUG", "Alarm skipped: Not scheduled for today.")
-                return
-            }
+            if (dd != null)
+            {
+                solarAlarm = dd
+                Log.d("ALARM_DEBUG", "Received alarm: ${solarAlarm.Name}")
 
-            // 3. Start the AlarmService to handle notification, music and full screen intent
-            val serviceIntent = Intent(context, AlarmService::class.java).apply {
-                putExtra("SolarAlarm", solarAlarm)
-            }
-            
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // 2. Logic check: If it's recurring, check if today is an active day
+                if (solarAlarm.Recurring && !alarmIsToday()) {
+                    Log.d("ALARM_DEBUG", "Alarm skipped: Not scheduled for today.")
+                    return
+                }
+
+                // 3. Start the AlarmService to handle notification, music and full screen intent
+                val serviceIntent = Intent(context, AlarmService::class.java).apply {
+                    putExtra("SolarAlarm", solarAlarm)
+                }
+
                 context.startForegroundService(serviceIntent)
-            } else {
-                context.startService(serviceIntent)
             }
-
         } catch (e: Exception) {
             Log.e("ALARM_DEBUG", "Error in onReceive: ${e.message}")
         }
@@ -60,14 +60,18 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        fun GetSolarAlarmFromIntent(intent: Intent): SolarAlarm {
-            val alarm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        fun GetSolarAlarmFromIntent(intent: Intent): SolarAlarm?
+        {
+            val solarAlarm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            {
                 intent.getParcelableExtra("SolarAlarm", SolarAlarm::class.java)
-            } else {
+            }
+            else
+            {
                 @Suppress("DEPRECATION")
                 intent.getParcelableExtra<SolarAlarm>("SolarAlarm")
             }
-            return alarm ?: throw NullPointerException("SolarAlarm data was null in Intent")
+            return solarAlarm //?: throw NullPointerException("SolarAlarm data was null in Intent")
         }
     }
 }

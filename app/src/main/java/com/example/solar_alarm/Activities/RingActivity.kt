@@ -6,14 +6,18 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver
 import com.example.solar_alarm.BroadcastReceiver.MusicControl
+import com.example.solar_alarm.Data.Tables.SolarAlarm
 import com.example.solar_alarm.Service.AlarmService
 import com.example.solar_alarm.databinding.ActivityRingBinding
 
 class RingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRingBinding
+    private lateinit var solarAlarm: SolarAlarm
 
     override fun onCreate(bundle: Bundle?) {
         super.onCreate(bundle)
@@ -38,7 +42,10 @@ class RingActivity : AppCompatActivity() {
         binding = ActivityRingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 3. Set up Click Listeners using binding
+        // 3. Get SolarAlarm from Intent
+        solarAlarm = AlarmBroadcastReceiver.GetSolarAlarmFromIntent(intent) as SolarAlarm
+
+        // 4. Set up Click Listeners using binding
         binding.activityRingDismiss.setOnClickListener {
             dismissAlarm()
         }
@@ -48,11 +55,24 @@ class RingActivity : AppCompatActivity() {
         }
     }
 
-    private fun dismissAlarm() {
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun dismissAlarm()
+    {
         MusicControl.getInstance(this).stopMusic()
         val intentService = Intent(applicationContext, AlarmService::class.java)
-        // NEED SolarAlarm object or ID IN HERE
-        // send to CreateAlarmFragment.UpdateAlarmAfterDismiss() to be updated and reset in broadcast receiver
+
+        var tt = intentService.getParcelableExtra<SolarAlarm>("SolarAlarm", SolarAlarm::class.java)
+
+//        // 3. Start the AlarmService to handle notification, music and full screen intent
+//        val serviceIntent = Intent(context, AlarmService::class.java).apply {
+//            putExtra("SolarAlarm", solarAlarm)
+//        }
+
+        val dd = intentService.getParcelableExtra<SolarAlarm>("SolarAlarm");
+        
+        // Example: Pass the object back to the service or another component
+        // intentService.putExtra("SolarAlarm", solarAlarm)
+
         stopService(intentService)
         finish()
     }
