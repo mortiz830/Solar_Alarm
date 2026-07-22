@@ -16,7 +16,7 @@ class HttpRequests @RequiresApi(api = Build.VERSION_CODES.O) constructor()
 
     @RequiresApi(Build.VERSION_CODES.O)
     @Throws(IOException::class)
-    suspend fun GetSolarData(sunriseSunsetRequest: SunriseSunsetRequest): SunriseSunsetResponse
+    suspend fun getSolarData(sunriseSunsetRequest: SunriseSunsetRequest): SunriseSunsetResponse
     {
         var sunriseSunsetResponse = SunriseSunsetResponse()
 

@@ -13,37 +13,37 @@ import java.time.ZonedDateTime
 class SolarTimeDisplayModel(private val _Application: Application, private val _SolarTime: SolarTime?) {
     @get:Throws(Exception::class)
     val sunrise: ZonedDateTime
-        get() = _SolarTime!!.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise)
+        get() = _SolarTime!!.getLocalZonedDateTime(SolarTimeTypeEnum.Sunrise)
 
     @get:Throws(Exception::class)
     val sunset: ZonedDateTime
-        get() = _SolarTime!!.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset)
+        get() = _SolarTime!!.getLocalZonedDateTime(SolarTimeTypeEnum.Sunset)
 
     @get:Throws(Exception::class)
     val solarNoon: ZonedDateTime
-        get() = _SolarTime!!.GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon)
+        get() = _SolarTime!!.getLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon)
 
     @get:Throws(Exception::class)
     val civilTwilightBegin: ZonedDateTime
-        get() = _SolarTime!!.GetLocalZonedDateTime(SolarTimeTypeEnum.CivilTwilightBegin)
+        get() = _SolarTime!!.getLocalZonedDateTime(SolarTimeTypeEnum.CivilTwilightBegin)
 
     @get:Throws(Exception::class)
     val civilTwilightEnd: ZonedDateTime
-        get() = _SolarTime!!.GetLocalZonedDateTime(SolarTimeTypeEnum.CivilTwilightEnd)
+        get() = _SolarTime!!.getLocalZonedDateTime(SolarTimeTypeEnum.CivilTwilightEnd)
 
     @get:Throws(Exception::class)
     val nauticalTwilightBegin: ZonedDateTime
-        get() = _SolarTime!!.GetLocalZonedDateTime(SolarTimeTypeEnum.NauticalTwilightBegin)
+        get() = _SolarTime!!.getLocalZonedDateTime(SolarTimeTypeEnum.NauticalTwilightBegin)
 
     @get:Throws(Exception::class)
     val nauticalTwilightEnd: ZonedDateTime
-        get() = _SolarTime!!.GetLocalZonedDateTime(SolarTimeTypeEnum.NauticalTwilightEnd)
+        get() = _SolarTime!!.getLocalZonedDateTime(SolarTimeTypeEnum.NauticalTwilightEnd)
 
     @get:Throws(Exception::class)
     val astronomicalTwilightBegin: ZonedDateTime
-        get() = _SolarTime!!.GetLocalZonedDateTime(SolarTimeTypeEnum.AstronomicalTwilightBegin)
+        get() = _SolarTime!!.getLocalZonedDateTime(SolarTimeTypeEnum.AstronomicalTwilightBegin)
 
     @get:Throws(Exception::class)
     val astronomicalTwilightEnd: ZonedDateTime
-        get() = _SolarTime!!.GetLocalZonedDateTime(SolarTimeTypeEnum.AstronomicalTwilightEnd)
+        get() = _SolarTime!!.getLocalZonedDateTime(SolarTimeTypeEnum.AstronomicalTwilightEnd)
 }

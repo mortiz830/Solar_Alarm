@@ -8,42 +8,44 @@ import androidx.lifecycle.LiveData
 import com.example.solar_alarm.Data.SolarAlarmDatabase
 import com.example.solar_alarm.Data.Daos.SolarAlarmDao
 import com.example.solar_alarm.Data.Daos.SolarTimeDao
+import com.example.solar_alarm.Data.Tables.SolarAlarmWithDetails
 import com.example.solar_alarm.Data.Tables.SolarTime
 import kotlinx.coroutines.flow.Flow
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 class SolarAlarmRepository(private val solarAlarmDao: SolarAlarmDao)
 {
-    val all: Flow<List<SolarAlarm>> = solarAlarmDao.GetAll()
+    val all: Flow<List<SolarAlarm>> = solarAlarmDao.getAll()
+    val allWithDetails: Flow<List<SolarAlarmWithDetails>> = solarAlarmDao.getAllWithDetails()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun Insert(solarAlarm: SolarAlarm)
+    suspend fun insert(solarAlarm: SolarAlarm)
     {
         solarAlarmDao.insert(solarAlarm)
     }
 
     @WorkerThread
-    suspend fun GetById(id: Int)
+    suspend fun getById(id: Int): SolarAlarm?
     {
-        solarAlarmDao.GetById(id)
+        return solarAlarmDao.getById(id)
     }
 
     @WorkerThread
-    suspend fun Update(solarAlarm: SolarAlarm)
+    suspend fun update(solarAlarm: SolarAlarm)
     {
         solarAlarmDao.update(solarAlarm)
     }
 
     @WorkerThread
-    suspend fun Delete(solarAlarm: SolarAlarm)
+    suspend fun delete(solarAlarm: SolarAlarm)
     {
         solarAlarmDao.delete(solarAlarm)
     }
 
     @WorkerThread
-    fun isSolarAlarmNameLocationIDExists(solarAlarm: SolarAlarm): Boolean
+    suspend fun isSolarAlarmNameLocationIDExists(solarAlarm: SolarAlarm): Boolean
     {
-        return solarAlarmDao.isSolarAlarmNameLocationIDPairExists(solarAlarm.Name, solarAlarm.LocationId)
+        return solarAlarmDao.isSolarAlarmNameLocationIdPairExists(solarAlarm.Name, solarAlarm.LocationId)
     }
 }

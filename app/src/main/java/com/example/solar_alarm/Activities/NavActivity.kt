@@ -44,18 +44,18 @@ class NavActivity : AppCompatActivity()
         binding = ActivityBottomNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        replaceFragment(SolarAlarmListFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
+        replaceFragment(SolarAlarmListFragment())
 
         binding.navView.setOnItemSelectedListener {
             when (it.itemId)
             {
 //                R.id.navigation_home         -> replaceFragment(AlarmListFragment())
-                R.id.navigation_home         -> replaceFragment(SolarAlarmListFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
-                R.id.navigation_location     -> replaceFragment(LocationListFragment(locationListViewModel))//replaceFragment(AddLocationFragment(locationViewModel))
-                R.id.navigation_create_alarm -> replaceFragment(CreateAlarmFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
+                R.id.navigation_home         -> replaceFragment(SolarAlarmListFragment())
+                R.id.navigation_location     -> replaceFragment(LocationListFragment())
+                R.id.navigation_create_alarm -> replaceFragment(CreateAlarmFragment())
 
                 // NEED TO CHANGE ICON AND ADD NEW SCREE FOR SOLAR TIMES
-                R.id.navigation_solar_times -> replaceFragment(SolarTimeFragment(solarTimeViewModel))
+                R.id.navigation_solar_times -> replaceFragment(SolarTimeFragment())
                 else -> { }
             }
             true

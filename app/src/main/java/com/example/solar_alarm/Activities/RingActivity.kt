@@ -43,7 +43,7 @@ class RingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // 3. Get SolarAlarm from Intent
-        solarAlarm = AlarmBroadcastReceiver.GetSolarAlarmFromIntent(intent) as SolarAlarm
+        solarAlarm = AlarmBroadcastReceiver.getSolarAlarmFromIntent(intent) as SolarAlarm
 
         // 4. Set up Click Listeners using binding
         binding.activityRingDismiss.setOnClickListener {

@@ -9,14 +9,16 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository
 import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.Data.Tables.SolarAlarmWithDetails
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 class SolarAlarmViewModel(private val repository: SolarAlarmRepository) : ViewModel()
 {
-    val AllSolarAlarms: LiveData<List<SolarAlarm>> = repository.all.asLiveData()
+    val allSolarAlarms: LiveData<List<SolarAlarm>> = repository.all.asLiveData()
+    val allSolarAlarmsWithDetails: LiveData<List<SolarAlarmWithDetails>> = repository.allWithDetails.asLiveData()
 
-    fun Insert(solarAlarm: SolarAlarm) = viewModelScope.launch { repository.Insert(solarAlarm) }
+    fun insert(solarAlarm: SolarAlarm) = viewModelScope.launch { repository.insert(solarAlarm) }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

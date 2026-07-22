@@ -62,25 +62,15 @@ data class SolarTime
     @IgnoredOnParcel
     @ColumnInfo(name = "CreateDateTimeUtc") var CreateDateTimeUtc : OffsetDateTime = OffsetDateTime.of(OffsetDateTime.now().toLocalDateTime(), ZoneOffset.UTC)
 
-    /**
-     * @param solarTimeTypeEnum the type of time.
-     * @return UTC date time string in UTC time zone as a ZonedDateTime
-     * @see ZonedDateTime
-     */
-    fun GetLocalZonedDateTime(solarTimeTypeEnum: SolarTimeTypeEnum): ZonedDateTime
+    fun getLocalZonedDateTime(solarTimeTypeEnum: SolarTimeTypeEnum): ZonedDateTime
     {
-        val utcDateTime = GetUtcZonedDateTime(solarTimeTypeEnum)
+        val utcDateTime = getUtcZonedDateTime(solarTimeTypeEnum)
         val zoneId      = ZoneId.systemDefault()
 
         return utcDateTime.withZoneSameInstant(zoneId)
     }
 
-    /**
-     * @param solarTimeTypeEnum the type of time.
-     * @return UTC date time string in UTC time zone as a ZonedDateTime
-     * @see ZonedDateTime
-     */
-    private fun GetUtcZonedDateTime(solarTimeTypeEnum: SolarTimeTypeEnum): ZonedDateTime
+    private fun getUtcZonedDateTime(solarTimeTypeEnum: SolarTimeTypeEnum): ZonedDateTime
     {
         val localDateTime = getLocalDateTime(solarTimeTypeEnum)
         val zoneId        = ZoneId.ofOffset("UTC", ZoneOffset.UTC)
@@ -88,11 +78,6 @@ data class SolarTime
         return localDateTime.atZone(zoneId)
     }
 
-    /**
-     * @param solarTimeTypeEnum the type of time.
-     * @return UTC date time string converted to the device's time zone as a LocalDateTime
-     * @see LocalDateTime
-     */
     private fun getLocalDateTime(solarTimeTypeEnum: SolarTimeTypeEnum): LocalDateTime
     {
         val utcString: String? = when (solarTimeTypeEnum)

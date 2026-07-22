@@ -27,9 +27,9 @@ class SolarTimeAdapter (private var solarTimes: List<SolarTime>) : RecyclerView.
         try
         {
             holder.binding.solarTimeData1.text = "${solarTime.Id} - ${solarTime.SolarDate} - Location ID: ${solarTime.LocationId}"
-            holder.binding.solarTimeData2.text = "Sunrise - ${formatDateString(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunrise))}"
-            holder.binding.solarTimeData3.text = "SolarNoon - ${formatDateString(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon))}"
-            holder.binding.solarTimeData4.text = "Sunset - ${formatDateString(solarTime.GetLocalZonedDateTime(SolarTimeTypeEnum.Sunset))}"
+            holder.binding.solarTimeData2.text = "Sunrise - ${formatDateString(solarTime.getLocalZonedDateTime(SolarTimeTypeEnum.Sunrise))}"
+            holder.binding.solarTimeData3.text = "SolarNoon - ${formatDateString(solarTime.getLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon))}"
+            holder.binding.solarTimeData4.text = "Sunset - ${formatDateString(solarTime.getLocalZonedDateTime(SolarTimeTypeEnum.Sunset))}"
         }
         catch (e: Exception)
         {

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.CreateAlarm.CreateAlarmFragment
@@ -24,14 +25,15 @@ import java.time.ZoneId
 import java.util.TimeZone
 
 @RequiresApi(Build.VERSION_CODES.O)
-class SolarAlarmListFragment constructor(private var locationListViewModel   : LocationListViewModel,
-                                         private val solarTimeViewModel  : SolarTimeViewModel,
-                                         private val solarAlarmViewModel : SolarAlarmViewModel)
-    : Fragment(), OnToggleAlarmListener
+class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
 {
     private lateinit var fragmentListalarmsBinding: FragmentListalarmsBinding
     private lateinit var solarAlarmListAdapter: SolarAlarmListAdapter
     private lateinit var recyclerView: RecyclerView
+
+    private val locationListViewModel: LocationListViewModel by activityViewModels()
+    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
+    private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels()
 
     private var gpsTracker: GpsTracker? = null
     private var zoneId: ZoneId? = null
@@ -46,26 +48,16 @@ class SolarAlarmListFragment constructor(private var locationListViewModel   : L
         recyclerView.setLayoutManager(LinearLayoutManager(context))
         recyclerView.setAdapter(solarAlarmListAdapter)
 
-        solarAlarmViewModel.AllSolarAlarms.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> solarAlarmListAdapter.UpdateSolarAlarms(solarAlarms)})
+        solarAlarmViewModel.allSolarAlarmsWithDetails.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> solarAlarmListAdapter.UpdateSolarAlarms(solarAlarms)})
 
         zoneId = TimeZone.getDefault().toZoneId()
         fragmentListalarmsBinding.addButton.setOnClickListener { showPopupMenu(it) }
-        GetLocation(fragmentListalarmsBinding.root)
+        getLocation(fragmentListalarmsBinding.root)
 
         return fragmentListalarmsBinding.getRoot()
     }
 
-//    override fun onToggle(alarm: Alarm) {
-//        if (alarm.isStarted) {
-//            alarm.cancelAlarm(context)
-//            //alarmsListViewModel.update(alarm);
-//        } else {
-//            alarm.schedule(context)
-//            //alarmsListViewModel.update(alarm);
-//        }
-//    }
-
-    fun GetLocation(view: View)
+    fun getLocation(view: View)
     {
         gpsTracker = GpsTracker(view.context)
 
@@ -91,13 +83,11 @@ class SolarAlarmListFragment constructor(private var locationListViewModel   : L
         popup.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.action_option_create_location -> {
-                    replaceFragment(LocationCreateFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
-                    //fab.hide()
+                    replaceFragment(LocationCreateFragment())
                     true
                 }
                 R.id.action_option_create_alarm -> {
-                    replaceFragment(CreateAlarmFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
-                    //fab.hide()
+                    replaceFragment(CreateAlarmFragment())
                     true
                 }
                 else -> false
@@ -106,26 +96,4 @@ class SolarAlarmListFragment constructor(private var locationListViewModel   : L
 
         popup.show()
     }
-/*
-    private fun configureOnClickRecyclerView() {
-        ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
-                .setOnItemClickListener(ItemClickSupport.OnItemClickListener { recyclerView, position, v ->
-                    val alarm = alarmRecyclerViewAdapter!!.getAlarm(position)
-                    val bundle = Bundle()
-                    bundle.putInt("position", position)
-                    val updateAlarmFragment = UpdateAlarmFragment()
-                    updateAlarmFragment.arguments = bundle
-                    val manager = fragmentManager
-                    manager!!.beginTransaction().replace(R.id.activity_main_nav_host_fragment, updateAlarmFragment).commit()
-                })
-        ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
-                .setOnItemLongClickListener(ItemClickSupport.OnItemLongClickListener { recyclerView, position, v ->
-                    val alarm = alarmRecyclerViewAdapter!!.getAlarm(position)
-                    // 2 - Show result in a Toast
-                    //Toast.makeText(getContext(), "You long clicked on user : "+alarm.getTitle(), Toast.LENGTH_SHORT).show();
-                    //alarmsListViewModel.delete(alarmRecyclerViewAdapter.removeItem(position));
-                    false
-                })
-    }
-    */
 }

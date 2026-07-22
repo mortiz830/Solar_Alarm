@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.Data.Tables.SolarAlarmWithDetails
 import com.example.solar_alarm.R
 import java.time.DayOfWeek
 import java.time.Month
 
 @RequiresApi(Build.VERSION_CODES.O)
-class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : RecyclerView.Adapter<SolarAlarmViewHolder>()
+class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarmWithDetails>) : RecyclerView.Adapter<SolarAlarmViewHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SolarAlarmViewHolder
     {
@@ -23,17 +23,20 @@ class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : Recycle
 
     override fun onBindViewHolder(solarAlarmViewHolder: SolarAlarmViewHolder, position: Int)
     {
-        val solarAlarm = solarAlarms[position]
+        val solarAlarmWithDetails = solarAlarms[position]
+        val solarAlarm = solarAlarmWithDetails.solarAlarm
+        val solarTime = solarAlarmWithDetails.solarTime
+        val location = solarAlarmWithDetails.location
 
         try
         {
-            val zonedDateTime = solarAlarm.solarTime.GetLocalZonedDateTime(solarAlarm.SolarTimeTypeId)
+            val zonedDateTime = solarTime.getLocalZonedDateTime(solarAlarm.SolarTimeTypeId)
             val hour          = if (zonedDateTime.hour > 12)  zonedDateTime.hour - 12 else zonedDateTime.hour
             val ampm          = if (zonedDateTime.hour > 12)  "PM" else "AM"
-            val shorDay       = GetShorDay(zonedDateTime.dayOfWeek)
-            val shortMonth    = GetShortMonth(zonedDateTime.month)
+            val shorDay       = getShortDay(zonedDateTime.dayOfWeek)
+            val shortMonth    = getShortMonth(zonedDateTime.month)
 
-            "${solarAlarm.Id} - ${solarAlarm.Name} - ${solarAlarm.OffsetTypeId.Name} ${solarAlarm.SolarTimeTypeId.Name} - ${solarAlarm.location.Name}".also { solarAlarmViewHolder.alarmName.text = it }
+            "${solarAlarm.Id} - ${solarAlarm.Name} - ${solarAlarm.OffsetTypeId.Name} ${solarAlarm.SolarTimeTypeId.Name} - ${location.Name}".also { solarAlarmViewHolder.alarmName.text = it }
             "${shorDay} ${zonedDateTime.dayOfMonth}-$shortMonth-${zonedDateTime.year} ${hour}:${zonedDateTime.minute} $ampm".also { solarAlarmViewHolder.alarmDateTime.text = it }
         }
         catch (e: Exception)
@@ -42,7 +45,7 @@ class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : Recycle
         }
     }
 
-    private fun GetShortMonth(month: Month): String
+    private fun getShortMonth(month: Month): String
     {
         return when (month)
         {
@@ -61,7 +64,7 @@ class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : Recycle
         }
     }
 
-    private fun GetShorDay(dayOfWeek: DayOfWeek): String
+    private fun getShortDay(dayOfWeek: DayOfWeek): String
     {
         return when (dayOfWeek)
         {
@@ -77,7 +80,7 @@ class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarm>) : Recycle
 
     override fun getItemCount(): Int = solarAlarms.size
 
-    fun UpdateSolarAlarms(newSolarAlarms: List<SolarAlarm>)
+    fun UpdateSolarAlarms(newSolarAlarms: List<SolarAlarmWithDetails>)
     {
         solarAlarms = newSolarAlarms
         notifyDataSetChanged()

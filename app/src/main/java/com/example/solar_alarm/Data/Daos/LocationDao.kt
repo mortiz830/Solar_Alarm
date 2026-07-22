@@ -16,26 +16,26 @@ interface LocationDao// : BaseDao<Location>
     suspend fun insert(location: Location)
 
     @Query("SELECT * FROM Location ORDER BY Name")
-    fun GetAll(): Flow<List<Location>>
+    fun getAll(): Flow<List<Location>>
 
     @Query("SELECT * FROM Location WHERE Id = :id")
-    fun GetById(id: Int): Location
+    suspend fun getById(id: Int): Location
 
     @Query("SELECT * FROM Location WHERE Name = :name")
-    fun GetByName(name: String): Location
+    suspend fun getByName(name: String): Location
 
     @Update
     suspend fun update(location: Location): Int
 
     @Delete
-    suspend fun Delete(location: Location)
+    suspend fun delete(location: Location)
 
     @Query("SELECT EXISTS(SELECT * FROM Location WHERE Name = :name)")
-    suspend fun DoesLocationNameExists(name: String?): Boolean
+    suspend fun doesLocationNameExists(name: String?): Boolean
 
     @Query("SELECT EXISTS(SELECT * FROM Location WHERE Latitude = :latitude AND Longitude = :longitude)")
-    suspend fun DoesLocationLatLongExists(latitude: Double, longitude: Double): Boolean
+    suspend fun doesLocationLatLongExists(latitude: Double, longitude: Double): Boolean
 
     @Query("SELECT MAX(Id) FROM Location")
-    suspend fun MaxId() : Int?
+    suspend fun maxId() : Int?
 }

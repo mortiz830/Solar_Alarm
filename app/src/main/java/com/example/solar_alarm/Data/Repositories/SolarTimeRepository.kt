@@ -14,35 +14,35 @@ import java.time.LocalDate
 @RequiresApi(api = Build.VERSION_CODES.O)
 class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
 {
-    val all: Flow<List<SolarTime>> = solarTimeDao.GetAll()
+    val all: Flow<List<SolarTime>> = solarTimeDao.getAll()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun Insert(solarTime: SolarTime)
+    suspend fun insert(solarTime: SolarTime)
     {
         solarTimeDao.insert(solarTime)
     }
 
     @WorkerThread
-    suspend fun GetById(id: Int) : SolarTime
+    suspend fun getById(id: Int) : SolarTime
     {
-        return solarTimeDao.GetById(id)
+        return solarTimeDao.getById(id)
     }
 
     @WorkerThread
-    suspend fun Update(solarTime: SolarTime)
+    suspend fun update(solarTime: SolarTime)
     {
         solarTimeDao.update(solarTime)
     }
 
     @WorkerThread
-    suspend fun Delete(solarTime: SolarTime)
+    suspend fun delete(solarTime: SolarTime)
     {
         solarTimeDao.delete(solarTime)
     }
 
     @WorkerThread
-    fun doesLocationIdDatePairExists(locationId: Int, date: LocalDate): Boolean
+    suspend fun doesLocationIdDatePairExists(locationId: Int, date: LocalDate): Boolean
     {
         return solarTimeDao.doesLocationIdDatePairExists(locationId, date)
     }
@@ -56,7 +56,7 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
         {
             // Make HTTP Request to API
             val sunriseSunsetRequest  = SunriseSunsetRequest(location.Latitude.toFloat(), location.Longitude.toFloat(), date)
-            val sunriseSunsetResponse = HttpRequests().GetSolarData(sunriseSunsetRequest)
+            val sunriseSunsetResponse = HttpRequests().getSolarData(sunriseSunsetRequest)
 
             solarTime = SolarTime(date,
                                   location.Id,
@@ -71,7 +71,7 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
                                   sunriseSunsetResponse.results?.astronomical_twilight_begin,
                                   sunriseSunsetResponse.results?.astronomical_twilight_end)
 
-            Insert(solarTime)   // save response as a new SolarTime
+            insert(solarTime)   // save response as a new SolarTime
 
             solarTime = solarTimeDao.getSolarTime(location.Id, date)   // reload from DB to get ID number
         }

@@ -10,16 +10,9 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.O)
 class SolarTimeViewModel(private val repository: SolarTimeRepository) : ViewModel()
 {
-    // Using LiveData and caching what allWords returns has several benefits:
-    // - We can put an observer on the data (instead of polling for changes) and only update the
-    //   the UI when the data actually changes.
-    // - Repository is completely separated from the UI through the ViewModel.
-    val AllSolarTimes: LiveData<List<SolarTime>> = repository.all.asLiveData()
+    val allSolarTimes: LiveData<List<SolarTime>> = repository.all.asLiveData()
 
-    /**
-     * Launching a new coroutine to insert the data in a non-blocking way
-     */
-    fun Insert(solarTime: SolarTime) = viewModelScope.launch { repository.Insert(solarTime) }
+    fun insert(solarTime: SolarTime) = viewModelScope.launch { repository.insert(solarTime) }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

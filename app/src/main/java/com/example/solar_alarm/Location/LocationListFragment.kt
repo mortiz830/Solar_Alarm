@@ -8,17 +8,20 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
 import com.example.solar_alarm.databinding.FragmentListlocationsBinding
 
 @RequiresApi(Build.VERSION_CODES.O)
-class LocationListFragment constructor(private var locationListViewModel: LocationListViewModel) : Fragment()
+class LocationListFragment : Fragment()
 {
     private lateinit var fragmentListlocationsBinding : FragmentListlocationsBinding
     private lateinit var locationListAdapter          : LocationListAdapter
     private lateinit var recyclerView                 : RecyclerView
+
+    private val locationListViewModel: LocationListViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
     {
@@ -31,7 +34,7 @@ class LocationListFragment constructor(private var locationListViewModel: Locati
 
         try
         {
-            locationListViewModel.AllLocations.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> locationListAdapter.UpdateLocations(solarAlarms)})
+            locationListViewModel.allLocations.observe(viewLifecycleOwner, androidx.lifecycle.Observer { locations -> locationListAdapter.UpdateLocations(locations)})
         }
         catch (e: Exception)
         {
@@ -40,24 +43,4 @@ class LocationListFragment constructor(private var locationListViewModel: Locati
 
         return fragmentListlocationsBinding.getRoot()
     }
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
-//    {
-//        super.onViewCreated(view, savedInstanceState)
-//
-//        recyclerView = view.findViewById(R.id.fragment_listlocations_recylerView)
-//
-//        locationListAdapter = LocationListAdapter(emptyList())
-//        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-//        recyclerView.adapter = locationListAdapter
-//
-//        try
-//        {
-//            locationViewModel.AllLocations.observe(viewLifecycleOwner, Observer { locations -> locationListAdapter.UpdateLocations(locations) })
-//        }
-//        catch (e: Exception)
-//        {
-//            Toast.makeText(getContext(), e.message, Toast.LENGTH_LONG).show()
-//        }
-//    }
 }

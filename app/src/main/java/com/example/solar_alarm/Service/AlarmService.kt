@@ -24,7 +24,7 @@ class AlarmService : Service()
         if (intent == null) return START_STICKY
 
         try {
-            solarAlarm = AlarmBroadcastReceiver.GetSolarAlarmFromIntent(intent) as SolarAlarm
+            solarAlarm = AlarmBroadcastReceiver.getSolarAlarmFromIntent(intent) as SolarAlarm
             
             // 1. Create the Intent for RingActivity with proper flags
             val ringIntent = Intent(this, RingActivity::class.java).apply {
@@ -65,7 +65,7 @@ class AlarmService : Service()
                 it.vibrate(pattern, 0)
             }
 
-            MusicControl.getInstance(this).PlayMusic(this)
+            MusicControl.getInstance(this).playMusic(this)
 
             // 6. Force start the activity
             startActivity(ringIntent)

@@ -8,16 +8,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
 import com.example.solar_alarm.databinding.FragmentSolarTimeBinding
 
-class SolarTimeFragment constructor(private var solarTimeViewModel: SolarTimeViewModel) : Fragment()
+class SolarTimeFragment : Fragment()
 {
     private lateinit var fragmentSolarTimeBinding    : FragmentSolarTimeBinding
     private lateinit var solarTimeAdapter            : SolarTimeAdapter
     private lateinit var recyclerView                : RecyclerView
+
+    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
@@ -31,7 +34,7 @@ class SolarTimeFragment constructor(private var solarTimeViewModel: SolarTimeVie
 
         try
         {
-            solarTimeViewModel.AllSolarTimes.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarTimes -> solarTimeAdapter.updateSolarTimes(solarTimes)})
+            solarTimeViewModel.allSolarTimes.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarTimes -> solarTimeAdapter.updateSolarTimes(solarTimes)})
         }
         catch (e: Exception)
         {

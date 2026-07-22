@@ -10,130 +10,54 @@ import kotlinx.coroutines.flow.Flow
 @RequiresApi(api = Build.VERSION_CODES.O)
 class LocationRepository(private val locationDao: LocationDao)
 {
-    //private val staticDataDao: StaticDataDao = _SolarAlarmDatabase.staticDataDao()
-
-    val all: Flow<List<Location>> = locationDao.GetAll()
-
-    //fun GetAllLocations() : LiveData<List<Location>> {return locationDao.GetAll()}
+    val all: Flow<List<Location>> = locationDao.getAll()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun Insert(location: Location)
+    suspend fun insert(location: Location)
     {
         locationDao.insert(location)
     }
 
     @WorkerThread
-    fun GetById(id: Int): Location
+    suspend fun getById(id: Int): Location
     {
-        return locationDao.GetById(id)
+        return locationDao.getById(id)
     }
 
     @WorkerThread
-    fun GetByName(name: String): Location
+    suspend fun getByName(name: String): Location
     {
-        return locationDao.GetByName(name)
+        return locationDao.getByName(name)
     }
 
     @WorkerThread
-    suspend fun Update(location: Location)
+    suspend fun update(location: Location)
     {
         locationDao.update(location)
     }
 
     @WorkerThread
-    suspend fun Delete(location: Location)
+    suspend fun delete(location: Location)
     {
-        locationDao.Delete(location)
+        locationDao.delete(location)
     }
 
     @WorkerThread
-    suspend fun DoesLocationLatLongExists(latitude: Double, longitude: Double): Boolean
+    suspend fun doesLocationLatLongExists(latitude: Double, longitude: Double): Boolean
     {
-        return locationDao.DoesLocationLatLongExists(latitude, longitude)
+        return locationDao.doesLocationLatLongExists(latitude, longitude)
     }
 
     @WorkerThread
-    suspend fun DoesLocationNameExists(name: String?): Boolean
+    suspend fun doesLocationNameExists(name: String?): Boolean
     {
-        return locationDao.DoesLocationNameExists(name)
+        return locationDao.doesLocationNameExists(name)
     }
 
     @WorkerThread
-    suspend fun MaxId(): Int?
+    suspend fun maxId(): Int?
     {
-        return locationDao.MaxId()
+        return locationDao.maxId()
     }
-/*
-    init {
-        all = locationDao.all
-        AddStaticData()
-    }
-
-    fun Insert(location: Location) {
-        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { locationDao.Insert(location) })
-    }
-
-    fun Update(location: Location) {
-        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { locationDao.Update(location) })
-    }
-
-    fun delete(location: Location) {
-        SolarAlarmDatabase.Companion.databaseWriteExecutor.execute(Runnable { locationDao.delete(location) })
-    }
-
-    fun GetById(id: Int): Location? {
-        return locationDao.GetById(id)
-    }
-
-    fun isLocationNameExists(name: String?): Boolean {
-        return locationDao.isLocationNameExists(name)
-    }
-
-    fun isLocationLatitudeExists(latitude: Double): Boolean {
-        return locationDao.isLocationLatitudeExists(latitude)
-    }
-
-    fun isLocationLongitudeExists(longitude: Double): Boolean {
-        return locationDao.isLocationLongitudeExists(longitude)
-    }
-
-    private fun AddStaticData() {
-        try {
-            IsTimeUnitTypesExistsTask().execute().get()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-*/
-/*
-    inner class IsTimeUnitTypesExistsTask : AsyncTask<Double?, Void?, Boolean>() {
-        protected override fun doInBackground(vararg p0: Double?): Boolean? {
-            try {
-                if (!staticDataDao.isOffsetTypesExists) {
-                    for (enumType in OffsetTypeEnum.values()) {
-                        val x = OffsetType(enumType.Id, enumType.Name)
-                        //x.Id = enumType.Id
-                        //x.Name = enumType.Name
-                        staticDataDao.Insert(x)
-                    }
-                }
-
-                //--------------------------
-                if (!staticDataDao.isSolarTimeTypesExists) {
-                    for (enumType in SolarTimeTypeEnum.values()) {
-                        val x = SolarTimeType(enumType.Id, enumType.Name)
-                        //x.Id = enumType.Id
-                        //x.Name = enumType.Name
-                        staticDataDao.Insert(x)
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return true
-        }
-    }
-
- */
 }

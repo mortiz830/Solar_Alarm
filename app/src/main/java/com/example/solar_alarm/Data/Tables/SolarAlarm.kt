@@ -10,8 +10,6 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
 import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
-import com.example.solar_alarm.SolarAlarmApp
-import kotlinx.coroutines.runBlocking
 import kotlinx.parcelize.Parcelize
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -76,37 +74,5 @@ data class SolarAlarm
     init
     {
         require(Name.isNotBlank()) { "SolarAlarm name cannot be empty or consist only of whitespace." }
-    }
-
-    val solarTime : SolarTime
-        get() {
-            return GetSolarTime()
-        }
-
-    private fun GetSolarTime() : SolarTime
-    {
-        val solarTime : SolarTime
-
-        runBlocking {
-            solarTime = SolarAlarmApp().solarTimeRepository.GetById(SolarTimeId)
-        }
-
-        return solarTime
-    }
-
-    val location : Location
-        get() {
-            return GetLocation()
-        }
-
-    private fun GetLocation() : Location
-    {
-        val location : Location
-
-        runBlocking {
-            location = SolarAlarmApp().locationRepository.GetById(LocationId)
-        }
-
-        return location
     }
 }

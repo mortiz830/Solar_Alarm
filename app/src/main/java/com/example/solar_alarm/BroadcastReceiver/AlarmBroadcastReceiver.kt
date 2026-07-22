@@ -3,12 +3,9 @@ package com.example.solar_alarm.BroadcastReceiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
-import android.media.MediaPlayer
 import android.os.Build
 import android.util.Log
 import com.example.solar_alarm.Data.Tables.SolarAlarm
-import com.example.solar_alarm.R
 import com.example.solar_alarm.Service.AlarmService
 import java.util.Calendar
 
@@ -18,7 +15,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         try {
             // 1. Initialize data
-            val dd = GetSolarAlarmFromIntent(intent);
+            val dd = getSolarAlarmFromIntent(intent)
 
             if (dd != null)
             {
@@ -60,7 +57,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        fun GetSolarAlarmFromIntent(intent: Intent): SolarAlarm?
+        fun getSolarAlarmFromIntent(intent: Intent): SolarAlarm?
         {
             val solarAlarm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             {
@@ -71,47 +68,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                 @Suppress("DEPRECATION")
                 intent.getParcelableExtra<SolarAlarm>("SolarAlarm")
             }
-            return solarAlarm //?: throw NullPointerException("SolarAlarm data was null in Intent")
-        }
-    }
-}
-
-class MusicControl private constructor(private var context: Context) {
-    private var mediaPlayer: MediaPlayer? = null
-
-    companion object {
-        @Volatile
-        private var INSTANCE: MusicControl? = null
-
-        fun getInstance(context: Context): MusicControl {
-            return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: MusicControl(context.applicationContext).also { INSTANCE = it }
-            }
-        }
-    }
-
-    fun PlayMusic(context: Context) {
-        stopMusic() // Stop any current playback first
-        
-        val audioAttributes = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_ALARM)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-            .build()
-
-        mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
-        mediaPlayer?.setAudioAttributes(audioAttributes)
-        mediaPlayer?.isLooping = true
-        mediaPlayer?.start()
-    }
-
-    fun stopMusic() {
-        try {
-            mediaPlayer?.stop()
-            mediaPlayer?.release()
-        } catch (e: Exception) {
-            Log.e("MusicControl", "Error stopping music", e)
-        } finally {
-            mediaPlayer = null
+            return solarAlarm
         }
     }
 }

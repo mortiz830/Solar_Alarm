@@ -1,0 +1,26 @@
+# Task: Project Modernization and Best Practices Implementation
+
+- [x] Data Layer Modernization
+    - [x] Create `SolarAlarmWithDetails.kt` [NEW]
+    - [x] Update `SolarAlarmDao.kt` (Joined queries, `suspend` methods)
+    - [x] Update `LocationDao.kt` (`suspend` methods)
+    - [x] Update `SolarTimeDao.kt` (`suspend` methods)
+    - [x] Update `SolarAlarm.kt` (Remove blocking getters)
+- [x] Repository & ViewModel Refactoring
+    - [x] Update Repositories to use `suspend` and camelCase
+    - [x] Update ViewModels to handle joined data
+- [x] UI Layer Refactoring (Lifecycle & Threading)
+    - [x] `NavActivity.kt`: Update Fragment replacement logic
+    - [x] `CreateAlarmFragment.kt`: Remove constructor params, fix threading
+    - [x] `SolarAlarmListFragment.kt`: Remove constructor params, fix threading
+    - [x] `LocationCreateFragment.kt`: Remove constructor params, fix threading
+    - [x] `LocationListFragment.kt`: Remove constructor params
+    - [x] `SolarTimeFragment.kt`: Remove constructor params
+- [x] Cleanup
+    - [x] Remove `ButterKnife` and `org.apache.http.legacy` from `build.gradle`
+    - [x] Remove legacy entries from `AndroidManifest.xml`
+    - [x] Delete unused files (`App.kt`, `MainActivity.kt`)
+    - [x] Remove commented-out dead code
+- [x] Verification
+    - [x] Gradle Build
+    - [x] Basic Manual Verification
