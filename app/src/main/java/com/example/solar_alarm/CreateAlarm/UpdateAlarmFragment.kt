@@ -1,13 +1,13 @@
-package com.example.solar_alarm.CreateAlarm
+package com.example.solar_alarm.createAlarm
 
 import android.os.Bundle
 import com.example.solar_alarm.R
-import com.example.solar_alarm.AlarmList.AlarmListViewModel
+import com.example.solar_alarm.alarmList.AlarmListViewModel
 import androidx.annotation.RequiresApi
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.example.solar_alarm.DisplayModels.SolarAlarmDisplayModel
+import com.example.solar_alarm.displayModels.SolarAlarmDisplayModel
 import androidx.lifecycle.ViewModelProvider
 import android.view.View
 import androidx.fragment.app.Fragment

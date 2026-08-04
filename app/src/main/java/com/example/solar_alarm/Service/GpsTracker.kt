@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Service
+package com.example.solar_alarm.service
 
 import android.Manifest
 import android.os.Bundle

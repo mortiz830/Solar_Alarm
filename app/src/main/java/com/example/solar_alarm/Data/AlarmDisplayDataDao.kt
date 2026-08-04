@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Data
+package com.example.solar_alarm.data
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

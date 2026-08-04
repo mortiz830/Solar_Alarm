@@ -1,4 +1,4 @@
-package com.example.solar_alarm.CreateAlarm
+package com.example.solar_alarm.createAlarm
 
 import android.database.sqlite.SQLiteConstraintException
 import android.os.Build
@@ -15,16 +15,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import com.example.solar_alarm.Activities.NavActivity
-import com.example.solar_alarm.AlarmList.SolarAlarmListFragment
-import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
-import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
-import com.example.solar_alarm.Data.Tables.Location
-import com.example.solar_alarm.Data.Tables.SolarAlarm
-import com.example.solar_alarm.Data.Tables.SolarTime
-import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
+import com.example.solar_alarm.activities.NavActivity
+import com.example.solar_alarm.alarmList.SolarAlarmListFragment
+import com.example.solar_alarm.data.enums.OffsetTypeEnum
+import com.example.solar_alarm.data.enums.SolarTimeTypeEnum
+import com.example.solar_alarm.data.tables.Location
+import com.example.solar_alarm.data.tables.SolarAlarm
+import com.example.solar_alarm.data.tables.SolarTime
+import com.example.solar_alarm.data.viewmodels.*
 import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
 import kotlinx.coroutines.launch
@@ -35,9 +33,15 @@ import java.time.format.DateTimeFormatter
 class CreateAlarmFragment : Fragment()
 {
     private lateinit var binding: FragmentCreatealarmBinding
-    private val locationListViewModel: LocationListViewModel by activityViewModels()
-    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
-    private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels()
+    private val locationListViewModel: LocationListViewModel by activityViewModels {
+        LocationViewModelFactory((requireActivity().application as SolarAlarmApp).locationRepository)
+    }
+    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels {
+        SolarTimeViewModelFactory((requireActivity().application as SolarAlarmApp).solarTimeRepository)
+    }
+    private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels {
+        SolarAlarmViewModelFactory((requireActivity().application as SolarAlarmApp).solarAlarmRepository)
+    }
 
     private val solarAlarmRepository by lazy { (requireActivity().application as SolarAlarmApp).solarAlarmRepository }
 

@@ -1,4 +1,4 @@
-package com.example.solar_alarm.CreateAlarm
+package com.example.solar_alarm.createAlarm
 
 import kotlin.Throws
 import java.lang.Exception

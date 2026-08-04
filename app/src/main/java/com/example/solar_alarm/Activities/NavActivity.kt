@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Activities
+package com.example.solar_alarm.activities
 
 import android.os.Build
 import android.os.Bundle
@@ -7,20 +7,20 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 
-import com.example.solar_alarm.AlarmList.SolarAlarmListFragment
-import com.example.solar_alarm.CreateAlarm.CreateAlarmFragment
-import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
-import com.example.solar_alarm.Data.ViewModels.LocationViewModelFactory
+import com.example.solar_alarm.alarmList.SolarAlarmListFragment
+import com.example.solar_alarm.createAlarm.CreateAlarmFragment
+import com.example.solar_alarm.data.viewmodels.LocationListViewModel
+import com.example.solar_alarm.data.viewmodels.LocationViewModelFactory
 
-import com.example.solar_alarm.Data.ViewModels.MainViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModelFactory
-import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModelFactory
-import com.example.solar_alarm.Location.LocationListFragment
+import com.example.solar_alarm.data.viewmodels.MainViewModel
+import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
+import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModelFactory
+import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
+import com.example.solar_alarm.data.viewmodels.SolarTimeViewModelFactory
+import com.example.solar_alarm.location.LocationListFragment
 import com.example.solar_alarm.R
 import com.example.solar_alarm.SolarAlarmApp
-import com.example.solar_alarm.SolarTime.SolarTimeFragment
+import com.example.solar_alarm.solarTime.SolarTimeFragment
 import com.example.solar_alarm.databinding.ActivityBottomNavigationBinding
 
 

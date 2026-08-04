@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Location
+package com.example.solar_alarm.location
 
 import android.os.Build
 import android.os.Bundle
@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
+import com.example.solar_alarm.data.viewmodels.LocationListViewModel
+import com.example.solar_alarm.data.viewmodels.LocationViewModelFactory
+import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.FragmentListlocationsBinding
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -21,7 +23,9 @@ class LocationListFragment : Fragment()
     private lateinit var locationListAdapter          : LocationListAdapter
     private lateinit var recyclerView                 : RecyclerView
 
-    private val locationListViewModel: LocationListViewModel by activityViewModels()
+    private val locationListViewModel: LocationListViewModel by activityViewModels {
+        LocationViewModelFactory((requireActivity().application as SolarAlarmApp).locationRepository)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
     {

@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Data.ViewModels
+package com.example.solar_alarm.data.viewmodels
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository
-import com.example.solar_alarm.Data.Tables.SolarAlarm
-import com.example.solar_alarm.Data.Tables.SolarAlarmWithDetails
+import com.example.solar_alarm.data.repositories.SolarAlarmRepository
+import com.example.solar_alarm.data.tables.SolarAlarm
+import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)

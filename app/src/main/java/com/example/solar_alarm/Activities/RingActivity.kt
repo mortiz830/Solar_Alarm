@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Activities
+package com.example.solar_alarm.activities
 
 import android.app.KeyguardManager
 import android.content.Context
@@ -8,10 +8,10 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver
-import com.example.solar_alarm.BroadcastReceiver.MusicControl
-import com.example.solar_alarm.Data.Tables.SolarAlarm
-import com.example.solar_alarm.Service.AlarmService
+import com.example.solar_alarm.broadcastReceiver.AlarmBroadcastReceiver
+import com.example.solar_alarm.broadcastReceiver.MusicControl
+import com.example.solar_alarm.data.tables.SolarAlarm
+import com.example.solar_alarm.service.AlarmService
 import com.example.solar_alarm.databinding.ActivityRingBinding
 
 class RingActivity : AppCompatActivity() {

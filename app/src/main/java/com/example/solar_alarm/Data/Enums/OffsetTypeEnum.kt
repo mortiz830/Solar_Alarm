@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Data.Enums
+package com.example.solar_alarm.data.enums
 
 enum class OffsetTypeEnum(val Id: Int, val Name: String)
 {

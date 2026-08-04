@@ -1,4 +1,4 @@
-package com.example.solar_alarm.SolarTime
+package com.example.solar_alarm.solarTime
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.databinding.SolartimeListItemBinding

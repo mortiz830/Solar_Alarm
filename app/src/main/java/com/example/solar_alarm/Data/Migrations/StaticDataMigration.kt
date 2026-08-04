@@ -1,11 +1,11 @@
-//package com.example.solar_alarm.Data.Migrations
+//package com.example.solar_alarm.data.migrations
 //
 //import androidx.annotation.RequiresApi
 //import android.os.Build
-//import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
-//import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
-//import com.example.solar_alarm.Data.Tables.OffsetType
-//import com.example.solar_alarm.Data.Tables.SolarTimeType
+//import com.example.solar_alarm.data.enums.OffsetTypeEnum
+//import com.example.solar_alarm.data.enums.SolarTimeTypeEnum
+//import com.example.solar_alarm.data.tables.OffsetType
+//import com.example.solar_alarm.data.tables.SolarTimeType
 //import androidx.room.Database
 //import androidx.room.RoomDatabase
 //import androidx.room.migration.Migration

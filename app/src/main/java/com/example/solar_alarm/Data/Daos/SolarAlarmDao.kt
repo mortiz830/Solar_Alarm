@@ -1,9 +1,9 @@
-package com.example.solar_alarm.Data.Daos
+package com.example.solar_alarm.data.daos
 
-import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.data.tables.SolarAlarm
 import androidx.room.*
-import com.example.solar_alarm.Data.Tables.SolarAlarmWithDetails
-import com.example.solar_alarm.Data.Tables.SolarTime
+import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
+import com.example.solar_alarm.data.tables.SolarTime
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,4 +1,4 @@
-package com.example.solar_alarm.CreateAlarm
+package com.example.solar_alarm.createAlarm
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -7,10 +7,10 @@ import android.content.Intent
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver
-import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
-import com.example.solar_alarm.Data.Tables.SolarAlarm
-import com.example.solar_alarm.Data.Tables.SolarTime
+import com.example.solar_alarm.broadcastReceiver.AlarmBroadcastReceiver
+import com.example.solar_alarm.data.enums.OffsetTypeEnum
+import com.example.solar_alarm.data.tables.SolarAlarm
+import com.example.solar_alarm.data.tables.SolarTime
 import java.time.ZonedDateTime
 import java.util.Calendar
 

@@ -1,11 +1,11 @@
-package com.example.solar_alarm.DisplayModels
+package com.example.solar_alarm.displayModels
 
 import androidx.annotation.RequiresApi
 import android.os.Build
 import android.app.Application
-import com.example.solar_alarm.Data.Tables.SolarTime
+import com.example.solar_alarm.data.tables.SolarTime
 import kotlin.Throws
-import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
+import com.example.solar_alarm.data.enums.SolarTimeTypeEnum
 import java.lang.Exception
 import java.time.ZonedDateTime
 

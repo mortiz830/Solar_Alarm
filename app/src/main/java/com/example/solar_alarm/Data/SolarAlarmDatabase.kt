@@ -1,20 +1,20 @@
-package com.example.solar_alarm.Data
+package com.example.solar_alarm.data
 
 import androidx.annotation.RequiresApi
 import android.os.Build
-import com.example.solar_alarm.Data.Daos.LocationDao
-//import com.example.solar_alarm.Data.Daos.StaticDataDao
-import com.example.solar_alarm.Data.Daos.SolarAlarmDao
-import com.example.solar_alarm.Data.Daos.SolarTimeDao
+import com.example.solar_alarm.data.daos.LocationDao
+//import com.example.solar_alarm.data.daos.StaticDataDao
+import com.example.solar_alarm.data.daos.SolarAlarmDao
+import com.example.solar_alarm.data.daos.SolarTimeDao
 import androidx.room.Database
 import androidx.room.RoomDatabase
-//import com.example.solar_alarm.Data.Migrations.StaticDataMigration
+//import com.example.solar_alarm.data.migrations.StaticDataMigration
 import androidx.room.TypeConverters
 import kotlin.jvm.Volatile
 import androidx.room.Room
 import android.content.Context
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.solar_alarm.Data.Tables.*
+import com.example.solar_alarm.data.tables.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService

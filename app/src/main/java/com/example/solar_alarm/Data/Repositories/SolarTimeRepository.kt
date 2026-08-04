@@ -1,11 +1,11 @@
-package com.example.solar_alarm.Data.Repositories
+package com.example.solar_alarm.data.repositories
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
-import com.example.solar_alarm.Data.Daos.SolarTimeDao
-import com.example.solar_alarm.Data.Tables.Location
-import com.example.solar_alarm.Data.Tables.SolarTime
+import com.example.solar_alarm.data.daos.SolarTimeDao
+import com.example.solar_alarm.data.tables.Location
+import com.example.solar_alarm.data.tables.SolarTime
 import com.example.solar_alarm.sunrise_sunset_http.HttpRequests
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest
 import kotlinx.coroutines.flow.Flow

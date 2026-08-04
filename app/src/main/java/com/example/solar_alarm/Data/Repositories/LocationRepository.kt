@@ -1,10 +1,10 @@
-package com.example.solar_alarm.Data.Repositories
+package com.example.solar_alarm.data.repositories
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
-import com.example.solar_alarm.Data.Daos.LocationDao
-import com.example.solar_alarm.Data.Tables.Location
+import com.example.solar_alarm.data.daos.LocationDao
+import com.example.solar_alarm.data.tables.Location
 import kotlinx.coroutines.flow.Flow
 
 @RequiresApi(api = Build.VERSION_CODES.O)

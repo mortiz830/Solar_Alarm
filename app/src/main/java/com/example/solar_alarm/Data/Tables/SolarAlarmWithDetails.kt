@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Data.Tables
+package com.example.solar_alarm.data.tables
 
 import androidx.room.Embedded
 import androidx.room.Relation

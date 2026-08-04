@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Data.Enums
+package com.example.solar_alarm.data.enums
 
 enum class SolarTimeTypeEnum(val Id: Int, val Name: String) {
     Sunrise(1, "Sunrise"),

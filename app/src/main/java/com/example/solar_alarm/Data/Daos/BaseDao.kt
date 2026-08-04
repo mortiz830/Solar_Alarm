@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Data.Daos
+package com.example.solar_alarm.data.daos
 
 import androidx.room.*
 import androidx.room.RoomMasterTable.TABLE_NAME

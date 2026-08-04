@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Data.Tables
+package com.example.solar_alarm.data.tables
 
 import android.os.Build
 import android.os.Parcelable
@@ -8,7 +8,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
+import com.example.solar_alarm.data.enums.SolarTimeTypeEnum
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate

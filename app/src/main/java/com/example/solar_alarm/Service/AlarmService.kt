@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Service
+package com.example.solar_alarm.service
 
 import android.app.Notification
 import android.app.PendingIntent
@@ -8,10 +8,10 @@ import android.os.IBinder
 import android.os.Vibrator
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.example.solar_alarm.Activities.RingActivity
-import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver
-import com.example.solar_alarm.BroadcastReceiver.MusicControl
-import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.activities.RingActivity
+import com.example.solar_alarm.broadcastReceiver.AlarmBroadcastReceiver
+import com.example.solar_alarm.broadcastReceiver.MusicControl
+import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.R
 import com.example.solar_alarm.SolarAlarmApp
 

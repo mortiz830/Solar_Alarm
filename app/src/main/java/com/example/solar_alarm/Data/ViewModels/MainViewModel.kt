@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Data.ViewModels
+package com.example.solar_alarm.data.viewmodels
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

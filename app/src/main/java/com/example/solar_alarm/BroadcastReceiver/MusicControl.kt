@@ -1,4 +1,4 @@
-package com.example.solar_alarm.BroadcastReceiver
+package com.example.solar_alarm.broadcastReceiver
 
 import android.content.Context
 import android.media.AudioAttributes

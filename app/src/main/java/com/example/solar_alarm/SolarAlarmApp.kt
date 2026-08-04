@@ -8,10 +8,10 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.os.Build
 import android.provider.Settings
-import com.example.solar_alarm.Data.Repositories.LocationRepository
-import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository
-import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
-import com.example.solar_alarm.Data.SolarAlarmDatabase
+import com.example.solar_alarm.data.repositories.LocationRepository
+import com.example.solar_alarm.data.repositories.SolarAlarmRepository
+import com.example.solar_alarm.data.repositories.SolarTimeRepository
+import com.example.solar_alarm.data.SolarAlarmDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
@@ -57,7 +57,7 @@ class SolarAlarmApp : Application()
     companion object {
         private var context: Context? = null
         const val CHANNEL_ID = "SOLAR_ALARM_CHANNEL_V2"
-        fun GetAppContext(): Context? {
+        fun getAppContext(): Context? {
             return context
         }
     }

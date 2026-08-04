@@ -1,15 +1,15 @@
-package com.example.solar_alarm.Data.Repositories
+package com.example.solar_alarm.data.repositories
 
 import androidx.annotation.RequiresApi
 import android.os.Build
 import androidx.annotation.WorkerThread
-import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.data.tables.SolarAlarm
 import androidx.lifecycle.LiveData
-import com.example.solar_alarm.Data.SolarAlarmDatabase
-import com.example.solar_alarm.Data.Daos.SolarAlarmDao
-import com.example.solar_alarm.Data.Daos.SolarTimeDao
-import com.example.solar_alarm.Data.Tables.SolarAlarmWithDetails
-import com.example.solar_alarm.Data.Tables.SolarTime
+import com.example.solar_alarm.data.SolarAlarmDatabase
+import com.example.solar_alarm.data.daos.SolarAlarmDao
+import com.example.solar_alarm.data.daos.SolarTimeDao
+import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
+import com.example.solar_alarm.data.tables.SolarTime
 import kotlinx.coroutines.flow.Flow
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -44,7 +44,7 @@ class SolarAlarmRepository(private val solarAlarmDao: SolarAlarmDao)
     }
 
     @WorkerThread
-    suspend fun isSolarAlarmNameLocationIDExists(solarAlarm: SolarAlarm): Boolean
+    suspend fun isSolarAlarmNameLocationIdPairExists(solarAlarm: SolarAlarm): Boolean
     {
         return solarAlarmDao.isSolarAlarmNameLocationIdPairExists(solarAlarm.Name, solarAlarm.LocationId)
     }

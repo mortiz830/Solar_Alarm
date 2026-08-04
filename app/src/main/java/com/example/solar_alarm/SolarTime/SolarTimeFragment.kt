@@ -1,4 +1,4 @@
-package com.example.solar_alarm.SolarTime
+package com.example.solar_alarm.solarTime
 
 import android.os.Build
 import android.os.Bundle
@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
+import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
+import com.example.solar_alarm.data.viewmodels.SolarTimeViewModelFactory
+import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.FragmentSolarTimeBinding
 
 class SolarTimeFragment : Fragment()
@@ -20,7 +22,9 @@ class SolarTimeFragment : Fragment()
     private lateinit var solarTimeAdapter            : SolarTimeAdapter
     private lateinit var recyclerView                : RecyclerView
 
-    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
+    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels {
+        SolarTimeViewModelFactory((requireActivity().application as SolarAlarmApp).solarTimeRepository)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View

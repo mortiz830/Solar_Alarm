@@ -1,12 +1,12 @@
-package com.example.solar_alarm.BroadcastReceiver
+package com.example.solar_alarm.broadcastReceiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import com.example.solar_alarm.Data.Tables.SolarAlarm
-import com.example.solar_alarm.Service.AlarmService
+import com.example.solar_alarm.data.tables.SolarAlarm
+import com.example.solar_alarm.service.AlarmService
 import java.util.Calendar
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {

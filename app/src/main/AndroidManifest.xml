@@ -25,7 +25,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".Activities.NavActivity"
+            android:name=".activities.NavActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,18 +38,14 @@
             android:value="@string/api_key"/>
 
         <activity
-            android:name=".Activities.MainActivity"
-            android:exported="false"/>
-
-        <activity
-            android:name=".Activities.RingActivity"
+            android:name=".activities.RingActivity"
             android:exported="true"
             android:showWhenLocked="true"
             android:turnScreenOn="true"
             android:launchMode="singleInstance" />
 
         <receiver
-            android:name=".BroadcastReceiver.AlarmBroadcastReceiver"
+            android:name=".broadcastReceiver.AlarmBroadcastReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -57,12 +53,12 @@
         </receiver>
 
         <service
-            android:name=".Service.AlarmService"
+            android:name=".service.AlarmService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback">
         </service>
         <service
-            android:name=".Service.RescheduleAlarmService"
+            android:name=".service.RescheduleAlarmService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback"/>
     </application>

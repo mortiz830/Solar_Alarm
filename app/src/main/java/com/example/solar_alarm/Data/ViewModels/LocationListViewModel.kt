@@ -1,12 +1,12 @@
-package com.example.solar_alarm.Data.ViewModels
+package com.example.solar_alarm.data.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.solar_alarm.Data.Repositories.LocationRepository
-import com.example.solar_alarm.Data.Tables.Location
+import com.example.solar_alarm.data.repositories.LocationRepository
+import com.example.solar_alarm.data.tables.Location
 import kotlinx.coroutines.launch
 
 

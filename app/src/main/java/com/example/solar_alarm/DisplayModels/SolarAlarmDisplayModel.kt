@@ -1,13 +1,13 @@
-package com.example.solar_alarm.DisplayModels
+package com.example.solar_alarm.displayModels
 
 import androidx.annotation.RequiresApi
 import android.os.Build
-import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.data.tables.SolarAlarm
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
-import com.example.solar_alarm.Data.Repositories.LocationRepository
-import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
+import com.example.solar_alarm.data.repositories.SolarTimeRepository
+import com.example.solar_alarm.data.repositories.LocationRepository
+import com.example.solar_alarm.data.enums.SolarTimeTypeEnum
 import java.lang.Exception
 import java.time.DayOfWeek
 import java.time.ZonedDateTime

@@ -1,4 +1,4 @@
-package com.example.solar_alarm.AlarmList
+package com.example.solar_alarm.alarmList
 
 import android.content.Context
 import android.os.Build
@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.example.solar_alarm.Data.Tables.SolarAlarmWithDetails
+import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
 import com.example.solar_alarm.databinding.SolarAlarmListItemBinding
 
 class AlarmRecycleViewAdapter(private val listener: OnToggleAlarmListener) : RecyclerView.Adapter<AlarmViewHolder>() {

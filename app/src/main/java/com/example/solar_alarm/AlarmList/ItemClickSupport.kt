@@ -1,4 +1,4 @@
-package com.example.solar_alarm.AlarmList
+package com.example.solar_alarm.alarmList
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View.OnLongClickListener

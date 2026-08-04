@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Activities.ui.home
+package com.example.solar_alarm.activities.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

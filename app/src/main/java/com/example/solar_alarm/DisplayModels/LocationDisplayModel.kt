@@ -1,9 +1,9 @@
-package com.example.solar_alarm.DisplayModels
+package com.example.solar_alarm.displayModels
 
 import androidx.annotation.RequiresApi
 import android.os.Build
 import android.app.Application
-import com.example.solar_alarm.Data.Tables.*
+import com.example.solar_alarm.data.tables.*
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 class LocationDisplayModel(private val _Application: Application, private val _Location: Location) {

@@ -1,15 +1,15 @@
-package com.example.solar_alarm.AlarmList
+package com.example.solar_alarm.alarmList
 
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import com.example.solar_alarm.Data.AlarmDisplayData
-import com.example.solar_alarm.Data.Tables.SolarAlarm
-import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
+import com.example.solar_alarm.data.AlarmDisplayData
+import com.example.solar_alarm.data.tables.SolarAlarm
+import com.example.solar_alarm.data.viewmodels.LocationListViewModel
+import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
+import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
 import com.example.solar_alarm.SolarAlarmApp
 
 @RequiresApi(api = Build.VERSION_CODES.O)

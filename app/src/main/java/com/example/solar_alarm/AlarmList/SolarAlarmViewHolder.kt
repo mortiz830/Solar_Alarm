@@ -1,4 +1,4 @@
-package com.example.solar_alarm.AlarmList
+package com.example.solar_alarm.alarmList
 
 import android.view.View
 import android.widget.TextView

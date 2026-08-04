@@ -1,12 +1,12 @@
-package com.example.solar_alarm.SolarTime
+package com.example.solar_alarm.solarTime
 
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
-import com.example.solar_alarm.Data.Tables.SolarTime
+import com.example.solar_alarm.data.enums.SolarTimeTypeEnum
+import com.example.solar_alarm.data.tables.SolarTime
 import com.example.solar_alarm.databinding.SolartimeListItemBinding
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter

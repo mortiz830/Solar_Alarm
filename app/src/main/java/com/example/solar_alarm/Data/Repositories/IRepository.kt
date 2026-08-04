@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Data.Repositories
+package com.example.solar_alarm.data.repositories
 
 interface IRepository <T>
 {

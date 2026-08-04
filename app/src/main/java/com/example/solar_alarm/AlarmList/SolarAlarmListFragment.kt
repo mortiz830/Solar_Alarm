@@ -1,4 +1,4 @@
-package com.example.solar_alarm.AlarmList
+package com.example.solar_alarm.alarmList
 
 import android.os.Build
 import android.os.Bundle
@@ -13,13 +13,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.solar_alarm.CreateAlarm.CreateAlarmFragment
-import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
-import com.example.solar_alarm.Location.LocationCreateFragment
+import com.example.solar_alarm.createAlarm.CreateAlarmFragment
+import com.example.solar_alarm.data.viewmodels.*
+import com.example.solar_alarm.location.LocationCreateFragment
 import com.example.solar_alarm.R
-import com.example.solar_alarm.Service.GpsTracker
+import com.example.solar_alarm.service.GpsTracker
+import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.FragmentListalarmsBinding
 import java.time.ZoneId
 import java.util.TimeZone
@@ -31,9 +30,15 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
     private lateinit var solarAlarmListAdapter: SolarAlarmListAdapter
     private lateinit var recyclerView: RecyclerView
 
-    private val locationListViewModel: LocationListViewModel by activityViewModels()
-    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
-    private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels()
+    private val locationListViewModel: LocationListViewModel by activityViewModels {
+        LocationViewModelFactory((requireActivity().application as SolarAlarmApp).locationRepository)
+    }
+    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels {
+        SolarTimeViewModelFactory((requireActivity().application as SolarAlarmApp).solarTimeRepository)
+    }
+    private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels {
+        SolarAlarmViewModelFactory((requireActivity().application as SolarAlarmApp).solarAlarmRepository)
+    }
 
     private var gpsTracker: GpsTracker? = null
     private var zoneId: ZoneId? = null

@@ -1,6 +1,6 @@
-package com.example.solar_alarm.Data.Daos
+package com.example.solar_alarm.data.daos
 
-import com.example.solar_alarm.Data.Tables.SolarTime
+import com.example.solar_alarm.data.tables.SolarTime
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate

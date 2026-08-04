@@ -1,9 +1,9 @@
-package com.example.solar_alarm.Data
+package com.example.solar_alarm.data
 
 import androidx.annotation.RequiresApi
 import android.os.Build
-import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
-import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
+import com.example.solar_alarm.data.enums.OffsetTypeEnum
+import com.example.solar_alarm.data.enums.SolarTimeTypeEnum
 import androidx.room.*
 import java.time.LocalDate
 import java.time.OffsetDateTime

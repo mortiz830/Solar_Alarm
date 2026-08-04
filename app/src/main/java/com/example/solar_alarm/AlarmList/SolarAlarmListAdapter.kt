@@ -1,11 +1,11 @@
-package com.example.solar_alarm.AlarmList
+package com.example.solar_alarm.alarmList
 
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.example.solar_alarm.Data.Tables.SolarAlarmWithDetails
+import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
 import com.example.solar_alarm.R
 import java.time.DayOfWeek
 import java.time.Month
