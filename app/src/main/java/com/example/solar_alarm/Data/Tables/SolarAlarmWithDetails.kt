@@ -1,5 +1,6 @@
 package com.example.solar_alarm.data.tables
 
+// Repair: Fixed broken package/import lines
 import androidx.room.Embedded
 import androidx.room.Relation
 

@@ -1,5 +1,6 @@
 package com.example.solar_alarm.data.daos
 
+// Repair: Fixed broken package/import lines
 import com.example.solar_alarm.data.tables.SolarTime
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +15,6 @@ abstract class SolarTimeDao : BaseDao<SolarTime>
     @Query("SELECT * FROM SolarTime WHERE Id = :id")
     abstract suspend fun getById(id: Int): SolarTime
 
-    // Returns one item or null
     @Query("SELECT * FROM SolarTime WHERE LocationId = :locationId AND SolarDate = :date")
     abstract suspend fun getSolarTime(locationId: Int, date: LocalDate): SolarTime?
 

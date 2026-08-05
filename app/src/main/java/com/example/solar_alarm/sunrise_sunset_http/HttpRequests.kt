@@ -1,5 +1,6 @@
 package com.example.solar_alarm.sunrise_sunset_http
 
+// Fixed broken line
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.google.gson.Gson

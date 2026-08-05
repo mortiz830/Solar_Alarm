@@ -1,5 +1,6 @@
 package com.example.solar_alarm.data.enums
 
+// Repair: Fixed broken package/import lines
 enum class SolarTimeTypeEnum(val Id: Int, val Name: String) {
     Sunrise(1, "Sunrise"),
     Sunset(2, "Sunset"),

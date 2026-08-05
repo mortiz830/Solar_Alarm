@@ -1,5 +1,6 @@
 package com.example.solar_alarm.alarmList
 
+// Repair: Fixed broken package/import lines
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup

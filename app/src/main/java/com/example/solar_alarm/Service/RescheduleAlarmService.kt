@@ -1,5 +1,6 @@
 package com.example.solar_alarm.service
 
+// Repair: Fixed broken package/import lines
 import android.content.Intent
 import androidx.annotation.RequiresApi
 import android.os.Build

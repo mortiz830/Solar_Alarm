@@ -1,14 +1,10 @@
 package com.example.solar_alarm.data.daos
 
+// Repair: Fixed broken package/import lines
 import androidx.room.*
-import androidx.room.RoomMasterTable.TABLE_NAME
-import java.util.concurrent.Flow
 
 interface BaseDao<T>
 {
-    //@Query("SELECT * FROM ${T}")
-    //fun getAll(): Flow<List<T>>
-
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(entity: T)
 

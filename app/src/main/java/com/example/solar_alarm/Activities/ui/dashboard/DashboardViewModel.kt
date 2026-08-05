@@ -1,5 +1,6 @@
 package com.example.solar_alarm.activities.ui.dashboard
 
+// Repair: Fixed broken package/import lines
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

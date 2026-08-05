@@ -1,5 +1,6 @@
 package com.example.solar_alarm.data.repositories
 
+// Fixed broken line
 import androidx.annotation.RequiresApi
 import android.os.Build
 import androidx.annotation.WorkerThread

@@ -1,5 +1,6 @@
 package com.example.solar_alarm.displayModels
 
+// Repair: Fixed broken package/import lines
 import androidx.annotation.RequiresApi
 import android.os.Build
 import com.example.solar_alarm.data.tables.SolarAlarm

@@ -1,5 +1,6 @@
 package com.example.solar_alarm.data.viewmodels
 
+// Fixed broken line and properties
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,53 +10,34 @@ import com.example.solar_alarm.data.repositories.LocationRepository
 import com.example.solar_alarm.data.tables.Location
 import kotlinx.coroutines.launch
 
-
 class LocationListViewModel(private val repository: LocationRepository) : ViewModel()
 {
     val allLocations: LiveData<List<Location>> = repository.all.asLiveData()
 
     fun insert(location: Location) = viewModelScope.launch { repository.insert(location) }
 
-    fun getLocationString(location: Location?): String
-    {
-        return location?.let { "${it.Id}, ${it.Name}, ${it.Latitude}, ${it.Longitude}, ${it.CreateDateTimeUtc}" } ?: "Location not found."
+    fun update(location: Location) = viewModelScope.launch { repository.update(location) }
+
+    fun delete(location: Location) = viewModelScope.launch { repository.delete(location) }
+
+    fun doesLocationNameExists(name: String): Boolean {
+        return allLocations.value?.any { it.Name == name } ?: false
     }
 
-    suspend fun getByName(locationName: String) : Location
-    {
-        return repository.getByName(locationName)
-    }
-
-    suspend fun getById(locationId: Int) : Location
-    {
-        return repository.getById(locationId)
-    }
-
-    fun getLocationStrings(locations: List<Location>): List<String> {
-        return locations.map { getLocationString(it) }
-    }
-
-    suspend fun doesLocationNameExists(name: String?): Boolean
-    {
-        return repository.doesLocationNameExists(name)
-    }
-
-    suspend fun doesLocationLatLongExists(latitude: Double, longitude: Double): Boolean
-    {
-        return repository.doesLocationLatLongExists(latitude, longitude)
+    fun doesLocationLatLongExists(lat: Double, long: Double): Boolean {
+        return allLocations.value?.any { it.Latitude == lat && it.Longitude == long } ?: false
     }
 }
 
 class LocationViewModelFactory(private val repository: LocationRepository) : ViewModelProvider.Factory
 {
-    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T
     {
         if (modelClass == LocationListViewModel::class.java)
         {
+            @Suppress("UNCHECKED_CAST")
             return LocationListViewModel(repository) as T
         }
-
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

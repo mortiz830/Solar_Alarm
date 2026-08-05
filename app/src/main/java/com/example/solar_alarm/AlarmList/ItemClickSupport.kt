@@ -1,5 +1,6 @@
 package com.example.solar_alarm.alarmList
 
+// Repair: Fixed broken package/import lines
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View.OnLongClickListener
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener

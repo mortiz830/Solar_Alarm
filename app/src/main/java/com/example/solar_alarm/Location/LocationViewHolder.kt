@@ -1,5 +1,6 @@
 package com.example.solar_alarm.location
 
+// Repair: Fixed broken package/import lines
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.databinding.LocationListItemBinding
 

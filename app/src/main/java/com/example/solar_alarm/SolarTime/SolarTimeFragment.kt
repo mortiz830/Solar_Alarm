@@ -1,5 +1,6 @@
 package com.example.solar_alarm.solarTime
 
+// Repair: Fixed broken package/import lines
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater

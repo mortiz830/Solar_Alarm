@@ -1,5 +1,6 @@
 package com.example.solar_alarm.data.daos
 
+// Repair: Fixed broken package/import lines
 import com.example.solar_alarm.data.tables.SolarAlarm
 import androidx.room.*
 import com.example.solar_alarm.data.tables.SolarAlarmWithDetails

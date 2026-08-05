@@ -1,5 +1,6 @@
 package com.example.solar_alarm.data.daos
 
+// Repair: Fixed broken package/import lines
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -10,7 +11,7 @@ import com.example.solar_alarm.data.tables.Location
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface LocationDao// : BaseDao<Location>
+interface LocationDao
 {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(location: Location)

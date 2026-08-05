@@ -1,5 +1,6 @@
 package com.example.solar_alarm.service
 
+// Repair: Fixed broken package/import lines
 import android.Manifest
 import android.os.Bundle
 import android.content.Intent

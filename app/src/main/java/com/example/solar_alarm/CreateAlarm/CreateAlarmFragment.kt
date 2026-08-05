@@ -1,5 +1,6 @@
 package com.example.solar_alarm.createAlarm
 
+// Repair: Fixed broken package/import lines
 import android.database.sqlite.SQLiteConstraintException
 import android.os.Build
 import android.os.Bundle
@@ -22,7 +23,12 @@ import com.example.solar_alarm.data.enums.SolarTimeTypeEnum
 import com.example.solar_alarm.data.tables.Location
 import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.data.tables.SolarTime
-import com.example.solar_alarm.data.viewmodels.*
+import com.example.solar_alarm.data.viewmodels.LocationListViewModel
+import com.example.solar_alarm.data.viewmodels.LocationViewModelFactory
+import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
+import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModelFactory
+import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
+import com.example.solar_alarm.data.viewmodels.SolarTimeViewModelFactory
 import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
 import kotlinx.coroutines.launch
@@ -154,8 +160,6 @@ class CreateAlarmFragment : Fragment()
             if (solarTimes.isNotEmpty()) {
                 scheduleAlarm(solarTimes[0], offsetTypeEnum, solarTimeTypeItem)
             }
-
-            (activity as NavActivity).replaceFragment(SolarAlarmListFragment())
         }
 
         return binding.root
@@ -183,21 +187,29 @@ class CreateAlarmFragment : Fragment()
             {
                 solarAlarmRepository.insert(solarAlarmItem)
                 
-                context?.let {
+                val currentContext = context
+                if (currentContext != null) {
                     AlarmScheduler(solarAlarmItem,
                         solarTimeItem,
                         binding.fragmentCreatealarmSetHours.value,
-                        binding.fragmentCreatealarmSetMins.value).schedule(it)
+                        binding.fragmentCreatealarmSetMins.value).schedule(currentContext)
+                    
+                    (activity as? NavActivity)?.replaceFragment(SolarAlarmListFragment())
                 }
             }
             catch (sqLiteConstraintException: SQLiteConstraintException)
             {
-                Toast.makeText(getContext(), "Alarm named '${solarAlarmItem.Name}' with location ID ${solarTimeItem.LocationId} already exists\n ${sqLiteConstraintException.message}", Toast.LENGTH_LONG).show();
+                if (isAdded) {
+                    Toast.makeText(requireContext(), "Alarm already exists", Toast.LENGTH_LONG).show()
+                }
             }
             catch (exception: Exception)
             {
+                if (exception is kotlinx.coroutines.CancellationException) throw exception
                 exception.printStackTrace()
-                Toast.makeText(getContext(), "Unable to create alarm.", Toast.LENGTH_LONG).show();
+                if (isAdded) {
+                    Toast.makeText(requireContext(), "Unable to create alarm.", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

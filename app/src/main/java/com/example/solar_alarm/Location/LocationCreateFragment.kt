@@ -1,5 +1,6 @@
 package com.example.solar_alarm.location
 
+// Repair: Fixed broken package/import lines
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +14,12 @@ import androidx.lifecycle.lifecycleScope
 import com.example.solar_alarm.activities.NavActivity
 import com.example.solar_alarm.alarmList.SolarAlarmListFragment
 import com.example.solar_alarm.data.tables.Location
-import com.example.solar_alarm.data.viewmodels.*
+import com.example.solar_alarm.data.viewmodels.LocationListViewModel
+import com.example.solar_alarm.data.viewmodels.LocationViewModelFactory
+import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
+import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModelFactory
+import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
+import com.example.solar_alarm.data.viewmodels.SolarTimeViewModelFactory
 import com.example.solar_alarm.R
 import com.example.solar_alarm.service.GpsTracker
 import com.example.solar_alarm.SolarAlarmApp
@@ -79,13 +85,15 @@ class LocationCreateFragment : Fragment(), OnMapReadyCallback
                 val nameExists = locationListViewModel.doesLocationNameExists(locationName)
                 val latLongExists = locationListViewModel.doesLocationLatLongExists(latitude, longitude)
 
+                if (!isAdded) return@launch
+
                 if (nameExists) {
-                    Toast.makeText(context, "Location Name Already Exists!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Location Name Already Exists!", Toast.LENGTH_LONG).show()
                 } else if (latLongExists) {
-                    Toast.makeText(context, "Location Point Already Exists!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Location Point Already Exists!", Toast.LENGTH_LONG).show()
                 } else {
                     saveLocation(locationName, latitude, longitude)
-                    (activity as NavActivity).replaceFragment(SolarAlarmListFragment())
+                    (activity as? NavActivity)?.replaceFragment(SolarAlarmListFragment())
                 }
             }
         })

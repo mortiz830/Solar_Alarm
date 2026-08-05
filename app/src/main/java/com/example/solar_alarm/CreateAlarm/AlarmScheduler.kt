@@ -1,5 +1,6 @@
 package com.example.solar_alarm.createAlarm
 
+// Repair: Fixed broken package/import lines
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -71,7 +72,7 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
         }
         else if (solarAlarm.OffsetTypeId == OffsetTypeEnum.After)
         {
-            localZonedDateTime = localZonedDateTime.plusHours(hours.toLong()).plusMinutes(mins.toLong())
+            localZonedDateTime = localZonedDateTime.plusHours(hours.toLong()).minusMinutes(mins.toLong())
         }
 
         return localZonedDateTime

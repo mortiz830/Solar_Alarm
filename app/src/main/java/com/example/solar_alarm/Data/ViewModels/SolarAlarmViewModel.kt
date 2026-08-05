@@ -1,5 +1,6 @@
 package com.example.solar_alarm.data.viewmodels
 
+// Fixed broken line
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData

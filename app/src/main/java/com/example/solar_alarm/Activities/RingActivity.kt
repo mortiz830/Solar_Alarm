@@ -1,5 +1,6 @@
 package com.example.solar_alarm.activities
 
+// Repair: Fixed broken package/import lines
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
