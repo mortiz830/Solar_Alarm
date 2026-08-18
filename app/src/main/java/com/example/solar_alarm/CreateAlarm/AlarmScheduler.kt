@@ -63,7 +63,7 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
 
     fun getLocalZonedDateTime() : ZonedDateTime
     {
-        var localZonedDateTime = if (true) ZonedDateTime.now().plusMinutes(mins.toLong() + 1) else 
+        var localZonedDateTime = if (false) ZonedDateTime.now().plusMinutes(mins.toLong() + 1) else
             solarTime.getLocalZonedDateTime(solarAlarm.SolarTimeTypeId)
 
         if (solarAlarm.OffsetTypeId == OffsetTypeEnum.Before)
@@ -86,34 +86,24 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
         val alarmManager       = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent      = getPendingIntent(context, intent)
 
-        if (solarAlarm.Recurring)
-        {
-            val toastText = String.format("Recurring Alarm %s scheduled for %s at %02d:%02d", solarAlarm.Name, recurringDaysText, localZonedDateTime.hour, localZonedDateTime.minute)
-            Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
-            val RUN_DAILY = (24 * 60 * 60 * 1000).toLong()
-
-            try
-            {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, RUN_DAILY, pendingIntent)
-            }
-            catch (exception: Exception)
-            {
-                exception.printStackTrace()
-            }
+        val toastText = if (solarAlarm.Recurring) {
+            String.format("Recurring Alarm %s scheduled for %s at %02d:%02d", solarAlarm.Name, recurringDaysText, localZonedDateTime.hour, localZonedDateTime.minute)
+        } else {
+            String.format("One Time Alarm %s scheduled for at %02d:%02d", solarAlarm.Name, localZonedDateTime.hour, localZonedDateTime.minute)
         }
-        else
-        {
-            val toastText = String.format("One Time Alarm %s scheduled for at %02d:%02d", solarAlarm.Name, localZonedDateTime.hour, localZonedDateTime.minute)
-            Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+        
+        Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
 
-            try
-            {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-            }
-            catch (exception: Exception)
-            {
-                exception.printStackTrace()
-            }
+        try {
+            // Always set an exact one-shot alarm. 
+            // Recurring solar alarms must be rescheduled manually to account for shifting times.
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP, 
+                calendar.timeInMillis, 
+                pendingIntent
+            )
+        } catch (exception: Exception) {
+            exception.printStackTrace()
         }
 
         started = true

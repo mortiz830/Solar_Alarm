@@ -174,7 +174,9 @@ class CreateAlarmFragment : Fragment()
                                         binding.fragmentCreatealarmCheckSat.isChecked,
                                         binding.fragmentCreatealarmCheckSun.isChecked,
                                         alarmTypeId,
-                                        solarTimeTypeId)
+                                        solarTimeTypeId,
+                                        binding.fragmentCreatealarmSetHours.value,
+                                        binding.fragmentCreatealarmSetMins.value)
 
         lifecycleScope.launch {
             try
@@ -185,8 +187,8 @@ class CreateAlarmFragment : Fragment()
                 if (currentContext != null) {
                     AlarmScheduler(solarAlarmItem,
                         solarTimeItem,
-                        binding.fragmentCreatealarmSetHours.value,
-                        binding.fragmentCreatealarmSetMins.value).schedule(currentContext)
+                        solarAlarmItem.OffsetHours,
+                        solarAlarmItem.OffsetMinutes).schedule(currentContext)
                     
                     (activity as? NavActivity)?.replaceFragment(SolarAlarmListFragment())
                 }

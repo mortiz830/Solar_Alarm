@@ -22,6 +22,8 @@ class SolarAlarmViewModel @Inject constructor(private val repository: SolarAlarm
     val allSolarAlarmsWithDetails: LiveData<List<SolarAlarmWithDetails>> = repository.allWithDetails.asLiveData()
 
     fun insert(solarAlarm: SolarAlarm) = viewModelScope.launch { repository.insert(solarAlarm) }
+
+    fun update(solarAlarm: SolarAlarm) = viewModelScope.launch { repository.update(solarAlarm) }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

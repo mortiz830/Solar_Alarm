@@ -65,7 +65,9 @@ data class SolarAlarm
     @ColumnInfo(name = "Sunday")    var Sunday:    Boolean,
 
     @ColumnInfo(name = "OffsetTypeId")    var OffsetTypeId:    OffsetTypeEnum,
-    @ColumnInfo(name = "SolarTimeTypeId") var SolarTimeTypeId: SolarTimeTypeEnum
+    @ColumnInfo(name = "SolarTimeTypeId") var SolarTimeTypeId: SolarTimeTypeEnum,
+    @ColumnInfo(name = "OffsetHours")     var OffsetHours:     Int = 0,
+    @ColumnInfo(name = "OffsetMinutes")   var OffsetMinutes:   Int = 0
 ) : Parcelable
 {
     @PrimaryKey(autoGenerate = true)

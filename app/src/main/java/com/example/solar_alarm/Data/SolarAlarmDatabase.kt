@@ -19,7 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-@Database(entities = [Location::class, SolarAlarm::class, SolarTime::class], version = 1, exportSchema = false)
+@Database(entities = [Location::class, SolarAlarm::class, SolarTime::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class SolarAlarmDatabase : RoomDatabase()
 {
@@ -40,6 +40,7 @@ abstract class SolarAlarmDatabase : RoomDatabase()
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, SolarAlarmDatabase::class.java, "SolarAlarmDatabase")
+                                    .fallbackToDestructiveMigration()
                                     //.addMigrations(StaticDataMigration.Companion.MIGRATION_1_2)
                                     //.addCallback(SolarAlarmDatabaseCallback(scope))
                                     .build()
