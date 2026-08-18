@@ -1,20 +1,18 @@
 package com.example.solar_alarm.data.repositories
 
-// Fixed broken line
-import androidx.annotation.RequiresApi
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
-import com.example.solar_alarm.data.tables.SolarAlarm
-import androidx.lifecycle.LiveData
-import com.example.solar_alarm.data.SolarAlarmDatabase
 import com.example.solar_alarm.data.daos.SolarAlarmDao
-import com.example.solar_alarm.data.daos.SolarTimeDao
+import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
-import com.example.solar_alarm.data.tables.SolarTime
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-class SolarAlarmRepository(private val solarAlarmDao: SolarAlarmDao)
+@Singleton
+class SolarAlarmRepository @Inject constructor(private val solarAlarmDao: SolarAlarmDao)
 {
     val all: Flow<List<SolarAlarm>> = solarAlarmDao.getAll()
     val allWithDetails: Flow<List<SolarAlarmWithDetails>> = solarAlarmDao.getAllWithDetails()

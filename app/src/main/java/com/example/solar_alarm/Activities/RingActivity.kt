@@ -1,6 +1,5 @@
 package com.example.solar_alarm.activities
 
-// Repair: Fixed broken package/import lines
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
@@ -14,7 +13,9 @@ import com.example.solar_alarm.broadcastReceiver.MusicControl
 import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.service.AlarmService
 import com.example.solar_alarm.databinding.ActivityRingBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRingBinding
@@ -61,18 +62,6 @@ class RingActivity : AppCompatActivity() {
     {
         MusicControl.getInstance(this).stopMusic()
         val intentService = Intent(applicationContext, AlarmService::class.java)
-
-        var tt = intentService.getParcelableExtra<SolarAlarm>("SolarAlarm", SolarAlarm::class.java)
-
-//        // 3. Start the AlarmService to handle notification, music and full screen intent
-//        val serviceIntent = Intent(context, AlarmService::class.java).apply {
-//            putExtra("SolarAlarm", solarAlarm)
-//        }
-
-        val dd = intentService.getParcelableExtra<SolarAlarm>("SolarAlarm");
-        
-        // Example: Pass the object back to the service or another component
-        // intentService.putExtra("SolarAlarm", solarAlarm)
 
         stopService(intentService)
         finish()

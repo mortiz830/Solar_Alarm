@@ -1,6 +1,5 @@
 package com.example.solar_alarm.data.viewmodels
 
-// Fixed broken line
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
@@ -11,10 +10,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.solar_alarm.data.repositories.SolarAlarmRepository
 import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
-class SolarAlarmViewModel(private val repository: SolarAlarmRepository) : ViewModel()
+@HiltViewModel
+class SolarAlarmViewModel @Inject constructor(private val repository: SolarAlarmRepository) : ViewModel()
 {
     val allSolarAlarms: LiveData<List<SolarAlarm>> = repository.all.asLiveData()
     val allSolarAlarmsWithDetails: LiveData<List<SolarAlarmWithDetails>> = repository.allWithDetails.asLiveData()

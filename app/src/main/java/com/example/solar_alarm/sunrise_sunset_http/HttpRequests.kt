@@ -1,6 +1,5 @@
 package com.example.solar_alarm.sunrise_sunset_http
 
-// Fixed broken line
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.google.gson.Gson
@@ -28,7 +27,6 @@ class HttpRequests @RequiresApi(api = Build.VERSION_CODES.O) constructor()
         }
         catch (e: Exception)
         {
-            // Handle exceptions, e.g., network errors
             e.printStackTrace()
         }
 
@@ -39,7 +37,7 @@ class HttpRequests @RequiresApi(api = Build.VERSION_CODES.O) constructor()
     @Throws(IOException::class)
     private suspend fun makeGetRequest(url: String): SunriseSunsetResponse
     {
-        val sunriseSunsetResponse = withContext(Dispatchers.IO)
+        return withContext(Dispatchers.IO)
         {
             val request = Request.Builder().url(url).build()
 
@@ -49,17 +47,9 @@ class HttpRequests @RequiresApi(api = Build.VERSION_CODES.O) constructor()
                     throw IOException("Unexpected code $response")
                 }
 
-                val responseBody = response.body!!.string()
-
-                try {
-                    gson.fromJson(responseBody, SunriseSunsetResponse::class.java)
-                } catch (e: Exception) {
-                    TODO("Not yet implemented")
-                }
+                val responseBody = response.body?.string() ?: ""
+                gson.fromJson(responseBody, SunriseSunsetResponse::class.java)
             }
         }
-
-        return sunriseSunsetResponse
     }
-
 }

@@ -1,6 +1,5 @@
 package com.example.solar_alarm.data.repositories
 
-// Fixed broken line
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
@@ -11,9 +10,12 @@ import com.example.solar_alarm.sunrise_sunset_http.HttpRequests
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
+@Singleton
+class SolarTimeRepository @Inject constructor(private val solarTimeDao: SolarTimeDao)
 {
     val all: Flow<List<SolarTime>> = solarTimeDao.getAll()
 

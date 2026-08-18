@@ -1,13 +1,12 @@
 package com.example.solar_alarm.alarmList
 
-// Repair: Fixed broken package/import lines
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
-import com.example.solar_alarm.R
+import com.example.solar_alarm.databinding.SolarAlarmListItemBinding
 import java.time.DayOfWeek
 import java.time.Month
 
@@ -16,10 +15,8 @@ class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarmWithDetails>
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SolarAlarmViewHolder
     {
-        val view = LayoutInflater.from(parent.context)
-                                 .inflate(R.layout.solar_alarm_list_item, parent, false)
-
-        return SolarAlarmViewHolder(view)
+        val binding = SolarAlarmListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return SolarAlarmViewHolder(binding)
     }
 
     override fun onBindViewHolder(solarAlarmViewHolder: SolarAlarmViewHolder, position: Int)
@@ -37,8 +34,8 @@ class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarmWithDetails>
             val shorDay       = getShortDay(zonedDateTime.dayOfWeek)
             val shortMonth    = getShortMonth(zonedDateTime.month)
 
-            "${solarAlarm.Id} - ${solarAlarm.Name} - ${solarAlarm.OffsetTypeId.Name} ${solarAlarm.SolarTimeTypeId.Name} - ${location.Name}".also { solarAlarmViewHolder.alarmName.text = it }
-            "${shorDay} ${zonedDateTime.dayOfMonth}-$shortMonth-${zonedDateTime.year} ${hour}:${zonedDateTime.minute} $ampm".also { solarAlarmViewHolder.alarmDateTime.text = it }
+            solarAlarmViewHolder.binding.alarmName.text = "${solarAlarm.Id} - ${solarAlarm.Name} - ${solarAlarm.OffsetTypeId.Name} ${solarAlarm.SolarTimeTypeId.Name} - ${location.Name}"
+            solarAlarmViewHolder.binding.alarmDateTime.text = "${shorDay} ${zonedDateTime.dayOfMonth}-$shortMonth-${zonedDateTime.year} ${hour}:${zonedDateTime.minute} $ampm"
         }
         catch (e: Exception)
         {

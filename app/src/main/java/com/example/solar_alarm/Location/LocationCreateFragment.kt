@@ -1,6 +1,6 @@
 package com.example.solar_alarm.location
 
-// Repair: Fixed broken package/import lines
+import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,14 +15,10 @@ import com.example.solar_alarm.activities.NavActivity
 import com.example.solar_alarm.alarmList.SolarAlarmListFragment
 import com.example.solar_alarm.data.tables.Location
 import com.example.solar_alarm.data.viewmodels.LocationListViewModel
-import com.example.solar_alarm.data.viewmodels.LocationViewModelFactory
 import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
-import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModelFactory
 import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
-import com.example.solar_alarm.data.viewmodels.SolarTimeViewModelFactory
 import com.example.solar_alarm.R
 import com.example.solar_alarm.service.GpsTracker
-import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.databinding.FragmentAddLocationBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -30,36 +26,29 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.TimeZone
 
 @RequiresApi(Build.VERSION_CODES.O)
+@AndroidEntryPoint
 class LocationCreateFragment : Fragment(), OnMapReadyCallback
 {
-    private val locationListViewModel: LocationListViewModel by activityViewModels {
-        LocationViewModelFactory((requireActivity().application as SolarAlarmApp).locationRepository)
-    }
-    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels {
-        SolarTimeViewModelFactory((requireActivity().application as SolarAlarmApp).solarTimeRepository)
-    }
-    private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels {
-        SolarAlarmViewModelFactory((requireActivity().application as SolarAlarmApp).solarAlarmRepository)
-    }
+    private var _binding: FragmentAddLocationBinding? = null
+    private val binding get() = _binding!!
+
+    private val locationListViewModel: LocationListViewModel by activityViewModels()
+    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
+    private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels()
     
-    private lateinit var binding: FragmentAddLocationBinding
     private var latLng: LatLng? = null
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentAddLocationBinding.inflate(layoutInflater)
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
     {
+        _binding = FragmentAddLocationBinding.inflate(inflater, container, false)
         val view = binding.root
         getCurrentLocation(view)
         val supportMapFragment = childFragmentManager.findFragmentById(R.id.fragment_add_location_map) as SupportMapFragment?
@@ -101,10 +90,14 @@ class LocationCreateFragment : Fragment(), OnMapReadyCallback
         return view
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     private fun getCurrentLocation(view: View)
     {
-        var gpsTracker = GpsTracker(view.context)
+        val gpsTracker = GpsTracker(view.context)
 
         if (gpsTracker.canGetLocation())
         {
@@ -137,8 +130,10 @@ class LocationCreateFragment : Fragment(), OnMapReadyCallback
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11.0f))
 
-            binding.fragmentAddLocationLatitude.text  = latLng.latitude.toString()
-            binding.fragmentAddLocationLongitude.text = latLng.longitude.toString()
+            if (_binding != null) {
+                binding.fragmentAddLocationLatitude.text  = latLng.latitude.toString()
+                binding.fragmentAddLocationLongitude.text = latLng.longitude.toString()
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.example.solar_alarm.activities
 
-// Repair: Fixed broken package/import lines
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -10,31 +9,23 @@ import androidx.fragment.app.Fragment
 import com.example.solar_alarm.alarmList.SolarAlarmListFragment
 import com.example.solar_alarm.createAlarm.CreateAlarmFragment
 import com.example.solar_alarm.data.viewmodels.LocationListViewModel
-import com.example.solar_alarm.data.viewmodels.LocationViewModelFactory
 import com.example.solar_alarm.data.viewmodels.MainViewModel
 import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
-import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModelFactory
 import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
-import com.example.solar_alarm.data.viewmodels.SolarTimeViewModelFactory
 import com.example.solar_alarm.location.LocationListFragment
 import com.example.solar_alarm.R
-import com.example.solar_alarm.SolarAlarmApp
 import com.example.solar_alarm.solarTime.SolarTimeFragment
 import com.example.solar_alarm.databinding.ActivityBottomNavigationBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 @RequiresApi(Build.VERSION_CODES.O)
+@AndroidEntryPoint
 class NavActivity : AppCompatActivity()
 {
     private val viewModel: MainViewModel by viewModels()
-    private val locationListViewModel : LocationListViewModel by viewModels {
-        LocationViewModelFactory((application as SolarAlarmApp).locationRepository)
-    }
-    private val solarTimeViewModel : SolarTimeViewModel by viewModels {
-        SolarTimeViewModelFactory((application as SolarAlarmApp).solarTimeRepository)
-    }
-    private val solarAlarmViewModel : SolarAlarmViewModel by viewModels {
-        SolarAlarmViewModelFactory((application as SolarAlarmApp).solarAlarmRepository)
-    }
+    private val locationListViewModel : LocationListViewModel by viewModels()
+    private val solarTimeViewModel : SolarTimeViewModel by viewModels()
+    private val solarAlarmViewModel : SolarAlarmViewModel by viewModels()
 
     private lateinit var binding : ActivityBottomNavigationBinding
 

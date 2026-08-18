@@ -1,15 +1,17 @@
 package com.example.solar_alarm.data.repositories
 
-// Fixed broken line
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
 import com.example.solar_alarm.data.daos.LocationDao
 import com.example.solar_alarm.data.tables.Location
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-class LocationRepository(private val locationDao: LocationDao)
+@Singleton
+class LocationRepository @Inject constructor(private val locationDao: LocationDao)
 {
     val all: Flow<List<Location>> = locationDao.getAll()
 

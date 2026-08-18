@@ -21,11 +21,11 @@ class HttpTestCase
             val sunriseSunsetResponse : SunriseSunsetResponse
 
             runBlocking {
-                sunriseSunsetResponse = httpRequests.GetSolarData(sunriseSunsetRequest)
+                sunriseSunsetResponse = httpRequests.getSolarData(sunriseSunsetRequest)
             }
 
             Assert.assertNotNull(sunriseSunsetResponse)
-            Assert.assertSame("OK", sunriseSunsetResponse!!.status)
+            Assert.assertEquals("OK", sunriseSunsetResponse.status)
         }
         catch (e: IOException)
         {

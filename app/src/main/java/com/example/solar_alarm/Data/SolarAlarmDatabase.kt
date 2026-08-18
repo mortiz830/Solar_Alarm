@@ -17,8 +17,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.solar_alarm.data.tables.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Database(entities = [Location::class, SolarAlarm::class, SolarTime::class], version = 1, exportSchema = false)
@@ -35,8 +33,6 @@ abstract class SolarAlarmDatabase : RoomDatabase()
     {
         @Volatile
         private var INSTANCE: SolarAlarmDatabase? = null
-        private const val NUMBER_OF_THREADS = 4
-        val databaseWriteExecutor: ExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
 
         fun getDatabase(context: Context, scope: CoroutineScope): SolarAlarmDatabase
         {
@@ -44,10 +40,6 @@ abstract class SolarAlarmDatabase : RoomDatabase()
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, SolarAlarmDatabase::class.java, "SolarAlarmDatabase")
-                                    // Wipes and rebuilds instead of migrating if no Migration object.
-                                    // Migration is not part of this codelab.
-                                    .fallbackToDestructiveMigration()
-                                    .allowMainThreadQueries()
                                     //.addMigrations(StaticDataMigration.Companion.MIGRATION_1_2)
                                     //.addCallback(SolarAlarmDatabaseCallback(scope))
                                     .build()

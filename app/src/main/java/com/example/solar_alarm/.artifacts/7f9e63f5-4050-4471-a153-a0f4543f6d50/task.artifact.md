@@ -1,26 +1,20 @@
-# Task: Project Modernization and Best Practices Implementation
+# Task: Project Stabilization and Best Practices
 
-- [x] Data Layer Modernization
-    - [x] Create `SolarAlarmWithDetails.kt` [NEW]
-    - [x] Update `SolarAlarmDao.kt` (Joined queries, `suspend` methods)
-    - [x] Update `LocationDao.kt` (`suspend` methods)
-    - [x] Update `SolarTimeDao.kt` (`suspend` methods)
-    - [x] Update `SolarAlarm.kt` (Remove blocking getters)
-- [x] Repository & ViewModel Refactoring
-    - [x] Update Repositories to use `suspend` and camelCase
-    - [x] Update ViewModels to handle joined data
-- [x] UI Layer Refactoring (Lifecycle & Threading)
-    - [x] `NavActivity.kt`: Update Fragment replacement logic
-    - [x] `CreateAlarmFragment.kt`: Remove constructor params, fix threading
-    - [x] `SolarAlarmListFragment.kt`: Remove constructor params, fix threading
-    - [x] `LocationCreateFragment.kt`: Remove constructor params, fix threading
-    - [x] `LocationListFragment.kt`: Remove constructor params
-    - [x] `SolarTimeFragment.kt`: Remove constructor params
-- [x] Cleanup
-    - [x] Remove `ButterKnife` and `org.apache.http.legacy` from `build.gradle`
-    - [x] Remove legacy entries from `AndroidManifest.xml`
-    - [x] Delete unused files (`App.kt`, `MainActivity.kt`)
-    - [x] Remove commented-out dead code
-- [x] Verification
-    - [x] Gradle Build
-    - [x] Basic Manual Verification
+- [x] Fix Memory Leaks in Fragments (ViewBinding Pattern)
+    - [x] `CreateAlarmFragment.kt`
+    - [x] `SolarAlarmListFragment.kt`
+    - [x] `LocationCreateFragment.kt`
+    - [x] `LocationListFragment.kt`
+    - [x] `SolarTimeFragment.kt`
+    - [x] `UpdateAlarmFragment.kt`
+- [x] Fix Test Compilation
+    - [x] `HttpTestCase.kt`
+- [x] Architectural Cleanup
+    - [x] Refactor `CreateAlarmFragment` to use ViewModel for insertions
+    - [x] Refactor `SolarAlarmViewHolder` to use ViewBinding
+- [x] Code Quality Improvements
+    - [x] Replace star imports with explicit imports
+    - [x] Move hardcoded strings in `AlarmService.kt` to resources
+- [x] Final Verification
+    - [x] Run Unit Tests
+    - [x] Build assembleDebug

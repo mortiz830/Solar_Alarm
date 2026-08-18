@@ -1,6 +1,5 @@
 package com.example.solar_alarm.createAlarm
 
-// Repair: Fixed broken package/import lines
 import android.database.sqlite.SQLiteConstraintException
 import android.os.Build
 import android.os.Bundle
@@ -24,40 +23,35 @@ import com.example.solar_alarm.data.tables.Location
 import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.data.tables.SolarTime
 import com.example.solar_alarm.data.viewmodels.LocationListViewModel
-import com.example.solar_alarm.data.viewmodels.LocationViewModelFactory
 import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
-import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModelFactory
 import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
-import com.example.solar_alarm.data.viewmodels.SolarTimeViewModelFactory
-import com.example.solar_alarm.SolarAlarmApp
+import com.example.solar_alarm.data.repositories.SolarTimeRepository
 import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
+@AndroidEntryPoint
 class CreateAlarmFragment : Fragment()
 {
-    private lateinit var binding: FragmentCreatealarmBinding
-    private val locationListViewModel: LocationListViewModel by activityViewModels {
-        LocationViewModelFactory((requireActivity().application as SolarAlarmApp).locationRepository)
-    }
-    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels {
-        SolarTimeViewModelFactory((requireActivity().application as SolarAlarmApp).solarTimeRepository)
-    }
-    private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels {
-        SolarAlarmViewModelFactory((requireActivity().application as SolarAlarmApp).solarAlarmRepository)
-    }
+    private var _binding: FragmentCreatealarmBinding? = null
+    private val binding get() = _binding!!
 
-    private val solarAlarmRepository by lazy { (requireActivity().application as SolarAlarmApp).solarAlarmRepository }
+    private val locationListViewModel: LocationListViewModel by activityViewModels()
+    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
+    private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels()
+
+    @Inject
+    lateinit var solarTimeRepository: SolarTimeRepository
 
     private var dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd-MMM-uuuu\nhh:mm a")
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        binding = FragmentCreatealarmBinding.inflate(layoutInflater)
     }
 
     suspend fun Location.getSolarTimes() : ArrayList<SolarTime>
@@ -65,7 +59,6 @@ class CreateAlarmFragment : Fragment()
         val solarTimes : ArrayList<SolarTime> = arrayListOf()
         var date                              = LocalDate.now()
         val thisLocation = this
-        val solarTimeRepository = (requireActivity().application as SolarAlarmApp).solarTimeRepository
 
         for (i in 1..7)
         {
@@ -90,8 +83,9 @@ class CreateAlarmFragment : Fragment()
         return solarTimes
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-    {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentCreatealarmBinding.inflate(inflater, container, false)
+        
         locationListViewModel.allLocations.observe(viewLifecycleOwner, Observer
         {
             locations ->
@@ -115,7 +109,7 @@ class CreateAlarmFragment : Fragment()
                 lifecycleScope.launch {
                     if (newSelectedLocation != null) {
                         solarTimes = newSelectedLocation.getSolarTimes()
-                        if (solarTimes.isNotEmpty()) {
+                        if (solarTimes.isNotEmpty() && _binding != null) {
                             binding.fragmentCreatealarmSunriseData.text   = solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(dateTimeFormatter)
                             binding.fragmentCreatealarmSolarnoonData.text = solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(dateTimeFormatter)
                             binding.fragmentCreatealarmSunsetData.text    = solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(dateTimeFormatter)
@@ -185,7 +179,7 @@ class CreateAlarmFragment : Fragment()
         lifecycleScope.launch {
             try
             {
-                solarAlarmRepository.insert(solarAlarmItem)
+                solarAlarmViewModel.insert(solarAlarmItem)
                 
                 val currentContext = context
                 if (currentContext != null) {
@@ -212,6 +206,11 @@ class CreateAlarmFragment : Fragment()
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     fun setPickers() {

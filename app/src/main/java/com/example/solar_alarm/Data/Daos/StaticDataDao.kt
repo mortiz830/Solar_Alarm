@@ -7,14 +7,14 @@ import androidx.room.*
 @Dao
 interface StaticDataDao {
     @Insert
-    fun insert(offsetType: OffsetTypeEnum)
+    suspend fun insert(offsetType: OffsetTypeEnum)
 
-    @get:Query("SELECT EXISTS(SELECT * FROM OffsetTypeEnum)")
-    val isOffsetTypesExists: Boolean
+    @Query("SELECT EXISTS(SELECT * FROM OffsetTypeEnum)")
+    suspend fun isOffsetTypesExists(): Boolean
 
     @Insert
-    fun insert(solarTimeType: SolarTimeTypeEnum)
+    suspend fun insert(solarTimeType: SolarTimeTypeEnum)
 
-    @get:Query("SELECT EXISTS(SELECT * FROM SolarTimeTypeEnum)")
-    val isSolarTimeTypesExists: Boolean
+    @Query("SELECT EXISTS(SELECT * FROM SolarTimeTypeEnum)")
+    suspend fun isSolarTimeTypesExists(): Boolean
 }
