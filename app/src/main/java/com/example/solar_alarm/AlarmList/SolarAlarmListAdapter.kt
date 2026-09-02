@@ -29,13 +29,20 @@ class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarmWithDetails>
         try
         {
             val zonedDateTime = solarTime.getLocalZonedDateTime(solarAlarm.SolarTimeTypeId)
-            val hour          = if (zonedDateTime.hour > 12)  zonedDateTime.hour - 12 else zonedDateTime.hour
-            val ampm          = if (zonedDateTime.hour > 12)  "PM" else "AM"
-            val shorDay       = getShortDay(zonedDateTime.dayOfWeek)
-            val shortMonth    = getShortMonth(zonedDateTime.month)
+            val hour12 = when {
+                zonedDateTime.hour == 0 -> 12
+                zonedDateTime.hour > 12 -> zonedDateTime.hour - 12
+                else -> zonedDateTime.hour
+            }
 
-            solarAlarmViewHolder.binding.alarmName.text = "${solarAlarm.Id} - ${solarAlarm.Name} - ${solarAlarm.OffsetTypeId.Name} ${solarAlarm.SolarTimeTypeId.Name} - ${location.Name}"
-            solarAlarmViewHolder.binding.alarmDateTime.text = "${shorDay} ${zonedDateTime.dayOfMonth}-$shortMonth-${zonedDateTime.year} ${hour}:${zonedDateTime.minute} $ampm"
+            val ampm            = if (zonedDateTime.hour >= 12)  "PM" else "AM"
+            val shorDay         = getShortDay(zonedDateTime.dayOfWeek)
+            val shortMonth      = getShortMonth(zonedDateTime.month)
+            val formattedHour   = String.format(java.util.Locale.getDefault(), "%02d", hour12)
+            val formattedMinute = String.format(java.util.Locale.getDefault(), "%02d", zonedDateTime.minute)
+
+            solarAlarmViewHolder.binding.alarmName.text     = "${solarAlarm.Id} - ${solarAlarm.Name} - ${solarAlarm.OffsetTypeId.Name} ${solarAlarm.SolarTimeTypeId.Name} - ${location.Name}"
+            solarAlarmViewHolder.binding.alarmDateTime.text = "${shorDay} ${zonedDateTime.dayOfMonth}-$shortMonth-${zonedDateTime.year} ${formattedHour}:${formattedMinute} $ampm"
         }
         catch (e: Exception)
         {
