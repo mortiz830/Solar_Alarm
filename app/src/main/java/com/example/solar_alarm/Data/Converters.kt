@@ -69,20 +69,17 @@ object Converters
     @TypeConverter
     fun toTimeString(zonedDateTime: ZonedDateTime): Array<String> {
         // We will need to consider giving the user to choose their date and time formats.
-        val hour: String
-        val hourInt = if (zonedDateTime.hour > 12) zonedDateTime.hour - 12 else zonedDateTime.hour
-        hour = if (hourInt < 10) {
-            String.format("%02d", hourInt)
-        } else {
-            hourInt.toString()
+        val hour12 = when {
+            zonedDateTime.hour == 0 -> 12
+            zonedDateTime.hour > 12 -> zonedDateTime.hour - 12
+            else -> zonedDateTime.hour
         }
-        val ampm = if (zonedDateTime.hour > 11) "PM" else "AM"
-        val time = hour + ":" + zonedDateTime.minute + " " + ampm
+        val ampm = if (zonedDateTime.hour >= 12) "PM" else "AM"
+        val time = String.format(java.util.Locale.getDefault(), "%02d:%02d %s", hour12, zonedDateTime.minute, ampm)
 
-        //String dayOfWeek  = zonedDateTime.getDayOfWeek().toString().substring(0,3);
-        val dayOfMonth = if (zonedDateTime.dayOfMonth < 10) String.format("%02d", zonedDateTime.dayOfMonth) else zonedDateTime.dayOfMonth.toString()
+        val dayOfMonth = String.format(java.util.Locale.getDefault(), "%02d", zonedDateTime.dayOfMonth)
         val month = zonedDateTime.month.toString().substring(0, 3)
-        val date =  /*dayOfWeek + " " +*/dayOfMonth + "-" + month + "-" + zonedDateTime.year
+        val date =  dayOfMonth + "-" + month + "-" + zonedDateTime.year
         return arrayOf(date, time)
     }
 }
