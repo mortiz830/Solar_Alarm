@@ -39,6 +39,8 @@ class LocationCreateFragment : Fragment(), OnMapReadyCallback
     private var _binding: FragmentAddLocationBinding? = null
     private val binding get() = _binding!!
 
+    private var gpsTracker: GpsTracker? = null
+
     private val locationListViewModel: LocationListViewModel by activityViewModels()
     private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
     private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels()
@@ -50,7 +52,7 @@ class LocationCreateFragment : Fragment(), OnMapReadyCallback
     {
         _binding = FragmentAddLocationBinding.inflate(inflater, container, false)
         val view = binding.root
-        getCurrentLocation(view)
+        startLocationTracking(view)
         val supportMapFragment = childFragmentManager.findFragmentById(R.id.fragment_add_location_map) as SupportMapFragment?
         supportMapFragment!!.getMapAsync(this)
         
@@ -92,20 +94,23 @@ class LocationCreateFragment : Fragment(), OnMapReadyCallback
 
     override fun onDestroyView() {
         super.onDestroyView()
+        gpsTracker?.stopUsingGPS()
+        gpsTracker = null
         _binding = null
     }
 
-    private fun getCurrentLocation(view: View)
+    private fun startLocationTracking(view: View)
     {
-        val gpsTracker = GpsTracker(view.context)
+        gpsTracker = GpsTracker(view.context)
+        gpsTracker?.getLocation()
 
-        if (gpsTracker.canGetLocation())
+        if (gpsTracker?.canGetLocation() == true)
         {
-            latLng = LatLng(gpsTracker.latitude, gpsTracker.longitude)
+            latLng = LatLng(gpsTracker?.latitude ?: 0.0, gpsTracker?.longitude ?: 0.0)
         }
         else
         {
-            gpsTracker.showSettingsAlert()
+            gpsTracker?.showSettingsAlert()
         }
     }
 

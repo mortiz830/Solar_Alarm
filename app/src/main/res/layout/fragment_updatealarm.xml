@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,33 +16,24 @@
             android:id="@+id/fragment_updatealarm_scheduleAlarmHeading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Schedule Alarm"
+            android:text="Update Alarm"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/fragment_updatealarm_timePickerLayout"
+            android:id="@+id/fragment_updatealarm_location_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/fragment_updatealarm_scheduleAlarmHeading">
 
-            <TextView
-                android:layout_width="0dp"
+            <Spinner
+                android:id="@+id/fragment_updatealarm_location_spinner"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.4"
-                android:text="Alarm Time"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-            <TimePicker
-                android:id="@+id/fragment_updatealarm_timePicker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:timePickerMode="spinner" />
+                android:layout_margin="5dp"
+                android:textAlignment="center"/>
         </LinearLayout>
 
         <EditText
@@ -49,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Alarm Title"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_updatealarm_timePickerLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/fragment_updatealarm_location_layout" />
 
         <CheckBox
             android:id="@+id/fragment_updatealarm_recurring"
@@ -68,59 +60,80 @@
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/fragment_updatealarm_recurring">
 
-            <CheckBox
-                android:id="@+id/fragment_updatealarm_checkMon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mon" />
+            <CheckBox android:id="@+id/fragment_updatealarm_checkMon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Mon" />
+            <CheckBox android:id="@+id/fragment_updatealarm_checkTue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tue" />
+            <CheckBox android:id="@+id/fragment_updatealarm_checkWed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Wed" />
+            <CheckBox android:id="@+id/fragment_updatealarm_checkThu" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Thu" />
+            <CheckBox android:id="@+id/fragment_updatealarm_checkFri" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fri" />
+            <CheckBox android:id="@+id/fragment_updatealarm_checkSat" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sat" />
+            <CheckBox android:id="@+id/fragment_updatealarm_checkSun" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sun" />
+        </LinearLayout>
 
-            <CheckBox
-                android:id="@+id/fragment_updatealarm_checkTue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tue" />
+        <TextView
+            android:id="@+id/fragment_updatealarm_alarmtime_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Alarm Offset"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_updatealarm_recurring_options"/>
 
-            <CheckBox
-                android:id="@+id/fragment_updatealarm_checkWed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Wed" />
+        <Spinner
+            android:id="@+id/fragment_updatealarm_alarmtime_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/fragment_updatealarm_alarmtime_text" />
 
-            <CheckBox
-                android:id="@+id/fragment_updatealarm_checkThu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Thu" />
+        <TextView
+            android:id="@+id/fragment_updatealarm_settime_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Solar Event"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/fragment_updatealarm_alarmtime_spinner"/>
 
-            <CheckBox
-                android:id="@+id/fragment_updatealarm_checkFri"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Fri" />
+        <Spinner
+            android:id="@+id/fragment_updatealarm_settime_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/fragment_updatealarm_settime_text" />
 
-            <CheckBox
-                android:id="@+id/fragment_updatealarm_checkSat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sat" />
+        <LinearLayout
+            android:id="@+id/fragment_updatealarm_offset_pickers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/fragment_updatealarm_settime_spinner">
+            <NumberPicker android:id="@+id/fragment_updatealarm_set_hours" android:layout_width="80dp" android:layout_height="100dp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="h" />
+            <NumberPicker android:id="@+id/fragment_updatealarm_set_mins" android:layout_width="80dp" android:layout_height="100dp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="m" />
+        </LinearLayout>
 
-            <CheckBox
-                android:id="@+id/fragment_updatealarm_checkSun"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sun" />
+        <LinearLayout
+            android:id="@+id/fragment_updatealarm_data_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/fragment_updatealarm_offset_pickers"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_updatealarm_saveAlarm">
 
+            <TextView android:id="@+id/fragment_updatealarm_sunrise_data" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" />
+            <TextView android:id="@+id/fragment_updatealarm_solarnoon_data" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" />
+            <TextView android:id="@+id/fragment_updatealarm_sunset_data" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" />
         </LinearLayout>
 
         <Button
-            android:id="@+id/fragment_updatealarm_scheduleAlarm"
+            android:id="@+id/fragment_updatealarm_saveAlarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Schedule Alarm"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:layout_editor_absoluteX="133dp" />
+            android:text="Save Changes"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </LinearLayout>

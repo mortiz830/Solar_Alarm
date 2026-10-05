@@ -19,13 +19,13 @@ import com.example.solar_alarm.activities.NavActivity
 import com.example.solar_alarm.alarmList.SolarAlarmListFragment
 import com.example.solar_alarm.data.enums.OffsetTypeEnum
 import com.example.solar_alarm.data.enums.SolarTimeTypeEnum
+import com.example.solar_alarm.data.repositories.SolarTimeRepository
 import com.example.solar_alarm.data.tables.Location
 import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.data.tables.SolarTime
 import com.example.solar_alarm.data.viewmodels.LocationListViewModel
 import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
 import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
-import com.example.solar_alarm.data.repositories.SolarTimeRepository
 import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -107,9 +107,12 @@ class CreateAlarmFragment : Fragment()
                 val newSelectedLocation = locationListViewModel.allLocations.value?.getOrNull(locationPosition)
                 
                 lifecycleScope.launch {
-                    if (newSelectedLocation != null) {
+                    if (newSelectedLocation != null)
+                    {
                         solarTimes = newSelectedLocation.getSolarTimes()
-                        if (solarTimes.isNotEmpty() && _binding != null) {
+
+                        if (solarTimes.isNotEmpty() && _binding != null)
+                        {
                             binding.fragmentCreatealarmSunriseData.text   = solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(dateTimeFormatter)
                             binding.fragmentCreatealarmSolarnoonData.text = solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(dateTimeFormatter)
                             binding.fragmentCreatealarmSunsetData.text    = solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(dateTimeFormatter)

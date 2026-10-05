@@ -30,6 +30,8 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
     private var _binding: FragmentListalarmsBinding? = null
     private val binding get() = _binding!!
 
+    private var gpsTracker: GpsTracker? = null
+
     private val locationListViewModel: LocationListViewModel by activityViewModels()
     private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
     private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels()
@@ -49,23 +51,26 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
         }
 
         binding.addButton.setOnClickListener { showPopupMenu(it) }
-        getLocation(binding.root)
+        startLocationTracking(binding.root)
 
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        gpsTracker?.stopUsingGPS()
+        gpsTracker = null
         _binding = null
     }
 
-    fun getLocation(view: View)
+    private fun startLocationTracking(view: View)
     {
-        val gpsTracker = GpsTracker(view.context)
+        gpsTracker = GpsTracker(view.context)
+        gpsTracker?.getLocation()
 
-        if (!gpsTracker.canGetLocation())
+        if (gpsTracker?.canGetLocation() == false)
         {
-            gpsTracker.showSettingsAlert()
+            gpsTracker?.showSettingsAlert()
         }
     }
 

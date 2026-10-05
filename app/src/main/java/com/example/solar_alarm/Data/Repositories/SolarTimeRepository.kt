@@ -61,18 +61,20 @@ class SolarTimeRepository @Inject constructor(private val solarTimeDao: SolarTim
             val sunriseSunsetRequest  = SunriseSunsetRequest(location.Latitude.toFloat(), location.Longitude.toFloat(), date)
             val sunriseSunsetResponse = HttpRequests().getSolarData(sunriseSunsetRequest)
 
+            val results = sunriseSunsetResponse.results ?: return null
+
             solarTime = SolarTime(date,
                                   location.Id,
-                                  sunriseSunsetResponse?.results?.day_length!!,
-                                  sunriseSunsetResponse.results?.sunrise,
-                                  sunriseSunsetResponse.results?.sunset,
-                                  sunriseSunsetResponse.results?.solar_noon,
-                                  sunriseSunsetResponse.results?.civil_twilight_begin,
-                                  sunriseSunsetResponse.results?.civil_twilight_end,
-                                  sunriseSunsetResponse.results?.nautical_twilight_begin,
-                                  sunriseSunsetResponse.results?.nautical_twilight_end,
-                                  sunriseSunsetResponse.results?.astronomical_twilight_begin,
-                                  sunriseSunsetResponse.results?.astronomical_twilight_end)
+                                  results.day_length,
+                                  results.sunrise,
+                                  results.sunset,
+                                  results.solar_noon,
+                                  results.civil_twilight_begin,
+                                  results.civil_twilight_end,
+                                  results.nautical_twilight_begin,
+                                  results.nautical_twilight_end,
+                                  results.astronomical_twilight_begin,
+                                  results.astronomical_twilight_end)
 
             insert(solarTime)   // save response as a new SolarTime
 

@@ -18,6 +18,8 @@ import com.example.solar_alarm.service.RescheduleHelper
 import com.example.solar_alarm.databinding.ActivityRingBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -72,7 +74,9 @@ class RingActivity : AppCompatActivity() {
         val intentService = Intent(applicationContext, AlarmService::class.java)
 
         lifecycleScope.launch {
-            rescheduleHelper.rescheduleNext(applicationContext, solarAlarm)
+            withContext(NonCancellable) {
+                rescheduleHelper.rescheduleNext(applicationContext, solarAlarm)
+            }
             stopService(intentService)
             finish()
         }

@@ -1,10 +1,14 @@
 package com.example.solar_alarm.alarmList
 
+import android.content.ContextWrapper
 import android.os.Build
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.example.solar_alarm.activities.NavActivity
+import com.example.solar_alarm.createAlarm.UpdateAlarmFragment
 import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
 import com.example.solar_alarm.databinding.SolarAlarmListItemBinding
 import java.time.DayOfWeek
@@ -35,7 +39,7 @@ class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarmWithDetails>
                 else -> zonedDateTime.hour
             }
 
-            val ampm            = if (zonedDateTime.hour >= 12)  "PM" else "AM"
+            val ampm            = if (zonedDateTime.hour >= 12) "PM" else "AM"
             val shorDay         = getShortDay(zonedDateTime.dayOfWeek)
             val shortMonth      = getShortMonth(zonedDateTime.month)
             val formattedHour   = String.format(java.util.Locale.getDefault(), "%02d", hour12)
@@ -43,6 +47,23 @@ class SolarAlarmListAdapter(private var solarAlarms: List<SolarAlarmWithDetails>
 
             solarAlarmViewHolder.binding.alarmName.text     = "${solarAlarm.Id} - ${solarAlarm.Name} - ${solarAlarm.OffsetTypeId.Name} ${solarAlarm.SolarTimeTypeId.Name} - ${location.Name}"
             solarAlarmViewHolder.binding.alarmDateTime.text = "${shorDay} ${zonedDateTime.dayOfMonth}-$shortMonth-${zonedDateTime.year} ${formattedHour}:${formattedMinute} $ampm"
+
+            solarAlarmViewHolder.binding.alarmCard.setOnClickListener {
+                val fragment = UpdateAlarmFragment().apply {
+                    arguments = Bundle().apply {
+                        putParcelable("solarAlarm", solarAlarm)
+                    }
+                }
+                
+                var context = it.context
+                while (context is ContextWrapper) {
+                    if (context is NavActivity) {
+                        context.replaceFragment(fragment)
+                        break
+                    }
+                    context = context.baseContext
+                }
+            }
         }
         catch (e: Exception)
         {

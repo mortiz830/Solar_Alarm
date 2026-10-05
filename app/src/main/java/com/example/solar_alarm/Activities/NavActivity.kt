@@ -35,7 +35,9 @@ class NavActivity : AppCompatActivity()
         binding = ActivityBottomNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        replaceFragment(SolarAlarmListFragment())
+        if (savedInstanceState == null) {
+            replaceFragment(SolarAlarmListFragment())
+        }
 
         binding.navView.setOnItemSelectedListener {
             when (it.itemId)
