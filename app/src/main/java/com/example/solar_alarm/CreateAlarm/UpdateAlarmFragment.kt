@@ -97,7 +97,10 @@ class UpdateAlarmFragment : Fragment() {
             
             // Set initial selection
             val index = locations.indexOfFirst { it.Id == solarAlarm.LocationId }
-            if (index != -1) binding.fragmentUpdatealarmLocationSpinner.setSelection(index)
+            if (index != -1) {
+                binding.fragmentUpdatealarmLocationSpinner.setSelection(index)
+                locations.getOrNull(index)?.let { loadSolarTimes(it) }
+            }
         }
 
         binding.fragmentUpdatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_item, OffsetTypeEnum.entries.map { it.Name })
@@ -125,7 +128,12 @@ class UpdateAlarmFragment : Fragment() {
         binding.fragmentUpdatealarmCheckSun.isChecked = solarAlarm.Sunday
 
         val offsetIndex = OffsetTypeEnum.entries.indexOfFirst { it == solarAlarm.OffsetTypeId }
-        if (offsetIndex != -1) binding.fragmentUpdatealarmAlarmtimeSpinner.setSelection(offsetIndex)
+        if (offsetIndex != -1) {
+            binding.fragmentUpdatealarmAlarmtimeSpinner.setSelection(offsetIndex)
+        }
+
+        val selectedOffset = solarAlarm.OffsetTypeId
+        binding.fragmentUpdatealarmOffsetPickers.visibility = if (selectedOffset == OffsetTypeEnum.Before || selectedOffset == OffsetTypeEnum.After) View.VISIBLE else View.GONE
 
         val timeTypeIndex = SolarTimeTypeEnum.entries.indexOfFirst { it == solarAlarm.SolarTimeTypeId }
         if (timeTypeIndex != -1) binding.fragmentUpdatealarmSettimeSpinner.setSelection(timeTypeIndex)
@@ -165,6 +173,7 @@ class UpdateAlarmFragment : Fragment() {
         val updatedAlarm = solarAlarm.copy(
             Name = binding.fragmentUpdatealarmTitle.text.toString(),
             LocationId = selectedLocation.Id,
+            SolarTimeId = if (solarTimes.isNotEmpty()) solarTimes[0].Id else solarAlarm.SolarTimeId,
             Recurring = binding.fragmentUpdatealarmRecurring.isChecked,
             Monday = binding.fragmentUpdatealarmCheckMon.isChecked,
             Tuesday = binding.fragmentUpdatealarmCheckTue.isChecked,
