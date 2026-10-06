@@ -1,6 +1,6 @@
-package com.example.solar_alarm.Data.Repositories
+package com.example.solar_alarm.data.repositories
 
-import com.example.solar_alarm.Data.Daos.BaseDao
+import com.example.solar_alarm.data.daos.BaseDao
 import kotlinx.coroutines.flow.Flow
 
 

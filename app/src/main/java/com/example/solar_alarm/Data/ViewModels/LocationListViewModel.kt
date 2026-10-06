@@ -1,49 +1,51 @@
-package com.example.solar_alarm.Data.ViewModels
+package com.example.solar_alarm.data.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.solar_alarm.Data.Repositories.LocationRepository
-import com.example.solar_alarm.Data.Tables.Location
-import kotlinx.coroutines.async
+import com.example.solar_alarm.data.repositories.LocationRepository
+import com.example.solar_alarm.data.tables.Location
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class LocationListViewModel(private val repository: LocationRepository) : ViewModel()
+@HiltViewModel
+class LocationListViewModel @Inject constructor(private val repository: LocationRepository) : ViewModel()
 {
-    val AllLocations: LiveData<List<Location>> = repository.all.asLiveData()
+    val allLocations: LiveData<List<Location>> = repository.all.asLiveData()
 
-    fun Insert(location: Location) = viewModelScope.launch { repository.Insert(location) }
+    fun insert(location: Location) = viewModelScope.launch { repository.insert(location) }
 
     fun getLocationString(location: Location?): String
     {
         return location?.let { "${it.Id}, ${it.Name}, ${it.Latitude}, ${it.Longitude}, ${it.CreateDateTimeUtc}" } ?: "Location not found."
     }
 
-    fun getByName(locationName: String) : Location
+    suspend fun getByName(locationName: String) : Location
     {
-        return repository.GetByName(locationName)
+        return repository.getByName(locationName)
     }
 
-    fun getById(locationId: Int) : Location
+    suspend fun getById(locationId: Int) : Location
     {
-        return repository.GetById(locationId)
+        return repository.getById(locationId)
     }
 
     fun getLocationStrings(locations: List<Location>): List<String> {
         return locations.map { getLocationString(it) }
     }
 
-    suspend fun DoesLocationNameExists(name: String?): Boolean
+    suspend fun doesLocationNameExists(name: String?): Boolean
     {
-        return repository.DoesLocationNameExists(name)
+        return repository.doesLocationNameExists(name)
     }
 
-    suspend fun DoesLocationLatLongExists(latitude: Double, longitude: Double): Boolean
+    suspend fun doesLocationLatLongExists(latitude: Double, longitude: Double): Boolean
     {
-        return repository.DoesLocationLatLongExists(latitude, longitude)
+        return repository.doesLocationLatLongExists(latitude, longitude)
     }
 }
 

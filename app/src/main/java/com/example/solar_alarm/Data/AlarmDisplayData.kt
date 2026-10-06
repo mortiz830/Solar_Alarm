@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Data
+package com.example.solar_alarm.data
 
 class AlarmDisplayData {
     @kotlin.jvm.JvmField

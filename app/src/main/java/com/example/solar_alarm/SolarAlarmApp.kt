@@ -8,23 +8,11 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.os.Build
 import android.provider.Settings
-import com.example.solar_alarm.Data.Repositories.LocationRepository
-import com.example.solar_alarm.Data.Repositories.SolarAlarmRepository
-import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
-import com.example.solar_alarm.Data.SolarAlarmDatabase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class SolarAlarmApp : Application()
 {
-    private val applicationScope = CoroutineScope(SupervisorJob())
-
-    private val solarAlarmDatabase by lazy { SolarAlarmDatabase.getDatabase(this, applicationScope) }
-
-    val locationRepository   by lazy { LocationRepository(solarAlarmDatabase.locationDao())   }
-    val solarTimeRepository  by lazy { SolarTimeRepository(solarAlarmDatabase.solarTimeDao()) }
-    val solarAlarmRepository by lazy { SolarAlarmRepository(solarAlarmDatabase.solarAlarmDao()) }
-
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
@@ -57,7 +45,7 @@ class SolarAlarmApp : Application()
     companion object {
         private var context: Context? = null
         const val CHANNEL_ID = "SOLAR_ALARM_CHANNEL_V2"
-        fun GetAppContext(): Context? {
+        fun getAppContext(): Context? {
             return context
         }
     }

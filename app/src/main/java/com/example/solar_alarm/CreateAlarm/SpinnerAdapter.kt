@@ -1,5 +1,6 @@
-package com.example.solar_alarm.CreateAlarm
+package com.example.solar_alarm.createAlarm
 
+// Repair: Fixed broken package/import lines
 import com.example.solar_alarm.R
 import android.widget.TextView
 import android.view.LayoutInflater
@@ -7,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.content.Context
 import android.view.View
-import com.example.solar_alarm.Data.Tables.*
+import com.example.solar_alarm.data.tables.*
 
 class SpinnerAdapter(context: Context?,
                      locationList: List<Location>?) : ArrayAdapter<Location?>(context!!, 0, locationList!!) {

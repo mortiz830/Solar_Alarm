@@ -1,4 +1,4 @@
-//package com.example.solar_alarm.Data.Tables
+//package com.example.solar_alarm.data.tables
 //
 //import android.os.Build
 //import androidx.annotation.RequiresApi

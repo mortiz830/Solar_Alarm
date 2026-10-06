@@ -1,4 +1,4 @@
-package com.example.solar_alarm.Activities
+package com.example.solar_alarm.activities
 
 import android.app.KeyguardManager
 import android.content.Context
@@ -6,14 +6,30 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.example.solar_alarm.BroadcastReceiver.MusicControl
-import com.example.solar_alarm.Service.AlarmService
+import androidx.lifecycle.lifecycleScope
+import com.example.solar_alarm.broadcastReceiver.AlarmBroadcastReceiver
+import com.example.solar_alarm.broadcastReceiver.MusicControl
+import com.example.solar_alarm.data.tables.SolarAlarm
+import com.example.solar_alarm.service.AlarmService
+import com.example.solar_alarm.service.RescheduleHelper
 import com.example.solar_alarm.databinding.ActivityRingBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class RingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRingBinding
+    private lateinit var solarAlarm: SolarAlarm
+
+    @Inject
+    lateinit var rescheduleHelper: RescheduleHelper
 
     override fun onCreate(bundle: Bundle?) {
         super.onCreate(bundle)
@@ -38,7 +54,10 @@ class RingActivity : AppCompatActivity() {
         binding = ActivityRingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 3. Set up Click Listeners using binding
+        // 3. Get SolarAlarm from Intent
+        solarAlarm = AlarmBroadcastReceiver.getSolarAlarmFromIntent(intent) as SolarAlarm
+
+        // 4. Set up Click Listeners using binding
         binding.activityRingDismiss.setOnClickListener {
             dismissAlarm()
         }
@@ -48,12 +67,18 @@ class RingActivity : AppCompatActivity() {
         }
     }
 
-    private fun dismissAlarm() {
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun dismissAlarm()
+    {
         MusicControl.getInstance(this).stopMusic()
         val intentService = Intent(applicationContext, AlarmService::class.java)
-        // NEED SolarAlarm object or ID IN HERE
-        // send to CreateAlarmFragment.UpdateAlarmAfterDismiss() to be updated and reset in broadcast receiver
-        stopService(intentService)
-        finish()
+
+        lifecycleScope.launch {
+            withContext(NonCancellable) {
+                rescheduleHelper.rescheduleNext(applicationContext, solarAlarm)
+            }
+            stopService(intentService)
+            finish()
+        }
     }
 }

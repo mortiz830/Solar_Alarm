@@ -1,11 +1,12 @@
-package com.example.solar_alarm.Location
+package com.example.solar_alarm.location
 
+// Repair: Fixed broken package/import lines
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.example.solar_alarm.Data.Tables.Location
+import com.example.solar_alarm.data.tables.Location
 import com.example.solar_alarm.databinding.LocationListItemBinding
 
 @RequiresApi(Build.VERSION_CODES.O)

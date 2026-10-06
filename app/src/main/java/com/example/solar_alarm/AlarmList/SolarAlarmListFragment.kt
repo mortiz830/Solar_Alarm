@@ -1,4 +1,4 @@
-package com.example.solar_alarm.AlarmList
+package com.example.solar_alarm.alarmList
 
 import android.os.Build
 import android.os.Bundle
@@ -10,77 +10,72 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.solar_alarm.CreateAlarm.CreateAlarmFragment
-import com.example.solar_alarm.Data.ViewModels.LocationListViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarAlarmViewModel
-import com.example.solar_alarm.Data.ViewModels.SolarTimeViewModel
-import com.example.solar_alarm.Location.LocationCreateFragment
+import com.example.solar_alarm.createAlarm.CreateAlarmFragment
+import com.example.solar_alarm.createAlarm.UpdateAlarmFragment
+import com.example.solar_alarm.data.viewmodels.LocationListViewModel
+import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
+import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
+import com.example.solar_alarm.location.LocationCreateFragment
 import com.example.solar_alarm.R
-import com.example.solar_alarm.Service.GpsTracker
+import com.example.solar_alarm.service.GpsTracker
 import com.example.solar_alarm.databinding.FragmentListalarmsBinding
-import java.time.ZoneId
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.TimeZone
 
 @RequiresApi(Build.VERSION_CODES.O)
-class SolarAlarmListFragment constructor(private var locationListViewModel   : LocationListViewModel,
-                                         private val solarTimeViewModel  : SolarTimeViewModel,
-                                         private val solarAlarmViewModel : SolarAlarmViewModel)
-    : Fragment(), OnToggleAlarmListener
+@AndroidEntryPoint
+class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
 {
-    private lateinit var fragmentListalarmsBinding: FragmentListalarmsBinding
-    private lateinit var solarAlarmListAdapter: SolarAlarmListAdapter
-    private lateinit var recyclerView: RecyclerView
+    private var _binding: FragmentListalarmsBinding? = null
+    private val binding get() = _binding!!
 
     private var gpsTracker: GpsTracker? = null
-    private var zoneId: ZoneId? = null
+
+    private val locationListViewModel: LocationListViewModel by activityViewModels()
+    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
+    private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels()
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
     {
-        fragmentListalarmsBinding = FragmentListalarmsBinding.inflate(layoutInflater, container, false)
-        solarAlarmListAdapter     = SolarAlarmListAdapter(emptyList())
-        recyclerView              = fragmentListalarmsBinding.fragmentListalarmsRecylerView
+        _binding = FragmentListalarmsBinding.inflate(inflater, container, false)
+        val solarAlarmListAdapter = SolarAlarmListAdapter(emptyList()) { solarAlarmWithDetails ->
+            val updateAlarmFragment = UpdateAlarmFragment.newInstance(solarAlarmWithDetails.solarAlarm)
+            replaceFragment(updateAlarmFragment)
+        }
+        val recyclerView = binding.fragmentListalarmsRecylerView
 
-        recyclerView.setLayoutManager(LinearLayoutManager(context))
-        recyclerView.setAdapter(solarAlarmListAdapter)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = solarAlarmListAdapter
 
-        solarAlarmViewModel.AllSolarAlarms.observe(viewLifecycleOwner, androidx.lifecycle.Observer { solarAlarms -> solarAlarmListAdapter.UpdateSolarAlarms(solarAlarms)})
+        solarAlarmViewModel.allSolarAlarmsWithDetails.observe(viewLifecycleOwner) { solarAlarms ->
+            solarAlarmListAdapter.UpdateSolarAlarms(solarAlarms)
+        }
 
-        zoneId = TimeZone.getDefault().toZoneId()
-        fragmentListalarmsBinding.addButton.setOnClickListener { showPopupMenu(it) }
-        GetLocation(fragmentListalarmsBinding.root)
+        binding.addButton.setOnClickListener { showPopupMenu(it) }
+        startLocationTracking(binding.root)
 
-        return fragmentListalarmsBinding.getRoot()
+        return binding.root
     }
 
-//    override fun onToggle(alarm: Alarm) {
-//        if (alarm.isStarted) {
-//            alarm.cancelAlarm(context)
-//            //alarmsListViewModel.update(alarm);
-//        } else {
-//            alarm.schedule(context)
-//            //alarmsListViewModel.update(alarm);
-//        }
-//    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        gpsTracker?.stopUsingGPS()
+        gpsTracker = null
+        _binding = null
+    }
 
-    fun GetLocation(view: View)
+    private fun startLocationTracking(view: View)
     {
         gpsTracker = GpsTracker(view.context)
+        gpsTracker?.getLocation()
 
-        if (!gpsTracker!!.canGetLocation())
+        if (gpsTracker?.canGetLocation() == false)
         {
-            gpsTracker!!.showSettingsAlert()
+            gpsTracker?.showSettingsAlert()
         }
-    }
-
-    internal fun replaceFragment(fragment: Fragment)
-    {
-        val fragmentManager = parentFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.frame_layout, fragment)
-        fragmentTransaction.commit()
     }
 
     private fun showPopupMenu(view: View) {
@@ -91,13 +86,11 @@ class SolarAlarmListFragment constructor(private var locationListViewModel   : L
         popup.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.action_option_create_location -> {
-                    replaceFragment(LocationCreateFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
-                    //fab.hide()
+                    replaceFragment(LocationCreateFragment())
                     true
                 }
                 R.id.action_option_create_alarm -> {
-                    replaceFragment(CreateAlarmFragment(locationListViewModel, solarTimeViewModel, solarAlarmViewModel))
-                    //fab.hide()
+                    replaceFragment(CreateAlarmFragment())
                     true
                 }
                 else -> false
@@ -106,26 +99,20 @@ class SolarAlarmListFragment constructor(private var locationListViewModel   : L
 
         popup.show()
     }
-/*
-    private fun configureOnClickRecyclerView() {
-        ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
-                .setOnItemClickListener(ItemClickSupport.OnItemClickListener { recyclerView, position, v ->
-                    val alarm = alarmRecyclerViewAdapter!!.getAlarm(position)
-                    val bundle = Bundle()
-                    bundle.putInt("position", position)
-                    val updateAlarmFragment = UpdateAlarmFragment()
-                    updateAlarmFragment.arguments = bundle
-                    val manager = fragmentManager
-                    manager!!.beginTransaction().replace(R.id.activity_main_nav_host_fragment, updateAlarmFragment).commit()
-                })
-        ItemClickSupport.addTo(alarmsRecyclerView, R.layout.item_alarm)
-                .setOnItemLongClickListener(ItemClickSupport.OnItemLongClickListener { recyclerView, position, v ->
-                    val alarm = alarmRecyclerViewAdapter!!.getAlarm(position)
-                    // 2 - Show result in a Toast
-                    //Toast.makeText(getContext(), "You long clicked on user : "+alarm.getTitle(), Toast.LENGTH_SHORT).show();
-                    //alarmsListViewModel.delete(alarmRecyclerViewAdapter.removeItem(position));
-                    false
-                })
+
+    private fun replaceFragment(fragment: Fragment)
+    {
+        val navActivity = activity as? com.example.solar_alarm.activities.NavActivity
+        if (navActivity != null)
+        {
+            navActivity.replaceFragment(fragment)
+        }
+        else
+        {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
-    */
 }

@@ -1,17 +1,17 @@
-package com.example.solar_alarm.AlarmList
+package com.example.solar_alarm.alarmList
 
+// Repair: Fixed broken package/import lines
 import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
 import com.example.solar_alarm.databinding.SolarAlarmListItemBinding
-import java.util.ArrayList
 
 class AlarmRecycleViewAdapter(private val listener: OnToggleAlarmListener) : RecyclerView.Adapter<AlarmViewHolder>() {
-    private var alarms: MutableList<SolarAlarm> = ArrayList()
+    private var alarms: MutableList<SolarAlarmWithDetails> = ArrayList()
     var context: Context? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlarmViewHolder {
@@ -30,12 +30,12 @@ class AlarmRecycleViewAdapter(private val listener: OnToggleAlarmListener) : Rec
         return alarms.size
     }
 
-    fun setAlarms(alarms: MutableList<SolarAlarm>) {
+    fun setAlarms(alarms: MutableList<SolarAlarmWithDetails>) {
         this.alarms = alarms
         notifyDataSetChanged()
     }
 
-    fun getAlarm(position: Int): SolarAlarm {
+    fun getAlarm(position: Int): SolarAlarmWithDetails {
         return alarms[position]
     }
 }

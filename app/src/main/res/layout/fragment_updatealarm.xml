@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,7 +16,7 @@
             android:id="@+id/fragment_updatealarm_scheduleAlarmHeading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Schedule Alarm"
+            android:text="Update Alarm"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintTop_toTopOf="parent" />
@@ -25,23 +26,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_updatealarm_scheduleAlarmHeading">
+            app:layout_constraintTop_toBottomOf="@+id/fragment_updatealarm_scheduleAlarmHeading"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_updatealarm_title">
 
-            <TextView
-                android:layout_width="0dp"
+            <Spinner
+                android:id="@+id/fragment_updatealarm_location_spinner"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.4"
-                android:text="Alarm Time"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-            <TimePicker
-                android:id="@+id/fragment_updatealarm_timePicker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:timePickerMode="spinner" />
+                android:layout_centerInParent="true"
+                android:layout_margin="5dp"
+                android:layout_marginTop="18dp"
+                android:textAlignment="center"/>
         </LinearLayout>
 
         <EditText
@@ -112,12 +107,150 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/fragment_updatealarm_alarmtime_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Alarm Time"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_updatealarm_recurring_options"
+            app:layout_constraintBottom_toTopOf="@id/fragment_updatealarm_alarmtime_spinner">
+        </TextView>
+
+        <Spinner
+            android:id="@+id/fragment_updatealarm_alarmtime_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="5dp"
+            android:layout_marginTop="18dp"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/fragment_updatealarm_alarmtime_text"
+            app:layout_constraintBottom_toTopOf="@id/fragment_updatealarm_settime_text"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/fragment_updatealarm_settime_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set Time"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/fragment_updatealarm_alarmtime_spinner"
+            app:layout_constraintBottom_toTopOf="@id/fragment_updatealarm_settime_spinner">
+        </TextView>
+
+        <Spinner
+            android:id="@+id/fragment_updatealarm_settime_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="5dp"
+            android:layout_marginTop="18dp"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/fragment_updatealarm_settime_text"
+            android:gravity="center_horizontal" />
+
+        <NumberPicker
+            android:id="@+id/fragment_updatealarm_set_hours"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:hint="Hours"
+            android:visibility="gone"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/fragment_updatealarm_settime_spinner"
+            app:layout_constraintRight_toLeftOf="@id/fragment_updatealarm_set_mins"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <NumberPicker
+            android:id="@+id/fragment_updatealarm_set_mins"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:hint="Minutes"
+            android:visibility="gone"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/fragment_updatealarm_settime_spinner"
+            app:layout_constraintLeft_toRightOf="@id/fragment_updatealarm_set_hours"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/fragment_updatealarm_set_hours"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_updatealarm_scheduleAlarm">
+            <LinearLayout
+                android:id="@+id/timetext_column"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/fragment_updatealarm_sunrise_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="Sunrise:"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_updatealarm_solarnoon_text">
+                </TextView>
+                <TextView
+                    android:id="@+id/fragment_updatealarm_solarnoon_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="Solar Noon:"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_updatealarm_sunrise_text"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_updatealarm_sunset_text">
+                </TextView>
+                <TextView
+                    android:id="@+id/fragment_updatealarm_sunset_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="Sunset:"
+                    android:textSize="24dp"
+                    android:textStyle="bold">
+                </TextView>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/fragment_updatealarm_sunrise_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:textSize="15dp"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_updatealarm_solarnoon_data">
+                </TextView>
+                <TextView
+                    android:id="@+id/fragment_updatealarm_solarnoon_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:textSize="15dp"
+                    android:gravity="center"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_updatealarm_sunrise_data"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_updatealarm_sunset_data">
+                </TextView>
+                <TextView
+                    android:id="@+id/fragment_updatealarm_sunset_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:textSize="15dp"></TextView>
+            </LinearLayout>
+        </LinearLayout>
+
         <Button
             android:id="@+id/fragment_updatealarm_scheduleAlarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Schedule Alarm"
+            android:text="Update Alarm"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:layout_editor_absoluteX="133dp" />
 

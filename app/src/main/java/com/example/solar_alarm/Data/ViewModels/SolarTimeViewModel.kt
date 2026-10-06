@@ -1,25 +1,25 @@
-package com.example.solar_alarm.Data.ViewModels
+package com.example.solar_alarm.data.viewmodels
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.*
-import com.example.solar_alarm.Data.Repositories.SolarTimeRepository
-import com.example.solar_alarm.Data.Tables.SolarTime
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import com.example.solar_alarm.data.repositories.SolarTimeRepository
+import com.example.solar_alarm.data.tables.SolarTime
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
-class SolarTimeViewModel(private val repository: SolarTimeRepository) : ViewModel()
+@HiltViewModel
+class SolarTimeViewModel @Inject constructor(private val repository: SolarTimeRepository) : ViewModel()
 {
-    // Using LiveData and caching what allWords returns has several benefits:
-    // - We can put an observer on the data (instead of polling for changes) and only update the
-    //   the UI when the data actually changes.
-    // - Repository is completely separated from the UI through the ViewModel.
-    val AllSolarTimes: LiveData<List<SolarTime>> = repository.all.asLiveData()
+    val allSolarTimes: LiveData<List<SolarTime>> = repository.all.asLiveData()
 
-    /**
-     * Launching a new coroutine to insert the data in a non-blocking way
-     */
-    fun Insert(solarTime: SolarTime) = viewModelScope.launch { repository.Insert(solarTime) }
+    fun insert(solarTime: SolarTime) = viewModelScope.launch { repository.insert(solarTime) }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

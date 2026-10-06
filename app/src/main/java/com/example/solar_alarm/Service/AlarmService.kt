@@ -1,5 +1,6 @@
-package com.example.solar_alarm.Service
+package com.example.solar_alarm.service
 
+// Repair: Fixed broken package/import lines
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
@@ -8,10 +9,10 @@ import android.os.IBinder
 import android.os.Vibrator
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.example.solar_alarm.Activities.RingActivity
-import com.example.solar_alarm.BroadcastReceiver.AlarmBroadcastReceiver
-import com.example.solar_alarm.BroadcastReceiver.MusicControl
-import com.example.solar_alarm.Data.Tables.SolarAlarm
+import com.example.solar_alarm.activities.RingActivity
+import com.example.solar_alarm.broadcastReceiver.AlarmBroadcastReceiver
+import com.example.solar_alarm.broadcastReceiver.MusicControl
+import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.R
 import com.example.solar_alarm.SolarAlarmApp
 
@@ -24,7 +25,7 @@ class AlarmService : Service()
         if (intent == null) return START_STICKY
 
         try {
-            solarAlarm = AlarmBroadcastReceiver.GetSolarAlarmFromIntent(intent)
+            solarAlarm = AlarmBroadcastReceiver.getSolarAlarmFromIntent(intent) as SolarAlarm
             
             // 1. Create the Intent for RingActivity with proper flags
             val ringIntent = Intent(this, RingActivity::class.java).apply {
@@ -46,7 +47,7 @@ class AlarmService : Service()
             val notification: Notification = NotificationCompat.Builder(this, SolarAlarmApp.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_alarm_black_24dp)
                 .setContentTitle(solarAlarm.Name)
-                .setContentText("Solar Alarm is ringing!")
+                .setContentText(getString(R.string.notification_text))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setFullScreenIntent(pendingIntent, true)
@@ -65,7 +66,7 @@ class AlarmService : Service()
                 it.vibrate(pattern, 0)
             }
 
-            MusicControl.getInstance(this).PlayMusic(this)
+            MusicControl.getInstance(this).playMusic(this)
 
             // 6. Force start the activity
             startActivity(ringIntent)

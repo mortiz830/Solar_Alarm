@@ -1,5 +1,6 @@
-package com.example.solar_alarm.Data.Tables
+package com.example.solar_alarm.data.tables
 
+// Repair: Fixed broken package/import lines
 import android.os.Build
 import android.os.Parcelable
 import androidx.annotation.RequiresApi
@@ -8,10 +9,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.example.solar_alarm.Data.Enums.OffsetTypeEnum
-import com.example.solar_alarm.Data.Enums.SolarTimeTypeEnum
-import com.example.solar_alarm.SolarAlarmApp
-import kotlinx.coroutines.runBlocking
+import com.example.solar_alarm.data.enums.OffsetTypeEnum
+import com.example.solar_alarm.data.enums.SolarTimeTypeEnum
 import kotlinx.parcelize.Parcelize
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -66,7 +65,9 @@ data class SolarAlarm
     @ColumnInfo(name = "Sunday")    var Sunday:    Boolean,
 
     @ColumnInfo(name = "OffsetTypeId")    var OffsetTypeId:    OffsetTypeEnum,
-    @ColumnInfo(name = "SolarTimeTypeId") var SolarTimeTypeId: SolarTimeTypeEnum
+    @ColumnInfo(name = "SolarTimeTypeId") var SolarTimeTypeId: SolarTimeTypeEnum,
+    @ColumnInfo(name = "OffsetHours")     var OffsetHours:     Int = 0,
+    @ColumnInfo(name = "OffsetMinutes")   var OffsetMinutes:   Int = 0
 ) : Parcelable
 {
     @PrimaryKey(autoGenerate = true)
@@ -76,37 +77,5 @@ data class SolarAlarm
     init
     {
         require(Name.isNotBlank()) { "SolarAlarm name cannot be empty or consist only of whitespace." }
-    }
-
-    val solarTime : SolarTime
-        get() {
-            return GetSolarTime()
-        }
-
-    private fun GetSolarTime() : SolarTime
-    {
-        val solarTime : SolarTime
-
-        runBlocking {
-            solarTime = SolarAlarmApp().solarTimeRepository.GetById(SolarTimeId)
-        }
-
-        return solarTime
-    }
-
-    val location : Location
-        get() {
-            return GetLocation()
-        }
-
-    private fun GetLocation() : Location
-    {
-        val location : Location
-
-        runBlocking {
-            location = SolarAlarmApp().locationRepository.GetById(LocationId)
-        }
-
-        return location
     }
 }

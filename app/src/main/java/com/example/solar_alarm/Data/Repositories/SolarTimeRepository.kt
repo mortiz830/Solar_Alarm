@@ -1,48 +1,51 @@
-package com.example.solar_alarm.Data.Repositories
+package com.example.solar_alarm.data.repositories
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
-import com.example.solar_alarm.Data.Daos.SolarTimeDao
-import com.example.solar_alarm.Data.Tables.Location
-import com.example.solar_alarm.Data.Tables.SolarTime
+import com.example.solar_alarm.data.daos.SolarTimeDao
+import com.example.solar_alarm.data.tables.Location
+import com.example.solar_alarm.data.tables.SolarTime
 import com.example.solar_alarm.sunrise_sunset_http.HttpRequests
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
+@Singleton
+class SolarTimeRepository @Inject constructor(private val solarTimeDao: SolarTimeDao)
 {
-    val all: Flow<List<SolarTime>> = solarTimeDao.GetAll()
+    val all: Flow<List<SolarTime>> = solarTimeDao.getAll()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun Insert(solarTime: SolarTime)
+    suspend fun insert(solarTime: SolarTime)
     {
         solarTimeDao.insert(solarTime)
     }
 
     @WorkerThread
-    suspend fun GetById(id: Int) : SolarTime
+    suspend fun getById(id: Int) : SolarTime
     {
-        return solarTimeDao.GetById(id)
+        return solarTimeDao.getById(id)
     }
 
     @WorkerThread
-    suspend fun Update(solarTime: SolarTime)
+    suspend fun update(solarTime: SolarTime)
     {
         solarTimeDao.update(solarTime)
     }
 
     @WorkerThread
-    suspend fun Delete(solarTime: SolarTime)
+    suspend fun delete(solarTime: SolarTime)
     {
         solarTimeDao.delete(solarTime)
     }
 
     @WorkerThread
-    fun doesLocationIdDatePairExists(locationId: Int, date: LocalDate): Boolean
+    suspend fun doesLocationIdDatePairExists(locationId: Int, date: LocalDate): Boolean
     {
         return solarTimeDao.doesLocationIdDatePairExists(locationId, date)
     }
@@ -56,22 +59,24 @@ class SolarTimeRepository(private val solarTimeDao: SolarTimeDao)
         {
             // Make HTTP Request to API
             val sunriseSunsetRequest  = SunriseSunsetRequest(location.Latitude.toFloat(), location.Longitude.toFloat(), date)
-            val sunriseSunsetResponse = HttpRequests().GetSolarData(sunriseSunsetRequest)
+            val sunriseSunsetResponse = HttpRequests().getSolarData(sunriseSunsetRequest)
+
+            val results = sunriseSunsetResponse.results ?: return null
 
             solarTime = SolarTime(date,
                                   location.Id,
-                                  sunriseSunsetResponse?.results?.day_length!!,
-                                  sunriseSunsetResponse.results?.sunrise,
-                                  sunriseSunsetResponse.results?.sunset,
-                                  sunriseSunsetResponse.results?.solar_noon,
-                                  sunriseSunsetResponse.results?.civil_twilight_begin,
-                                  sunriseSunsetResponse.results?.civil_twilight_end,
-                                  sunriseSunsetResponse.results?.nautical_twilight_begin,
-                                  sunriseSunsetResponse.results?.nautical_twilight_end,
-                                  sunriseSunsetResponse.results?.astronomical_twilight_begin,
-                                  sunriseSunsetResponse.results?.astronomical_twilight_end)
+                                  results.day_length,
+                                  results.sunrise,
+                                  results.sunset,
+                                  results.solar_noon,
+                                  results.civil_twilight_begin,
+                                  results.civil_twilight_end,
+                                  results.nautical_twilight_begin,
+                                  results.nautical_twilight_end,
+                                  results.astronomical_twilight_begin,
+                                  results.astronomical_twilight_end)
 
-            Insert(solarTime)   // save response as a new SolarTime
+            insert(solarTime)   // save response as a new SolarTime
 
             solarTime = solarTimeDao.getSolarTime(location.Id, date)   // reload from DB to get ID number
         }
