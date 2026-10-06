@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.solar_alarm.createAlarm.CreateAlarmFragment
+import com.example.solar_alarm.createAlarm.UpdateAlarmFragment
 import com.example.solar_alarm.data.viewmodels.LocationListViewModel
 import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
 import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
@@ -40,7 +41,10 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
     {
         _binding = FragmentListalarmsBinding.inflate(inflater, container, false)
-        val solarAlarmListAdapter = SolarAlarmListAdapter(emptyList())
+        val solarAlarmListAdapter = SolarAlarmListAdapter(emptyList()) { solarAlarmWithDetails ->
+            val updateAlarmFragment = UpdateAlarmFragment.newInstance(solarAlarmWithDetails.solarAlarm)
+            replaceFragment(updateAlarmFragment)
+        }
         val recyclerView = binding.fragmentListalarmsRecylerView
 
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -98,9 +102,17 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
 
     private fun replaceFragment(fragment: Fragment)
     {
-        val fragmentManager = parentFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.frame_layout, fragment)
-        fragmentTransaction.commit()
+        val navActivity = activity as? com.example.solar_alarm.activities.NavActivity
+        if (navActivity != null)
+        {
+            navActivity.replaceFragment(fragment)
+        }
+        else
+        {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 }

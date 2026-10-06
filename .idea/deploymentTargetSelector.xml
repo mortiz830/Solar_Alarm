@@ -26,10 +26,10 @@
       </SelectionState>
       <SelectionState runConfigName="main">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-02-18T01:09:01.667481100Z">
+        <DropdownSelection timestamp="2026-10-05T23:54:50.352111200Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\dorti\.android\avd\Pixel_9.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\morti\.android\avd\Pixel_9.avd" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -37,10 +37,10 @@
       </SelectionState>
       <SelectionState runConfigName="androidTest">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-08-19T00:07:24.210064300Z">
+        <DropdownSelection timestamp="2026-10-05T23:57:18.934454900Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=63110DLCR002R4" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\morti\.android\avd\Pixel_9.avd" />
             </handle>
           </Target>
         </DropdownSelection>

@@ -72,7 +72,7 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
         }
         else if (solarAlarm.OffsetTypeId == OffsetTypeEnum.After)
         {
-            localZonedDateTime = localZonedDateTime.plusHours(hours.toLong()).minusMinutes(mins.toLong())
+            localZonedDateTime = localZonedDateTime.plusHours(hours.toLong()).plusMinutes(mins.toLong())
         }
 
         return localZonedDateTime
