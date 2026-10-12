@@ -1,6 +1,10 @@
-# Soalr Alarm
+# Solar Alarm
 
-This is an Android alarm app that allows users to set alarms based on the sun. Alarms can be set before, at, or after sunrise, solar noon, of sunset.
+This is an Android alarm app that allows users to set alarms based on the sun. Alarms can be set before, at, or after sunrise, solar noon, or sunset.
+
+## Database Schema & ERD
+
+See the [Database Entity-Relationship Diagram (ERD)](DATABASE_ERD.md) for full details on tables, fields, and relationships.
 
 ## Developer Guide
 
