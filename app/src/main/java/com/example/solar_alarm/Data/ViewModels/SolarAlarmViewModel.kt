@@ -24,6 +24,8 @@ class SolarAlarmViewModel @Inject constructor(private val repository: SolarAlarm
     fun insert(solarAlarm: SolarAlarm) = viewModelScope.launch { repository.insert(solarAlarm) }
 
     fun update(solarAlarm: SolarAlarm) = viewModelScope.launch { repository.update(solarAlarm) }
+
+    fun delete(solarAlarm: SolarAlarm) = viewModelScope.launch { repository.delete(solarAlarm) }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

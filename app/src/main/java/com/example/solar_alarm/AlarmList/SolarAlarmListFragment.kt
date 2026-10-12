@@ -41,10 +41,16 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
     {
         _binding = FragmentListalarmsBinding.inflate(inflater, container, false)
-        val solarAlarmListAdapter = SolarAlarmListAdapter(emptyList()) { solarAlarmWithDetails ->
-            val updateAlarmFragment = UpdateAlarmFragment.newInstance(solarAlarmWithDetails.solarAlarm)
-            replaceFragment(updateAlarmFragment)
-        }
+        val solarAlarmListAdapter = SolarAlarmListAdapter(
+            emptyList(),
+            onItemClick = { solarAlarmWithDetails ->
+                val updateAlarmFragment = UpdateAlarmFragment.newInstance(solarAlarmWithDetails.solarAlarm)
+                replaceFragment(updateAlarmFragment)
+            },
+            onItemLongClick = { solarAlarmWithDetails ->
+                showDeleteDialog(solarAlarmWithDetails)
+            }
+        )
         val recyclerView = binding.fragmentListalarmsRecylerView
 
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -98,6 +104,29 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
         }
 
         popup.show()
+    }
+
+    private fun showDeleteDialog(solarAlarmWithDetails: com.example.solar_alarm.data.tables.SolarAlarmWithDetails) {
+        val solarAlarm = solarAlarmWithDetails.solarAlarm
+        val solarTime = solarAlarmWithDetails.solarTime
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Delete Alarm")
+            .setMessage("Are you sure you want to delete '${solarAlarm.Name}'?")
+            .setPositiveButton("Delete") { _, _ ->
+                val currentContext = context
+                if (currentContext != null) {
+                    com.example.solar_alarm.createAlarm.AlarmScheduler(
+                        solarAlarm,
+                        solarTime,
+                        solarAlarm.OffsetHours,
+                        solarAlarm.OffsetMinutes
+                    ).cancel(currentContext)
+                }
+                solarAlarmViewModel.delete(solarAlarm)
+                android.widget.Toast.makeText(requireContext(), "Alarm deleted", android.widget.Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun replaceFragment(fragment: Fragment)

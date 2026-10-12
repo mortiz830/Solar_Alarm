@@ -109,6 +109,22 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
         started = true
     }
 
+    fun cancel(context: Context) {
+        try {
+            val intent = getIntent(context)
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                solarAlarm.Id,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.cancel(pendingIntent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private val recurringDaysText: String
         get()
         {

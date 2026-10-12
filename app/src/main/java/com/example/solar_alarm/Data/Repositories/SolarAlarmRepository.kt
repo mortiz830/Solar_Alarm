@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
 import com.example.solar_alarm.data.daos.SolarAlarmDao
+import com.example.solar_alarm.data.daos.SolarTimeDao
 import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +13,10 @@ import javax.inject.Singleton
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Singleton
-class SolarAlarmRepository @Inject constructor(private val solarAlarmDao: SolarAlarmDao)
+class SolarAlarmRepository @Inject constructor(
+    private val solarAlarmDao: SolarAlarmDao,
+    private val solarTimeDao: SolarTimeDao
+)
 {
     val all: Flow<List<SolarAlarm>> = solarAlarmDao.getAll()
     val allWithDetails: Flow<List<SolarAlarmWithDetails>> = solarAlarmDao.getAllWithDetails()
@@ -40,6 +44,7 @@ class SolarAlarmRepository @Inject constructor(private val solarAlarmDao: SolarA
     suspend fun delete(solarAlarm: SolarAlarm)
     {
         solarAlarmDao.delete(solarAlarm)
+        solarTimeDao.deleteSolarTimeIfNotUsed(solarAlarm.SolarTimeId)
     }
 
     @WorkerThread

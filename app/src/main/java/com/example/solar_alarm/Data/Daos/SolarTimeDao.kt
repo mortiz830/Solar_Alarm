@@ -20,4 +20,7 @@ abstract class SolarTimeDao : BaseDao<SolarTime>
 
     @Query("SELECT EXISTS(SELECT * FROM SolarTime WHERE LocationId = :locationId AND SolarDate = :date)")
     abstract suspend fun doesLocationIdDatePairExists(locationId: Int, date: LocalDate): Boolean
+
+    @Query("DELETE FROM SolarTime WHERE Id = :solarTimeId AND NOT EXISTS (SELECT 1 FROM SolarAlarm WHERE SolarTimeId = :solarTimeId)")
+    abstract suspend fun deleteSolarTimeIfNotUsed(solarTimeId: Int)
 }

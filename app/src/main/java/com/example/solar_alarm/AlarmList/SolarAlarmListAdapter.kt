@@ -14,7 +14,8 @@ import java.time.Month
 @RequiresApi(Build.VERSION_CODES.O)
 class SolarAlarmListAdapter(
     private var solarAlarms: List<SolarAlarmWithDetails>,
-    private val onItemClick: ((SolarAlarmWithDetails) -> Unit)? = null
+    private val onItemClick: ((SolarAlarmWithDetails) -> Unit)? = null,
+    private val onItemLongClick: ((SolarAlarmWithDetails) -> Unit)? = null
 ) : RecyclerView.Adapter<SolarAlarmViewHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SolarAlarmViewHolder
@@ -60,8 +61,15 @@ class SolarAlarmListAdapter(
             val clickListener = android.view.View.OnClickListener {
                 onItemClick?.invoke(solarAlarmWithDetails)
             }
+            val longClickListener = android.view.View.OnLongClickListener {
+                onItemLongClick?.invoke(solarAlarmWithDetails)
+                true
+            }
+
             solarAlarmViewHolder.binding.root.setOnClickListener(clickListener)
             solarAlarmViewHolder.binding.alarmCard.setOnClickListener(clickListener)
+            solarAlarmViewHolder.binding.root.setOnLongClickListener(longClickListener)
+            solarAlarmViewHolder.binding.alarmCard.setOnLongClickListener(longClickListener)
         }
         catch (e: Exception)
         {
