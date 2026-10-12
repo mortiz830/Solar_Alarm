@@ -15,7 +15,9 @@ import java.time.Month
 class SolarAlarmListAdapter(
     private var solarAlarms: List<SolarAlarmWithDetails>,
     private val onItemClick: ((SolarAlarmWithDetails) -> Unit)? = null,
-    private val onItemLongClick: ((SolarAlarmWithDetails) -> Unit)? = null
+    private val onItemLongClick: ((SolarAlarmWithDetails) -> Unit)? = null,
+    private val onEditClick: ((SolarAlarmWithDetails) -> Unit)? = null,
+    private val onDeleteClick: ((SolarAlarmWithDetails) -> Unit)? = null
 ) : RecyclerView.Adapter<SolarAlarmViewHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SolarAlarmViewHolder
@@ -70,6 +72,25 @@ class SolarAlarmListAdapter(
             solarAlarmViewHolder.binding.alarmCard.setOnClickListener(clickListener)
             solarAlarmViewHolder.binding.root.setOnLongClickListener(longClickListener)
             solarAlarmViewHolder.binding.alarmCard.setOnLongClickListener(longClickListener)
+
+            solarAlarmViewHolder.binding.alarmKebabMenu.setOnClickListener { view ->
+                val popup = androidx.appcompat.widget.PopupMenu(view.context, view)
+                popup.menuInflater.inflate(com.example.solar_alarm.R.menu.alarm_item_menu, popup.menu)
+                popup.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        com.example.solar_alarm.R.id.action_alarm_edit -> {
+                            (onEditClick ?: onItemClick)?.invoke(solarAlarmWithDetails)
+                            true
+                        }
+                        com.example.solar_alarm.R.id.action_alarm_delete -> {
+                            (onDeleteClick ?: onItemLongClick)?.invoke(solarAlarmWithDetails)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                popup.show()
+            }
         }
         catch (e: Exception)
         {

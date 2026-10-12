@@ -49,6 +49,13 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
             },
             onItemLongClick = { solarAlarmWithDetails ->
                 showDeleteDialog(solarAlarmWithDetails)
+            },
+            onEditClick = { solarAlarmWithDetails ->
+                val updateAlarmFragment = UpdateAlarmFragment.newInstance(solarAlarmWithDetails.solarAlarm)
+                replaceFragment(updateAlarmFragment)
+            },
+            onDeleteClick = { solarAlarmWithDetails ->
+                showDeleteDialog(solarAlarmWithDetails)
             }
         )
         val recyclerView = binding.fragmentListalarmsRecylerView
