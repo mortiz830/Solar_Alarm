@@ -9,14 +9,19 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
 
-class HttpRequests @RequiresApi(api = Build.VERSION_CODES.O) constructor()
-{
-    private val client = OkHttpClient()
-    private val gson   = Gson()
+import javax.inject.Inject
+import javax.inject.Singleton
 
+@RequiresApi(api = Build.VERSION_CODES.O)
+@Singleton
+open class HttpRequests @Inject constructor(
+    private val client: OkHttpClient = OkHttpClient(),
+    private val gson: Gson = Gson()
+) : SolarRemoteDataSource
+{
     @RequiresApi(Build.VERSION_CODES.O)
     @Throws(IOException::class)
-    suspend fun getSolarData(sunriseSunsetRequest: SunriseSunsetRequest): SunriseSunsetResponse
+    override suspend fun getSolarData(sunriseSunsetRequest: SunriseSunsetRequest): SunriseSunsetResponse
     {
         var sunriseSunsetResponse = SunriseSunsetResponse()
 

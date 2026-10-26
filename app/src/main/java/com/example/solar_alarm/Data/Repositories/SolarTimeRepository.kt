@@ -6,7 +6,7 @@ import androidx.annotation.WorkerThread
 import com.example.solar_alarm.data.daos.SolarTimeDao
 import com.example.solar_alarm.data.tables.Location
 import com.example.solar_alarm.data.tables.SolarTime
-import com.example.solar_alarm.sunrise_sunset_http.HttpRequests
+import com.example.solar_alarm.sunrise_sunset_http.SolarRemoteDataSource
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
@@ -15,7 +15,10 @@ import javax.inject.Singleton
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Singleton
-class SolarTimeRepository @Inject constructor(private val solarTimeDao: SolarTimeDao)
+class SolarTimeRepository @Inject constructor(
+    private val solarTimeDao: SolarTimeDao,
+    private val solarRemoteDataSource: SolarRemoteDataSource
+)
 {
     val all: Flow<List<SolarTime>> = solarTimeDao.getAll()
 
@@ -57,9 +60,9 @@ class SolarTimeRepository @Inject constructor(private val solarTimeDao: SolarTim
 
         if (solarTime == null)
         {
-            // Make HTTP Request to API
+            // Make HTTP Request to API via injected remote data source
             val sunriseSunsetRequest  = SunriseSunsetRequest(location.Latitude.toFloat(), location.Longitude.toFloat(), date)
-            val sunriseSunsetResponse = HttpRequests().getSolarData(sunriseSunsetRequest)
+            val sunriseSunsetResponse = solarRemoteDataSource.getSolarData(sunriseSunsetRequest)
 
             val results = sunriseSunsetResponse.results ?: return null
 
