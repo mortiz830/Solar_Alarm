@@ -18,18 +18,17 @@ import com.example.solar_alarm.activities.NavActivity
 import com.example.solar_alarm.alarmList.SolarAlarmListFragment
 import com.example.solar_alarm.data.enums.OffsetTypeEnum
 import com.example.solar_alarm.data.enums.SolarTimeTypeEnum
-import com.example.solar_alarm.data.repositories.SolarTimeRepository
 import com.example.solar_alarm.data.tables.Location
 import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.data.tables.SolarTime
 import com.example.solar_alarm.data.viewmodels.LocationListViewModel
 import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
+import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
 import com.example.solar_alarm.databinding.FragmentUpdatealarmBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
@@ -40,9 +39,7 @@ class UpdateAlarmFragment : Fragment() {
 
     private val locationListViewModel: LocationListViewModel by activityViewModels()
     private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels()
-
-    @Inject
-    lateinit var solarTimeRepository: SolarTimeRepository
+    private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
 
     private var solarAlarm: SolarAlarm? = null
     private var solarTimes: ArrayList<SolarTime> = arrayListOf()
@@ -71,24 +68,7 @@ class UpdateAlarmFragment : Fragment() {
         }
     }
 
-    suspend fun Location.getSolarTimes(): ArrayList<SolarTime> {
-        val list: ArrayList<SolarTime> = arrayListOf()
-        var date = LocalDate.now()
-        val thisLocation = this
 
-        for (i in 1..7) {
-            try {
-                val st = solarTimeRepository.getSolarTime(thisLocation, date)
-                if (st != null) {
-                    list.add(st)
-                }
-                date = date.plusDays(1)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-        return list
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -182,7 +162,7 @@ class UpdateAlarmFragment : Fragment() {
                         locationListViewModel.allLocations.value?.getOrNull(locationPosition)
                     lifecycleScope.launch {
                         if (newSelectedLocation != null) {
-                            solarTimes = newSelectedLocation.getSolarTimes()
+                            solarTimes = ArrayList(solarTimeViewModel.getWeeklySolarTimes(newSelectedLocation))
                             if (solarTimes.isNotEmpty() && _binding != null) {
                                 binding.fragmentUpdatealarmSunriseData.text =
                                     solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.Sunrise)

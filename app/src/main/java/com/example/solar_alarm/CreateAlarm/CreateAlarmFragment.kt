@@ -19,7 +19,6 @@ import com.example.solar_alarm.activities.NavActivity
 import com.example.solar_alarm.alarmList.SolarAlarmListFragment
 import com.example.solar_alarm.data.enums.OffsetTypeEnum
 import com.example.solar_alarm.data.enums.SolarTimeTypeEnum
-import com.example.solar_alarm.data.repositories.SolarTimeRepository
 import com.example.solar_alarm.data.tables.Location
 import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.data.tables.SolarTime
@@ -31,7 +30,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
@@ -43,45 +41,7 @@ class CreateAlarmFragment : Fragment()
     private val locationListViewModel: LocationListViewModel by activityViewModels()
     private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
     private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels()
-
-    @Inject
-    lateinit var solarTimeRepository: SolarTimeRepository
-
     private var dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd-MMM-uuuu\nhh:mm a")
-
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        super.onCreate(savedInstanceState)
-    }
-
-    suspend fun Location.getSolarTimes() : ArrayList<SolarTime>
-    {
-        val solarTimes : ArrayList<SolarTime> = arrayListOf()
-        var date                              = LocalDate.now()
-        val thisLocation = this
-
-        for (i in 1..7)
-        {
-            try
-            {
-                val solarTime = solarTimeRepository.getSolarTime(thisLocation, date)
-
-                if (solarTime != null)
-                {
-                    solarTimes.add(solarTime)
-                }
-
-                date = date.plusDays(1)
-            }
-            catch (e: Exception)
-            {
-                e.printStackTrace()
-                throw e
-            }
-        }
-
-        return solarTimes
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCreatealarmBinding.inflate(inflater, container, false)
@@ -109,7 +69,7 @@ class CreateAlarmFragment : Fragment()
                 lifecycleScope.launch {
                     if (newSelectedLocation != null)
                     {
-                        solarTimes = newSelectedLocation.getSolarTimes()
+                        solarTimes = ArrayList(solarTimeViewModel.getWeeklySolarTimes(newSelectedLocation))
 
                         if (solarTimes.isNotEmpty() && _binding != null)
                         {

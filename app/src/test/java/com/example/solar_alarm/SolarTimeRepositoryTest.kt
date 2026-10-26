@@ -145,4 +145,12 @@ class SolarTimeRepositoryTest {
         assertNull(result)
         assertEquals(1, fakeRemoteDataSource.callCount)
     }
+
+    @Test
+    fun getWeeklySolarTimes_fetchesAndReturns7DaysOfData() = runBlocking {
+        val results = repository.getWeeklySolarTimes(testLocation, testDate)
+
+        assertEquals(7, results.size)
+        assertEquals(7, fakeRemoteDataSource.callCount)
+    }
 }

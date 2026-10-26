@@ -86,4 +86,30 @@ class SolarTimeRepository @Inject constructor(
 
         return solarTime
     }
+
+    @WorkerThread
+    suspend fun getWeeklySolarTimes(location: Location, startDate: LocalDate = LocalDate.now()): List<SolarTime>
+    {
+        val solarTimes = mutableListOf<SolarTime>()
+        var date = startDate
+
+        for (i in 1..7)
+        {
+            try
+            {
+                val solarTime = getSolarTime(location, date)
+                if (solarTime != null)
+                {
+                    solarTimes.add(solarTime)
+                }
+                date = date.plusDays(1)
+            }
+            catch (e: Exception)
+            {
+                e.printStackTrace()
+            }
+        }
+
+        return solarTimes
+    }
 }
