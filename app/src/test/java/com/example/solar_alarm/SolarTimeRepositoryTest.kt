@@ -9,6 +9,7 @@ import com.example.solar_alarm.data.SolarAlarmDatabase
 import com.example.solar_alarm.data.daos.LocationDao
 import com.example.solar_alarm.data.daos.SolarTimeDao
 import com.example.solar_alarm.data.repositories.SolarTimeRepository
+import com.example.solar_alarm.data.repositories.SolarTimeRepositoryImpl
 import com.example.solar_alarm.data.tables.Location
 import com.example.solar_alarm.data.tables.SolarTime
 import com.example.solar_alarm.sunrise_sunset_http.Results
@@ -81,7 +82,7 @@ class SolarTimeRepositoryTest {
         locationDao.insert(testLocation)
 
         fakeRemoteDataSource = FakeSolarRemoteDataSource()
-        repository = SolarTimeRepository(solarTimeDao, fakeRemoteDataSource)
+        repository = SolarTimeRepositoryImpl(solarTimeDao, fakeRemoteDataSource)
     }
 
     @After
