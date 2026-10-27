@@ -3,6 +3,8 @@ package com.example.solar_alarm.data.repositories
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.WorkerThread
+import androidx.room.withTransaction
+import com.example.solar_alarm.data.SolarAlarmDatabase
 import com.example.solar_alarm.data.daos.SolarAlarmDao
 import com.example.solar_alarm.data.daos.SolarTimeDao
 import com.example.solar_alarm.data.tables.SolarAlarm
@@ -14,6 +16,7 @@ import javax.inject.Singleton
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Singleton
 class SolarAlarmRepositoryImpl @Inject constructor(
+    private val database: SolarAlarmDatabase,
     private val solarAlarmDao: SolarAlarmDao,
     private val solarTimeDao: SolarTimeDao
 ) : SolarAlarmRepository {
@@ -38,8 +41,10 @@ class SolarAlarmRepositoryImpl @Inject constructor(
 
     @WorkerThread
     override suspend fun delete(solarAlarm: SolarAlarm) {
-        solarAlarmDao.delete(solarAlarm)
-        solarTimeDao.deleteSolarTimeIfNotUsed(solarAlarm.SolarTimeId)
+        database.withTransaction {
+            solarAlarmDao.delete(solarAlarm)
+            solarTimeDao.deleteSolarTimeIfNotUsed(solarAlarm.SolarTimeId)
+        }
     }
 
     @WorkerThread
