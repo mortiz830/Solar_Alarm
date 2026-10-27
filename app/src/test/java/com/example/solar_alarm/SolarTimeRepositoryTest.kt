@@ -18,7 +18,9 @@ import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetResponse
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -109,7 +111,7 @@ class SolarTimeRepositoryTest {
         )
         solarTimeDao.insert(existingSolarTime)
 
-        val result = repository.getSolarTime(testLocation, testDate)
+        val result = repository.getSolarTime(testLocation, testDate).getOrNull()
 
         assertNotNull(result)
         assertEquals("2026-10-26T11:00:00Z", result?.SunriseUtc)
@@ -119,7 +121,7 @@ class SolarTimeRepositoryTest {
     @Test
     fun getSolarTime_whenNotCached_fetchesFromRemoteDataSourceAndPersistsInDatabase() = runBlocking {
         // DB is empty initially
-        val result = repository.getSolarTime(testLocation, testDate)
+        val result = repository.getSolarTime(testLocation, testDate).getOrNull()
 
         assertNotNull(result)
         assertEquals(1, fakeRemoteDataSource.callCount)
@@ -138,20 +140,21 @@ class SolarTimeRepositoryTest {
     }
 
     @Test
-    fun getSolarTime_whenRemoteFails_returnsNull() = runBlocking {
+    fun getSolarTime_whenRemoteFails_returnsFailure() = runBlocking {
         fakeRemoteDataSource.responseToReturn = SunriseSunsetResponse(results = null, status = "INVALID_REQUEST")
 
         val result = repository.getSolarTime(testLocation, testDate)
 
-        assertNull(result)
+        assertTrue(result.isFailure)
         assertEquals(1, fakeRemoteDataSource.callCount)
     }
 
     @Test
     fun getWeeklySolarTimes_fetchesAndReturns7DaysOfData() = runBlocking {
-        val results = repository.getWeeklySolarTimes(testLocation, testDate)
+        val results = repository.getWeeklySolarTimes(testLocation, testDate).getOrNull()
 
-        assertEquals(7, results.size)
+        assertNotNull(results)
+        assertEquals(7, results?.size)
         assertEquals(7, fakeRemoteDataSource.callCount)
     }
 }

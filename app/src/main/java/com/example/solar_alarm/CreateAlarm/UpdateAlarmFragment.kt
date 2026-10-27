@@ -42,7 +42,7 @@ class UpdateAlarmFragment : Fragment() {
     private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
 
     private var solarAlarm: SolarAlarm? = null
-    private var solarTimes: ArrayList<SolarTime> = arrayListOf()
+    private var solarTimes: List<SolarTime> = emptyList()
     private var dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd-MMM-uuuu\nhh:mm a")
 
     companion object {
@@ -162,7 +162,7 @@ class UpdateAlarmFragment : Fragment() {
                         locationListViewModel.allLocations.value?.getOrNull(locationPosition)
                     lifecycleScope.launch {
                         if (newSelectedLocation != null) {
-                            solarTimes = ArrayList(solarTimeViewModel.getWeeklySolarTimes(newSelectedLocation))
+                            solarTimes = solarTimeViewModel.getWeeklySolarTimes(newSelectedLocation).getOrDefault(emptyList())
                             if (solarTimes.isNotEmpty() && _binding != null) {
                                 binding.fragmentUpdatealarmSunriseData.text =
                                     solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.Sunrise)
