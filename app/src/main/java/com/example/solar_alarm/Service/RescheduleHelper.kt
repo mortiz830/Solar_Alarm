@@ -25,7 +25,7 @@ class RescheduleHelper @Inject constructor(
 
         val nextDate = findNextDate(alarm)
         val location = locationRepository.getById(alarm.LocationId)
-        val nextSolarTime = solarTimeRepository.getSolarTime(location, nextDate)
+        val nextSolarTime = solarTimeRepository.getSolarTime(location, nextDate).getOrNull()
 
         if (nextSolarTime != null) {
             val updatedAlarm = alarm.copy().apply {

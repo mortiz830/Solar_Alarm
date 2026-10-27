@@ -23,18 +23,8 @@ open class HttpRequests @Inject constructor(
     @Throws(IOException::class)
     override suspend fun getSolarData(sunriseSunsetRequest: SunriseSunsetRequest): SunriseSunsetResponse
     {
-        var sunriseSunsetResponse = SunriseSunsetResponse()
-
-        try
-        {
-            sunriseSunsetResponse         = makeGetRequest(sunriseSunsetRequest.getFullUrl())
-            sunriseSunsetResponse.request = sunriseSunsetRequest
-        }
-        catch (e: Exception)
-        {
-            e.printStackTrace()
-        }
-
+        val sunriseSunsetResponse = makeGetRequest(sunriseSunsetRequest.getFullUrl())
+        sunriseSunsetResponse.request = sunriseSunsetRequest
         return sunriseSunsetResponse
     }
 

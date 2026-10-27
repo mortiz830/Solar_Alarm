@@ -25,13 +25,21 @@ class SolarTimeViewModel @Inject constructor(private val repository: SolarTimeRe
     private val _selectedLocationSolarTimes = MutableLiveData<List<SolarTime>>()
     val selectedLocationSolarTimes: LiveData<List<SolarTime>> = _selectedLocationSolarTimes
 
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> = _errorMessage
+
     fun insert(solarTime: SolarTime) = viewModelScope.launch { repository.insert(solarTime) }
 
-    suspend fun getWeeklySolarTimes(location: Location, startDate: LocalDate = LocalDate.now()): List<SolarTime>
+    suspend fun getWeeklySolarTimes(location: Location, startDate: LocalDate = LocalDate.now()): Result<List<SolarTime>>
     {
-        val times = repository.getWeeklySolarTimes(location, startDate)
-        _selectedLocationSolarTimes.postValue(times)
-        return times
+        val result = repository.getWeeklySolarTimes(location, startDate)
+        result.onSuccess { times ->
+            _selectedLocationSolarTimes.postValue(times)
+            _errorMessage.postValue(null)
+        }.onFailure { error ->
+            _errorMessage.postValue(error.localizedMessage ?: "Failed to fetch solar times")
+        }
+        return result
     }
 
     fun loadWeeklySolarTimes(location: Location, startDate: LocalDate = LocalDate.now())

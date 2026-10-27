@@ -13,6 +13,6 @@ interface SolarTimeRepository {
     suspend fun update(solarTime: SolarTime)
     suspend fun delete(solarTime: SolarTime)
     suspend fun doesLocationIdDatePairExists(locationId: Int, date: LocalDate): Boolean
-    suspend fun getSolarTime(location: Location, date: LocalDate): SolarTime?
-    suspend fun getWeeklySolarTimes(location: Location, startDate: LocalDate = LocalDate.now()): List<SolarTime>
+    suspend fun getSolarTime(location: Location, date: LocalDate): Result<SolarTime>
+    suspend fun getWeeklySolarTimes(location: Location, startDate: LocalDate = LocalDate.now()): Result<List<SolarTime>>
 }

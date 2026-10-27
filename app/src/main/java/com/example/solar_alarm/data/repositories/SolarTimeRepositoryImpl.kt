@@ -9,6 +9,7 @@ import com.example.solar_alarm.data.tables.SolarTime
 import com.example.solar_alarm.sunrise_sunset_http.SolarRemoteDataSource
 import com.example.solar_alarm.sunrise_sunset_http.SunriseSunsetRequest
 import kotlinx.coroutines.flow.Flow
+import java.io.IOException
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -49,7 +50,7 @@ class SolarTimeRepositoryImpl @Inject constructor(
     }
 
     @WorkerThread
-    override suspend fun getSolarTime(location: Location, date: LocalDate): SolarTime? {
+    override suspend fun getSolarTime(location: Location, date: LocalDate): Result<SolarTime> = runCatching {
         var solarTime = solarTimeDao.getSolarTime(location.Id, date)
 
         if (solarTime == null) {
@@ -57,7 +58,12 @@ class SolarTimeRepositoryImpl @Inject constructor(
             val sunriseSunsetRequest = SunriseSunsetRequest(location.Latitude.toFloat(), location.Longitude.toFloat(), date)
             val sunriseSunsetResponse = solarRemoteDataSource.getSolarData(sunriseSunsetRequest)
 
-            val results = sunriseSunsetResponse.results ?: return null
+            if (sunriseSunsetResponse.status != "OK" && sunriseSunsetResponse.results == null) {
+                throw IOException("Sunrise-Sunset API returned error status: ${sunriseSunsetResponse.status ?: "UNKNOWN"}")
+            }
+
+            val results = sunriseSunsetResponse.results
+                ?: throw IOException("No solar data results received from Sunrise-Sunset API")
 
             solarTime = SolarTime(
                 date,
@@ -77,28 +83,26 @@ class SolarTimeRepositoryImpl @Inject constructor(
             insert(solarTime) // save response as a new SolarTime
 
             solarTime = solarTimeDao.getSolarTime(location.Id, date) // reload from DB to get ID number
+                ?: throw IOException("Failed to retrieve cached solar time after insertion")
         }
 
-        return solarTime
+        solarTime
     }
 
     @WorkerThread
-    override suspend fun getWeeklySolarTimes(location: Location, startDate: LocalDate): List<SolarTime> {
+    override suspend fun getWeeklySolarTimes(location: Location, startDate: LocalDate): Result<List<SolarTime>> = runCatching {
         val solarTimes = mutableListOf<SolarTime>()
         var date = startDate
 
         for (i in 1..7) {
-            try {
-                val solarTime = getSolarTime(location, date)
-                if (solarTime != null) {
-                    solarTimes.add(solarTime)
-                }
-                date = date.plusDays(1)
-            } catch (e: Exception) {
-                e.printStackTrace()
+            val dailyResult = getSolarTime(location, date)
+            if (dailyResult.isFailure) {
+                throw dailyResult.exceptionOrNull() ?: IOException("Failed to fetch solar time for $date")
             }
+            solarTimes.add(dailyResult.getOrThrow())
+            date = date.plusDays(1)
         }
 
-        return solarTimes
+        solarTimes
     }
 }

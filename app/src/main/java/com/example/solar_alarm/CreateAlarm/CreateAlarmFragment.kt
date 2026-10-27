@@ -69,13 +69,21 @@ class CreateAlarmFragment : Fragment()
                 lifecycleScope.launch {
                     if (newSelectedLocation != null)
                     {
-                        solarTimes = ArrayList(solarTimeViewModel.getWeeklySolarTimes(newSelectedLocation))
+                        val result = solarTimeViewModel.getWeeklySolarTimes(newSelectedLocation)
+                        result.onSuccess { times ->
+                            solarTimes = ArrayList(times)
 
-                        if (solarTimes.isNotEmpty() && _binding != null)
-                        {
-                            binding.fragmentCreatealarmSunriseData.text   = solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(dateTimeFormatter)
-                            binding.fragmentCreatealarmSolarnoonData.text = solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(dateTimeFormatter)
-                            binding.fragmentCreatealarmSunsetData.text    = solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(dateTimeFormatter)
+                            if (solarTimes.isNotEmpty() && _binding != null)
+                            {
+                                binding.fragmentCreatealarmSunriseData.text   = solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.Sunrise).format(dateTimeFormatter)
+                                binding.fragmentCreatealarmSolarnoonData.text = solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.SolarNoon).format(dateTimeFormatter)
+                                binding.fragmentCreatealarmSunsetData.text    = solarTimes[0].getLocalZonedDateTime(SolarTimeTypeEnum.Sunset).format(dateTimeFormatter)
+                            }
+                        }.onFailure { error ->
+                            if (isAdded)
+                            {
+                                Toast.makeText(requireContext(), "Failed to get solar times: ${error.localizedMessage}", Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
                 }
