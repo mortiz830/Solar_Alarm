@@ -11,13 +11,47 @@ import com.example.solar_alarm.data.repositories.SolarAlarmRepository
 import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+sealed interface SolarAlarmUiState {
+    object Loading : SolarAlarmUiState
+    data class Success(val alarms: List<SolarAlarmWithDetails>) : SolarAlarmUiState
+    data class Error(val message: String) : SolarAlarmUiState
+}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class SolarAlarmViewModel @Inject constructor(private val repository: SolarAlarmRepository) : ViewModel()
 {
+    val uiState: StateFlow<SolarAlarmUiState> = repository.allWithDetails
+        .map<List<SolarAlarmWithDetails>, SolarAlarmUiState> { alarms -> SolarAlarmUiState.Success(alarms) }
+        .catch { throwable -> emit(SolarAlarmUiState.Error(throwable.localizedMessage ?: "Unknown Error")) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = SolarAlarmUiState.Loading
+        )
+
+    val solarAlarmsState: StateFlow<List<SolarAlarm>> = repository.all
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = emptyList()
+        )
+
+    val solarAlarmsWithDetailsState: StateFlow<List<SolarAlarmWithDetails>> = repository.allWithDetails
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = emptyList()
+        )
+
     val allSolarAlarms: LiveData<List<SolarAlarm>> = repository.all.asLiveData()
     val allSolarAlarmsWithDetails: LiveData<List<SolarAlarmWithDetails>> = repository.allWithDetails.asLiveData()
 
