@@ -26,6 +26,9 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
     {
         val intent = Intent(context, AlarmBroadcastReceiver::class.java)
         intent.putExtra("SolarAlarm", solarAlarm)
+        if (DebugSettings.ringOneMinuteAfterCreation) {
+            intent.putExtra(DebugSettings.EXTRA_IS_DEBUG_ONE_MINUTE, true)
+        }
         return intent
     }
 
@@ -63,16 +66,21 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
 
     fun getLocalZonedDateTime() : ZonedDateTime
     {
-        var localZonedDateTime = if (false) ZonedDateTime.now().plusMinutes(mins.toLong() + 1) else
+        var localZonedDateTime = if (DebugSettings.ringOneMinuteAfterCreation) {
+            ZonedDateTime.now().plusMinutes(1)
+        } else {
             solarTime.getLocalZonedDateTime(solarAlarm.SolarTimeTypeId)
-
-        if (solarAlarm.OffsetTypeId == OffsetTypeEnum.Before)
-        {
-            localZonedDateTime = localZonedDateTime.minusHours(hours.toLong()).minusMinutes(mins.toLong())
         }
-        else if (solarAlarm.OffsetTypeId == OffsetTypeEnum.After)
-        {
-            localZonedDateTime = localZonedDateTime.plusHours(hours.toLong()).plusMinutes(mins.toLong())
+
+        if (!DebugSettings.ringOneMinuteAfterCreation) {
+            if (solarAlarm.OffsetTypeId == OffsetTypeEnum.Before)
+            {
+                localZonedDateTime = localZonedDateTime.minusHours(hours.toLong()).minusMinutes(mins.toLong())
+            }
+            else if (solarAlarm.OffsetTypeId == OffsetTypeEnum.After)
+            {
+                localZonedDateTime = localZonedDateTime.plusHours(hours.toLong()).plusMinutes(mins.toLong())
+            }
         }
 
         return localZonedDateTime
@@ -81,15 +89,25 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
     fun schedule(context: Context)
     {
         val intent             = getIntent(context)
+        val isDebugOneMinute   = DebugSettings.ringOneMinuteAfterCreation
         val localZonedDateTime = getLocalZonedDateTime()
         val calendar           = getCalendarInstance(localZonedDateTime)
         val alarmManager       = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent      = getPendingIntent(context, intent)
 
-        val toastText = if (solarAlarm.Recurring) {
-            String.format("Recurring Alarm %s scheduled for %s at %02d:%02d", solarAlarm.Name, recurringDaysText, localZonedDateTime.hour, localZonedDateTime.minute)
+        val triggerTimeMillis: Long
+        val toastText: String
+
+        if (isDebugOneMinute) {
+            triggerTimeMillis = System.currentTimeMillis() + 60 * 1000L
+            toastText = "[DEBUG] Alarm '${solarAlarm.Name}' scheduled to ring in 1 minute!"
         } else {
-            String.format("One Time Alarm %s scheduled for at %02d:%02d", solarAlarm.Name, localZonedDateTime.hour, localZonedDateTime.minute)
+            triggerTimeMillis = calendar.timeInMillis
+            toastText = if (solarAlarm.Recurring) {
+                String.format("Recurring Alarm %s scheduled for %s at %02d:%02d", solarAlarm.Name, recurringDaysText, localZonedDateTime.hour, localZonedDateTime.minute)
+            } else {
+                String.format("One Time Alarm %s scheduled for at %02d:%02d", solarAlarm.Name, localZonedDateTime.hour, localZonedDateTime.minute)
+            }
         }
         
         Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
@@ -99,7 +117,7 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
             // Recurring solar alarms must be rescheduled manually to account for shifting times.
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP, 
-                calendar.timeInMillis, 
+                triggerTimeMillis, 
                 pendingIntent
             )
         } catch (exception: Exception) {

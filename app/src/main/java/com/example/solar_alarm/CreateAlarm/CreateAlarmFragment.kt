@@ -118,12 +118,24 @@ class CreateAlarmFragment : Fragment()
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
 
+        if (DebugSettings.isDebug) {
+            binding.fragmentCreatealarmDebugOneMinute.visibility = View.VISIBLE
+            binding.fragmentCreatealarmDebugOneMinute.isChecked = DebugSettings.ringOneMinuteAfterCreation
+            binding.fragmentCreatealarmDebugOneMinute.setOnCheckedChangeListener { _, isChecked ->
+                DebugSettings.ringOneMinuteAfterCreation = isChecked
+            }
+        } else {
+            binding.fragmentCreatealarmDebugOneMinute.visibility = View.GONE
+        }
+
         binding.fragmentCreatealarmScheduleAlarm.setOnClickListener { v ->
             val offsetTypeEnum    = binding.fragmentCreatealarmAlarmtimeSpinner.selectedItem as OffsetTypeEnum
             val solarTimeTypeItem = binding.fragmentCreatealarmSettimeSpinner.selectedItem   as SolarTimeTypeEnum
 
             if (solarTimes.isNotEmpty()) {
                 scheduleAlarm(solarTimes[0], offsetTypeEnum, solarTimeTypeItem)
+            } else {
+                Toast.makeText(requireContext(), "Please select a location with available solar times.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -132,8 +144,15 @@ class CreateAlarmFragment : Fragment()
 
     private fun scheduleAlarm(solarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum)
     {
+        val titleText = binding.fragmentCreatealarmTitle.text.toString().trim()
+        val alarmTitle = if (titleText.isEmpty() && DebugSettings.ringOneMinuteAfterCreation) {
+            "[DEBUG] 1-Min Alarm"
+        } else {
+            titleText
+        }
+
         val solarAlarmItem = SolarAlarm(true,
-                                        binding.fragmentCreatealarmTitle.text.toString(),
+                                        alarmTitle,
                                         solarTimeItem.LocationId,
                                         solarTimeItem.Id,
                                         binding.fragmentCreatealarmRecurring.isChecked,

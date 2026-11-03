@@ -246,6 +246,18 @@
             </LinearLayout>
         </LinearLayout>
 
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/fragment_createalarm_debug_one_minute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="[DEBUG] Ring 1 minute after creation"
+            android:textColor="#D32F2F"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_createalarm_scheduleAlarm"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/fragment_createalarm_scheduleAlarm"
