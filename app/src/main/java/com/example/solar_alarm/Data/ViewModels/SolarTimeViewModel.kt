@@ -60,6 +60,11 @@ class SolarTimeViewModel @Inject constructor(private val repository: SolarTimeRe
 
     fun insert(solarTime: SolarTime) = viewModelScope.launch { repository.insert(solarTime) }
 
+    suspend fun getSolarTime(location: Location, date: LocalDate): Result<SolarTime>
+    {
+        return repository.getSolarTime(location, date)
+    }
+
     suspend fun getWeeklySolarTimes(location: Location, startDate: LocalDate = LocalDate.now()): Result<List<SolarTime>>
     {
         val result = repository.getWeeklySolarTimes(location, startDate)

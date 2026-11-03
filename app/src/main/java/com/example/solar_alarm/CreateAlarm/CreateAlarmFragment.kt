@@ -42,6 +42,7 @@ class CreateAlarmFragment : Fragment()
     private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
     private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels()
     private var dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd-MMM-uuuu\nhh:mm a")
+    private var solarTimes: List<SolarTime> = emptyList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCreatealarmBinding.inflate(inflater, container, false)
@@ -55,8 +56,6 @@ class CreateAlarmFragment : Fragment()
 
         binding.fragmentCreatealarmAlarmtimeSpinner.adapter = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, OffsetTypeEnum.values())
         binding.fragmentCreatealarmSettimeSpinner.adapter   = ArrayAdapter(requireActivity().baseContext, android.R.layout.simple_spinner_item, SolarTimeTypeEnum.values())
-
-        var solarTimes : ArrayList<SolarTime> = arrayListOf()
 
         setPickers()
         binding.fragmentCreatealarmLocationSpinner.onItemSelectedListener = object : OnItemSelectedListener
@@ -142,7 +141,7 @@ class CreateAlarmFragment : Fragment()
         return binding.root
     }
 
-    private fun scheduleAlarm(solarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum)
+    private fun scheduleAlarm(initialSolarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum)
     {
         val titleText = binding.fragmentCreatealarmTitle.text.toString().trim()
         val alarmTitle = if (titleText.isEmpty() && DebugSettings.ringOneMinuteAfterCreation) {
@@ -153,8 +152,8 @@ class CreateAlarmFragment : Fragment()
 
         val solarAlarmItem = SolarAlarm(true,
                                         alarmTitle,
-                                        solarTimeItem.LocationId,
-                                        solarTimeItem.Id,
+                                        initialSolarTimeItem.LocationId,
+                                        initialSolarTimeItem.Id,
                                         binding.fragmentCreatealarmRecurring.isChecked,
                                         binding.fragmentCreatealarmCheckMon.isChecked,
                                         binding.fragmentCreatealarmCheckTue.isChecked,
@@ -171,12 +170,26 @@ class CreateAlarmFragment : Fragment()
         lifecycleScope.launch {
             try
             {
+                val selectedLocation = locationListViewModel.allLocations.value?.getOrNull(
+                    binding.fragmentCreatealarmLocationSpinner.selectedItemPosition
+                )
+                val targetSolarTime = AlarmScheduler.resolveTargetSolarTime(
+                    solarAlarmItem,
+                    solarTimes,
+                    fetchSolarTime = { date ->
+                        selectedLocation?.let { loc ->
+                            solarTimeViewModel.getSolarTime(loc, date).getOrNull()
+                        }
+                    }
+                )
+                solarAlarmItem.SolarTimeId = targetSolarTime.Id
+
                 solarAlarmViewModel.insert(solarAlarmItem)
                 
                 val currentContext = context
                 if (currentContext != null) {
                     AlarmScheduler(solarAlarmItem,
-                        solarTimeItem,
+                        targetSolarTime,
                         solarAlarmItem.OffsetHours,
                         solarAlarmItem.OffsetMinutes).schedule(currentContext)
                     

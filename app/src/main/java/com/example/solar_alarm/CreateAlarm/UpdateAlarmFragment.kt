@@ -240,13 +240,29 @@ class UpdateAlarmFragment : Fragment() {
 
         lifecycleScope.launch {
             try {
+                val targetSolarTime = if (solarTimes.isNotEmpty()) {
+                    AlarmScheduler.resolveTargetSolarTime(
+                        alarm,
+                        solarTimes,
+                        fetchSolarTime = { date ->
+                            selectedLocation?.let { loc ->
+                                solarTimeViewModel.getSolarTime(loc, date).getOrNull()
+                            }
+                        }
+                    )
+                } else null
+
+                if (targetSolarTime != null) {
+                    alarm.SolarTimeId = targetSolarTime.Id
+                }
+
                 solarAlarmViewModel.update(alarm)
 
                 val currentContext = context
-                if (currentContext != null && solarTimes.isNotEmpty()) {
+                if (currentContext != null && targetSolarTime != null) {
                     AlarmScheduler(
                         alarm,
-                        solarTimes[0],
+                        targetSolarTime,
                         alarm.OffsetHours,
                         alarm.OffsetMinutes
                     ).schedule(currentContext)
