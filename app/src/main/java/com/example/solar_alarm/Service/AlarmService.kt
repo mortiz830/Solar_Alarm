@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import com.example.solar_alarm.activities.RingActivity
 import com.example.solar_alarm.broadcastReceiver.AlarmBroadcastReceiver
 import com.example.solar_alarm.broadcastReceiver.MusicControl
+import com.example.solar_alarm.createAlarm.AlarmScheduler
 import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.R
 import com.example.solar_alarm.SolarAlarmApp
@@ -26,6 +27,7 @@ class AlarmService : Service()
 
         try {
             solarAlarm = AlarmBroadcastReceiver.getSolarAlarmFromIntent(intent) as SolarAlarm
+            val isSnooze = intent.getBooleanExtra(AlarmScheduler.EXTRA_IS_SNOOZE, false)
             
             // 1. Create the Intent for RingActivity with proper flags
             val ringIntent = Intent(this, RingActivity::class.java).apply {
@@ -33,6 +35,7 @@ class AlarmService : Service()
                              Intent.FLAG_ACTIVITY_CLEAR_TOP or 
                              Intent.FLAG_ACTIVITY_SINGLE_TOP
                 putExtra("SolarAlarm", solarAlarm)
+                putExtra(AlarmScheduler.EXTRA_IS_SNOOZE, isSnooze)
             }
             
             // 2. Create the PendingIntent
@@ -43,10 +46,12 @@ class AlarmService : Service()
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
+            val title = if (isSnooze) "${solarAlarm.Name} (Snoozed)" else solarAlarm.Name
+
             // 3. Build the high-priority notification with Full Screen Intent
             val notification: Notification = NotificationCompat.Builder(this, SolarAlarmApp.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_alarm_black_24dp)
-                .setContentTitle(solarAlarm.Name)
+                .setContentTitle(title)
                 .setContentText(getString(R.string.notification_text))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)

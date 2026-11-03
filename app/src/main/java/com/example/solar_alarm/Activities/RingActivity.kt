@@ -6,12 +6,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.solar_alarm.broadcastReceiver.AlarmBroadcastReceiver
 import com.example.solar_alarm.broadcastReceiver.MusicControl
+import com.example.solar_alarm.createAlarm.AlarmScheduler
 import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.service.AlarmService
 import com.example.solar_alarm.service.RescheduleHelper
@@ -22,6 +22,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class RingActivity : AppCompatActivity() {
 
@@ -57,21 +58,39 @@ class RingActivity : AppCompatActivity() {
         // 3. Get SolarAlarm from Intent
         solarAlarm = AlarmBroadcastReceiver.getSolarAlarmFromIntent(intent) as SolarAlarm
 
+        val isSnooze = intent.getBooleanExtra(AlarmScheduler.EXTRA_IS_SNOOZE, false)
+        binding.textView.text = if (isSnooze) {
+            "${solarAlarm.Name} (Snoozed)"
+        } else {
+            solarAlarm.Name.ifEmpty { "Ring Ring" }
+        }
+
         // 4. Set up Click Listeners using binding
         binding.activityRingDismiss.setOnClickListener {
             dismissAlarm()
         }
 
         binding.activityRingSnooze.setOnClickListener {
-            dismissAlarm()
+            snoozeAlarm()
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun snoozeAlarm() {
+        MusicControl.getInstance(this).stopMusic()
+        val intentService = Intent(applicationContext, AlarmService::class.java)
+        stopService(intentService)
+
+        AlarmScheduler.snooze(applicationContext, solarAlarm)
+        finish()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun dismissAlarm()
     {
         MusicControl.getInstance(this).stopMusic()
         val intentService = Intent(applicationContext, AlarmService::class.java)
+
+        AlarmScheduler.cancelSnooze(applicationContext, solarAlarm.Id)
 
         lifecycleScope.launch {
             withContext(NonCancellable) {

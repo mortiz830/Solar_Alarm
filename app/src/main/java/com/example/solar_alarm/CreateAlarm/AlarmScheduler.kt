@@ -120,6 +120,7 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
             )
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.cancel(pendingIntent)
+            cancelSnooze(context, solarAlarm.Id)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -143,4 +144,56 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
 
             return days
         }
+
+    companion object {
+        const val EXTRA_IS_SNOOZE = "EXTRA_IS_SNOOZE"
+        const val ACTION_SNOOZE_ALARM = "com.example.solar_alarm.ACTION_SNOOZE_ALARM"
+        const val DEFAULT_SNOOZE_MINUTES = 10
+        const val SNOOZE_REQUEST_CODE_OFFSET = 100000
+
+        fun snooze(context: Context, solarAlarm: SolarAlarm, snoozeMinutes: Int = DEFAULT_SNOOZE_MINUTES) {
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(context, AlarmBroadcastReceiver::class.java).apply {
+                action = ACTION_SNOOZE_ALARM
+                putExtra("SolarAlarm", solarAlarm)
+                putExtra(EXTRA_IS_SNOOZE, true)
+            }
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                solarAlarm.Id + SNOOZE_REQUEST_CODE_OFFSET,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            val triggerTimeMillis = System.currentTimeMillis() + (snoozeMinutes * 60 * 1000L)
+            try {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerTimeMillis,
+                    pendingIntent
+                )
+                Toast.makeText(context, "Alarm snoozed for $snoozeMinutes minutes", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        fun cancelSnooze(context: Context, solarAlarmId: Int) {
+            try {
+                val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                val intent = Intent(context, AlarmBroadcastReceiver::class.java).apply {
+                    action = ACTION_SNOOZE_ALARM
+                }
+                val pendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    solarAlarmId + SNOOZE_REQUEST_CODE_OFFSET,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+                alarmManager.cancel(pendingIntent)
+                pendingIntent.cancel()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 }
