@@ -73,6 +73,28 @@ class RingActivity : AppCompatActivity() {
         binding.activityRingSnooze.setOnClickListener {
             snoozeAlarm()
         }
+
+        androidx.core.content.ContextCompat.registerReceiver(
+            this,
+            closeReceiver,
+            android.content.IntentFilter(AlarmService.ACTION_CLOSE_RING_ACTIVITY),
+            androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+    }
+
+    private val closeReceiver = object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == AlarmService.ACTION_CLOSE_RING_ACTIVITY) {
+                finish()
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        try {
+            unregisterReceiver(closeReceiver)
+        } catch (_: Exception) {}
     }
 
     private fun snoozeAlarm() {

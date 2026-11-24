@@ -1,5 +1,6 @@
 package com.example.solar_alarm.createAlarm
 
+import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -25,6 +27,7 @@ import com.example.solar_alarm.data.viewmodels.LocationListViewModel
 import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
 import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
 import com.example.solar_alarm.databinding.FragmentUpdatealarmBinding
+import com.example.solar_alarm.util.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -44,6 +47,21 @@ class UpdateAlarmFragment : Fragment() {
     private var solarAlarm: SolarAlarm? = null
     private var solarTimes: List<SolarTime> = emptyList()
     private var dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd-MMM-uuuu\nhh:mm a")
+
+    private var pendingUpdateAction: (() -> Unit)? = null
+
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (!isGranted) {
+                Toast.makeText(
+                    context,
+                    "Notification permission not granted. Alarms will ring, but heads-up alerts will not appear.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            pendingUpdateAction?.invoke()
+            pendingUpdateAction = null
+        }
 
     companion object {
         private const val ARG_SOLAR_ALARM = "solarAlarm"
@@ -67,8 +85,6 @@ class UpdateAlarmFragment : Fragment() {
             arguments?.getParcelable(ARG_SOLAR_ALARM)
         }
     }
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -203,8 +219,37 @@ class UpdateAlarmFragment : Fragment() {
             }
 
         binding.fragmentUpdatealarmScheduleAlarm.setOnClickListener {
-            updateAlarm(alarm)
+            checkPermissionsAndUpdate(alarm)
         }
+    }
+
+    private fun checkPermissionsAndUpdate(alarm: SolarAlarm) {
+        val currentContext = context ?: return
+
+        // 1. Exact Alarm permission check on Android 12+ (API 31+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !PermissionUtils.hasExactAlarmPermission(currentContext)) {
+            PermissionUtils.showExactAlarmDialog(requireContext()) {
+                checkNotificationAndUpdate(alarm)
+            }
+            return
+        }
+
+        checkNotificationAndUpdate(alarm)
+    }
+
+    private fun checkNotificationAndUpdate(alarm: SolarAlarm) {
+        val currentContext = context ?: return
+
+        // 2. Notification permission check on Android 13+ (API 33+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !PermissionUtils.hasNotificationPermission(currentContext)) {
+            pendingUpdateAction = {
+                updateAlarm(alarm)
+            }
+            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            return
+        }
+
+        updateAlarm(alarm)
     }
 
     private fun updateAlarm(alarm: SolarAlarm) {

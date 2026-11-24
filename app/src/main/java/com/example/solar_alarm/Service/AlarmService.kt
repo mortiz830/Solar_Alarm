@@ -16,17 +16,59 @@ import com.example.solar_alarm.createAlarm.AlarmScheduler
 import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.R
 import com.example.solar_alarm.SolarAlarmApp
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AlarmService : Service()
 {
-    private lateinit var solarAlarm: SolarAlarm
+    private var solarAlarm: SolarAlarm? = null
     private var vibrator: Vibrator? = null
+
+    @Inject
+    lateinit var rescheduleHelper: RescheduleHelper
+
+    companion object {
+        const val ACTION_DISMISS = "com.example.solar_alarm.ACTION_DISMISS"
+        const val ACTION_SNOOZE = "com.example.solar_alarm.ACTION_SNOOZE"
+        const val ACTION_CLOSE_RING_ACTIVITY = "com.example.solar_alarm.ACTION_CLOSE_RING_ACTIVITY"
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent == null) return START_STICKY
 
+        val action = intent.action
+        if (action == ACTION_DISMISS) {
+            val alarm = AlarmBroadcastReceiver.getSolarAlarmFromIntent(intent) ?: solarAlarm
+            if (alarm != null) {
+                AlarmScheduler.cancelSnooze(applicationContext, alarm.Id)
+                CoroutineScope(Dispatchers.IO).launch {
+                    rescheduleHelper.rescheduleNext(applicationContext, alarm)
+                }
+            }
+            sendBroadcast(Intent(ACTION_CLOSE_RING_ACTIVITY).setPackage(packageName))
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            stopSelf()
+            return START_NOT_STICKY
+        }
+
+        if (action == ACTION_SNOOZE) {
+            val alarm = AlarmBroadcastReceiver.getSolarAlarmFromIntent(intent) ?: solarAlarm
+            if (alarm != null) {
+                AlarmScheduler.snooze(applicationContext, alarm)
+            }
+            sendBroadcast(Intent(ACTION_CLOSE_RING_ACTIVITY).setPackage(packageName))
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            stopSelf()
+            return START_NOT_STICKY
+        }
+
         try {
-            solarAlarm = AlarmBroadcastReceiver.getSolarAlarmFromIntent(intent) as SolarAlarm
+            val alarm = AlarmBroadcastReceiver.getSolarAlarmFromIntent(intent) as SolarAlarm
+            solarAlarm = alarm
             val isSnooze = intent.getBooleanExtra(AlarmScheduler.EXTRA_IS_SNOOZE, false)
             
             // 1. Create the Intent for RingActivity with proper flags
@@ -34,21 +76,45 @@ class AlarmService : Service()
                 this.flags = Intent.FLAG_ACTIVITY_NEW_TASK or 
                              Intent.FLAG_ACTIVITY_CLEAR_TOP or 
                              Intent.FLAG_ACTIVITY_SINGLE_TOP
-                putExtra("SolarAlarm", solarAlarm)
+                putExtra("SolarAlarm", alarm)
                 putExtra(AlarmScheduler.EXTRA_IS_SNOOZE, isSnooze)
             }
             
             // 2. Create the PendingIntent
             val pendingIntent = PendingIntent.getActivity(
                 this, 
-                solarAlarm.Id, 
+                alarm.Id, 
                 ringIntent, 
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
-            val title = if (isSnooze) "${solarAlarm.Name} (Snoozed)" else solarAlarm.Name
+            // Inline action: Dismiss
+            val dismissIntent = Intent(this, AlarmService::class.java).apply {
+                this.action = ACTION_DISMISS
+                putExtra("SolarAlarm", alarm)
+            }
+            val dismissPendingIntent = PendingIntent.getService(
+                this,
+                alarm.Id + 200000,
+                dismissIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
 
-            // 3. Build the high-priority notification with Full Screen Intent
+            // Inline action: Snooze
+            val snoozeIntent = Intent(this, AlarmService::class.java).apply {
+                this.action = ACTION_SNOOZE
+                putExtra("SolarAlarm", alarm)
+            }
+            val snoozePendingIntent = PendingIntent.getService(
+                this,
+                alarm.Id + 300000,
+                snoozeIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            val title = if (isSnooze) "${alarm.Name} (Snoozed)" else alarm.Name
+
+            // 3. Build the high-priority notification with Full Screen Intent and Actions
             val notification: Notification = NotificationCompat.Builder(this, SolarAlarmApp.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_alarm_black_24dp)
                 .setContentTitle(title)
@@ -57,17 +123,21 @@ class AlarmService : Service()
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setFullScreenIntent(pendingIntent, true)
                 .setContentIntent(pendingIntent)
+                .addAction(R.drawable.ic_alarm_black_24dp, "Dismiss", dismissPendingIntent)
+                .addAction(R.drawable.ic_alarm_black_24dp, "Snooze", snoozePendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOngoing(true)
                 .build()
 
             // 4. Start Foreground Service
-            startForeground(solarAlarm.Id + 1000, notification)
+            startForeground(alarm.Id + 1000, notification)
 
             // 5. Play Sound and Vibrate
-            vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+            @Suppress("DEPRECATION")
+            vibrator = getSystemService(VIBRATOR_SERVICE) as? Vibrator
             vibrator?.let {
                 val pattern = longArrayOf(0, 500, 500)
+                @Suppress("DEPRECATION")
                 it.vibrate(pattern, 0)
             }
 

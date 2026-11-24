@@ -38,6 +38,10 @@ class SolarAlarmRepositoryImpl @Inject constructor(
         solarAlarmDao.getById(id)
     }
 
+    override suspend fun getAllActive(): List<SolarAlarm> = withContext(ioDispatcher) {
+        solarAlarmDao.getAllActive()
+    }
+
     override suspend fun update(solarAlarm: SolarAlarm) {
         withContext(ioDispatcher) {
             solarAlarmDao.update(solarAlarm)

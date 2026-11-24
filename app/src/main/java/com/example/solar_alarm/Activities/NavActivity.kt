@@ -39,6 +39,9 @@ class NavActivity : AppCompatActivity()
             replaceFragment(SolarAlarmListFragment())
         }
 
+        checkNotificationPermission()
+        checkExactAlarmPermission()
+
         binding.navView.setOnItemSelectedListener {
             when (it.itemId)
             {
@@ -49,6 +52,33 @@ class NavActivity : AppCompatActivity()
                 else -> { }
             }
             true
+        }
+    }
+
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (!isGranted) {
+                android.widget.Toast.makeText(
+                    this,
+                    "Notification permission is recommended so alarms can alert you properly.",
+                    android.widget.Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!com.example.solar_alarm.util.PermissionUtils.hasNotificationPermission(this)) {
+                requestNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    private fun checkExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (!com.example.solar_alarm.util.PermissionUtils.hasExactAlarmPermission(this)) {
+                com.example.solar_alarm.util.PermissionUtils.showExactAlarmDialog(this)
+            }
         }
     }
 

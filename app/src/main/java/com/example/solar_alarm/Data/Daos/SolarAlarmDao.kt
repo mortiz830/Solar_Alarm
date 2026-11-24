@@ -20,6 +20,9 @@ abstract class SolarAlarmDao : BaseDao<SolarAlarm>
     @Query("SELECT * FROM SolarAlarm WHERE Id = :id")
     abstract suspend fun getById(id: Int): SolarAlarm?
 
+    @Query("SELECT * FROM SolarAlarm WHERE Active = 1")
+    abstract suspend fun getAllActive(): List<SolarAlarm>
+
     @Query("SELECT EXISTS(SELECT * FROM SolarAlarm WHERE Name = :name AND LocationId = :locationId)")
     abstract suspend fun isSolarAlarmNameLocationIdPairExists(name: String?, locationId: Int): Boolean
 }

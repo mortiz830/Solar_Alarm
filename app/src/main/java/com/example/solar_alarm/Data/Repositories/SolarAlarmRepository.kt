@@ -10,6 +10,7 @@ interface SolarAlarmRepository {
 
     suspend fun insert(solarAlarm: SolarAlarm)
     suspend fun getById(id: Int): SolarAlarm?
+    suspend fun getAllActive(): List<SolarAlarm>
     suspend fun update(solarAlarm: SolarAlarm)
     suspend fun delete(solarAlarm: SolarAlarm)
     suspend fun isSolarAlarmNameLocationIdPairExists(solarAlarm: SolarAlarm): Boolean

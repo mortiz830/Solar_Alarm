@@ -1,6 +1,7 @@
 package com.example.solar_alarm.service
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,7 +12,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 class GpsTracker(context: Context) : LocationListener {
     private val mContext = context.applicationContext
@@ -22,61 +23,85 @@ class GpsTracker(context: Context) : LocationListener {
     var latitude = 0.0
     var longitude = 0.0
 
-    private var locationManager: LocationManager? = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    private var locationManager: LocationManager? = mContext.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
 
+    fun hasLocationPermission(): Boolean {
+        val fine = ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val coarse = ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return fine || coarse
+    }
+
+    fun isLocationProviderEnabled(): Boolean {
+        isGPSEnabled = locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER) ?: false
+        isNetworkEnabled = locationManager?.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ?: false
+        return isGPSEnabled || isNetworkEnabled
+    }
+
+    @SuppressLint("MissingPermission")
     fun getLocation(): Location? {
         try {
-            isGPSEnabled = locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER) ?: false
-            isNetworkEnabled = locationManager?.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ?: false
+            if (!hasLocationPermission()) {
+                Log.w("GpsTracker", "Location permission is not granted.")
+                canGetLocation = false
+                return null
+            }
 
-            if (isGPSEnabled || isNetworkEnabled) {
-                this.canGetLocation = true
-                
-                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                    ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    
-                    if (isNetworkEnabled) {
-                        locationManager?.requestLocationUpdates(
-                            LocationManager.NETWORK_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(), this
-                        )
-                        currentLocation = locationManager?.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                    }
+            if (!isLocationProviderEnabled()) {
+                Log.w("GpsTracker", "Neither GPS nor Network location provider is enabled.")
+                canGetLocation = false
+                return null
+            }
 
-                    if (isGPSEnabled && currentLocation == null) {
-                        locationManager?.requestLocationUpdates(
-                            LocationManager.GPS_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(), this
-                        )
-                        currentLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                    }
-                }
-                
-                currentLocation?.let {
-                    latitude = it.latitude
-                    longitude = it.longitude
-                }
+            if (isNetworkEnabled) {
+                locationManager?.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    MIN_TIME_BW_UPDATES,
+                    MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(),
+                    this
+                )
+                currentLocation = locationManager?.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            }
+
+            if (isGPSEnabled && currentLocation == null) {
+                locationManager?.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    MIN_TIME_BW_UPDATES,
+                    MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(),
+                    this
+                )
+                currentLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            }
+
+            currentLocation?.let {
+                latitude = it.latitude
+                longitude = it.longitude
+                canGetLocation = true
+            } ?: run {
+                canGetLocation = false
             }
         } catch (e: Exception) {
             Log.e("GpsTracker", "Error getting location", e)
+            canGetLocation = false
         }
         return currentLocation
     }
 
     fun stopUsingGPS() {
-        locationManager?.removeUpdates(this)
+        try {
+            locationManager?.removeUpdates(this)
+        } catch (e: Exception) {
+            Log.e("GpsTracker", "Error removing location updates", e)
+        }
     }
 
     fun canGetLocation(): Boolean = canGetLocation
 
-    fun showSettingsAlert() {
-        AlertDialog.Builder(mContext).apply {
-            setTitle("GPS settings")
-            setMessage("GPS is not enabled. Do you want to go to settings menu?")
+    fun showSettingsAlert(activityContext: Context) {
+        AlertDialog.Builder(activityContext).apply {
+            setTitle("GPS Settings")
+            setMessage("GPS is not enabled on your device. Do you want to go to the settings menu to enable it?")
             setPositiveButton("Settings") { _, _ ->
-                mContext.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                activityContext.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
             }
             setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
             show()
@@ -87,6 +112,7 @@ class GpsTracker(context: Context) : LocationListener {
         this.currentLocation = location
         this.latitude = location.latitude
         this.longitude = location.longitude
+        this.canGetLocation = true
     }
     override fun onProviderDisabled(provider: String) {}
     override fun onProviderEnabled(provider: String) {}

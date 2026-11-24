@@ -1,6 +1,5 @@
 package com.example.solar_alarm.location
 
-import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +19,7 @@ import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
 import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
 import com.example.solar_alarm.R
 import com.example.solar_alarm.service.GpsTracker
+import com.example.solar_alarm.util.PermissionUtils
 import com.example.solar_alarm.databinding.FragmentAddLocationBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -46,31 +47,58 @@ class LocationCreateFragment : Fragment(), OnMapReadyCallback
     private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels()
     
     private var latLng: LatLng? = null
+    private var googleMap: GoogleMap? = null
+
+    private val requestLocationPermissionLauncher =
+        registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val fineGranted = permissions[android.Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+            val coarseGranted = permissions[android.Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
+            if (fineGranted || coarseGranted) {
+                checkGpsAndInit()
+            } else {
+                if (isAdded) {
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Location Permission Needed")
+                        .setMessage("Location permission is needed to automatically detect your coordinates. You can still manually tap anywhere on the map to set your location.")
+                        .setPositiveButton("OK", null)
+                        .setNeutralButton("Settings") { _, _ ->
+                            PermissionUtils.openAppSettings(requireContext())
+                        }
+                        .show()
+                }
+            }
+        }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
     {
         _binding = FragmentAddLocationBinding.inflate(inflater, container, false)
         val view = binding.root
-        startLocationTracking(view)
-        val supportMapFragment = childFragmentManager.findFragmentById(R.id.fragment_add_location_map) as SupportMapFragment?
-        supportMapFragment!!.getMapAsync(this)
         
-        binding.fragmentAddLocationLatitude.text  = latLng?.latitude.toString()
-        binding.fragmentAddLocationLongitude.text = latLng?.longitude.toString()
+        startLocationTracking()
+        val supportMapFragment = childFragmentManager.findFragmentById(R.id.fragment_add_location_map) as SupportMapFragment?
+        supportMapFragment?.getMapAsync(this)
+        
+        binding.fragmentAddLocationLatitude.text  = (latLng?.latitude ?: 0.0).toString()
+        binding.fragmentAddLocationLongitude.text = (latLng?.longitude ?: 0.0).toString()
         binding.fragmentAddLocationTimeZone.text  = TimeZone.getDefault().toZoneId().toString()
 
         binding.fragmentAddLocationAddLocationButton.setOnClickListener(View.OnClickListener
         {
-            val locationName = binding.fragmentAddLocationLocationNameText.text.toString()
+            val locationName = binding.fragmentAddLocationLocationNameText.text.toString().trim()
             if (locationName.isBlank()) {
                 Toast.makeText(context, "Location name cannot be empty", Toast.LENGTH_SHORT).show()
                 return@OnClickListener
             }
 
+            val latStr = binding.fragmentAddLocationLatitude.text.toString()
+            val lonStr = binding.fragmentAddLocationLongitude.text.toString()
+
             val newScale = 4
-            val latitude = BigDecimal(binding.fragmentAddLocationLatitude.text.toString()).setScale(newScale, RoundingMode.HALF_UP).toDouble()
-            val longitude = BigDecimal(binding.fragmentAddLocationLongitude.text.toString()).setScale(newScale, RoundingMode.HALF_UP).toDouble()
+            val latitude = (latStr.toDoubleOrNull()?.let { BigDecimal(it) } ?: BigDecimal.ZERO)
+                .setScale(newScale, RoundingMode.HALF_UP).toDouble()
+            val longitude = (lonStr.toDoubleOrNull()?.let { BigDecimal(it) } ?: BigDecimal.ZERO)
+                .setScale(newScale, RoundingMode.HALF_UP).toDouble()
 
             lifecycleScope.launch {
                 val nameExists = locationListViewModel.doesLocationNameExists(locationName)
@@ -96,21 +124,62 @@ class LocationCreateFragment : Fragment(), OnMapReadyCallback
         super.onDestroyView()
         gpsTracker?.stopUsingGPS()
         gpsTracker = null
+        googleMap = null
         _binding = null
     }
 
-    private fun startLocationTracking(view: View)
+    private fun startLocationTracking()
     {
-        gpsTracker = GpsTracker(view.context)
-        gpsTracker?.getLocation()
-
-        if (gpsTracker?.canGetLocation() == true)
-        {
-            latLng = LatLng(gpsTracker?.latitude ?: 0.0, gpsTracker?.longitude ?: 0.0)
+        val currentContext = context ?: return
+        if (PermissionUtils.hasLocationPermission(currentContext)) {
+            checkGpsAndInit()
+        } else {
+            requestLocationPermissionLauncher.launch(
+                arrayOf(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
         }
-        else
-        {
-            gpsTracker?.showSettingsAlert()
+    }
+
+    private fun checkGpsAndInit() {
+        val currentContext = context ?: return
+        if (!PermissionUtils.isLocationProviderEnabled(currentContext)) {
+            if (isAdded) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Location Services Disabled")
+                    .setMessage("GPS / Location is disabled on your device. Would you like to enable it in Settings to automatically detect your coordinates?")
+                    .setPositiveButton("Settings") { _, _ ->
+                        PermissionUtils.openLocationSettings(requireContext())
+                    }
+                    .setNegativeButton("Cancel") { _, _ ->
+                        Toast.makeText(requireContext(), "You can tap on the map to choose your location.", Toast.LENGTH_SHORT).show()
+                    }
+                    .show()
+            }
+            return
+        }
+        initGpsAndCenterMap()
+    }
+
+    private fun initGpsAndCenterMap() {
+        val currentContext = context ?: return
+        gpsTracker = GpsTracker(currentContext)
+        val location = gpsTracker?.getLocation()
+
+        if (gpsTracker?.canGetLocation() == true && location != null) {
+            val curLatLng = LatLng(location.latitude, location.longitude)
+            latLng = curLatLng
+            if (_binding != null) {
+                binding.fragmentAddLocationLatitude.text = curLatLng.latitude.toString()
+                binding.fragmentAddLocationLongitude.text = curLatLng.longitude.toString()
+            }
+            googleMap?.let { map ->
+                map.clear()
+                map.addMarker(MarkerOptions().position(curLatLng).title("${curLatLng.latitude}, ${curLatLng.longitude}"))
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(curLatLng, 11.0f))
+            }
         }
     }
 
@@ -121,23 +190,25 @@ class LocationCreateFragment : Fragment(), OnMapReadyCallback
         locationListViewModel.insert(location)
     }
 
-    override fun onMapReady(googleMap: GoogleMap)
+    override fun onMapReady(map: GoogleMap)
     {
-        val markerOptions = MarkerOptions().position(latLng!!).title("$latLng.latitude, $latLng.longitude")
+        this.googleMap = map
+        val position = latLng ?: LatLng(0.0, 0.0)
+        val zoom = if (latLng != null) 11.0f else 2.0f
 
-        googleMap.addMarker(markerOptions)
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng!!))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng!!, 11.0f))
+        map.clear()
+        map.addMarker(MarkerOptions().position(position).title("${position.latitude}, ${position.longitude}"))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, zoom))
 
-        googleMap.setOnMapClickListener {latLng ->
-            googleMap.clear()
-            googleMap.addMarker(MarkerOptions().position(latLng).title(latLng.latitude.toString() + ", " + latLng.longitude))
-            googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11.0f))
+        map.setOnMapClickListener { clickedLatLng ->
+            latLng = clickedLatLng
+            map.clear()
+            map.addMarker(MarkerOptions().position(clickedLatLng).title("${clickedLatLng.latitude}, ${clickedLatLng.longitude}"))
+            map.animateCamera(CameraUpdateFactory.newLatLng(clickedLatLng))
 
             if (_binding != null) {
-                binding.fragmentAddLocationLatitude.text  = latLng.latitude.toString()
-                binding.fragmentAddLocationLongitude.text = latLng.longitude.toString()
+                binding.fragmentAddLocationLatitude.text  = clickedLatLng.latitude.toString()
+                binding.fragmentAddLocationLongitude.text = clickedLatLng.longitude.toString()
             }
         }
     }

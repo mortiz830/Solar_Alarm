@@ -40,6 +40,42 @@ class RescheduleHelper @Inject constructor(
         }
     }
 
+    suspend fun rescheduleAllActiveAlarms(context: Context) {
+        val activeAlarms = solarAlarmRepository.getAllActive()
+        val now = java.time.ZonedDateTime.now()
+        val today = now.toLocalDate()
+
+        for (alarm in activeAlarms) {
+            try {
+                val location = locationRepository.getById(alarm.LocationId)
+                val todaySolarTime = solarTimeRepository.getSolarTime(location, today).getOrNull()
+                val targetDate = AlarmScheduler.findTargetDate(alarm, todaySolarTime, now)
+                val targetSolarTime = if (targetDate == today && todaySolarTime != null) {
+                    todaySolarTime
+                } else {
+                    solarTimeRepository.getSolarTime(location, targetDate).getOrNull()
+                }
+
+                if (targetSolarTime != null) {
+                    val updatedAlarm = alarm.copy().apply {
+                        SolarTimeId = targetSolarTime.Id
+                    }
+                    updatedAlarm.Id = alarm.Id
+                    solarAlarmRepository.update(updatedAlarm)
+
+                    AlarmScheduler(
+                        updatedAlarm,
+                        targetSolarTime,
+                        updatedAlarm.OffsetHours,
+                        updatedAlarm.OffsetMinutes
+                    ).schedule(context, showToast = false)
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("RescheduleHelper", "Failed to reschedule alarm ${alarm.Id}: ${alarm.Name}", e)
+            }
+        }
+    }
+
     private fun findNextDate(alarm: SolarAlarm): LocalDate {
         var date = LocalDate.now().plusDays(1)
         

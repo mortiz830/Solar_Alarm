@@ -19,7 +19,6 @@ import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
 import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
 import com.example.solar_alarm.location.LocationCreateFragment
 import com.example.solar_alarm.R
-import com.example.solar_alarm.service.GpsTracker
 import com.example.solar_alarm.databinding.FragmentListalarmsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.TimeZone
@@ -30,8 +29,6 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
 {
     private var _binding: FragmentListalarmsBinding? = null
     private val binding get() = _binding!!
-
-    private var gpsTracker: GpsTracker? = null
 
     private val locationListViewModel: LocationListViewModel by activityViewModels()
     private val solarTimeViewModel: SolarTimeViewModel by activityViewModels()
@@ -68,27 +65,13 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
         }
 
         binding.addButton.setOnClickListener { showPopupMenu(it) }
-        startLocationTracking(binding.root)
 
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        gpsTracker?.stopUsingGPS()
-        gpsTracker = null
         _binding = null
-    }
-
-    private fun startLocationTracking(view: View)
-    {
-        gpsTracker = GpsTracker(view.context)
-        gpsTracker?.getLocation()
-
-        if (gpsTracker?.canGetLocation() == false)
-        {
-            gpsTracker?.showSettingsAlert()
-        }
     }
 
     private fun showPopupMenu(view: View) {

@@ -78,7 +78,7 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
         return localZonedDateTime
     }
 
-    fun schedule(context: Context)
+    fun schedule(context: Context, showToast: Boolean = true)
     {
         val intent             = getIntent(context)
         val isDebugOneMinute   = DebugSettings.ringOneMinuteAfterCreation
@@ -105,18 +105,47 @@ class AlarmScheduler(private val solarAlarm: SolarAlarm, private val solarTime: 
             }
         }
         
-        Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+        if (showToast) {
+            Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+        }
 
         try {
-            // Always set an exact one-shot alarm. 
-            // Recurring solar alarms must be rescheduled manually to account for shifting times.
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP, 
-                triggerTimeMillis, 
-                pendingIntent
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
+                android.util.Log.w("AlarmScheduler", "Exact alarm permission is disabled. Scheduling inexact alarm as fallback.")
+                if (showToast) {
+                    Toast.makeText(context, "Exact alarm permission disabled. Alarm scheduled with standard precision.", Toast.LENGTH_LONG).show()
+                }
+                alarmManager.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerTimeMillis,
+                    pendingIntent
+                )
+            } else {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerTimeMillis,
+                    pendingIntent
+                )
+            }
+        } catch (exception: SecurityException) {
+            android.util.Log.e("AlarmScheduler", "SecurityException scheduling exact alarm, attempting fallback", exception)
+            try {
+                alarmManager.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerTimeMillis,
+                    pendingIntent
+                )
+                if (showToast) {
+                    Toast.makeText(context, "Exact alarm permission denied. Alarm scheduled with standard precision.", Toast.LENGTH_LONG).show()
+                }
+            } catch (fallbackException: Exception) {
+                android.util.Log.e("AlarmScheduler", "Fallback alarm scheduling also failed", fallbackException)
+                if (showToast) {
+                    Toast.makeText(context, "Permission denied for alarm scheduling.", Toast.LENGTH_LONG).show()
+                }
+            }
         } catch (exception: Exception) {
-            exception.printStackTrace()
+            android.util.Log.e("AlarmScheduler", "Exception scheduling alarm", exception)
         }
 
         started = true

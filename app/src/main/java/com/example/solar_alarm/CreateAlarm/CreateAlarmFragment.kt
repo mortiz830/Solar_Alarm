@@ -1,5 +1,6 @@
 package com.example.solar_alarm.createAlarm
 
+import android.Manifest
 import android.database.sqlite.SQLiteConstraintException
 import android.os.Build
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -26,6 +28,7 @@ import com.example.solar_alarm.data.viewmodels.LocationListViewModel
 import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
 import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
 import com.example.solar_alarm.databinding.FragmentCreatealarmBinding
+import com.example.solar_alarm.util.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -43,6 +46,21 @@ class CreateAlarmFragment : Fragment()
     private val solarAlarmViewModel: SolarAlarmViewModel by activityViewModels()
     private var dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd-MMM-uuuu\nhh:mm a")
     private var solarTimes: List<SolarTime> = emptyList()
+
+    private var pendingScheduleAction: (() -> Unit)? = null
+
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (!isGranted) {
+                Toast.makeText(
+                    context,
+                    "Notification permission not granted. Alarms will ring, but heads-up alerts will not appear.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            pendingScheduleAction?.invoke()
+            pendingScheduleAction = null
+        }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCreatealarmBinding.inflate(inflater, container, false)
@@ -132,13 +150,50 @@ class CreateAlarmFragment : Fragment()
             val solarTimeTypeItem = binding.fragmentCreatealarmSettimeSpinner.selectedItem   as SolarTimeTypeEnum
 
             if (solarTimes.isNotEmpty()) {
-                scheduleAlarm(solarTimes[0], offsetTypeEnum, solarTimeTypeItem)
+                checkPermissionsAndSchedule(solarTimes[0], offsetTypeEnum, solarTimeTypeItem)
             } else {
                 Toast.makeText(requireContext(), "Please select a location with available solar times.", Toast.LENGTH_SHORT).show()
             }
         }
 
         return binding.root
+    }
+
+    private fun checkPermissionsAndSchedule(
+        initialSolarTimeItem: SolarTime,
+        alarmTypeId: OffsetTypeEnum,
+        solarTimeTypeId: SolarTimeTypeEnum
+    ) {
+        val currentContext = context ?: return
+
+        // 1. Exact Alarm permission check on Android 12+ (API 31+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !PermissionUtils.hasExactAlarmPermission(currentContext)) {
+            PermissionUtils.showExactAlarmDialog(requireContext()) {
+                checkNotificationAndSchedule(initialSolarTimeItem, alarmTypeId, solarTimeTypeId)
+            }
+            return
+        }
+
+        checkNotificationAndSchedule(initialSolarTimeItem, alarmTypeId, solarTimeTypeId)
+    }
+
+    private fun checkNotificationAndSchedule(
+        initialSolarTimeItem: SolarTime,
+        alarmTypeId: OffsetTypeEnum,
+        solarTimeTypeId: SolarTimeTypeEnum
+    ) {
+        val currentContext = context ?: return
+
+        // 2. Notification permission check on Android 13+ (API 33+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !PermissionUtils.hasNotificationPermission(currentContext)) {
+            pendingScheduleAction = {
+                scheduleAlarm(initialSolarTimeItem, alarmTypeId, solarTimeTypeId)
+            }
+            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            return
+        }
+
+        scheduleAlarm(initialSolarTimeItem, alarmTypeId, solarTimeTypeId)
     }
 
     private fun scheduleAlarm(initialSolarTimeItem: SolarTime, alarmTypeId: OffsetTypeEnum, solarTimeTypeId: SolarTimeTypeEnum)

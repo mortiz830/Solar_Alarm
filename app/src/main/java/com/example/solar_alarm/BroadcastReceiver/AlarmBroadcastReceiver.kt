@@ -10,13 +10,41 @@ import com.example.solar_alarm.createAlarm.AlarmScheduler
 import com.example.solar_alarm.createAlarm.DebugSettings
 import com.example.solar_alarm.data.tables.SolarAlarm
 import com.example.solar_alarm.service.AlarmService
+import com.example.solar_alarm.service.RescheduleHelper
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Calendar
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AlarmBroadcastReceiver : BroadcastReceiver() {
     private lateinit var solarAlarm: SolarAlarm
 
+    @Inject
+    lateinit var rescheduleHelper: RescheduleHelper
+
     override fun onReceive(context: Context, intent: Intent) {
         try {
+            val action = intent.action
+            if (action == Intent.ACTION_BOOT_COMPLETED ||
+                action == Intent.ACTION_MY_PACKAGE_REPLACED ||
+                action == "android.intent.action.QUICKBOOT_POWERON") {
+                Log.d("ALARM_DEBUG", "Received boot/replacement action: $action. Rescheduling all active alarms.")
+                val pendingResult = goAsync()
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        rescheduleHelper.rescheduleAllActiveAlarms(context.applicationContext)
+                    } catch (e: Exception) {
+                        Log.e("ALARM_DEBUG", "Error rescheduling on boot: ${e.message}", e)
+                    } finally {
+                        pendingResult.finish()
+                    }
+                }
+                return
+            }
+
             // 1. Initialize data
             val dd = getSolarAlarmFromIntent(intent)
 
