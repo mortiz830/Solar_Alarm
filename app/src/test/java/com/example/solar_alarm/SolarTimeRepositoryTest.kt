@@ -140,13 +140,37 @@ class SolarTimeRepositoryTest {
     }
 
     @Test
-    fun getSolarTime_whenRemoteFails_returnsFailure() = runBlocking {
+    fun getSolarTime_whenRemoteFails_fallsBackToOfflineCalculationSuccessfully() = runBlocking {
         fakeRemoteDataSource.responseToReturn = SunriseSunsetResponse(results = null, status = "INVALID_REQUEST")
 
-        val result = repository.getSolarTime(testLocation, testDate)
+        val result = repository.getSolarTime(testLocation, testDate).getOrNull()
 
-        assertTrue(result.isFailure)
-        assertEquals(1, fakeRemoteDataSource.callCount)
+        assertNotNull(result)
+        assertEquals(1, fakeRemoteDataSource.callCount) // Attempted remote call first
+        assertNotNull(result?.SunriseUtc)
+        assertNotNull(result?.SunsetUtc)
+        assertNotNull(result?.SolarNoonUtc)
+        assertEquals(testDate, result?.SolarDate)
+        assertEquals(testLocation.Id, result?.LocationId)
+
+        // Verify fallback calculation was persisted in database
+        val cached = solarTimeDao.getSolarTime(testLocation.Id, testDate)
+        assertNotNull(cached)
+        assertEquals(result?.SunriseUtc, cached?.SunriseUtc)
+    }
+
+    @Test
+    fun calculateSolarTimeOffline_calculatesAndPersistsWithoutCallingRemote() = runBlocking {
+        val result = repository.calculateSolarTimeOffline(testLocation, testDate)
+
+        assertNotNull(result)
+        assertEquals(0, fakeRemoteDataSource.callCount) // Pure offline, no remote calls
+        assertNotNull(result.SunriseUtc)
+        assertNotNull(result.SunsetUtc)
+
+        val cachedInDb = solarTimeDao.getSolarTime(testLocation.Id, testDate)
+        assertNotNull(cachedInDb)
+        assertEquals(result.SunriseUtc, cachedInDb?.SunriseUtc)
     }
 
     @Test

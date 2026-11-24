@@ -65,6 +65,11 @@ class SolarTimeViewModel @Inject constructor(private val repository: SolarTimeRe
         return repository.getSolarTime(location, date)
     }
 
+    suspend fun calculateSolarTimeOffline(location: Location, date: LocalDate): SolarTime
+    {
+        return repository.calculateSolarTimeOffline(location, date)
+    }
+
     suspend fun getWeeklySolarTimes(location: Location, startDate: LocalDate = LocalDate.now()): Result<List<SolarTime>>
     {
         val result = repository.getWeeklySolarTimes(location, startDate)
