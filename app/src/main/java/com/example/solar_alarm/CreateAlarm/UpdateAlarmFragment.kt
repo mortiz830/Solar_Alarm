@@ -264,6 +264,7 @@ class UpdateAlarmFragment : Fragment() {
             locationListViewModel.allLocations.value?.getOrNull(selectedLocationIndex)
 
         alarm.Name = binding.fragmentUpdatealarmTitle.text.toString()
+        alarm.Active = true
         if (selectedLocation != null) {
             alarm.LocationId = selectedLocation.Id
         }

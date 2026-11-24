@@ -55,7 +55,12 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                 val isSnooze = intent.getBooleanExtra(AlarmScheduler.EXTRA_IS_SNOOZE, false)
                 Log.d("ALARM_DEBUG", "Received alarm: ${solarAlarm.Name}, isDebugOneMinute: $isDebugOneMinute, isSnooze: $isSnooze")
 
-                // 2. Logic check: If it's recurring and not a debug or snooze alarm, check if today is an active day
+                // 2. Logic check: If alarm is inactive or recurring and not today, skip
+                if (!isDebugOneMinute && !isSnooze && !solarAlarm.Active) {
+                    Log.d("ALARM_DEBUG", "Alarm skipped: Alarm is not active.")
+                    return
+                }
+
                 if (!isDebugOneMinute && !isSnooze && solarAlarm.Recurring && !alarmIsToday()) {
                     Log.d("ALARM_DEBUG", "Alarm skipped: Not scheduled for today.")
                     return

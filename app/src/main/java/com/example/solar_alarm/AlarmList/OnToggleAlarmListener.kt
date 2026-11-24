@@ -1,6 +1,7 @@
 package com.example.solar_alarm.alarmList
 
-// Repair: Fixed broken package/import lines
+import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
+
 interface OnToggleAlarmListener {
-//    fun onToggle(alarm: Alarm)
+    fun onToggle(solarAlarmWithDetails: SolarAlarmWithDetails, isChecked: Boolean)
 }

@@ -14,6 +14,7 @@ import java.time.Month
 @RequiresApi(Build.VERSION_CODES.O)
 class SolarAlarmListAdapter(
     private var solarAlarms: List<SolarAlarmWithDetails>,
+    private val onToggleListener: OnToggleAlarmListener? = null,
     private val onItemClick: ((SolarAlarmWithDetails) -> Unit)? = null,
     private val onItemLongClick: ((SolarAlarmWithDetails) -> Unit)? = null,
     private val onEditClick: ((SolarAlarmWithDetails) -> Unit)? = null,
@@ -59,6 +60,18 @@ class SolarAlarmListAdapter(
 
             solarAlarmViewHolder.binding.alarmName.text     = "${solarAlarm.Id} - ${solarAlarm.Name} - ${solarAlarm.OffsetTypeId.Name} ${solarAlarm.SolarTimeTypeId.Name} - ${location.Name}"
             solarAlarmViewHolder.binding.alarmDateTime.text = "${shorDay} ${zonedDateTime.dayOfMonth}-$shortMonth-${zonedDateTime.year} ${formattedHour}:${formattedMinute} $ampm"
+
+            // Configure toggle switch state & visual dimming when inactive
+            solarAlarmViewHolder.binding.alarmToggleSwitch.setOnCheckedChangeListener(null)
+            solarAlarmViewHolder.binding.alarmToggleSwitch.isChecked = solarAlarm.Active
+
+            val textAlpha = if (solarAlarm.Active) 1.0f else 0.45f
+            solarAlarmViewHolder.binding.alarmName.alpha = textAlpha
+            solarAlarmViewHolder.binding.alarmDateTime.alpha = textAlpha
+
+            solarAlarmViewHolder.binding.alarmToggleSwitch.setOnCheckedChangeListener { _, isChecked ->
+                onToggleListener?.onToggle(solarAlarmWithDetails, isChecked)
+            }
 
             val clickListener = android.view.View.OnClickListener {
                 onItemClick?.invoke(solarAlarmWithDetails)

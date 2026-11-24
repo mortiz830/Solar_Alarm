@@ -44,6 +44,14 @@
 
             </LinearLayout>
 
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/alarmToggleSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="4dp"
+                android:contentDescription="@string/toggle_alarm" />
+
             <ImageButton
                 android:id="@+id/alarmKebabMenu"
                 android:layout_width="40dp"

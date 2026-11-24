@@ -1,6 +1,5 @@
 package com.example.solar_alarm.alarmList
 
-// Repair: Fixed broken package/import lines
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
@@ -21,8 +20,15 @@ class AlarmViewHolder(private val binding: SolarAlarmListItemBinding, private va
         binding.alarmDateTime.text = "${alarmText[0]} ${alarmText[1]}"
         binding.alarmName.text = String.format("%s | %d", solarAlarm.Name, solarAlarm.Id)
 
-        binding.parentLayout.setOnClickListener {
-            // Add click logic if needed
+        binding.alarmToggleSwitch.setOnCheckedChangeListener(null)
+        binding.alarmToggleSwitch.isChecked = solarAlarm.Active
+
+        val textAlpha = if (solarAlarm.Active) 1.0f else 0.45f
+        binding.alarmName.alpha = textAlpha
+        binding.alarmDateTime.alpha = textAlpha
+
+        binding.alarmToggleSwitch.setOnCheckedChangeListener { _, isChecked ->
+            listener.onToggle(solarAlarmWithDetails, isChecked)
         }
     }
 }

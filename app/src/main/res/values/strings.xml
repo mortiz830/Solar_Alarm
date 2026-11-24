@@ -26,4 +26,5 @@
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
     <string name="alarm_options">Alarm options</string>
+    <string name="toggle_alarm">Toggle alarm active state</string>
 </resources>

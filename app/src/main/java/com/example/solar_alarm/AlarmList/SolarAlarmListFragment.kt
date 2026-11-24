@@ -8,20 +8,25 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.solar_alarm.createAlarm.AlarmScheduler
 import com.example.solar_alarm.createAlarm.CreateAlarmFragment
 import com.example.solar_alarm.createAlarm.UpdateAlarmFragment
+import com.example.solar_alarm.data.tables.SolarAlarmWithDetails
 import com.example.solar_alarm.data.viewmodels.LocationListViewModel
 import com.example.solar_alarm.data.viewmodels.SolarAlarmViewModel
 import com.example.solar_alarm.data.viewmodels.SolarTimeViewModel
 import com.example.solar_alarm.location.LocationCreateFragment
 import com.example.solar_alarm.R
 import com.example.solar_alarm.databinding.FragmentListalarmsBinding
+import com.example.solar_alarm.util.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.TimeZone
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
@@ -40,6 +45,7 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
         _binding = FragmentListalarmsBinding.inflate(inflater, container, false)
         val solarAlarmListAdapter = SolarAlarmListAdapter(
             emptyList(),
+            onToggleListener = this,
             onItemClick = { solarAlarmWithDetails ->
                 val updateAlarmFragment = UpdateAlarmFragment.newInstance(solarAlarmWithDetails.solarAlarm)
                 replaceFragment(updateAlarmFragment)
@@ -69,6 +75,71 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
         return binding.root
     }
 
+    override fun onToggle(solarAlarmWithDetails: SolarAlarmWithDetails, isChecked: Boolean) {
+        val solarAlarm = solarAlarmWithDetails.solarAlarm
+        val solarTime = solarAlarmWithDetails.solarTime
+        val location = solarAlarmWithDetails.location
+        val currentContext = context ?: return
+
+        if (isChecked) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !PermissionUtils.hasExactAlarmPermission(currentContext)) {
+                PermissionUtils.showExactAlarmDialog(requireContext())
+            }
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    solarAlarm.Active = true
+                    val targetSolarTime = AlarmScheduler.resolveTargetSolarTime(
+                        solarAlarm,
+                        listOf(solarTime),
+                        fetchSolarTime = { date ->
+                            solarTimeViewModel.getSolarTime(location, date).getOrNull()
+                        }
+                    )
+                    solarAlarm.SolarTimeId = targetSolarTime.Id
+                    solarAlarmViewModel.update(solarAlarm)
+
+                    AlarmScheduler(
+                        solarAlarm,
+                        targetSolarTime,
+                        solarAlarm.OffsetHours,
+                        solarAlarm.OffsetMinutes
+                    ).schedule(currentContext)
+                } catch (e: Exception) {
+                    if (e is kotlinx.coroutines.CancellationException) throw e
+                    e.printStackTrace()
+                    if (isAdded) {
+                        Toast.makeText(requireContext(), "Failed to enable alarm", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        } else {
+            solarAlarm.Active = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    AlarmScheduler(
+                        solarAlarm,
+                        solarTime,
+                        solarAlarm.OffsetHours,
+                        solarAlarm.OffsetMinutes
+                    ).cancel(currentContext)
+                    AlarmScheduler.cancelSnooze(currentContext, solarAlarm.Id)
+
+                    solarAlarmViewModel.update(solarAlarm)
+                    if (isAdded) {
+                        Toast.makeText(requireContext(), "${solarAlarm.Name} turned off", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: Exception) {
+                    if (e is kotlinx.coroutines.CancellationException) throw e
+                    e.printStackTrace()
+                    if (isAdded) {
+                        Toast.makeText(requireContext(), "Failed to disable alarm", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -96,7 +167,7 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
         popup.show()
     }
 
-    private fun showDeleteDialog(solarAlarmWithDetails: com.example.solar_alarm.data.tables.SolarAlarmWithDetails) {
+    private fun showDeleteDialog(solarAlarmWithDetails: SolarAlarmWithDetails) {
         val solarAlarm = solarAlarmWithDetails.solarAlarm
         val solarTime = solarAlarmWithDetails.solarTime
         androidx.appcompat.app.AlertDialog.Builder(requireContext())
@@ -105,7 +176,7 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
             .setPositiveButton("Delete") { _, _ ->
                 val currentContext = context
                 if (currentContext != null) {
-                    com.example.solar_alarm.createAlarm.AlarmScheduler(
+                    AlarmScheduler(
                         solarAlarm,
                         solarTime,
                         solarAlarm.OffsetHours,
@@ -113,7 +184,7 @@ class SolarAlarmListFragment : Fragment(), OnToggleAlarmListener
                     ).cancel(currentContext)
                 }
                 solarAlarmViewModel.delete(solarAlarm)
-                android.widget.Toast.makeText(requireContext(), "Alarm deleted", android.widget.Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Alarm deleted", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancel", null)
             .show()
